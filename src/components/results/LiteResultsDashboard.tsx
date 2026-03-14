@@ -95,7 +95,7 @@ export function LiteResultsDashboard({
   respondentEmail,
   respondentCompany = '',
 }: LiteResultsDashboardProps) {
-  const firstName  = respondentName?.split(' ')[0] || 'there'
+  const firstName  = respondentName?.trim().split(/\s+/)[0] || 'there'
   const config     = MATURITY_CONFIG[score.maturityLevel] ?? MATURITY_CONFIG.Exploring
   const displayScore = useCountUp(score.overall)
 

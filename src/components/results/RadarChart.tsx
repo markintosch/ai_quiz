@@ -61,12 +61,12 @@ function labelPos(i: number, n: number, cx: number, cy: number, r: number, paddi
 }
 
 export function RadarChart({ dimensionScores, size = 300, animate = true }: RadarChartProps) {
-  const n      = dimensionScores.length
-  const cx     = size / 2
-  const cy     = size / 2
-  const r      = size * 0.33   // radar radius
-  const levels = 4             // grid rings (25, 50, 75, 100)
-  const labelPad = size * 0.09
+  const n        = dimensionScores.length
+  const cx       = size / 2
+  const cy       = size / 2
+  const r        = size * 0.30   // slightly smaller radius to give labels more room
+  const labelPad = size * 0.10
+  const legendY  = size + 22    // legend sits below the chart content
 
   const userValues     = dimensionScores.map(d => d.normalized)
   const baselineValues = dimensionScores.map(() => 50)
@@ -93,14 +93,13 @@ export function RadarChart({ dimensionScores, size = 300, animate = true }: Rada
 
   const animatedValues = userValues.map(v => v * progress)
 
-  // Grid ring labels (25 50 75 100) — placed on the right axis (index 0, -90° = up, so index 1 at -30°)
   const ringValues = [25, 50, 75, 100]
 
   return (
     <svg
       width={size}
-      height={size}
-      viewBox={`0 0 ${size} ${size}`}
+      height={legendY + 12}
+      viewBox={`0 0 ${size} ${legendY + 12}`}
       className="overflow-visible"
       aria-label="AI Maturity Radar Chart"
     >
@@ -199,17 +198,17 @@ export function RadarChart({ dimensionScores, size = 300, animate = true }: Rada
       {/* Score value labels disabled — scores are shown in the dimension breakdown list below */}
 
       {/* ── Legend ── */}
-      <g transform={`translate(${cx - 60}, ${size - size * 0.06})`}>
+      <g transform={`translate(${cx - 68}, ${legendY})`}>
         <line x1={0} y1={0} x2={16} y2={0} stroke={COLORS.user} strokeWidth={2.5} />
         <circle cx={8} cy={0} r={3} fill={COLORS.user} />
         <text x={20} y={0} dominantBaseline="middle" fontSize={size * 0.038} fill="#374151" fontFamily="Inter, sans-serif">
           Your score
         </text>
       </g>
-      <g transform={`translate(${cx + 14}, ${size - size * 0.06})`}>
+      <g transform={`translate(${cx + 10}, ${legendY})`}>
         <line x1={0} y1={0} x2={16} y2={0} stroke={COLORS.baseline} strokeWidth={1.5} strokeDasharray="4 3" />
         <text x={20} y={0} dominantBaseline="middle" fontSize={size * 0.038} fill="#6b7280" fontFamily="Inter, sans-serif">
-          Market avg
+          50 baseline
         </text>
       </g>
     </svg>
