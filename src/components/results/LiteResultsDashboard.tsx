@@ -46,7 +46,7 @@ const MATURITY_CONFIG: Record<string, {
     bg:      'bg-yellow-50',
     ring:    'ring-yellow-200',
     insight: 'You have real AI activity underway, which puts you ahead of most. The challenge now is moving from scattered pilots to a coherent capability that scales and creates lasting differentiation.',
-    urgency: 'Scaling what works — and stopping what doesn\'t — is the highest-leverage move right now.',
+    urgency: 'Most organisations stall here. The gap between pilots and scaled capability is where competitive advantage is won or lost.',
   },
   Scaling: {
     color:   'text-teal-600',
@@ -159,6 +159,22 @@ export function LiteResultsDashboard({
         >
           Hi {firstName} — this is a directional snapshot across 6 AI dimensions.
         </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.65 }}
+          className="mt-4 inline-flex items-center gap-3 bg-white/10 border border-white/10 rounded-xl px-4 py-2"
+        >
+          <span className="text-xs text-gray-400">Average score across all assessments: <strong className="text-white">47</strong></span>
+          <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+            score.overall >= 47
+              ? 'bg-green-500/20 text-green-300'
+              : 'bg-red-500/20 text-red-300'
+          }`}>
+            {score.overall >= 47 ? `+${score.overall - 47}` : `${score.overall - 47}`} vs avg
+          </span>
+        </motion.div>
       </motion.div>
 
       {/* ═══ 2. RADAR CHART ════════════════════════════════════════ */}
@@ -213,7 +229,57 @@ export function LiteResultsDashboard({
         </p>
       </motion.div>
 
-      {/* ═══ 5. BOOK A CALL — PRIMARY CTA ════════════════════════ */}
+      {/* ═══ 5. PRIMARY RECOMMENDATIONS ═════════════════════════ */}
+      {primaryRecs.length > 0 && (
+        <motion.div variants={fadeUp}>
+          <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3 px-1">
+            Your priority actions
+          </h3>
+          <div className="space-y-3">
+            {primaryRecs.map((rec, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 + i * 0.1 }}
+                onClick={() => trackEvent('recommendation_cta_clicked', {
+                  dimension: rec.dimension,
+                  priority:  rec.priority,
+                })}
+              >
+                <RecommendationCard recommendation={rec} softCta={true} />
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+
+      {/* ═══ 6. SUPPORTING RECOMMENDATIONS ══════════════════════ */}
+      {supportingRecs.length > 0 && (
+        <motion.div variants={fadeUp}>
+          <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3 px-1">
+            Also worth addressing
+          </h3>
+          <div className="space-y-3">
+            {supportingRecs.map((rec, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 + i * 0.1 }}
+                onClick={() => trackEvent('recommendation_cta_clicked', {
+                  dimension: rec.dimension,
+                  priority:  rec.priority,
+                })}
+              >
+                <RecommendationCard recommendation={rec} softCta={true} />
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+
+      {/* ═══ 7. BOOK A CALL — PRIMARY CTA ════════════════════════ */}
       <motion.div
         variants={fadeUp}
         className="bg-[#354E5E] rounded-2xl p-7 text-white text-center"
@@ -245,56 +311,6 @@ export function LiteResultsDashboard({
           With Mark de Kock — AI Transformation Lead, Kirk &amp; Blackbeard
         </p>
       </motion.div>
-
-      {/* ═══ 6. PRIMARY RECOMMENDATIONS ═════════════════════════ */}
-      {primaryRecs.length > 0 && (
-        <motion.div variants={fadeUp}>
-          <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3 px-1">
-            Your priority actions
-          </h3>
-          <div className="space-y-3">
-            {primaryRecs.map((rec, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 + i * 0.1 }}
-                onClick={() => trackEvent('recommendation_cta_clicked', {
-                  dimension: rec.dimension,
-                  priority:  rec.priority,
-                })}
-              >
-                <RecommendationCard recommendation={rec} />
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      )}
-
-      {/* ═══ 7. SUPPORTING RECOMMENDATIONS ══════════════════════ */}
-      {supportingRecs.length > 0 && (
-        <motion.div variants={fadeUp}>
-          <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3 px-1">
-            Also worth addressing
-          </h3>
-          <div className="space-y-3">
-            {supportingRecs.map((rec, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 + i * 0.1 }}
-                onClick={() => trackEvent('recommendation_cta_clicked', {
-                  dimension: rec.dimension,
-                  priority:  rec.priority,
-                })}
-              >
-                <RecommendationCard recommendation={rec} />
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      )}
 
       {/* ═══ 8. FULL ASSESSMENT CTA (secondary) ═════════════════ */}
       <motion.div

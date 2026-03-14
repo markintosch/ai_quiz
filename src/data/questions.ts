@@ -92,7 +92,7 @@ export const QUESTIONS: Question[] = [
     dimension: 'current_usage',
     text: 'How often do you personally use AI tools in your work?',
     type: 'frequency',
-    lite: true,
+    lite: false,
     scored: true,
     options: [
       { value: 1, label: 'Never' },
@@ -107,7 +107,7 @@ export const QUESTIONS: Question[] = [
     dimension: 'current_usage',
     text: 'How broadly are AI tools used across your organization?',
     type: 'likert',
-    lite: false,
+    lite: true,
     scored: true,
     options: [
       { value: 1, label: 'Only a few individuals experimenting independently' },

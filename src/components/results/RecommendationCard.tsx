@@ -2,9 +2,10 @@ import type { Recommendation } from '@/lib/scoring/recommendations'
 
 interface RecommendationCardProps {
   recommendation: Recommendation
+  softCta?: boolean
 }
 
-export function RecommendationCard({ recommendation }: RecommendationCardProps) {
+export function RecommendationCard({ recommendation, softCta }: RecommendationCardProps) {
   const isPrimary = recommendation.priority === 'primary'
 
   return (
@@ -41,7 +42,7 @@ export function RecommendationCard({ recommendation }: RecommendationCardProps) 
             : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
         }`}
       >
-        {recommendation.cta}
+        {softCta ? 'Discuss this with us →' : recommendation.cta}
       </span>
     </div>
   )

@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { useEffect, useRef } from 'react'
 import { motion, type Variants } from 'framer-motion'
 import { trackEvent } from '@/lib/analytics'
+import { RadarChart } from '@/components/results/RadarChart'
+import type { DimensionScore } from '@/types'
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 24 },
@@ -22,6 +24,15 @@ const DIMENSIONS = [
   { icon: '🧑‍💻', label: 'Talent & Culture',        desc: 'Do your people feel equipped and motivated to work with AI?' },
   { icon: '🛡️', label: 'Governance & Risk',       desc: 'Do you have the guardrails and policies that responsible AI requires?' },
   { icon: '🔍', label: 'Opportunity Awareness',   desc: 'Does your leadership team agree on where AI creates the most value?' },
+]
+
+const SAMPLE_SCORES: DimensionScore[] = [
+  { dimension: 'strategy_vision',       label: 'Strategy',    raw: 3, max: 5, normalized: 60 },
+  { dimension: 'current_usage',         label: 'Usage',       raw: 4, max: 5, normalized: 72 },
+  { dimension: 'data_readiness',        label: 'Data',        raw: 2, max: 5, normalized: 35 },
+  { dimension: 'talent_culture',        label: 'Talent',      raw: 3, max: 5, normalized: 55 },
+  { dimension: 'governance_risk',       label: 'Governance',  raw: 1, max: 5, normalized: 28 },
+  { dimension: 'opportunity_awareness', label: 'Opportunity', raw: 4, max: 5, normalized: 68 },
 ]
 
 const STEPS = [
@@ -107,8 +118,8 @@ export default function LandingPage() {
             variants={fadeUp}
             className="text-gray-400 text-sm max-w-xl mx-auto mb-10"
           >
-            Developed by Kirk &amp; Blackbeard — AI transformation specialists working
-            with leadership teams across Europe.
+            Developed by Kirk &amp; Blackbeard — AI transformation specialists. Used
+            by CEOs, MDs and transformation leads to benchmark where they actually stand.
           </motion.p>
 
           {/* ── Primary CTA ── */}
@@ -141,16 +152,16 @@ export default function LandingPage() {
             className="mt-12 flex flex-wrap justify-center gap-6 text-xs text-gray-500 border-t border-white/10 pt-10"
           >
             <span className="flex items-center gap-2">
-              <span className="text-green-400">✓</span> Built by AI transformation specialists
+              <span className="text-green-400">✓</span> Used by leadership teams across Europe
             </span>
             <span className="flex items-center gap-2">
-              <span className="text-green-400">✓</span> Results in under 5 minutes
+              <span className="text-green-400">✓</span> Average score: 47/100 — where do you rank?
             </span>
             <span className="flex items-center gap-2">
-              <span className="text-green-400">✓</span> Free — no credit card, ever
+              <span className="text-green-400">✓</span> Results in 5 minutes, free
             </span>
             <span className="flex items-center gap-2">
-              <span className="text-green-400">✓</span> GDPR compliant
+              <span className="text-green-400">✓</span> No consultant pitch — just your score
             </span>
           </motion.div>
         </motion.div>
@@ -187,6 +198,52 @@ export default function LandingPage() {
             </div>
           </motion.div>
         </div>
+      </section>
+
+      {/* ── Results preview ── */}
+      <section className="max-w-5xl mx-auto px-6 py-16">
+        <motion.div
+          variants={stagger}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: '-80px' }}
+        >
+          <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-widest text-[#E8611A] mb-2 text-center">
+            What you'll receive
+          </motion.p>
+          <motion.h2 variants={fadeUp} className="text-3xl font-bold text-center mb-3">
+            Your results look like this
+          </motion.h2>
+          <motion.p variants={fadeUp} className="text-gray-400 text-center mb-10 max-w-xl mx-auto">
+            A radar across all 6 dimensions, an overall score with benchmark context, and specific actions for your weakest areas.
+          </motion.p>
+
+          <motion.div
+            variants={fadeUp}
+            className="max-w-sm mx-auto bg-white/5 border border-white/10 rounded-2xl p-6"
+          >
+            {/* Sample score header */}
+            <div className="text-center mb-4">
+              <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Example result</p>
+              <div className="inline-flex items-center justify-center w-20 h-20 rounded-full ring-4 bg-yellow-50 ring-yellow-200 mb-2">
+                <span className="text-2xl font-black text-yellow-600">53</span>
+              </div>
+              <p className="text-white font-bold text-lg">Experimenting</p>
+              <div className="mt-2 inline-flex items-center gap-2 bg-white/10 rounded-xl px-3 py-1">
+                <span className="text-xs text-gray-400">Average: <strong className="text-white">47</strong></span>
+                <span className="text-xs font-bold px-1.5 py-0.5 rounded-full bg-green-500/20 text-green-300">+6 vs avg</span>
+              </div>
+            </div>
+
+            <div className="flex justify-center">
+              <RadarChart dimensionScores={SAMPLE_SCORES} size={260} animate={false} />
+            </div>
+
+            <p className="text-center text-xs text-gray-500 mt-4 italic">
+              Sample output — your actual profile will differ
+            </p>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* ── What you get ── */}
