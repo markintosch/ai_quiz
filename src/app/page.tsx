@@ -118,8 +118,8 @@ export default function LandingPage() {
             variants={fadeUp}
             className="text-gray-400 text-sm max-w-xl mx-auto mb-10"
           >
-            Developed by Kirk &amp; Blackbeard — AI transformation specialists. Used
-            by CEOs, MDs and transformation leads to benchmark where they actually stand.
+            Developed by Mark de Kock &amp; Frank Meeuwsen — AI transformation specialists
+            with 30+ years of combined digital experience.
           </motion.p>
 
           {/* ── Primary CTA ── */}
@@ -314,6 +314,68 @@ export default function LandingPage() {
                   {role}
                 </motion.span>
               ))}
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── Built by ── */}
+      <section className="border-t border-white/10 bg-white/5">
+        <div className="max-w-5xl mx-auto px-6 py-20">
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: '-80px' }}
+          >
+            <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-widest text-[#E8611A] mb-2 text-center">
+              Built by practitioners
+            </motion.p>
+            <motion.h2 variants={fadeUp} className="text-3xl font-bold text-center mb-3">
+              No theory. No agency fluff.
+            </motion.h2>
+            <motion.p variants={fadeUp} className="text-gray-400 text-center mb-12 max-w-xl mx-auto">
+              This assessment was built by two people who do this work every day — not a research team or a software house.
+            </motion.p>
+
+            <motion.div variants={stagger} className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+
+              {/* Mark */}
+              <motion.div variants={fadeUp} className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col items-center text-center">
+                <div className="w-20 h-20 rounded-full overflow-hidden mb-4 ring-2 ring-[#E8611A]/40 bg-[#354E5E] flex items-center justify-center">
+                  {/* Replace with: <img src="/mark-de-kock.jpg" alt="Mark de Kock" className="w-full h-full object-cover" /> */}
+                  <span className="text-white font-bold text-xl">MdK</span>
+                </div>
+                <h3 className="text-white font-bold text-base mb-0.5">Mark de Kock</h3>
+                <p className="text-[#E8611A] text-xs font-semibold mb-3">AI Transformation Lead · Kirk &amp; Blackbeard</p>
+                <p className="text-gray-400 text-sm leading-relaxed">
+                  Works with leadership teams across Europe to design and implement practical AI strategies — from board alignment to team adoption.
+                </p>
+              </motion.div>
+
+              {/* Frank */}
+              <motion.div variants={fadeUp} className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col items-center text-center">
+                <div className="w-20 h-20 rounded-full overflow-hidden mb-4 ring-2 ring-[#E8611A]/40">
+                  {/* Replace src once photo is in /public/frank-meeuwsen.jpg */}
+                  <img
+                    src="/frank-meeuwsen.jpg"
+                    alt="Frank Meeuwsen"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      const t = e.currentTarget
+                      t.style.display = 'none'
+                      if (t.parentElement) t.parentElement.innerHTML = '<span class="w-full h-full flex items-center justify-center bg-[#354E5E] text-white font-bold text-xl">FM</span>'
+                    }}
+                  />
+                </div>
+                <h3 className="text-white font-bold text-base mb-0.5">Frank Meeuwsen</h3>
+                <p className="text-[#E8611A] text-xs font-semibold mb-3">AI Trainer &amp; Consultant · 30 years digital experience</p>
+                <p className="text-gray-400 text-sm leading-relaxed italic">
+                  &ldquo;Geen hype, geen bullshit. Gewoon wat werkt in de echte wereld.&rdquo;
+                </p>
+                <p className="text-gray-500 text-xs mt-2">No hype, no buzzwords. Just what works in the real world.</p>
+              </motion.div>
+
             </motion.div>
           </motion.div>
         </div>

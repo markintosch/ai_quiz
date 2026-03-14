@@ -282,17 +282,32 @@ export function LiteResultsDashboard({
       {/* ═══ 7. BOOK A CALL — PRIMARY CTA ════════════════════════ */}
       <motion.div
         variants={fadeUp}
-        className="bg-[#354E5E] rounded-2xl p-7 text-white text-center"
+        className="bg-[#354E5E] rounded-2xl p-7 text-white"
       >
-        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">
-          Free · 20 minutes · No obligation
-        </p>
+        {/* Person intro */}
+        <div className="flex items-center gap-4 mb-5">
+          <div className="w-14 h-14 rounded-full overflow-hidden ring-2 ring-[#E8611A]/50 flex-shrink-0 bg-[#2a3e4b] flex items-center justify-center">
+            {/* Replace with real photo: <img src="/mark-de-kock.jpg" alt="Mark de Kock" className="w-full h-full object-cover" /> */}
+            <span className="text-white font-bold text-sm">MdK</span>
+          </div>
+          <div>
+            <p className="text-white font-bold text-sm leading-tight">Mark de Kock</p>
+            <p className="text-[#E8611A] text-xs font-semibold">AI Transformation Lead</p>
+            <p className="text-gray-400 text-xs">Kirk &amp; Blackbeard</p>
+          </div>
+          <div className="ml-auto">
+            <span className="text-xs bg-white/10 border border-white/10 rounded-full px-3 py-1 text-gray-300">
+              Free · 20 min
+            </span>
+          </div>
+        </div>
+
         <h3 className="text-xl font-bold mb-2">
           Want to know what to do about it?
         </h3>
-        <p className="text-gray-300 text-sm max-w-sm mx-auto mb-6">
-          Book a free result review with an AI specialist. We walk through your
-          radar, identify your biggest lever, and give you a clear first step.
+        <p className="text-gray-300 text-sm mb-6 leading-relaxed">
+          Book a free result review. We walk through your radar together, identify
+          your highest-leverage move, and give you a clear first step — no pitch, no obligation.
         </p>
         <a
           href="https://calendly.com/markiesbpm/ai-intro-meeting-mark-de-kock"
@@ -303,13 +318,10 @@ export function LiteResultsDashboard({
             maturity_level: score.maturityLevel,
             overall_score:  score.overall,
           })}
-          className="inline-block px-8 py-3.5 bg-[#E8611A] hover:bg-orange-700 text-white font-bold rounded-xl text-sm transition-colors shadow-lg shadow-orange-900/30"
+          className="inline-block w-full text-center px-8 py-3.5 bg-[#E8611A] hover:bg-orange-700 text-white font-bold rounded-xl text-sm transition-colors shadow-lg shadow-orange-900/30"
         >
           Book my free result review →
         </a>
-        <p className="text-xs text-gray-500 mt-3">
-          With Mark de Kock — AI Transformation Lead, Kirk &amp; Blackbeard
-        </p>
       </motion.div>
 
       {/* ═══ 8. FULL ASSESSMENT CTA (secondary) ═════════════════ */}
