@@ -1,0 +1,442 @@
+export type QuestionType = 'likert' | 'frequency' | 'weighted_mc' | 'multiselect'
+
+export type Dimension =
+  | 'strategy_vision'
+  | 'current_usage'
+  | 'data_readiness'
+  | 'talent_culture'
+  | 'governance_risk'
+  | 'opportunity_awareness'
+
+export interface QuestionOption {
+  value: number | null // null for unscored multiselect
+  label: string
+}
+
+export interface Question {
+  code: string
+  dimension: Dimension
+  text: string
+  type: QuestionType
+  options: QuestionOption[]
+  lite: boolean
+  scored: boolean
+}
+
+export const QUESTIONS: Question[] = [
+  // ── STRATEGY & VISION ─────────────────────────────────────────────
+  {
+    code: 'SV1',
+    dimension: 'strategy_vision',
+    text: 'How central is AI to your company\'s current strategy?',
+    type: 'likert',
+    lite: true,
+    scored: true,
+    options: [
+      { value: 1, label: 'Not on the agenda at all' },
+      { value: 2, label: 'Occasionally discussed but no concrete plans' },
+      { value: 3, label: 'Part of our strategy in some areas' },
+      { value: 4, label: 'Actively integrated into strategic planning' },
+      { value: 5, label: 'Central to how we operate and compete' },
+    ],
+  },
+  {
+    code: 'SV2',
+    dimension: 'strategy_vision',
+    text: 'How would you describe leadership\'s commitment to AI adoption?',
+    type: 'likert',
+    lite: false,
+    scored: true,
+    options: [
+      { value: 1, label: 'No visible interest from leadership' },
+      { value: 2, label: 'Awareness but no dedicated sponsorship' },
+      { value: 3, label: 'One or two senior sponsors actively engaged' },
+      { value: 4, label: 'Broad leadership buy-in with resources allocated' },
+      { value: 5, label: 'AI is a board-level priority with dedicated investment' },
+    ],
+  },
+  {
+    code: 'SV3',
+    dimension: 'strategy_vision',
+    text: 'Does your organization have a defined AI roadmap or implementation plan?',
+    type: 'likert',
+    lite: false,
+    scored: true,
+    options: [
+      { value: 1, label: 'No roadmap exists' },
+      { value: 2, label: 'Being drafted but not finalized' },
+      { value: 3, label: 'Exists for specific departments or use cases' },
+      { value: 4, label: 'Company-wide roadmap with clear milestones' },
+      { value: 5, label: 'Living roadmap actively reviewed and updated quarterly' },
+    ],
+  },
+  {
+    code: 'SV4',
+    dimension: 'strategy_vision',
+    text: 'How well aligned is your AI vision across departments?',
+    type: 'likert',
+    lite: false,
+    scored: true,
+    options: [
+      { value: 1, label: 'Each department does its own thing' },
+      { value: 2, label: 'Some awareness but no formal alignment' },
+      { value: 3, label: 'Partial alignment in some areas' },
+      { value: 4, label: 'Regular cross-department coordination on AI' },
+      { value: 5, label: 'Fully aligned AI strategy across all departments' },
+    ],
+  },
+
+  // ── CURRENT USAGE & ADOPTION ───────────────────────────────────────
+  {
+    code: 'UA1',
+    dimension: 'current_usage',
+    text: 'How often do you personally use AI tools in your work?',
+    type: 'frequency',
+    lite: true,
+    scored: true,
+    options: [
+      { value: 1, label: 'Never' },
+      { value: 2, label: 'Rarely — a few times a month' },
+      { value: 3, label: 'Monthly — occasional use' },
+      { value: 4, label: 'Weekly — regular use' },
+      { value: 5, label: 'Daily — part of my standard workflow' },
+    ],
+  },
+  {
+    code: 'UA2',
+    dimension: 'current_usage',
+    text: 'How broadly are AI tools used across your organization?',
+    type: 'likert',
+    lite: false,
+    scored: true,
+    options: [
+      { value: 1, label: 'Only a few individuals experimenting independently' },
+      { value: 2, label: 'Specific teams or departments only' },
+      { value: 3, label: 'Most departments have some usage' },
+      { value: 4, label: 'Company-wide adoption with varying depth' },
+      { value: 5, label: 'Structured, organization-wide use with measurement' },
+    ],
+  },
+  {
+    code: 'UA3',
+    dimension: 'current_usage',
+    text: 'How would you describe the maturity of AI use in your organization?',
+    type: 'likert',
+    lite: false,
+    scored: true,
+    options: [
+      { value: 1, label: 'Purely experimental — no structured approach' },
+      { value: 2, label: 'A few use cases proven but not scaled' },
+      { value: 3, label: 'Several use cases running in production' },
+      { value: 4, label: 'AI is embedded in key business processes' },
+      { value: 5, label: 'AI is central to our competitive advantage' },
+    ],
+  },
+  {
+    code: 'UA4',
+    dimension: 'current_usage',
+    text: 'Which AI tools are currently in use in your organization?',
+    type: 'multiselect',
+    lite: false,
+    scored: false,
+    options: [
+      { value: null, label: 'ChatGPT / OpenAI' },
+      { value: null, label: 'Claude (Anthropic)' },
+      { value: null, label: 'Microsoft Copilot' },
+      { value: null, label: 'Google Gemini' },
+      { value: null, label: 'Notion AI' },
+      { value: null, label: 'Midjourney / DALL·E' },
+      { value: null, label: 'Salesforce Einstein / HubSpot AI' },
+      { value: null, label: 'GitHub Copilot' },
+      { value: null, label: 'Custom internal AI tools' },
+      { value: null, label: 'Other' },
+      { value: null, label: 'None' },
+    ],
+  },
+
+  // ── DATA READINESS ─────────────────────────────────────────────────
+  {
+    code: 'DR1',
+    dimension: 'data_readiness',
+    text: 'Which best describes your organization\'s data situation?',
+    type: 'weighted_mc',
+    lite: true,
+    scored: true,
+    options: [
+      { value: 1, label: 'Data is scattered across systems and hard to access' },
+      { value: 2, label: 'Data is available but poorly structured' },
+      { value: 3, label: 'Clean data exists in some areas' },
+      { value: 4, label: 'Most data is structured and accessible' },
+      { value: 5, label: 'Mature data infrastructure with governance in place' },
+    ],
+  },
+  {
+    code: 'DR2',
+    dimension: 'data_readiness',
+    text: 'How well governed is your organization\'s data?',
+    type: 'likert',
+    lite: false,
+    scored: true,
+    options: [
+      { value: 1, label: 'No data governance practices in place' },
+      { value: 2, label: 'Ad hoc practices without formal policy' },
+      { value: 3, label: 'Some governance in key areas' },
+      { value: 4, label: 'Formal data governance policy and ownership defined' },
+      { value: 5, label: 'Mature governance with data catalog, lineage and quality tracking' },
+    ],
+  },
+  {
+    code: 'DR3',
+    dimension: 'data_readiness',
+    text: 'How would you rate your organization\'s data quality?',
+    type: 'likert',
+    lite: false,
+    scored: true,
+    options: [
+      { value: 1, label: 'Data is often incomplete, duplicated or unreliable' },
+      { value: 2, label: 'Quality varies significantly across sources' },
+      { value: 3, label: 'Acceptable quality in core systems' },
+      { value: 4, label: 'Consistently high quality in most areas' },
+      { value: 5, label: 'Data quality is actively monitored and enforced' },
+    ],
+  },
+  {
+    code: 'DR4',
+    dimension: 'data_readiness',
+    text: 'Can your teams access the data they need for AI use cases?',
+    type: 'likert',
+    lite: false,
+    scored: true,
+    options: [
+      { value: 1, label: 'Significant barriers — access is slow and bureaucratic' },
+      { value: 2, label: 'Possible but requires IT involvement each time' },
+      { value: 3, label: 'Self-service access available for some teams' },
+      { value: 4, label: 'Most teams have ready access to relevant data' },
+      { value: 5, label: 'Frictionless self-service data access organization-wide' },
+    ],
+  },
+
+  // ── TALENT & CULTURE ───────────────────────────────────────────────
+  {
+    code: 'TC1',
+    dimension: 'talent_culture',
+    text: 'How would you describe your team\'s general attitude toward AI?',
+    type: 'likert',
+    lite: true,
+    scored: true,
+    options: [
+      { value: 1, label: 'Resistant or threatened by AI' },
+      { value: 2, label: 'Cautious — watching but not engaging' },
+      { value: 3, label: 'Curious — willing to experiment' },
+      { value: 4, label: 'Enthusiastic — actively exploring' },
+      { value: 5, label: 'Confident — AI fluency is a team expectation' },
+    ],
+  },
+  {
+    code: 'TC2',
+    dimension: 'talent_culture',
+    text: 'How would you rate overall AI literacy in your organization?',
+    type: 'likert',
+    lite: false,
+    scored: true,
+    options: [
+      { value: 1, label: 'Very low — most people have no AI knowledge' },
+      { value: 2, label: 'Low — a few AI-literate individuals' },
+      { value: 3, label: 'Growing — training underway in some areas' },
+      { value: 4, label: 'Good — structured upskilling in place' },
+      { value: 5, label: 'High — AI skills are part of role expectations across the org' },
+    ],
+  },
+  {
+    code: 'TC3',
+    dimension: 'talent_culture',
+    text: 'Is AI tooling part of the standard onboarding programme for new employees?',
+    type: 'likert',
+    lite: false,
+    scored: true,
+    options: [
+      { value: 1, label: 'No, not at all' },
+      { value: 2, label: 'Mentioned but not structured' },
+      { value: 3, label: 'Basic guidance is included' },
+      { value: 4, label: 'AI tools actively introduced and trained during onboarding' },
+      { value: 5, label: 'Full AI onboarding module with hands-on practice' },
+    ],
+  },
+  {
+    code: 'TC4',
+    dimension: 'talent_culture',
+    text: 'How broadly are AI tools being used across your workforce?',
+    type: 'likert',
+    lite: false,
+    scored: true,
+    options: [
+      { value: 1, label: 'Only a few individuals experimenting independently' },
+      { value: 2, label: 'Specific teams or departments only' },
+      { value: 3, label: 'Most departments have some usage' },
+      { value: 4, label: 'Company-wide adoption with varying depth' },
+      { value: 5, label: 'Structured, organization-wide adoption with active measurement' },
+    ],
+  },
+  {
+    code: 'TC5',
+    dimension: 'talent_culture',
+    text: 'Does your organization invest in AI upskilling or training programmes?',
+    type: 'likert',
+    lite: false,
+    scored: true,
+    options: [
+      { value: 1, label: 'No investment in this area' },
+      { value: 2, label: 'Ad hoc — individuals self-train on their own time' },
+      { value: 3, label: 'Some team or departmental training available' },
+      { value: 4, label: 'Structured training programme in place' },
+      { value: 5, label: 'Continuous learning culture with dedicated AI learning budget' },
+    ],
+  },
+  {
+    code: 'TC6',
+    dimension: 'talent_culture',
+    text: 'How psychologically safe do employees feel when experimenting with AI tools?',
+    type: 'likert',
+    lite: false,
+    scored: true,
+    options: [
+      { value: 1, label: 'Fear of failure or judgment prevents experimentation' },
+      { value: 2, label: 'Experimentation tolerated but not encouraged' },
+      { value: 3, label: 'Generally safe to try new things' },
+      { value: 4, label: 'Experimentation is actively encouraged' },
+      { value: 5, label: 'Failure is celebrated as learning — innovation is rewarded' },
+    ],
+  },
+
+  // ── GOVERNANCE & RISK ──────────────────────────────────────────────
+  {
+    code: 'GR1',
+    dimension: 'governance_risk',
+    text: 'Does your organization have defined policies or guardrails for AI use by employees?',
+    type: 'likert',
+    lite: true,
+    scored: true,
+    options: [
+      { value: 1, label: 'No policy exists' },
+      { value: 2, label: 'Being discussed but nothing formal yet' },
+      { value: 3, label: 'Informal guidelines in place' },
+      { value: 4, label: 'Formal AI use policy exists' },
+      { value: 5, label: 'Comprehensive governance framework including ethics, data privacy and compliance' },
+    ],
+  },
+  {
+    code: 'GR2',
+    dimension: 'governance_risk',
+    text: 'How does your organization address AI-related data privacy and security risks?',
+    type: 'likert',
+    lite: false,
+    scored: true,
+    options: [
+      { value: 1, label: 'Not addressed — we haven\'t thought about this' },
+      { value: 2, label: 'Awareness of risks but no formal approach' },
+      { value: 3, label: 'Some controls in specific areas' },
+      { value: 4, label: 'Formal risk framework with regular review' },
+      { value: 5, label: 'Embedded risk management with monitoring and audit trails' },
+    ],
+  },
+  {
+    code: 'GR3',
+    dimension: 'governance_risk',
+    text: 'Are employees aware of what AI use is and isn\'t permitted?',
+    type: 'likert',
+    lite: false,
+    scored: true,
+    options: [
+      { value: 1, label: 'No guidance has been communicated' },
+      { value: 2, label: 'Minimal awareness — no formal communication' },
+      { value: 3, label: 'Guidance exists but awareness is patchy' },
+      { value: 4, label: 'Most employees are aware of the key rules' },
+      { value: 5, label: 'Clear, well-communicated policy — employees know exactly what\'s permitted' },
+    ],
+  },
+  {
+    code: 'GR4',
+    dimension: 'governance_risk',
+    text: 'How does your organization approach AI ethics?',
+    type: 'likert',
+    lite: false,
+    scored: true,
+    options: [
+      { value: 1, label: 'Not considered' },
+      { value: 2, label: 'Informal awareness but no framework' },
+      { value: 3, label: 'Ethics principles defined but not operationalized' },
+      { value: 4, label: 'Ethics framework embedded in AI development and procurement' },
+      { value: 5, label: 'Active ethics governance including bias reviews and model audits' },
+    ],
+  },
+  {
+    code: 'GR5',
+    dimension: 'governance_risk',
+    text: 'How are AI tools evaluated before being approved for use?',
+    type: 'likert',
+    lite: false,
+    scored: true,
+    options: [
+      { value: 1, label: 'No evaluation process — employees choose their own tools' },
+      { value: 2, label: 'Ad hoc review on a case-by-case basis' },
+      { value: 3, label: 'Basic checklist or approval process in place' },
+      { value: 4, label: 'Structured vendor assessment covering security and compliance' },
+      { value: 5, label: 'Rigorous procurement process with ongoing monitoring of approved tools' },
+    ],
+  },
+
+  // ── OPPORTUNITY AWARENESS ──────────────────────────────────────────
+  {
+    code: 'OA1',
+    dimension: 'opportunity_awareness',
+    text: 'How clearly can you articulate where AI creates the most value in your organization?',
+    type: 'likert',
+    lite: true,
+    scored: true,
+    options: [
+      { value: 1, label: 'We haven\'t mapped AI opportunities' },
+      { value: 2, label: 'Vague sense of potential but no specific use cases identified' },
+      { value: 3, label: 'A few use cases identified but not prioritized' },
+      { value: 4, label: 'Clear use case map with prioritized opportunities' },
+      { value: 5, label: 'Continuously updated opportunity map with ROI tracking' },
+    ],
+  },
+  {
+    code: 'OA2',
+    dimension: 'opportunity_awareness',
+    text: 'Where do you see the biggest AI opportunity in your organization?',
+    type: 'multiselect',
+    lite: true,
+    scored: false,
+    options: [
+      { value: null, label: 'Sales' },
+      { value: null, label: 'Marketing' },
+      { value: null, label: 'Product' },
+      { value: null, label: 'Operations' },
+      { value: null, label: 'Finance' },
+      { value: null, label: 'HR' },
+      { value: null, label: 'Customer Service' },
+      { value: null, label: 'IT' },
+      { value: null, label: 'Strategic decision-making' },
+      { value: null, label: 'Other' },
+    ],
+  },
+  {
+    code: 'OA3',
+    dimension: 'opportunity_awareness',
+    text: 'How aligned is your leadership team on where AI investments should be focused?',
+    type: 'likert',
+    lite: false,
+    scored: true,
+    options: [
+      { value: 1, label: 'No shared view — everyone has a different opinion' },
+      { value: 2, label: 'Some alignment but significant disagreement remains' },
+      { value: 3, label: 'Broad consensus on 1–2 priority areas' },
+      { value: 4, label: 'Clear shared priorities with buy-in across the leadership team' },
+      { value: 5, label: 'Fully aligned investment thesis with defined KPIs per area' },
+    ],
+  },
+]
+
+export const LITE_QUESTIONS = QUESTIONS.filter(q => q.lite)
+export const FULL_QUESTIONS = QUESTIONS
