@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { useTranslations } from 'next-intl'
 
 interface ReferralSectionProps {
   referrerName: string
@@ -16,6 +17,7 @@ export function ReferralSection({
   referrerScore,
   referrerLevel,
 }: ReferralSectionProps) {
+  const t = useTranslations('results.referral')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [consent, setConsent] = useState(false)
@@ -25,7 +27,7 @@ export function ReferralSection({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!consent) { setError('Please confirm consent before sending.'); return }
+    if (!consent) { setError(t('consentError')); return }
     setLoading(true)
     setError('')
 
@@ -64,10 +66,8 @@ export function ReferralSection({
           🤝
         </div>
         <div>
-          <h3 className="text-base font-bold text-gray-900">Know someone who should take this?</h3>
-          <p className="text-sm text-gray-500 mt-0.5">
-            Invite a colleague — we&apos;ll send them a personalised email with your score as context.
-          </p>
+          <h3 className="text-base font-bold text-gray-900">{t('heading')}</h3>
+          <p className="text-sm text-gray-500 mt-0.5">{t('sub')}</p>
         </div>
       </div>
 
@@ -77,14 +77,14 @@ export function ReferralSection({
           animate={{ opacity: 1, scale: 1 }}
           className="bg-green-50 border border-green-200 rounded-xl p-4 text-center"
         >
-          <p className="text-green-700 font-semibold text-sm">✓ Invitation sent to {name}!</p>
-          <p className="text-green-600 text-xs mt-1">Their email will not be stored or used again.</p>
+          <p className="text-green-700 font-semibold text-sm">{t('successPrefix')} {name}!</p>
+          <p className="text-green-600 text-xs mt-1">{t('successSub')}</p>
         </motion.div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Their name</label>
+              <label className="block text-xs font-medium text-gray-600 mb-1">{t('theirName')}</label>
               <input
                 type="text"
                 value={name}
@@ -95,7 +95,7 @@ export function ReferralSection({
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Their email</label>
+              <label className="block text-xs font-medium text-gray-600 mb-1">{t('theirEmail')}</label>
               <input
                 type="email"
                 value={email}
@@ -115,7 +115,7 @@ export function ReferralSection({
               className="mt-0.5 w-4 h-4 accent-brand-accent flex-shrink-0"
             />
             <span className="text-xs text-gray-500 leading-relaxed">
-              I confirm this person has agreed to receive this invitation. Their email will be used only to send this one message and will not be stored or added to any mailing list.
+              {t('consent')}
             </span>
           </label>
 
@@ -126,7 +126,7 @@ export function ReferralSection({
             disabled={loading}
             className="w-full py-2.5 bg-brand-accent hover:bg-orange-700 disabled:opacity-60 text-white font-semibold text-sm rounded-lg transition-colors"
           >
-            {loading ? 'Sending…' : 'Send invitation →'}
+            {loading ? t('submitting') : t('submit')}
           </button>
         </form>
       )}

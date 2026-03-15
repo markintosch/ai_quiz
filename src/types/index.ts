@@ -107,6 +107,8 @@ export interface SubmitQuizPayload {
   lead: LeadFormData
   companySlug?: string
   cohortId?: string
+  /** Active locale — used by API to build locale-prefixed email links */
+  locale?: string
 }
 
 export interface SubmitQuizResponse {

@@ -2,12 +2,59 @@ import { Resend } from 'resend'
 import { render } from '@react-email/render'
 import { SummaryEmail } from './templates/summary'
 import { AdminNotificationEmail } from './templates/adminNotification'
+import { createServiceClient } from '@/lib/supabase/server'
 import type { QuizScore, QuizVersion } from '@/types'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 const FROM = 'Brand PWRD Media <results@brandpwrdmedia.com>'
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'mark@brandpwrdmedia.com'
+
+// ── Email log helper ──────────────────────────────────────────────────────────
+// Non-blocking: logs to email_log table after every send.
+// Never throws — a logging failure must never break the email send.
+
+export type EmailType =
+  | 'quiz_summary'
+  | 'admin_notification'
+  | 'referral_invite'
+  | 'company_report'
+  | 'training_confirmation'
+  | 'training_reminder'
+  | 'training_followup'
+
+export async function logEmail({
+  respondentId,
+  emailType,
+  subject,
+  toEmail,
+  status,
+  errorMessage,
+}: {
+  respondentId?: string
+  emailType: EmailType
+  subject: string
+  toEmail: string
+  status: 'sent' | 'failed'
+  errorMessage?: string
+}) {
+  try {
+    const supabase = createServiceClient()
+    await supabase.from('email_log').insert({
+      respondent_id: respondentId ?? null,
+      email_type:    emailType,
+      subject,
+      to_email:      toEmail,
+      status,
+      error_message: errorMessage ?? null,
+    })
+  } catch (err) {
+    // Log to console but never propagate — logging must be fire-and-forget
+    console.error('[email_log] Failed to write log entry:', err)
+  }
+}
+
+// ── sendSummaryEmail ──────────────────────────────────────────────────────────
 
 interface SendSummaryEmailParams {
   to: string
@@ -29,11 +76,15 @@ export async function sendSummaryEmail(params: SendSummaryEmailParams) {
     ? `Your AI Maturity Score: ${score.overall}/100 — ${score.maturityLevel}`
     : `Your AI Maturity Assessment Results — ${score.maturityLevel} (${score.overall}/100)`
 
-  const { error } = await resend.emails.send({
-    from: FROM,
-    to,
+  const { error } = await resend.emails.send({ from: FROM, to, subject, html })
+
+  await logEmail({
+    respondentId,
+    emailType:    'quiz_summary',
     subject,
-    html,
+    toEmail:      to,
+    status:       error ? 'failed' : 'sent',
+    errorMessage: error ? String(error) : undefined,
   })
 
   if (error) {
@@ -41,6 +92,8 @@ export async function sendSummaryEmail(params: SendSummaryEmailParams) {
     throw error
   }
 }
+
+// ── sendAdminNotification ─────────────────────────────────────────────────────
 
 interface SendAdminNotificationParams {
   respondent: {
@@ -71,9 +124,18 @@ export async function sendAdminNotification(params: SendAdminNotificationParams)
 
   const { error } = await resend.emails.send({
     from: FROM,
-    to: ADMIN_EMAIL,
+    to:   ADMIN_EMAIL,
     subject,
     html,
+  })
+
+  // Admin notification: no respondent_id (it's an internal email)
+  await logEmail({
+    emailType:    'admin_notification',
+    subject,
+    toEmail:      ADMIN_EMAIL,
+    status:       error ? 'failed' : 'sent',
+    errorMessage: error ? String(error) : undefined,
   })
 
   if (error) {

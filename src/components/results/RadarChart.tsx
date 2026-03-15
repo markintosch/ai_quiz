@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import type { DimensionScore } from '@/types'
 
 interface RadarChartProps {
@@ -9,6 +10,8 @@ interface RadarChartProps {
   size?: number
   /** Animate polygon on mount. Default true */
   animate?: boolean
+  /** Use light colours for legend/labels when rendered on a dark background */
+  dark?: boolean
 }
 
 const COLORS = {
@@ -20,7 +23,7 @@ const COLORS = {
   baseFill: 'rgba(107, 114, 128, 0.08)',
 }
 
-// Short labels for the radar axes
+// Short labels fallback for the radar axes
 const SHORT_LABELS: Record<string, string> = {
   strategy_vision:       'Strategy',
   current_usage:         'Usage',
@@ -60,7 +63,12 @@ function labelPos(i: number, n: number, cx: number, cy: number, r: number, paddi
   }
 }
 
-export function RadarChart({ dimensionScores, size = 300, animate = true }: RadarChartProps) {
+export function RadarChart({ dimensionScores, size = 300, animate = true, dark = false }: RadarChartProps) {
+  const t = useTranslations('results')
+
+  const labelColor  = dark ? '#e5e7eb' : '#374151'   // gray-200 vs gray-700
+  const legendMuted = dark ? '#9ca3af' : '#6b7280'   // gray-400 vs gray-500
+
   const n        = dimensionScores.length
   const cx       = size / 2
   const cy       = size / 2
@@ -172,7 +180,7 @@ export function RadarChart({ dimensionScores, size = 300, animate = true }: Rada
       {/* ── Axis labels ── */}
       {dimensionScores.map((ds, i) => {
         const pos = labelPos(i, n, cx, cy, r, labelPad)
-        const label = SHORT_LABELS[ds.dimension] ?? ds.label
+        const label = t(`radarShortLabels.${ds.dimension}` as Parameters<typeof t>[0]) || SHORT_LABELS[ds.dimension] || ds.label
         // Determine text-anchor based on horizontal position
         const textAnchor =
           pos.x < cx - 5 ? 'end' :
@@ -187,7 +195,7 @@ export function RadarChart({ dimensionScores, size = 300, animate = true }: Rada
             dominantBaseline="middle"
             fontSize={size * 0.042}
             fontWeight="600"
-            fill="#374151"
+            fill={labelColor}
             fontFamily="Inter, -apple-system, sans-serif"
           >
             {label}
@@ -201,14 +209,14 @@ export function RadarChart({ dimensionScores, size = 300, animate = true }: Rada
       <g transform={`translate(${cx - 68}, ${legendY})`}>
         <line x1={0} y1={0} x2={16} y2={0} stroke={COLORS.user} strokeWidth={2.5} />
         <circle cx={8} cy={0} r={3} fill={COLORS.user} />
-        <text x={20} y={0} dominantBaseline="middle" fontSize={size * 0.038} fill="#374151" fontFamily="Inter, sans-serif">
-          Your score
+        <text x={20} y={0} dominantBaseline="middle" fontSize={size * 0.038} fill={labelColor} fontFamily="Inter, sans-serif">
+          {t('legend.yourScore')}
         </text>
       </g>
       <g transform={`translate(${cx + 10}, ${legendY})`}>
         <line x1={0} y1={0} x2={16} y2={0} stroke={COLORS.baseline} strokeWidth={1.5} strokeDasharray="4 3" />
-        <text x={20} y={0} dominantBaseline="middle" fontSize={size * 0.038} fill="#6b7280" fontFamily="Inter, sans-serif">
-          50 baseline
+        <text x={20} y={0} dominantBaseline="middle" fontSize={size * 0.038} fill={legendMuted} fontFamily="Inter, sans-serif">
+          {t('legend.baseline')}
         </text>
       </g>
     </svg>

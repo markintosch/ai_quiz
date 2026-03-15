@@ -1,15 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import type { LeadFormData } from '@/types'
 
 const COMPANY_SIZES = ['1–10','11–50','51–200','201–500','501–1000','1000+']
-
-const INDUSTRIES = [
-  'Financial Services','Technology','Healthcare','Retail & E-commerce',
-  'Manufacturing','Professional Services','Media & Entertainment',
-  'Education','Government & Public Sector','Other',
-]
 
 interface LeadCaptureFormProps {
   variant: 'pre' | 'post'
@@ -19,6 +14,9 @@ interface LeadCaptureFormProps {
 }
 
 export function LeadCaptureForm({ variant, initialValues, onSubmit, loading = false }: LeadCaptureFormProps) {
+  const t = useTranslations('quiz.lead')
+  const industries = t.raw('industries') as string[]
+
   const [form, setForm] = useState<LeadFormData>({
     name:             initialValues?.name             ?? '',
     email:            initialValues?.email            ?? '',
@@ -39,13 +37,13 @@ export function LeadCaptureForm({ variant, initialValues, onSubmit, loading = fa
 
   function validate(): boolean {
     const next: typeof errors = {}
-    if (!form.name.trim())        next.name        = 'Name is required'
-    if (!form.email.trim())       next.email       = 'Email is required'
+    if (!form.name.trim())        next.name        = t('errors.nameRequired')
+    if (!form.email.trim())       next.email       = t('errors.emailRequired')
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
-                                  next.email       = 'Enter a valid email address'
-    if (!form.jobTitle.trim())    next.jobTitle    = 'Job title is required'
-    if (!form.companyName.trim()) next.companyName = 'Company name is required'
-    if (!form.gdprConsent)        next.gdprConsent = 'You must agree to continue'
+                                  next.email       = t('errors.emailInvalid')
+    if (!form.jobTitle.trim())    next.jobTitle    = t('errors.jobTitleRequired')
+    if (!form.companyName.trim()) next.companyName = t('errors.companyRequired')
+    if (!form.gdprConsent)        next.gdprConsent = t('errors.gdprRequired')
     setErrors(next)
     return Object.keys(next).length === 0
   }
@@ -58,43 +56,43 @@ export function LeadCaptureForm({ variant, initialValues, onSubmit, loading = fa
 
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-5">
-      <Field label="Full Name" error={errors.name} required>
+      <Field label={t('fullName')} error={errors.name} required>
         <input type="text" value={form.name} onChange={e => set('name', e.target.value)}
-          placeholder="Jane Smith" className={inputCls(!!errors.name)} />
+          placeholder={t('fullNamePh')} className={inputCls(!!errors.name)} />
       </Field>
 
-      <Field label="Work Email" error={errors.email} required>
+      <Field label={t('email')} error={errors.email} required>
         <input type="email" value={form.email} onChange={e => set('email', e.target.value)}
-          placeholder="jane@company.com" className={inputCls(!!errors.email)} autoComplete="email" />
+          placeholder={t('emailPh')} className={inputCls(!!errors.email)} autoComplete="email" />
       </Field>
 
-      <Field label="Job Title" error={errors.jobTitle} required>
+      <Field label={t('jobTitle')} error={errors.jobTitle} required>
         <input type="text" value={form.jobTitle} onChange={e => set('jobTitle', e.target.value)}
-          placeholder="Chief Digital Officer" className={inputCls(!!errors.jobTitle)} />
+          placeholder={t('jobTitlePh')} className={inputCls(!!errors.jobTitle)} />
       </Field>
 
-      <Field label="Company Name" error={errors.companyName} required>
+      <Field label={t('company')} error={errors.companyName} required>
         <input type="text" value={form.companyName} onChange={e => set('companyName', e.target.value)}
-          placeholder="Acme Ltd" className={inputCls(!!errors.companyName)} />
+          placeholder={t('companyPh')} className={inputCls(!!errors.companyName)} />
       </Field>
 
-      <Field label="Industry" error={errors.industry}>
+      <Field label={t('industry')} error={errors.industry}>
         <select value={form.industry ?? ''} onChange={e => set('industry', e.target.value)} className={inputCls(false)}>
-          <option value="">Select…</option>
-          {INDUSTRIES.map(i => <option key={i} value={i}>{i}</option>)}
+          <option value="">{t('industrySel')}</option>
+          {industries.map(i => <option key={i} value={i}>{i}</option>)}
         </select>
       </Field>
 
-      <Field label="Company Size" error={errors.companySize}>
+      <Field label={t('companySize')} error={errors.companySize}>
         <select value={form.companySize ?? ''} onChange={e => set('companySize', e.target.value)} className={inputCls(false)}>
-          <option value="">Select…</option>
-          {COMPANY_SIZES.map(s => <option key={s} value={s}>{s} employees</option>)}
+          <option value="">{t('industrySel')}</option>
+          {COMPANY_SIZES.map(s => <option key={s} value={s}>{s}{t('companySizeSuffix')}</option>)}
         </select>
       </Field>
 
       {/* ── GDPR — two separate consents ── */}
       <div className="space-y-3 border border-gray-100 rounded-xl p-4 bg-gray-50">
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Your data &amp; privacy</p>
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{t('privacyLabel')}</p>
 
         {/* Required: results */}
         <div>
@@ -103,9 +101,13 @@ export function LeadCaptureForm({ variant, initialValues, onSubmit, loading = fa
               onChange={e => set('gdprConsent', e.target.checked)}
               className="mt-0.5 w-4 h-4 rounded border-gray-300 accent-brand-accent flex-shrink-0" />
             <span className="text-sm text-gray-700 leading-relaxed">
-              <strong>Required —</strong> I agree to Brand PWRD Media processing my personal data
-              to generate and deliver my assessment results. See our{' '}
-              <a href="/privacy" className="underline text-brand-accent" target="_blank" rel="noreferrer">Privacy Policy</a>.
+              {t.rich('gdprRequired', {
+                link: (chunks) => (
+                  <a href="/privacy" className="underline text-brand-accent" target="_blank" rel="noreferrer">
+                    {chunks}
+                  </a>
+                ),
+              })}
             </span>
           </label>
           {errors.gdprConsent && (
@@ -119,15 +121,14 @@ export function LeadCaptureForm({ variant, initialValues, onSubmit, loading = fa
             onChange={e => set('marketingConsent', e.target.checked)}
             className="mt-0.5 w-4 h-4 rounded border-gray-300 accent-brand-accent flex-shrink-0" />
           <span className="text-sm text-gray-500 leading-relaxed">
-            <strong>Optional —</strong> I&apos;d like to receive occasional AI insights and updates
-            from Brand PWRD Media. I can unsubscribe at any time.
+            {t('gdprOptional')}
           </span>
         </label>
       </div>
 
       <button type="submit" disabled={loading}
         className="w-full py-3.5 bg-brand-accent text-white font-semibold rounded-xl hover:bg-orange-700 disabled:opacity-50 transition-all text-sm">
-        {loading ? 'Please wait…' : variant === 'pre' ? 'Start Assessment →' : 'Reveal My Score →'}
+        {loading ? t('submitLoading') : variant === 'pre' ? t('submitPre') : t('submitPost')}
       </button>
     </form>
   )

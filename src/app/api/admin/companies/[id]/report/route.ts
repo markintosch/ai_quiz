@@ -4,6 +4,7 @@ import { createServiceClient } from '@/lib/supabase/server'
 import { Resend } from 'resend'
 import { render } from '@react-email/render'
 import { CompanyReportEmail } from '@/lib/email/templates/companyReport'
+import { logEmail } from '@/lib/email/sender'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 const FROM = 'Brand PWRD Media <results@brandpwrdmedia.com>'
@@ -131,11 +132,22 @@ export async function POST(
     })
   )
 
+  const reportSubject = `AI Maturity Report — ${company.name} · ${respondents.length} respondents · Avg ${avgScore}/100`
+
   const { error: emailErr } = await resend.emails.send({
-    from: FROM,
-    to: ADMIN_EMAIL,
-    subject: `AI Maturity Report — ${company.name} · ${respondents.length} respondents · Avg ${avgScore}/100`,
+    from:    FROM,
+    to:      ADMIN_EMAIL,
+    subject: reportSubject,
     html,
+  })
+
+  await logEmail({
+    // Company report goes to admin — no individual respondent_id
+    emailType:    'company_report',
+    subject:      reportSubject,
+    toEmail:      ADMIN_EMAIL,
+    status:       emailErr ? 'failed' : 'sent',
+    errorMessage: emailErr ? String(emailErr) : undefined,
   })
 
   if (emailErr) {

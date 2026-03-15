@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useTranslations } from 'next-intl'
 
 interface ProgressBarProps {
   current: number
@@ -8,13 +9,14 @@ interface ProgressBarProps {
 }
 
 export function ProgressBar({ current, total }: ProgressBarProps) {
+  const t = useTranslations('quiz')
   const pct = Math.round((current / total) * 100)
 
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-2">
         <span className="text-xs font-semibold uppercase tracking-widest text-gray-400">
-          Question {current} of {total}
+          {t('progress', { current, total })}
         </span>
         <motion.span
           key={pct}

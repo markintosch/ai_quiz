@@ -1,0 +1,222 @@
+{
+  "nav": {
+    "switchLang": "NL",
+    "brand": "Kirk & Blackbeard"
+  },
+  "landing": {
+    "hero": {
+      "badge": "Free · 5 minutes · Instant results",
+      "heading1": "Your competitors are already using AI.",
+      "heading2": "Where do you actually stand?",
+      "sub": "Our 5-minute diagnostic benchmarks your AI maturity across 6 critical dimensions — and tells you exactly what to prioritise next.",
+      "authors": "Developed by Mark de Kock & Frank Meeuwsen — AI transformation specialists with 30+ years of combined digital experience.",
+      "ctaMain": "Start the 5-minute AI scan →",
+      "ctaSub": "8 questions · free · no sign-up required upfront",
+      "ctaFullPre": "Want the complete picture?",
+      "ctaFull": "Take the full 25-question assessment →"
+    },
+    "trust": [
+      "Used by leadership teams across Europe",
+      "Average score: 47/100 — where do you rank?",
+      "Results in 5 minutes, free",
+      "No consultant pitch — just your score"
+    ],
+    "howItWorks": {
+      "label": "How it works",
+      "heading": "Three steps. Zero jargon.",
+      "steps": [
+        { "n": "01", "title": "Answer 8 honest questions", "desc": "5 minutes · no jargon · no sign-up required upfront" },
+        { "n": "02", "title": "See your score instantly", "desc": "A radar chart across all 6 AI maturity dimensions" },
+        { "n": "03", "title": "Know your next move", "desc": "Prioritised actions — specific to your score, not generic advice" }
+      ]
+    },
+    "dimensions": {
+      "label": "What you get",
+      "heading": "A score across 6 dimensions that actually matter",
+      "items": [
+        { "icon": "🧭", "label": "Strategy & Vision", "desc": "Is AI central to how you compete — or still a side project?" },
+        { "icon": "⚡", "label": "Current Usage", "desc": "Are AI tools genuinely embedded across your organisation?" },
+        { "icon": "🗄️", "label": "Data Readiness", "desc": "Is your data architecture ready to power real AI outcomes?" },
+        { "icon": "🧑‍💻", "label": "Talent & Culture", "desc": "Do your people feel equipped and motivated to work with AI?" },
+        { "icon": "🛡️", "label": "Governance & Risk", "desc": "Do you have the guardrails and policies that responsible AI requires?" },
+        { "icon": "🔍", "label": "Opportunity Awareness", "desc": "Does your leadership team agree on where AI creates the most value?" }
+      ]
+    },
+    "preview": {
+      "label": "What you'll receive",
+      "heading": "Your results look like this",
+      "sub": "A radar across all 6 dimensions, an overall score with benchmark context, and specific actions for your weakest areas.",
+      "exampleLabel": "Example result",
+      "exampleLevel": "Experimenting",
+      "sampleCaption": "Sample output — your actual profile will differ"
+    },
+    "practitioners": {
+      "label": "Built by practitioners",
+      "heading": "No theory. No agency fluff.",
+      "sub": "This assessment was built by two people who do this work every day — not a research team or a software house.",
+      "mark": {
+        "role": "AI Transformation Lead · Kirk & Blackbeard",
+        "bio": "Works with leadership teams across Europe to design and implement practical AI strategies — from board alignment to team adoption."
+      },
+      "frank": {
+        "role": "AI Trainer & Consultant · 30 years digital experience",
+        "quote": "\"Geen hype, geen bullshit. Gewoon wat werkt in de echte wereld.\"",
+        "translation": "No hype, no buzzwords. Just what works in the real world."
+      }
+    },
+    "finalCta": {
+      "heading": "Ready to find out where you stand?",
+      "sub": "No sign-up required until you see your results. Free. Takes 5 minutes.",
+      "button": "Start the free 5-minute scan →",
+      "buttonSub": "8 questions · instant score · no card required",
+      "fullPre": "Want the full breakdown instead?",
+      "fullLink": "Take the full 25-question assessment →",
+      "fullNote": "Free · ~15 minutes · deeper scoring across all 6 dimensions"
+    },
+    "footer": {
+      "privacy": "Privacy Policy",
+      "contact": "Contact"
+    }
+  },
+  "quiz": {
+    "lite": {
+      "brand": "Kirk & Blackbeard",
+      "heading": "AI Maturity Assessment",
+      "sub": "7 questions · ~5 minutes · Instant personalised score"
+    },
+    "engine": {
+      "submitting": "Calculating your AI Maturity Score…",
+      "back": "← Back",
+      "next": "Next →",
+      "seeResults": "See My Results →",
+      "seeResultsLoading": "Submitting…",
+      "postHeadingFull": "Assessment complete!",
+      "postHeadingLite": "Your results are ready",
+      "postSubFull": "You've completed all 25 questions. Enter your details and we'll generate your full AI Maturity report.",
+      "postSubLite": "Enter your details to reveal your AI Maturity Score and personalised recommendations."
+    },
+    "lead": {
+      "fullName": "Full Name",
+      "fullNamePh": "Jane Smith",
+      "email": "Work Email",
+      "emailPh": "jane@company.com",
+      "jobTitle": "Job Title",
+      "jobTitlePh": "Chief Digital Officer",
+      "company": "Company Name",
+      "companyPh": "Acme Ltd",
+      "industry": "Industry",
+      "industrySel": "Select…",
+      "companySize": "Company Size",
+      "companySizeSuffix": " employees",
+      "privacyLabel": "Your data & privacy",
+      "gdprRequired": "Required — I agree to Brand PWRD Media processing my personal data to generate and deliver my assessment results. See our {link}.",
+      "privacyLinkText": "Privacy Policy",
+      "gdprOptional": "Optional — I'd like to receive occasional AI insights and updates from Brand PWRD Media. I can unsubscribe at any time.",
+      "submitPre": "Start Assessment →",
+      "submitPost": "Reveal My Score →",
+      "submitLoading": "Please wait…",
+      "errors": {
+        "nameRequired": "Name is required",
+        "emailRequired": "Email is required",
+        "emailInvalid": "Enter a valid email address",
+        "jobTitleRequired": "Job title is required",
+        "companyRequired": "Company name is required",
+        "gdprRequired": "You must agree to continue"
+      },
+      "industries": ["Financial Services", "Technology", "Healthcare", "Retail & E-commerce", "Manufacturing", "Professional Services", "Media & Entertainment", "Education", "Government & Public Sector", "Other"]
+    },
+    "progress": "Question {current} of {total}"
+  },
+  "results": {
+    "scoreLabel": "Your AI Maturity Score",
+    "greeting": "Hi {firstName} — this is a directional snapshot across 6 AI dimensions.",
+    "avgLabel": "Average score across all assessments:",
+    "vsAvgPos": "+{delta} vs avg",
+    "vsAvgNeg": "{delta} vs avg",
+    "dimensionProfile": "Your dimension profile",
+    "insightLabel": "What your score is telling you",
+    "orgPrioritiesIntro": "Based on your responses, here are the most urgent priorities for your organisation right now.",
+    "priorityActions": "Your priority actions",
+    "alsoWorth": "Also worth addressing",
+    "discussWithUs": "Discuss this with us →",
+    "primaryRec": "Primary Recommendation",
+    "bookReview": {
+      "title": "AI Transformation Lead",
+      "company": "Kirk & Blackbeard",
+      "badge": "Free · 20 min",
+      "heading": "Want to know what to do about it?",
+      "body": "Book a free result review. We walk through your radar together, identify your highest-leverage move, and give you a clear first step — no pitch, no obligation.",
+      "cta": "Book my free result review →",
+      "trainingRef": "Prefer structured group learning?",
+      "trainingRefLink": "See upcoming Hands-on AI sessions →"
+    },
+    "fullAssessment": {
+      "label": "Want your full picture?",
+      "heading": "Take the 25-question full assessment",
+      "body": "Deeper scoring, a complete dimension breakdown and tailored recommendations across all 6 AI maturity areas — in about 15 minutes.",
+      "cta": "Start the full assessment →",
+      "free": "Free · No extra charge"
+    },
+    "referral": {
+      "heading": "Know someone who should take this?",
+      "sub": "Invite a colleague — takes 10 seconds",
+      "show": "↓ Show",
+      "hide": "↑ Hide",
+      "theirName": "Their name",
+      "theirEmail": "Their email",
+      "consent": "I confirm this person has agreed to receive this invitation. Their email will be used only to send this one message and will not be stored or added to any mailing list.",
+      "submit": "Send invitation →",
+      "submitting": "Sending…",
+      "successPrefix": "✓ Invitation sent to",
+      "successSub": "Their email will not be stored or used again.",
+      "consentError": "Please confirm consent before sending."
+    },
+    "shadowAI": {
+      "lowRisk": "Low Risk",
+      "mediumRisk": "Medium Risk",
+      "highRisk": "High Risk"
+    },
+    "maturityLevels": {
+      "Unaware": {
+        "insight": "Your organisation is at a critical inflection point. AI is no longer a future consideration — it is reshaping markets now. The good news: starting from awareness means every move you make compounds quickly.",
+        "urgency": "Act now — competitors are already widening the gap."
+      },
+      "Exploring": {
+        "insight": "You are beginning to see the opportunity — but exploration without direction leads to wasted investment. A clear strategy will help you convert curiosity into competitive advantage faster than you think.",
+        "urgency": "Structured action in the next 90 days can accelerate you by 12+ months."
+      },
+      "Experimenting": {
+        "insight": "You have real AI activity underway, which puts you ahead of most. The challenge now is moving from scattered pilots to a coherent capability that scales and creates lasting differentiation.",
+        "urgency": "Most organisations stall here. The gap between pilots and scaled capability is where competitive advantage is won or lost."
+      },
+      "Scaling": {
+        "insight": "AI is embedded in how you operate — a genuine advantage. The leaders who stay ahead are those who lock in governance, culture and compounding capability before the next wave hits.",
+        "urgency": "Protecting and extending your lead requires deliberate focus on the dimensions lagging behind."
+      },
+      "Leading": {
+        "insight": "You are operating at the frontier of AI adoption. The risk at this stage is complacency — the landscape shifts fast and staying ahead requires continuous investment in capability, talent and governance.",
+        "urgency": "Sustaining leadership means building the next advantage before you need it."
+      }
+    },
+    "dimensionLabels": {
+      "strategy_vision": "Strategy & Vision",
+      "current_usage": "Current Usage",
+      "data_readiness": "Data Readiness",
+      "talent_culture": "Talent & Culture",
+      "governance_risk": "Governance & Risk",
+      "opportunity_awareness": "Opportunity Awareness"
+    },
+    "radarShortLabels": {
+      "strategy_vision": "Strategy",
+      "current_usage": "Usage",
+      "data_readiness": "Data",
+      "talent_culture": "Talent",
+      "governance_risk": "Governance",
+      "opportunity_awareness": "Opportunity"
+    },
+    "legend": {
+      "yourScore": "Your score",
+      "baseline": "50 baseline"
+    }
+  }
+}

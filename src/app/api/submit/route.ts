@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
   }
 
-  const { version, answers, lead, companySlug, cohortId } = body
+  const { version, answers, lead, companySlug, cohortId, locale = 'en' } = body
 
   // ── Basic validation ──────────────────────────────────────
   if (!version || !answers || !lead) {
@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
 
     // ── Emails (non-blocking — log errors but don't fail) ──────
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? ''
-    const resultsUrl = `${baseUrl}/results/${response.id}`
+    const resultsUrl = `${baseUrl}/${locale}/results/${response.id}`
 
     await Promise.allSettled([
       sendSummaryEmail({

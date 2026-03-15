@@ -1,3 +1,6 @@
+'use client'
+
+import { useTranslations } from 'next-intl'
 import type { Recommendation } from '@/lib/scoring/recommendations'
 
 interface RecommendationCardProps {
@@ -6,6 +9,7 @@ interface RecommendationCardProps {
 }
 
 export function RecommendationCard({ recommendation, softCta }: RecommendationCardProps) {
+  const t = useTranslations('results')
   const isPrimary = recommendation.priority === 'primary'
 
   return (
@@ -18,7 +22,7 @@ export function RecommendationCard({ recommendation, softCta }: RecommendationCa
     >
       {isPrimary && (
         <span className="inline-block text-xs font-semibold uppercase tracking-widest text-brand-accent mb-2">
-          Primary Recommendation
+          {t('primaryRec')}
         </span>
       )}
       <h4
@@ -42,7 +46,7 @@ export function RecommendationCard({ recommendation, softCta }: RecommendationCa
             : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
         }`}
       >
-        {softCta ? 'Discuss this with us →' : recommendation.cta}
+        {softCta ? t('discussWithUs') : recommendation.cta}
       </span>
     </div>
   )

@@ -1,0 +1,222 @@
+{
+  "nav": {
+    "switchLang": "EN",
+    "brand": "Kirk & Blackbeard"
+  },
+  "landing": {
+    "hero": {
+      "badge": "Gratis · 5 minuten · Direct resultaat",
+      "heading1": "Je concurrenten gebruiken AI al.",
+      "heading2": "Waar sta jij eigenlijk?",
+      "sub": "Onze 5-minuten-diagnose meet je AI-volwassenheid op 6 kritieke dimensies — en vertelt je precies wat je als eerste moet aanpakken.",
+      "authors": "Ontwikkeld door Mark de Kock & Frank Meeuwsen — AI-transformatiespecialisten met ruim 30 jaar gecombineerde digitale ervaring.",
+      "ctaMain": "Start de gratis 5-minuten-scan →",
+      "ctaSub": "8 vragen · gratis · geen registratie vooraf vereist",
+      "ctaFullPre": "Wil je het complete beeld?",
+      "ctaFull": "Doe de uitgebreide assessment met 25 vragen →"
+    },
+    "trust": [
+      "Gebruikt door leiderschapsteams door heel Europa",
+      "Gemiddelde score: 47/100 — hoe scoor jij?",
+      "Resultaat in 5 minuten, gratis",
+      "Geen verkooppraatje — gewoon jouw score"
+    ],
+    "howItWorks": {
+      "label": "Hoe het werkt",
+      "heading": "Drie stappen. Geen jargon.",
+      "steps": [
+        { "n": "01", "title": "Beantwoord 8 eerlijke vragen", "desc": "5 minuten · geen jargon · geen registratie vooraf vereist" },
+        { "n": "02", "title": "Zie je score direct", "desc": "Een radarkaart over alle 6 AI-volwassenheidsdimensies" },
+        { "n": "03", "title": "Weet wat je volgende stap is", "desc": "Geprioriteerde acties — specifiek voor jouw score, geen generiek advies" }
+      ]
+    },
+    "dimensions": {
+      "label": "Wat je krijgt",
+      "heading": "Een score op 6 dimensies die er echt toe doen",
+      "items": [
+        { "icon": "🧭", "label": "Strategie & Visie", "desc": "Staat AI centraal in hoe je concurreert — of is het nog een bijproject?" },
+        { "icon": "⚡", "label": "Huidig gebruik", "desc": "Zijn AI-tools echt ingebed in je hele organisatie?" },
+        { "icon": "🗄️", "label": "Data-gereedheid", "desc": "Is je dataarchitectuur klaar voor echte AI-resultaten?" },
+        { "icon": "🧑‍💻", "label": "Talent & Cultuur", "desc": "Voelen je mensen zich toegerust en gemotiveerd om met AI te werken?" },
+        { "icon": "🛡️", "label": "Governance & Risico", "desc": "Heb je de richtlijnen en het beleid dat verantwoord AI vereist?" },
+        { "icon": "🔍", "label": "Kansenbewustzijn", "desc": "Is jouw leiderschapsteam het eens over waar AI de meeste waarde creëert?" }
+      ]
+    },
+    "preview": {
+      "label": "Wat je ontvangt",
+      "heading": "Jouw resultaten zien er zo uit",
+      "sub": "Een radar over alle 6 dimensies, een totaalscore met benchmarkcontext en concrete acties voor je zwakste gebieden.",
+      "exampleLabel": "Voorbeeldresultaat",
+      "exampleLevel": "Experimenterend",
+      "sampleCaption": "Voorbeelduitvoer — jouw eigen profiel zal afwijken"
+    },
+    "practitioners": {
+      "label": "Gebouwd door beoefenaars",
+      "heading": "Geen theorie. Geen bureau-gebabbel.",
+      "sub": "Deze assessment is gebouwd door twee mensen die dit werk elke dag doen — geen onderzoeksteam of softwarehuis.",
+      "mark": {
+        "role": "AI Transformation Lead · Kirk & Blackbeard",
+        "bio": "Werkt met leiderschapsteams door heel Europa aan het ontwerpen en implementeren van praktische AI-strategieën — van bestuurlijke afstemming tot teamadoptie."
+      },
+      "frank": {
+        "role": "AI-trainer & Consultant · 30 jaar digitale ervaring",
+        "quote": "\"Geen hype, geen bullshit. Gewoon wat werkt in de echte wereld.\"",
+        "translation": "Geen hype, geen moeilijke woorden. Gewoon wat werkt in de praktijk."
+      }
+    },
+    "finalCta": {
+      "heading": "Klaar om te ontdekken waar je staat?",
+      "sub": "Geen registratie vereist totdat je je resultaten ziet. Gratis. Duurt 5 minuten.",
+      "button": "Start de gratis 5-minuten-scan →",
+      "buttonSub": "8 vragen · direct resultaat · geen creditcard vereist",
+      "fullPre": "Wil je liever de volledige analyse?",
+      "fullLink": "Doe de uitgebreide assessment met 25 vragen →",
+      "fullNote": "Gratis · ~15 minuten · diepgaandere scoring op alle 6 dimensies"
+    },
+    "footer": {
+      "privacy": "Privacybeleid",
+      "contact": "Contact"
+    }
+  },
+  "quiz": {
+    "lite": {
+      "brand": "Kirk & Blackbeard",
+      "heading": "AI Maturity Assessment",
+      "sub": "7 vragen · ~5 minuten · Direct gepersonaliseerde score"
+    },
+    "engine": {
+      "submitting": "Jouw AI-volwassenheidsscore wordt berekend…",
+      "back": "← Terug",
+      "next": "Volgende →",
+      "seeResults": "Bekijk mijn resultaten →",
+      "seeResultsLoading": "Bezig met versturen…",
+      "postHeadingFull": "Assessment voltooid!",
+      "postHeadingLite": "Jouw resultaten zijn klaar",
+      "postSubFull": "Je hebt alle 25 vragen beantwoord. Vul je gegevens in en we genereren je volledige AI-volwassenheidsrapport.",
+      "postSubLite": "Vul je gegevens in om je AI-volwassenheidsscore en gepersonaliseerde aanbevelingen te bekijken."
+    },
+    "lead": {
+      "fullName": "Volledige naam",
+      "fullNamePh": "Jan Janssen",
+      "email": "Zakelijk e-mailadres",
+      "emailPh": "jan@bedrijf.nl",
+      "jobTitle": "Functietitel",
+      "jobTitlePh": "Chief Digital Officer",
+      "company": "Bedrijfsnaam",
+      "companyPh": "Acme BV",
+      "industry": "Sector",
+      "industrySel": "Selecteer…",
+      "companySize": "Bedrijfsgrootte",
+      "companySizeSuffix": " medewerkers",
+      "privacyLabel": "Jouw gegevens & privacy",
+      "gdprRequired": "Verplicht — Ik ga akkoord met de verwerking van mijn persoonsgegevens door Brand PWRD Media om mijn assessmentresultaten te genereren en te leveren. Zie ons {link}.",
+      "privacyLinkText": "Privacybeleid",
+      "gdprOptional": "Optioneel — Ik ontvang graag af en toe AI-inzichten en updates van Brand PWRD Media. Ik kan me op elk moment afmelden.",
+      "submitPre": "Start assessment →",
+      "submitPost": "Bekijk mijn score →",
+      "submitLoading": "Even geduld…",
+      "errors": {
+        "nameRequired": "Naam is verplicht",
+        "emailRequired": "E-mailadres is verplicht",
+        "emailInvalid": "Voer een geldig e-mailadres in",
+        "jobTitleRequired": "Functietitel is verplicht",
+        "companyRequired": "Bedrijfsnaam is verplicht",
+        "gdprRequired": "Je moet akkoord gaan om door te gaan"
+      },
+      "industries": ["Financiële dienstverlening", "Technologie", "Gezondheidszorg", "Retail & E-commerce", "Maakindustrie", "Professionele dienstverlening", "Media & Entertainment", "Onderwijs", "Overheid & Publieke sector", "Overig"]
+    },
+    "progress": "Vraag {current} van {total}"
+  },
+  "results": {
+    "scoreLabel": "Jouw AI-volwassenheidsscore",
+    "greeting": "Hoi {firstName} — dit is een richtinggevende momentopname over 6 AI-dimensies.",
+    "avgLabel": "Gemiddelde score over alle assessments:",
+    "vsAvgPos": "+{delta} vs gem.",
+    "vsAvgNeg": "{delta} vs gem.",
+    "dimensionProfile": "Jouw dimensieprofiel",
+    "insightLabel": "Wat jouw score je vertelt",
+    "orgPrioritiesIntro": "Op basis van jouw antwoorden zijn dit de meest urgente prioriteiten voor jouw organisatie op dit moment.",
+    "priorityActions": "Jouw prioriteitsacties",
+    "alsoWorth": "Ook het aanpakken waard",
+    "discussWithUs": "Bespreek dit met ons →",
+    "primaryRec": "Primaire aanbeveling",
+    "bookReview": {
+      "title": "AI Transformation Lead",
+      "company": "Kirk & Blackbeard",
+      "badge": "Gratis · 20 min",
+      "heading": "Wil je weten wat je ermee moet doen?",
+      "body": "Boek een gratis resultaatbespreking. We lopen samen door je radar, identificeren je hoogste-impact-stap en geven je een concrete eerste actie — geen pitch, geen verplichtingen.",
+      "cta": "Boek mijn gratis resultaatbespreking →",
+      "trainingRef": "Voorkeur voor gestructureerd groepsleren?",
+      "trainingRefLink": "Bekijk de aankomende Hands-on AI sessies →"
+    },
+    "fullAssessment": {
+      "label": "Wil je het volledige beeld?",
+      "heading": "Doe de uitgebreide assessment met 25 vragen",
+      "body": "Diepgaandere scoring, een complete dimensie-analyse en op maat gemaakte aanbevelingen over alle 6 AI-volwassenheidsgebieden — in ongeveer 15 minuten.",
+      "cta": "Start de uitgebreide assessment →",
+      "free": "Gratis · Geen extra kosten"
+    },
+    "referral": {
+      "heading": "Ken je iemand die dit ook zou moeten doen?",
+      "sub": "Nodig een collega uit — duurt 10 seconden",
+      "show": "↓ Tonen",
+      "hide": "↑ Verbergen",
+      "theirName": "Hun naam",
+      "theirEmail": "Hun e-mailadres",
+      "consent": "Ik bevestig dat deze persoon heeft ingestemd met het ontvangen van deze uitnodiging. Hun e-mailadres wordt alleen gebruikt om dit ene bericht te sturen en wordt niet opgeslagen of toegevoegd aan een mailinglijst.",
+      "submit": "Verstuur uitnodiging →",
+      "submitting": "Versturen…",
+      "successPrefix": "✓ Uitnodiging verstuurd naar",
+      "successSub": "Hun e-mailadres wordt niet opgeslagen of opnieuw gebruikt.",
+      "consentError": "Bevestig alstublieft de toestemming voordat je verstuurt."
+    },
+    "shadowAI": {
+      "lowRisk": "Laag risico",
+      "mediumRisk": "Gemiddeld risico",
+      "highRisk": "Hoog risico"
+    },
+    "maturityLevels": {
+      "Unaware": {
+        "insight": "Jouw organisatie bevindt zich op een kritiek keerpunt. AI is niet langer een toekomstige overweging — het herschikt markten nu al. Het goede nieuws: beginnen vanuit bewustzijn betekent dat elke stap die je zet snel rendeert.",
+        "urgency": "Handel nu — concurrenten vergroten de kloof al."
+      },
+      "Exploring": {
+        "insight": "Je begint de kans te zien — maar verkennen zonder richting leidt tot verspild kapitaal. Een heldere strategie helpt je nieuwsgierigheid sneller om te zetten in concurrentievoordeel dan je denkt.",
+        "urgency": "Gestructureerde actie in de komende 90 dagen kan je 12+ maanden vooruit helpen."
+      },
+      "Experimenting": {
+        "insight": "Je hebt echte AI-activiteit lopen, waardoor je de meeste organisaties voor bent. De uitdaging nu is om van verspreide pilots te gaan naar een samenhangende capability die schaalt en blijvende differentiatie creëert.",
+        "urgency": "De meeste organisaties stagneren hier. Het gat tussen pilots en geschaalde capability bepaalt wie het concurrentievoordeel wint."
+      },
+      "Scaling": {
+        "insight": "AI is ingebed in hoe jij opereert — een echt voordeel. De leiders die voorop blijven, borgen governance, cultuur en samengestelde capability vóórdat de volgende golf komt.",
+        "urgency": "Je voorsprong beschermen en uitbreiden vereist bewuste focus op de achterblijvende dimensies."
+      },
+      "Leading": {
+        "insight": "Je opereert aan de frontlinie van AI-adoptie. Het risico in dit stadium is zelfgenoegzaamheid — het landschap verandert snel en voorop blijven vereist voortdurende investering in capability, talent en governance.",
+        "urgency": "Leiderschap volhouden betekent de volgende kans bouwen vóórdat je hem nodig hebt."
+      }
+    },
+    "dimensionLabels": {
+      "strategy_vision": "Strategie & Visie",
+      "current_usage": "Huidig gebruik",
+      "data_readiness": "Data-gereedheid",
+      "talent_culture": "Talent & Cultuur",
+      "governance_risk": "Governance & Risico",
+      "opportunity_awareness": "Kansenbewustzijn"
+    },
+    "radarShortLabels": {
+      "strategy_vision": "Strategie",
+      "current_usage": "Gebruik",
+      "data_readiness": "Data",
+      "talent_culture": "Talent",
+      "governance_risk": "Governance",
+      "opportunity_awareness": "Kansen"
+    },
+    "legend": {
+      "yourScore": "Jouw score",
+      "baseline": "50 baseline"
+    }
+  }
+}

@@ -1,8 +1,10 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from '@/i18n/routing'
+import { useLocale } from 'next-intl'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useTranslations } from 'next-intl'
 import { QUESTIONS, LITE_QUESTIONS, type Question } from '@/data/questions'
 import type { AnswerMap, LeadFormData, QuizVersion, SubmitQuizPayload } from '@/types'
 import { ProgressBar } from './ProgressBar'
@@ -38,6 +40,9 @@ export function QuizEngine({
   excludedCodes = [],
   accentColor,
 }: QuizEngineProps) {
+  const t = useTranslations('quiz.engine')
+  const locale = useLocale()
+
   // Resolve default: company full quiz → pre; lite + extended public → post
   const captureMode = leadCapture ?? (version === 'full' && companySlug ? 'pre' : 'post')
 
@@ -104,6 +109,7 @@ export function QuizEngine({
         answers,
         lead,
         companySlug,
+        locale,
       }
 
       const res = await fetch('/api/submit', {
@@ -117,8 +123,9 @@ export function QuizEngine({
         throw new Error(body.error ?? `Server error ${res.status}`)
       }
 
-      const { resultsUrl } = await res.json()
-      router.push(resultsUrl)
+      const { responseId } = await res.json()
+      // Use locale-aware router — automatically prepends /en or /nl
+      router.push(`/results/${responseId}`)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
       setSubmitting(false)
@@ -168,7 +175,7 @@ export function QuizEngine({
     return (
       <div className="max-w-xl mx-auto text-center py-20">
         <div className="inline-block w-10 h-10 border-4 border-brand-accent border-t-transparent rounded-full animate-spin mb-6" />
-        <p className="text-gray-600 font-medium">Calculating your AI Maturity Score…</p>
+        <p className="text-gray-600 font-medium">{t('submitting')}</p>
       </div>
     )
   }
@@ -181,12 +188,10 @@ export function QuizEngine({
             <span className="text-2xl">✓</span>
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            {version === 'full' ? 'Assessment complete!' : 'Your results are ready'}
+            {version === 'full' ? t('postHeadingFull') : t('postHeadingLite')}
           </h2>
           <p className="text-gray-500 text-sm max-w-sm mx-auto">
-            {version === 'full'
-              ? "You've completed all 25 questions. Enter your details and we'll generate your full AI Maturity report."
-              : 'Enter your details to reveal your AI Maturity Score and personalised recommendations.'}
+            {version === 'full' ? t('postSubFull') : t('postSubLite')}
           </p>
         </div>
         {error && (
@@ -235,7 +240,7 @@ export function QuizEngine({
           disabled={currentIndex === 0}
           className="text-sm text-gray-400 hover:text-gray-700 disabled:invisible transition-colors"
         >
-          ← Back
+          {t('back')}
         </button>
 
         {captureMode === 'pre' && isLast ? (
@@ -247,7 +252,7 @@ export function QuizEngine({
             className="px-8 py-3 text-white font-semibold rounded-xl disabled:opacity-40 transition-all"
             style={{ backgroundColor: accentColor ?? '#E8611A' }}
           >
-            {submitting ? 'Submitting…' : 'See My Results'}
+            {submitting ? t('seeResultsLoading') : t('seeResults')}
           </button>
         ) : (
           <button
@@ -256,7 +261,7 @@ export function QuizEngine({
             disabled={!canAdvance}
             className="px-8 py-3 bg-brand-accent text-white font-semibold rounded-xl disabled:opacity-40 hover:bg-orange-700 transition-all"
           >
-            {isLast ? 'See My Results →' : 'Next →'}
+            {isLast ? t('seeResults') : t('next')}
           </button>
         )}
       </div>

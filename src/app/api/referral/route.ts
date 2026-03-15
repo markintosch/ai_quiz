@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { render } from '@react-email/render'
 import { ReferralInviteEmail } from '@/lib/email/templates/referralInvite'
+import { logEmail } from '@/lib/email/sender'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 const FROM = 'Brand PWRD Media <results@brandpwrdmedia.com>'
@@ -44,11 +45,22 @@ export async function POST(req: NextRequest) {
     })
   )
 
+  const subject = `${referrerName} thinks you should know your AI Maturity Score`
+
   const { error } = await resend.emails.send({
     from: FROM,
-    to: inviteeEmail,
-    subject: `${referrerName} thinks you should know your AI Maturity Score`,
+    to:   inviteeEmail,
+    subject,
     html,
+  })
+
+  await logEmail({
+    // No respondent_id — invitee is not stored (GDPR: one-time send only)
+    emailType:    'referral_invite',
+    subject,
+    toEmail:      inviteeEmail,
+    status:       error ? 'failed' : 'sent',
+    errorMessage: error ? String(error) : undefined,
   })
 
   if (error) {

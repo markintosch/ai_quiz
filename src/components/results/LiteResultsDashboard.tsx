@@ -2,12 +2,14 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
+import { useTranslations } from 'next-intl'
 import type { QuizScore } from '@/types'
 import type { Recommendation } from '@/lib/scoring/recommendations'
 import { RadarChart } from './RadarChart'
 import { ShadowAIFlag } from './ShadowAIFlag'
 import { RecommendationCard } from './RecommendationCard'
 import { ReferralSection } from './ReferralSection'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { trackEvent } from '@/lib/analytics'
 
 // ── Types ──────────────────────────────────────────────────────
@@ -20,48 +22,12 @@ interface LiteResultsDashboardProps {
 }
 
 // ── Config ────────────────────────────────────────────────────
-const MATURITY_CONFIG: Record<string, {
-  color: string
-  bg: string
-  ring: string
-  insight: string
-  urgency: string
-}> = {
-  Unaware: {
-    color:   'text-red-500',
-    bg:      'bg-red-50',
-    ring:    'ring-red-200',
-    insight: 'Your organisation is at a critical inflection point. AI is no longer a future consideration — it is reshaping markets now. The good news: starting from awareness means every move you make compounds quickly.',
-    urgency: 'Act now — competitors are already widening the gap.',
-  },
-  Exploring: {
-    color:   'text-orange-500',
-    bg:      'bg-orange-50',
-    ring:    'ring-orange-200',
-    insight: 'You are beginning to see the opportunity — but exploration without direction leads to wasted investment. A clear strategy will help you convert curiosity into competitive advantage faster than you think.',
-    urgency: 'Structured action in the next 90 days can accelerate you by 12+ months.',
-  },
-  Experimenting: {
-    color:   'text-yellow-600',
-    bg:      'bg-yellow-50',
-    ring:    'ring-yellow-200',
-    insight: 'You have real AI activity underway, which puts you ahead of most. The challenge now is moving from scattered pilots to a coherent capability that scales and creates lasting differentiation.',
-    urgency: 'Most organisations stall here. The gap between pilots and scaled capability is where competitive advantage is won or lost.',
-  },
-  Scaling: {
-    color:   'text-teal-600',
-    bg:      'bg-teal-50',
-    ring:    'ring-teal-200',
-    insight: 'AI is embedded in how you operate — a genuine advantage. The leaders who stay ahead are those who lock in governance, culture and compounding capability before the next wave hits.',
-    urgency: 'Protecting and extending your lead requires deliberate focus on the dimensions lagging behind.',
-  },
-  Leading: {
-    color:   'text-green-600',
-    bg:      'bg-green-50',
-    ring:    'ring-green-200',
-    insight: 'You are operating at the frontier of AI adoption. The risk at this stage is complacency — the landscape shifts fast and staying ahead requires continuous investment in capability, talent and governance.',
-    urgency: 'Sustaining leadership means building the next advantage before you need it.',
-  },
+const MATURITY_COLORS: Record<string, { color: string; bg: string; ring: string }> = {
+  Unaware:      { color: 'text-red-500',    bg: 'bg-red-50',    ring: 'ring-red-200'    },
+  Exploring:    { color: 'text-orange-500', bg: 'bg-orange-50', ring: 'ring-orange-200' },
+  Experimenting:{ color: 'text-yellow-600', bg: 'bg-yellow-50', ring: 'ring-yellow-200' },
+  Scaling:      { color: 'text-teal-600',   bg: 'bg-teal-50',   ring: 'ring-teal-200'   },
+  Leading:      { color: 'text-green-600',  bg: 'bg-green-50',  ring: 'ring-green-200'  },
 }
 
 // ── Animated count-up ─────────────────────────────────────────
@@ -95,8 +61,9 @@ export function LiteResultsDashboard({
   respondentEmail,
   respondentCompany = '',
 }: LiteResultsDashboardProps) {
+  const t = useTranslations('results')
   const firstName  = respondentName?.trim().split(/\s+/)[0] || 'there'
-  const config     = MATURITY_CONFIG[score.maturityLevel] ?? MATURITY_CONFIG.Exploring
+  const config     = MATURITY_COLORS[score.maturityLevel] ?? MATURITY_COLORS.Exploring
   const displayScore = useCountUp(score.overall)
 
   // Split recommendations into primary and supporting
@@ -115,6 +82,8 @@ export function LiteResultsDashboard({
     })
   }, [score.maturityLevel, score.overall])
 
+  const delta = score.overall - 47
+
   return (
     <motion.div
       className="max-w-2xl mx-auto space-y-6 pb-20"
@@ -123,13 +92,18 @@ export function LiteResultsDashboard({
       animate="show"
     >
 
+      {/* Language switcher */}
+      <div className="flex justify-end mb-2">
+        <LanguageSwitcher />
+      </div>
+
       {/* ═══ 1. TOP SUMMARY ═══════════════════════════════════════ */}
       <motion.div
         variants={fadeUp}
         className="bg-[#354E5E] rounded-2xl px-8 pt-8 pb-6 text-white text-center"
       >
         <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-5">
-          Your AI Maturity Score
+          {t('scoreLabel')}
         </p>
 
         {/* Score circle */}
@@ -157,7 +131,7 @@ export function LiteResultsDashboard({
           transition={{ delay: 0.5 }}
           className="text-gray-300 text-sm max-w-sm mx-auto"
         >
-          Hi {firstName} — this is a directional snapshot across 6 AI dimensions.
+          {t('greeting', { firstName })}
         </motion.p>
 
         <motion.div
@@ -166,13 +140,15 @@ export function LiteResultsDashboard({
           transition={{ delay: 0.65 }}
           className="mt-4 inline-flex items-center gap-3 bg-white/10 border border-white/10 rounded-xl px-4 py-2"
         >
-          <span className="text-xs text-gray-400">Average score across all assessments: <strong className="text-white">47</strong></span>
+          <span className="text-xs text-gray-400">{t('avgLabel')} <strong className="text-white">47</strong></span>
           <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
             score.overall >= 47
               ? 'bg-green-500/20 text-green-300'
               : 'bg-red-500/20 text-red-300'
           }`}>
-            {score.overall >= 47 ? `+${score.overall - 47}` : `${score.overall - 47}`} vs avg
+            {delta >= 0
+              ? t('vsAvgPos', { delta })
+              : t('vsAvgNeg', { delta })}
           </span>
         </motion.div>
       </motion.div>
@@ -183,7 +159,7 @@ export function LiteResultsDashboard({
         className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm"
       >
         <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-widest mb-5 text-center">
-          Your dimension profile
+          {t('dimensionProfile')}
         </h3>
 
         <div className="flex justify-center">
@@ -194,7 +170,9 @@ export function LiteResultsDashboard({
         <div className="mt-5 grid grid-cols-2 gap-x-6 gap-y-2">
           {score.dimensionScores.map(ds => (
             <div key={ds.dimension} className="flex items-center justify-between gap-2">
-              <span className="text-xs text-gray-600 truncate">{ds.label}</span>
+              <span className="text-xs text-gray-600 truncate">
+                {t(`dimensionLabels.${ds.dimension}` as Parameters<typeof t>[0]) || ds.label}
+              </span>
               <span
                 className="text-xs font-bold tabular-nums"
                 style={{ color: ds.normalized >= 60 ? '#059669' : ds.normalized >= 40 ? '#d97706' : '#dc2626' }}
@@ -219,21 +197,25 @@ export function LiteResultsDashboard({
         className="bg-white border-l-4 border-[#E8611A] rounded-r-2xl rounded-tl-2xl rounded-bl-none px-6 py-5 shadow-sm"
       >
         <p className="text-xs font-semibold uppercase tracking-widest text-[#E8611A] mb-2">
-          What your score is telling you
+          {t('insightLabel')}
         </p>
         <p className="text-gray-800 text-sm leading-relaxed mb-3">
-          {config.insight}
+          {t(`maturityLevels.${score.maturityLevel}.insight` as Parameters<typeof t>[0])}
         </p>
         <p className="text-xs font-semibold text-gray-500 italic">
-          {config.urgency}
+          {t(`maturityLevels.${score.maturityLevel}.urgency` as Parameters<typeof t>[0])}
         </p>
       </motion.div>
 
       {/* ═══ 5. PRIMARY RECOMMENDATIONS ═════════════════════════ */}
       {primaryRecs.length > 0 && (
         <motion.div variants={fadeUp}>
+          {/* Org-level framing — shifts reader from "my score" to "my company's agenda" */}
+          <p className="text-sm text-gray-500 italic mb-4 px-1">
+            {t('orgPrioritiesIntro')}
+          </p>
           <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3 px-1">
-            Your priority actions
+            {t('priorityActions')}
           </h3>
           <div className="space-y-3">
             {primaryRecs.map((rec, i) => (
@@ -258,7 +240,7 @@ export function LiteResultsDashboard({
       {supportingRecs.length > 0 && (
         <motion.div variants={fadeUp}>
           <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3 px-1">
-            Also worth addressing
+            {t('alsoWorth')}
           </h3>
           <div className="space-y-3">
             {supportingRecs.map((rec, i) => (
@@ -287,27 +269,25 @@ export function LiteResultsDashboard({
         {/* Person intro */}
         <div className="flex items-center gap-4 mb-5">
           <div className="w-14 h-14 rounded-full overflow-hidden ring-2 ring-[#E8611A]/50 flex-shrink-0 bg-[#2a3e4b] flex items-center justify-center">
-            {/* Replace with real photo: <img src="/mark-de-kock.jpg" alt="Mark de Kock" className="w-full h-full object-cover" /> */}
-            <span className="text-white font-bold text-sm">MdK</span>
+            <img src="/mark-de-kock.jpg" alt="Mark de Kock" className="w-full h-full object-cover" />
           </div>
           <div>
             <p className="text-white font-bold text-sm leading-tight">Mark de Kock</p>
-            <p className="text-[#E8611A] text-xs font-semibold">AI Transformation Lead</p>
-            <p className="text-gray-400 text-xs">Kirk &amp; Blackbeard</p>
+            <p className="text-[#E8611A] text-xs font-semibold">{t('bookReview.title')}</p>
+            <p className="text-gray-400 text-xs">{t('bookReview.company')}</p>
           </div>
           <div className="ml-auto">
             <span className="text-xs bg-white/10 border border-white/10 rounded-full px-3 py-1 text-gray-300">
-              Free · 20 min
+              {t('bookReview.badge')}
             </span>
           </div>
         </div>
 
         <h3 className="text-xl font-bold mb-2">
-          Want to know what to do about it?
+          {t('bookReview.heading')}
         </h3>
         <p className="text-gray-300 text-sm mb-6 leading-relaxed">
-          Book a free result review. We walk through your radar together, identify
-          your highest-leverage move, and give you a clear first step — no pitch, no obligation.
+          {t('bookReview.body')}
         </p>
         <a
           href="https://calendly.com/markiesbpm/ai-intro-meeting-mark-de-kock"
@@ -320,8 +300,25 @@ export function LiteResultsDashboard({
           })}
           className="inline-block w-full text-center px-8 py-3.5 bg-[#E8611A] hover:bg-orange-700 text-white font-bold rounded-xl text-sm transition-colors shadow-lg shadow-orange-900/30"
         >
-          Book my free result review →
+          {t('bookReview.cta')}
         </a>
+
+        {/* Training reference — one line, ambient, no hard sell */}
+        <p className="text-center mt-4 text-xs text-gray-400">
+          {t('bookReview.trainingRef')}{' '}
+          <a
+            href="https://handsonai.nl"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#E8611A] hover:underline font-medium"
+            onClick={() => trackEvent('training_ref_clicked', {
+              maturity_level: score.maturityLevel,
+              source: 'lite_results',
+            })}
+          >
+            {t('bookReview.trainingRefLink')}
+          </a>
+        </p>
       </motion.div>
 
       {/* ═══ 8. FULL ASSESSMENT CTA (secondary) ═════════════════ */}
@@ -330,14 +327,13 @@ export function LiteResultsDashboard({
         className="border border-gray-200 rounded-2xl p-6 text-center bg-white"
       >
         <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-2">
-          Want your full picture?
+          {t('fullAssessment.label')}
         </p>
         <h3 className="text-base font-bold text-gray-900 mb-2">
-          Take the 25-question full assessment
+          {t('fullAssessment.heading')}
         </h3>
         <p className="text-sm text-gray-500 mb-5 max-w-sm mx-auto">
-          Deeper scoring, a complete dimension breakdown and tailored recommendations
-          across all 6 AI maturity areas — in about 15 minutes.
+          {t('fullAssessment.body')}
         </p>
         <a
           href="/quiz/extended"
@@ -347,9 +343,9 @@ export function LiteResultsDashboard({
           })}
           className="inline-block px-6 py-2.5 bg-[#354E5E] hover:bg-[#2a3e4b] text-white font-semibold rounded-xl text-sm transition-colors"
         >
-          Start the full assessment →
+          {t('fullAssessment.cta')}
         </a>
-        <p className="text-xs text-gray-400 mt-3">Free · No extra charge</p>
+        <p className="text-xs text-gray-400 mt-3">{t('fullAssessment.free')}</p>
       </motion.div>
 
       {/* ═══ 9. REFERRAL (collapsible) ═══════════════════════════ */}
@@ -365,12 +361,12 @@ export function LiteResultsDashboard({
           <div className="flex items-center gap-3">
             <span className="text-lg">🤝</span>
             <div>
-              <p className="text-sm font-semibold text-gray-800">Know someone who should take this?</p>
-              <p className="text-xs text-gray-400">Invite a colleague — takes 10 seconds</p>
+              <p className="text-sm font-semibold text-gray-800">{t('referral.heading')}</p>
+              <p className="text-xs text-gray-400">{t('referral.sub')}</p>
             </div>
           </div>
           <span className="text-gray-400 text-sm font-medium">
-            {referralOpen ? '↑ Hide' : '↓ Show'}
+            {referralOpen ? t('referral.hide') : t('referral.show')}
           </span>
         </button>
 

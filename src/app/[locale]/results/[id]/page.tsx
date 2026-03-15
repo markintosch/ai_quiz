@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import { setRequestLocale } from 'next-intl/server'
 import { createServiceClient } from '@/lib/supabase/server'
 import { ScoreDashboard } from '@/components/results/ScoreDashboard'
 import { LiteResultsDashboard } from '@/components/results/LiteResultsDashboard'
@@ -8,7 +9,7 @@ import type { Recommendation } from '@/lib/scoring/recommendations'
 import type { BenchmarkData } from '@/components/results/BenchmarkComparison'
 
 interface PageProps {
-  params: { id: string }
+  params: Promise<{ locale: string; id: string }>
 }
 
 export const metadata: Metadata = {
@@ -17,13 +18,15 @@ export const metadata: Metadata = {
 }
 
 export default async function ResultsPage({ params }: PageProps) {
+  const { locale, id } = await params
+  setRequestLocale(locale)
   const supabase = createServiceClient()
 
   // Fetch response
   const { data: response } = await supabase
     .from('responses')
     .select('id, quiz_version, maturity_level, shadow_ai_flag, shadow_ai_severity, scores, recommendation_payload, respondent_id')
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (!response) {
@@ -61,7 +64,7 @@ export default async function ResultsPage({ params }: PageProps) {
     supabase,
     jobTitle:  respondent?.job_title ?? null,
     cohortId:  respondent?.cohort_id ?? null,
-    currentResponseId: params.id,
+    currentResponseId: id,
   })
 
   const isLite      = response.quiz_version === 'lite'

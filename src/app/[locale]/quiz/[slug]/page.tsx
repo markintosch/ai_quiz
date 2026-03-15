@@ -1,19 +1,21 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import { setRequestLocale } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
 import { QUESTIONS } from '@/data/questions'
 import { CompanyLandingPage } from '@/components/quiz/CompanyLandingPage'
 
 interface PageProps {
-  params: { slug: string }
+  params: Promise<{ locale: string; slug: string }>
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params
   const supabase = createClient()
   const { data: company } = await supabase
     .from('companies')
     .select('name')
-    .eq('slug', params.slug)
+    .eq('slug', slug)
     .eq('active', true)
     .single()
 
@@ -28,12 +30,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function FullQuizPage({ params }: PageProps) {
+  const { locale, slug } = await params
+  setRequestLocale(locale)
   const supabase = createClient()
 
   const { data: company } = await supabase
     .from('companies')
     .select('id, name, slug, logo_url, brand_color, welcome_message, excluded_question_codes')
-    .eq('slug', params.slug)
+    .eq('slug', slug)
     .eq('active', true)
     .single() as unknown as {
       data: {
