@@ -11,7 +11,7 @@
       "sub": "Onze 5-minuten-diagnose meet je AI-volwassenheid op 6 kritieke dimensies — en vertelt je precies wat je als eerste moet aanpakken.",
       "authors": "Ontwikkeld door Mark de Kock & Frank Meeuwsen — AI-transformatiespecialisten met ruim 30 jaar gecombineerde digitale ervaring.",
       "ctaMain": "Start de gratis 5-minuten-scan →",
-      "ctaSub": "8 vragen · gratis · geen registratie vooraf vereist",
+      "ctaSub": "7 vragen · gratis · geen registratie vooraf vereist",
       "ctaFullPre": "Wil je het complete beeld?",
       "ctaFull": "Doe de uitgebreide assessment met 25 vragen →"
     },
@@ -25,7 +25,7 @@
       "label": "Hoe het werkt",
       "heading": "Drie stappen. Geen jargon.",
       "steps": [
-        { "n": "01", "title": "Beantwoord 8 eerlijke vragen", "desc": "5 minuten · geen jargon · geen registratie vooraf vereist" },
+        { "n": "01", "title": "Beantwoord 7 eerlijke vragen", "desc": "5 minuten · geen jargon · geen registratie vooraf vereist" },
         { "n": "02", "title": "Zie je score direct", "desc": "Een radarkaart over alle 6 AI-volwassenheidsdimensies" },
         { "n": "03", "title": "Weet wat je volgende stap is", "desc": "Geprioriteerde acties — specifiek voor jouw score, geen generiek advies" }
       ]
@@ -68,7 +68,7 @@
       "heading": "Klaar om te ontdekken waar je staat?",
       "sub": "Geen registratie vereist totdat je je resultaten ziet. Gratis. Duurt 5 minuten.",
       "button": "Start de gratis 5-minuten-scan →",
-      "buttonSub": "8 vragen · direct resultaat · geen creditcard vereist",
+      "buttonSub": "7 vragen · direct resultaat · geen creditcard vereist",
       "fullPre": "Wil je liever de volledige analyse?",
       "fullLink": "Doe de uitgebreide assessment met 25 vragen →",
       "fullNote": "Gratis · ~15 minuten · diepgaandere scoring op alle 6 dimensies"

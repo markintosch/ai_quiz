@@ -11,7 +11,7 @@
       "sub": "Our 5-minute diagnostic benchmarks your AI maturity across 6 critical dimensions — and tells you exactly what to prioritise next.",
       "authors": "Developed by Mark de Kock & Frank Meeuwsen — AI transformation specialists with 30+ years of combined digital experience.",
       "ctaMain": "Start the 5-minute AI scan →",
-      "ctaSub": "8 questions · free · no sign-up required upfront",
+      "ctaSub": "7 questions · free · no sign-up required upfront",
       "ctaFullPre": "Want the complete picture?",
       "ctaFull": "Take the full 25-question assessment →"
     },
@@ -25,7 +25,7 @@
       "label": "How it works",
       "heading": "Three steps. Zero jargon.",
       "steps": [
-        { "n": "01", "title": "Answer 8 honest questions", "desc": "5 minutes · no jargon · no sign-up required upfront" },
+        { "n": "01", "title": "Answer 7 honest questions", "desc": "5 minutes · no jargon · no sign-up required upfront" },
         { "n": "02", "title": "See your score instantly", "desc": "A radar chart across all 6 AI maturity dimensions" },
         { "n": "03", "title": "Know your next move", "desc": "Prioritised actions — specific to your score, not generic advice" }
       ]
@@ -68,7 +68,7 @@
       "heading": "Ready to find out where you stand?",
       "sub": "No sign-up required until you see your results. Free. Takes 5 minutes.",
       "button": "Start the free 5-minute scan →",
-      "buttonSub": "8 questions · instant score · no card required",
+      "buttonSub": "7 questions · instant score · no card required",
       "fullPre": "Want the full breakdown instead?",
       "fullLink": "Take the full 25-question assessment →",
       "fullNote": "Free · ~15 minutes · deeper scoring across all 6 dimensions"
