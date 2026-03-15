@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 // FILE: src/app/api/admin/auth/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'

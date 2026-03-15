@@ -1,4 +1,6 @@
 // FILE: src/app/api/admin/stats/route.ts
+export const dynamic = 'force-dynamic'
+
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 
