@@ -152,7 +152,8 @@ export default async function LocaleLayout({
   // Required: tells next-intl which locale is active for server components
   setRequestLocale(locale)
 
-  const messages = await getMessages()
+  // Pass locale explicitly — more reliable on Vercel edge/serverless
+  const messages = await getMessages({ locale })
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
