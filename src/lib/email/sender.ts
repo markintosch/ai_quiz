@@ -40,7 +40,8 @@ export async function logEmail({
 }) {
   try {
     const supabase = createServiceClient()
-    await supabase.from('email_log').insert({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase as any).from('email_log').insert({
       respondent_id: respondentId ?? null,
       email_type:    emailType,
       subject,
