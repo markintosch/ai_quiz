@@ -11,7 +11,8 @@ export function middleware(req: NextRequest) {
   if (pathname.startsWith('/admin')) {
     if (pathname === '/admin/login') return NextResponse.next()
     const token = req.cookies.get('admin_token')?.value
-    if (token !== process.env.ADMIN_SECRET) {
+    const secret = process.env.ADMIN_SECRET ?? process.env.ADMIN_PASSWORD
+    if (!secret || token !== secret) {
       return NextResponse.redirect(new URL('/admin/login', req.url))
     }
     return NextResponse.next()

@@ -7,12 +7,13 @@ import { cookies } from 'next/headers'
 export async function POST(req: NextRequest) {
   const body = await req.json() as { password?: string }
 
-  if (body.password !== process.env.ADMIN_SECRET) {
+  const secret = process.env.ADMIN_SECRET ?? process.env.ADMIN_PASSWORD
+  if (!secret || body.password !== secret) {
     return NextResponse.json({ error: 'Invalid password' }, { status: 401 })
   }
 
   const cookieStore = cookies()
-  cookieStore.set('admin_token', process.env.ADMIN_SECRET!, {
+  cookieStore.set('admin_token', secret, {
     httpOnly: true,
     path: '/',
     maxAge: 60 * 60 * 24 * 7,
