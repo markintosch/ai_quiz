@@ -148,6 +148,7 @@ export default async function CompanyDetailPage({
                   <th className="text-left px-4 py-3">Name</th>
                   <th className="text-left px-4 py-3">Date</th>
                   <th className="text-left px-4 py-3">Created</th>
+                  <th className="px-4 py-3"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -169,6 +170,14 @@ export default async function CompanyDetailPage({
                         month: 'short',
                         year: 'numeric',
                       })}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <Link
+                        href={`/admin/cohorts/${c.id}`}
+                        className="text-brand-accent hover:underline font-medium text-sm"
+                      >
+                        View →
+                      </Link>
                     </td>
                   </tr>
                 ))}

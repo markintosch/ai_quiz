@@ -1,4 +1,5 @@
 // FILE: src/app/admin/cohorts/page.tsx
+import Link from 'next/link'
 import { createServiceClient } from '@/lib/supabase/server'
 
 export const dynamic = 'force-dynamic'
@@ -60,6 +61,7 @@ export default async function CohortsPage() {
                 <th className="text-left px-4 py-3">Date</th>
                 <th className="text-left px-4 py-3">Respondents</th>
                 <th className="text-left px-4 py-3">Created</th>
+                <th className="px-4 py-3"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
@@ -87,6 +89,14 @@ export default async function CohortsPage() {
                       month: 'short',
                       year: 'numeric',
                     })}
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <Link
+                      href={`/admin/cohorts/${c.id}`}
+                      className="text-brand-accent hover:underline font-medium text-sm"
+                    >
+                      View →
+                    </Link>
                   </td>
                 </tr>
               ))}
