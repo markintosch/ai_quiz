@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { setRequestLocale } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
-import { QUESTIONS } from '@/data/questions'
+import { getProductConfig } from '@/products'
 import { CompanyLandingPage } from '@/components/quiz/CompanyLandingPage'
 
 export const dynamic = 'force-dynamic'
@@ -38,7 +38,7 @@ export default async function FullQuizPage({ params }: PageProps) {
 
   const { data: company, error: companyError } = await supabase
     .from('companies')
-    .select('id, name, slug, logo_url, brand_color, welcome_message, excluded_question_codes')
+    .select('id, name, slug, logo_url, brand_color, welcome_message, excluded_question_codes, quiz_products!product_id(key)')
     .eq('slug', slug)
     .eq('active', true)
     .single() as unknown as {
@@ -50,6 +50,7 @@ export default async function FullQuizPage({ params }: PageProps) {
         brand_color: string | null
         welcome_message: string | null
         excluded_question_codes: string[] | null
+        quiz_products: { key: string } | null
       } | null
       error: { message: string; code: string } | null
     }
@@ -58,9 +59,11 @@ export default async function FullQuizPage({ params }: PageProps) {
     notFound()
   }
 
+  const productKey = company.quiz_products?.key ?? 'ai_maturity'
+  const productConfig = getProductConfig(productKey)
   const excludedCodes = company.excluded_question_codes ?? []
   const accentColor = company.brand_color ?? '#E8611A'
-  const questionCount = QUESTIONS.filter((q) => !excludedCodes.includes(q.code)).length
+  const questionCount = productConfig.questions.filter((q) => !excludedCodes.includes(q.code)).length
 
   return (
     <CompanyLandingPage
@@ -71,6 +74,7 @@ export default async function FullQuizPage({ params }: PageProps) {
       welcomeMessage={company.welcome_message}
       excludedCodes={excludedCodes}
       questionCount={questionCount}
+      productKey={productKey}
     />
   )
 }

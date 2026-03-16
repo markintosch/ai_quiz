@@ -8,6 +8,7 @@
 
 import { QUESTIONS } from '@/data/questions'
 import { generateRecommendations as _generateRecommendations } from '@/lib/scoring/recommendations'
+import { detectShadowAI } from '@/lib/scoring/engine'
 import type { QuizProductConfig } from '../types'
 import type { DimensionScore, ShadowAIResult } from '@/lib/scoring/engine'
 
@@ -98,6 +99,11 @@ export const AI_MATURITY_CONFIG: QuizProductConfig = {
       { maxScore: 100, url: CALENDLY_STRATEGY  },
     ],
   },
+
+  // Product-specific signal detectors
+  flags: [
+    { key: 'shadow_ai', detect: detectShadowAI },
+  ],
 
   // Adapter: the stored recommendations function takes ShadowAIResult directly;
   // our generic interface passes flags as a Record. We unwrap here.

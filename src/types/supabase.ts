@@ -22,6 +22,10 @@ export interface Database {
           custom_questions: Json | null
           active: boolean
           created_at: string
+          brand_color: string | null
+          welcome_message: string | null
+          excluded_question_codes: string[] | null
+          product_id: string | null
         }
         Insert: {
           id?: string
@@ -31,6 +35,10 @@ export interface Database {
           custom_questions?: Json | null
           active?: boolean
           created_at?: string
+          brand_color?: string | null
+          welcome_message?: string | null
+          excluded_question_codes?: string[] | null
+          product_id?: string | null
         }
         Update: {
           id?: string
@@ -39,6 +47,46 @@ export interface Database {
           logo_url?: string | null
           custom_questions?: Json | null
           active?: boolean
+          created_at?: string
+          brand_color?: string | null
+          welcome_message?: string | null
+          excluded_question_codes?: string[] | null
+          product_id?: string | null
+        }
+        Relationships: []
+      }
+      quiz_products: {
+        Row: {
+          id: string
+          key: string
+          name: string
+          subdomain: string | null
+          description: string | null
+          active: boolean
+          questions_config: Json | null
+          scoring_config: Json | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          key: string
+          name: string
+          subdomain?: string | null
+          description?: string | null
+          active?: boolean
+          questions_config?: Json | null
+          scoring_config?: Json | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          key?: string
+          name?: string
+          subdomain?: string | null
+          description?: string | null
+          active?: boolean
+          questions_config?: Json | null
+          scoring_config?: Json | null
           created_at?: string
         }
         Relationships: []
@@ -127,6 +175,7 @@ export interface Database {
           shadow_ai_flag: boolean
           shadow_ai_severity: string | null
           recommendation_payload: Json
+          product_key: string
           created_at: string
         }
         Insert: {
@@ -140,6 +189,7 @@ export interface Database {
           shadow_ai_flag?: boolean
           shadow_ai_severity?: string | null
           recommendation_payload: Json
+          product_key?: string
           created_at?: string
         }
         Update: {
@@ -153,6 +203,7 @@ export interface Database {
           shadow_ai_flag?: boolean
           shadow_ai_severity?: string | null
           recommendation_payload?: Json
+          product_key?: string
           created_at?: string
         }
         Relationships: []

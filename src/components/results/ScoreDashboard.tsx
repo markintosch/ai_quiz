@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import type { QuizScore } from '@/types'
 import type { Recommendation } from '@/lib/scoring/recommendations'
+import type { ProductUIConfig } from '@/products/types'
+import { resolveCalendlyUrl } from '@/products/types'
 import { DimensionBreakdown } from './DimensionBreakdown'
 import { RadarChart } from './RadarChart'
 import { ShadowAIFlag } from './ShadowAIFlag'
@@ -70,6 +72,8 @@ interface ScoreDashboardProps {
   respondentEmail: string
   respondentCompany?: string
   benchmarkData?: BenchmarkData
+  /** Serializable product config — drives maturity colours, descriptions, Calendly routing */
+  productUI?: ProductUIConfig
 }
 
 export function ScoreDashboard({
@@ -81,12 +85,27 @@ export function ScoreDashboard({
   respondentEmail,
   respondentCompany = '',
   benchmarkData,
+  productUI,
 }: ScoreDashboardProps) {
   const isLite    = quizVariant === 'lite'
   const isCompany = quizVariant === 'company'
-  const config = MATURITY_CONFIG[score.maturityLevel]
+
+  // Resolve maturity colours — from product config when available, else hardcoded defaults
+  const threshold = productUI?.maturityThresholds.find(t => t.level === score.maturityLevel)
+  const config = threshold
+    ? { color: threshold.colorClass, bg: threshold.bgClass, ring: threshold.ringClass }
+    : (MATURITY_CONFIG[score.maturityLevel as keyof typeof MATURITY_CONFIG] ?? MATURITY_CONFIG.Exploring)
+
+  // Resolve description and Calendly URL from product config when available
+  const description = productUI
+    ? (productUI.maturityDescriptions[score.maturityLevel] ?? '')
+    : maturityDescription(score.maturityLevel)
+
+  const calendlyHref = productUI
+    ? resolveCalendlyUrl(score.overall, productUI.calendlyRules)
+    : getCalendlyHref(score.overall)
+
   const displayScore = useCountUp(score.overall)
-  const calendlyHref = getCalendlyHref(score.overall)
 
   return (
     <motion.div
@@ -128,7 +147,7 @@ export function ScoreDashboard({
           transition={{ delay: 0.55 }}
           className="text-white/80 text-sm max-w-sm mx-auto"
         >
-          {maturityDescription(score.maturityLevel)}
+          {description}
         </motion.p>
 
         {isLite && (

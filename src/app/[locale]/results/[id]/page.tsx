@@ -7,6 +7,8 @@ import { LiteResultsDashboard } from '@/components/results/LiteResultsDashboard'
 import type { QuizScore, MaturityLevel, ShadowAIResult } from '@/types'
 import type { Recommendation } from '@/lib/scoring/recommendations'
 import type { BenchmarkData } from '@/components/results/BenchmarkComparison'
+import { getProductConfig } from '@/products'
+import { toProductUI } from '@/products/types'
 
 interface PageProps {
   params: Promise<{ locale: string; id: string }>
@@ -25,7 +27,7 @@ export default async function ResultsPage({ params }: PageProps) {
   // Fetch response
   const { data: response } = await supabase
     .from('responses')
-    .select('id, quiz_version, maturity_level, shadow_ai_flag, shadow_ai_severity, scores, recommendation_payload, respondent_id')
+    .select('id, quiz_version, maturity_level, shadow_ai_flag, shadow_ai_severity, scores, recommendation_payload, respondent_id, product_key')
     .eq('id', id)
     .single()
 
@@ -67,6 +69,10 @@ export default async function ResultsPage({ params }: PageProps) {
     currentResponseId: id,
   })
 
+  // Resolve product config (fall back to ai_maturity for legacy responses without product_key)
+  const productKey = (response.product_key as string | null) ?? 'ai_maturity'
+  const productUI = toProductUI(getProductConfig(productKey))
+
   const isLite      = response.quiz_version === 'lite'
   const isCompany   = !!respondent?.source && respondent.source !== 'public'
   const companySlug = isCompany ? (respondent?.source ?? undefined) : undefined
@@ -96,6 +102,7 @@ export default async function ResultsPage({ params }: PageProps) {
             respondentEmail={respondent?.email ?? ''}
             respondentCompany={respondent?.company_name ?? ''}
             benchmarkData={benchmarkData}
+            productUI={productUI}
           />
         )}
 

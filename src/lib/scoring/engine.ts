@@ -1,5 +1,7 @@
-import { QUESTIONS, type Dimension } from '@/data/questions'
+import { QUESTIONS, type Dimension, type Question } from '@/data/questions'
 import type { AnswerMap } from '@/types'
+// type-only import — no runtime circular dep (products/types re-exports our types via type-only)
+import type { QuizProductConfig } from '@/products/types'
 
 // ─── Core scoring types (owned here; re-exported via @/types) ─────────────
 export type MaturityLevel = 'Unaware' | 'Exploring' | 'Experimenting' | 'Scaling' | 'Leading'
@@ -29,7 +31,7 @@ export interface QuizScore {
   shadowAI: ShadowAIResult
 }
 
-// ─── Dimension weights (must sum to 1.0) ─────────────────────
+// ─── Dimension weights (must sum to 1.0) — AI Maturity defaults ──────────
 const DIMENSION_WEIGHTS: Record<Dimension, number> = {
   strategy_vision:      0.22,
   governance_risk:      0.22,
@@ -48,7 +50,7 @@ const DIMENSION_LABELS: Record<Dimension, string> = {
   opportunity_awareness: 'Opportunity Awareness',
 }
 
-// ─── Maturity level thresholds ───────────────────────────────
+// ─── Maturity level thresholds — AI Maturity defaults ───────────────────
 function toMaturityLevel(score: number): MaturityLevel {
   if (score <= 20) return 'Unaware'
   if (score <= 40) return 'Exploring'
@@ -57,8 +59,19 @@ function toMaturityLevel(score: number): MaturityLevel {
   return 'Leading'
 }
 
-// ─── Shadow AI detection ──────────────────────────────────────
-function detectShadowAI(dimensionScores: DimensionScore[]): ShadowAIResult {
+/** Resolve maturity level string from a product config's threshold array */
+function resolveMaturityLevel(
+  score: number,
+  thresholds: { maxScore: number; level: string }[]
+): string {
+  for (const t of thresholds) {
+    if (score <= t.maxScore) return t.level
+  }
+  return thresholds[thresholds.length - 1]?.level ?? 'Unknown'
+}
+
+// ─── Shadow AI detection — exported so product configs can use it as a flag ─
+export function detectShadowAI(dimensionScores: DimensionScore[]): ShadowAIResult {
   const get = (dim: Dimension) =>
     dimensionScores.find(d => d.dimension === dim)?.normalized ?? 0
 
@@ -74,14 +87,15 @@ function detectShadowAI(dimensionScores: DimensionScore[]): ShadowAIResult {
   return           { triggered: true,  severity: 'high',   gap }
 }
 
-// ─── Per-dimension scoring ────────────────────────────────────
+// ─── Per-dimension scoring ────────────────────────────────────────────────
 function scoreDimension(
-  dimension: Dimension,
+  dimensionKey: string,
+  dimensionLabel: string,
   answers: AnswerMap,
-  questionsForVersion: typeof QUESTIONS
+  questionsForVersion: Question[]
 ): DimensionScore {
   const dimensionQs = questionsForVersion.filter(
-    q => q.dimension === dimension && q.scored
+    q => q.dimension === dimensionKey && q.scored
   )
 
   let raw = 0
@@ -101,40 +115,69 @@ function scoreDimension(
   const normalized = max > 0 ? Math.round((raw / max) * 100) : 0
 
   return {
-    dimension,
+    dimension: dimensionKey as Dimension, // cast: AI Maturity keys match Dimension union
     raw,
     max,
     normalized,
-    label: DIMENSION_LABELS[dimension],
+    label: dimensionLabel,
   }
 }
 
-// ─── Main scoring function ────────────────────────────────────
+// ─── Main scoring function ────────────────────────────────────────────────
 export function calculateScore(
   answers: AnswerMap,
-  version: 'lite' | 'full'
+  version: 'lite' | 'full',
+  /** Optional product config — defaults to AI Maturity when omitted (backward compat) */
+  productConfig?: QuizProductConfig
 ): QuizScore {
-  const questionsForVersion =
-    version === 'lite' ? QUESTIONS.filter(q => q.lite) : QUESTIONS
 
-  const dimensions = Object.keys(DIMENSION_WEIGHTS) as Dimension[]
+  // ── Resolve questions, dimensions, and weights from config or defaults ───
+  const questions = productConfig
+    ? (version === 'lite'
+        ? productConfig.questions.filter(q => q.lite)
+        : productConfig.questions)
+    : (version === 'lite' ? QUESTIONS.filter(q => q.lite) : QUESTIONS)
 
-  const dimensionScores = dimensions.map(dim =>
-    scoreDimension(dim, answers, questionsForVersion)
+  const dims: Array<{ key: string; label: string; weight: number }> = productConfig
+    ? productConfig.dimensions.map(d => ({ key: d.key, label: d.label, weight: d.weight }))
+    : (Object.keys(DIMENSION_WEIGHTS) as Dimension[]).map(key => ({
+        key,
+        label: DIMENSION_LABELS[key],
+        weight: DIMENSION_WEIGHTS[key],
+      }))
+
+  const dimensionScores = dims.map(dim =>
+    scoreDimension(dim.key, dim.label, answers, questions)
   )
 
-  // Weighted overall score
+  // ── Weighted overall score ────────────────────────────────────────────────
   let overall = 0
   for (const ds of dimensionScores) {
-    overall += ds.normalized * DIMENSION_WEIGHTS[ds.dimension]
+    const dimConfig = dims.find(d => d.key === ds.dimension)
+    overall += ds.normalized * (dimConfig?.weight ?? 0)
   }
   overall = Math.round(overall)
 
-  const shadowAI = detectShadowAI(dimensionScores)
+  // ── Run product flags (e.g. shadow AI) ───────────────────────────────────
+  const flagResults: Record<string, unknown> = {}
+  if (productConfig?.flags) {
+    for (const flag of productConfig.flags) {
+      flagResults[flag.key] = flag.detect(dimensionScores)
+    }
+  }
+
+  // Shadow AI: from flags map if present, else run directly (backward compat)
+  const shadowAI = (flagResults.shadow_ai as ShadowAIResult | undefined)
+    ?? detectShadowAI(dimensionScores)
+
+  // ── Maturity level ────────────────────────────────────────────────────────
+  const maturityLevel = productConfig
+    ? resolveMaturityLevel(overall, productConfig.scoring.maturityThresholds)
+    : toMaturityLevel(overall)
 
   return {
     overall,
-    maturityLevel: toMaturityLevel(overall),
+    maturityLevel: maturityLevel as MaturityLevel,
     dimensionScores,
     shadowAI,
   }

@@ -66,6 +66,15 @@ export interface ProductCopy {
   heroCta?: string
 }
 
+// ── Product-specific signal detectors (e.g. Shadow AI) ───────────────────────
+
+export interface ProductFlag {
+  /** Unique key — e.g. 'shadow_ai' */
+  key: string
+  /** Returns the flag result (any shape) given the scored dimensions */
+  detect: (dimensionScores: DimensionScore[]) => unknown
+}
+
 // ── Product config ────────────────────────────────────────────────────────────
 
 export interface QuizProductConfig {
@@ -96,6 +105,9 @@ export interface QuizProductConfig {
     rules: CalendlyRule[]
   }
 
+  /** Product-specific signal detectors run after scoring (e.g. Shadow AI) */
+  flags?: ProductFlag[]
+
   /**
    * Generates ordered recommendations from dimension scores and flags.
    * Flags is a generic map to support product-specific signals (e.g. shadow_ai).
@@ -110,6 +122,30 @@ export interface QuizProductConfig {
     en?: ProductCopy
     nl?: ProductCopy
     fr?: ProductCopy
+  }
+}
+
+// ── ProductUIConfig — serializable subset safe for server→client props ───────
+// (QuizProductConfig contains functions and cannot be passed as a Next.js prop
+//  from a server component to a client component. Use this instead.)
+
+export interface ProductUIConfig {
+  key: string
+  name: string
+  maturityDescriptions: Record<string, string>
+  /** Ordered ascending by maxScore */
+  maturityThresholds: MaturityThreshold[]
+  calendlyRules: CalendlyRule[]
+}
+
+/** Extract the serializable UI config from a full QuizProductConfig */
+export function toProductUI(config: QuizProductConfig): ProductUIConfig {
+  return {
+    key:                  config.key,
+    name:                 config.name,
+    maturityDescriptions: config.maturityDescriptions,
+    maturityThresholds:   config.scoring.maturityThresholds,
+    calendlyRules:        config.calendly.rules,
   }
 }
 

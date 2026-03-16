@@ -16,6 +16,8 @@ interface CompanyLandingPageProps {
   welcomeMessage: string | null
   excludedCodes: string[]
   questionCount: number
+  /** Product key forwarded to QuizEngine for multi-product routing */
+  productKey?: string
 }
 
 export function CompanyLandingPage({
@@ -26,6 +28,7 @@ export function CompanyLandingPage({
   welcomeMessage,
   excludedCodes,
   questionCount,
+  productKey,
 }: CompanyLandingPageProps) {
   const [started, setStarted] = useState(false)
   const t = useTranslations('company')
@@ -206,6 +209,7 @@ export function CompanyLandingPage({
               companyName={name}
               excludedCodes={excludedCodes}
               accentColor={accentColor}
+              productKey={productKey}
             />
           </div>
         </motion.div>

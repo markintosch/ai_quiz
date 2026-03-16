@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 import { calculateScore } from '@/lib/scoring/engine'
-import { generateRecommendations } from '@/lib/scoring/recommendations'
+import { getProductConfig } from '@/products'
 import { sendSummaryEmail, sendAdminNotification } from '@/lib/email/sender'
 import { rateLimit, getClientIp } from '@/lib/rateLimit'
 import type { SubmitQuizPayload, SubmitQuizResponse } from '@/types'
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Too many submissions. Please wait a few minutes.' }, { status: 429 })
   }
 
-  const { version, answers, lead, companySlug, cohortId, locale = 'en' } = body
+  const { version, answers, lead, companySlug, cohortId, locale = 'en', productKey = 'ai_maturity' } = body
 
   // ── Basic validation ──────────────────────────────────────
   if (!version || !answers || !lead) {
@@ -115,10 +115,12 @@ export async function POST(req: NextRequest) {
     const attemptNumber = (lastAttempt?.attempt_number ?? 0) + 1
 
     // ── Score ──────────────────────────────────────────────────
-    const quizScore = calculateScore(answers, version)
-    const recommendations = generateRecommendations(
+    const productConfig = getProductConfig(productKey)
+    const quizScore = calculateScore(answers, version, productConfig)
+    const flagResults: Record<string, unknown> = { shadow_ai: quizScore.shadowAI }
+    const recommendations = productConfig.generateRecommendations(
       quizScore.dimensionScores,
-      quizScore.shadowAI
+      flagResults
     )
 
     // ── Insert response ────────────────────────────────────────
@@ -134,6 +136,7 @@ export async function POST(req: NextRequest) {
         shadow_ai_flag:        quizScore.shadowAI.triggered,
         shadow_ai_severity:    quizScore.shadowAI.severity ?? null,
         recommendation_payload: recommendations as unknown as import('@/types/supabase').Json,
+        product_key:           productConfig.key,
       })
       .select('id')
       .single()

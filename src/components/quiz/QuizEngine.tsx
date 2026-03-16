@@ -29,6 +29,8 @@ interface QuizEngineProps {
   excludedCodes?: string[]
   /** Company accent colour for CTA buttons */
   accentColor?: string
+  /** Product key for multi-product scoring — forwarded to /api/submit */
+  productKey?: string
 }
 
 export function QuizEngine({
@@ -39,6 +41,7 @@ export function QuizEngine({
   initialLead,
   excludedCodes = [],
   accentColor,
+  productKey,
 }: QuizEngineProps) {
   const t = useTranslations('quiz.engine')
   const locale = useLocale()
@@ -110,6 +113,7 @@ export function QuizEngine({
         lead,
         companySlug,
         locale,
+        productKey,
       }
 
       const res = await fetch('/api/submit', {

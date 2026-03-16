@@ -109,6 +109,8 @@ export interface SubmitQuizPayload {
   cohortId?: string
   /** Active locale — used by API to build locale-prefixed email links */
   locale?: string
+  /** Product key for multi-product routing — defaults to 'ai_maturity' */
+  productKey?: string
 }
 
 export interface SubmitQuizResponse {
