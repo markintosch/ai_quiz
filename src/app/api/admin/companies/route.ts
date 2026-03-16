@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 // FILE: src/app/api/admin/companies/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
+import { isAuthorised } from '@/lib/admin/auth'
 
 interface CompanyRow {
   id: string
@@ -14,6 +15,10 @@ interface CompanyRow {
 }
 
 export async function GET() {
+  if (!(await isAuthorised())) {
+    return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  }
+
   const supabase = createServiceClient()
 
   const { data: companies, error } = await supabase
@@ -47,6 +52,10 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  if (!(await isAuthorised())) {
+    return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  }
+
   const supabase = createServiceClient()
   const body = await req.json() as {
     name: string

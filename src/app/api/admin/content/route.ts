@@ -1,15 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
-import { cookies } from 'next/headers'
+import { isAuthorised } from '@/lib/admin/auth'
 
 export const dynamic = 'force-dynamic'
-
-async function isAuthorised(): Promise<boolean> {
-  const cookieStore = await cookies()
-  const token = cookieStore.get('admin_token')?.value
-  const secret = process.env.ADMIN_SECRET ?? process.env.ADMIN_PASSWORD
-  return !!secret && token === secret
-}
 
 // GET /api/admin/content?locale=en
 // Returns the stored content blob for the given locale (or {} if none)

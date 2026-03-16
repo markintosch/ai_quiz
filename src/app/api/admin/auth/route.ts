@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 // FILE: src/app/api/admin/auth/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
+import { deriveSessionToken, adminCookieOptions } from '@/lib/admin/auth'
 
 export async function POST(req: NextRequest) {
   const body = await req.json() as { password?: string }
@@ -12,24 +13,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid password' }, { status: 401 })
   }
 
-  const cookieStore = cookies()
-  cookieStore.set('admin_token', secret, {
-    httpOnly: true,
-    path: '/',
-    maxAge: 60 * 60 * 24 * 7,
-    sameSite: 'lax',
-  })
+  const cookieStore = await cookies()
+  cookieStore.set('admin_token', deriveSessionToken(secret), adminCookieOptions())
 
   return NextResponse.json({ ok: true })
 }
 
 export async function DELETE(_req: NextRequest) {
-  const cookieStore = cookies()
-  cookieStore.set('admin_token', '', {
-    httpOnly: true,
-    path: '/',
-    maxAge: 0,
-  })
+  const cookieStore = await cookies()
+  cookieStore.set('admin_token', '', adminCookieOptions(0))
 
   return NextResponse.json({ ok: true })
 }

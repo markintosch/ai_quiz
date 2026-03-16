@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
+import { isAuthorised } from '@/lib/admin/auth'
 
 interface ScoresJsonb {
   overall: number
@@ -32,6 +33,10 @@ const DIMENSION_LABELS: Record<string, string> = {
 }
 
 export async function GET() {
+  if (!(await isAuthorised())) {
+    return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  }
+
   const supabase = createServiceClient()
 
   // Total respondents

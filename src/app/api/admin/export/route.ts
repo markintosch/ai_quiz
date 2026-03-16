@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 // FILE: src/app/api/admin/export/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
+import { isAuthorised } from '@/lib/admin/auth'
 
 interface ScoresJsonb {
   overall: number
@@ -21,6 +22,10 @@ function escapeCsv(val: unknown): string {
 }
 
 export async function GET(req: NextRequest) {
+  if (!(await isAuthorised())) {
+    return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  }
+
   const { searchParams } = req.nextUrl
   const companyId = searchParams.get('company_id')
   const version = searchParams.get('version') ?? 'all'

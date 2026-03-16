@@ -3,11 +3,16 @@ export const dynamic = 'force-dynamic'
 // FILE: src/app/api/admin/companies/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
+import { isAuthorised } from '@/lib/admin/auth'
 
 export async function GET(
   _req: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  if (!(await isAuthorised())) {
+    return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  }
+
   const supabase = createServiceClient()
 
   const { data: company, error } = await supabase
@@ -32,6 +37,10 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  if (!(await isAuthorised())) {
+    return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  }
+
   const supabase = createServiceClient()
   const body = await req.json() as {
     name?: string
@@ -58,6 +67,10 @@ export async function DELETE(
   _req: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  if (!(await isAuthorised())) {
+    return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  }
+
   const supabase = createServiceClient()
 
   const { error } = await supabase

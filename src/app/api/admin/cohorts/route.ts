@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 // FILE: src/app/api/admin/cohorts/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
+import { isAuthorised } from '@/lib/admin/auth'
 
 interface CohortRow {
   id: string
@@ -13,6 +14,10 @@ interface CohortRow {
 }
 
 export async function GET() {
+  if (!(await isAuthorised())) {
+    return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  }
+
   const supabase = createServiceClient()
 
   const { data: cohorts, error } = await supabase
@@ -58,6 +63,10 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  if (!(await isAuthorised())) {
+    return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  }
+
   const supabase = createServiceClient()
   const body = await req.json() as {
     company_id: string
