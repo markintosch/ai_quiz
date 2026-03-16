@@ -56,7 +56,25 @@ kb-quiz / AI Quiz
 - Multilingual support: EN / NL / FR via next-intl
 - Locale-less URL redirects: `/quiz/[slug]` → `/en/quiz/[slug]`
 
-### Phase 3 — PENDING
+### Phase 3a ✅ COMPLETE
+- Company landing page redesign: eyebrow badge → dynamic `{name}` headline → expanded intro with workshop mention → proof line → CTA as "Start the {name} Assessment →" → confidentiality note → value line → "What we assess" dimension tiles
+- Dynamic company name in CTA and heading driven by CMS/props (`displayName`, `headingFallback`, `ctaFallback` keys)
+- "Other" free-text in multiselect questions (UA4, OA2): text input slides in when "Other" selected; stored as `"other_detail:<text>"` alongside `"Other"` in the answer array; deselecting "Other" removes both entries; derived from answer array (persists on back-navigation)
+- Radar chart restored to results page (`RadarChart` re-imported in `ScoreDashboard`)
+- Translation keys updated across EN/NL/FR for new company page copy
+- Admin CMS editor extended with `headingFallback`, `ctaFallback`, `confidentiality`, `valueLine` fields
+- Results page segmentation by quiz variant:
+  - Fixed `isCompany` detection bug (`source !== 'public'`, not `=== 'company_slug'`)
+  - `companySlug` extracted from `respondent.source` and threaded to `ScoreDashboard`
+  - `RecommendationCard`: `ctaHref` prop renders CTAs as real `<a target="_blank">` links
+  - `ScoreDashboard`: score-band Calendly routing (`<50` → discovery, `≥50` → strategy) passed as `ctaHref` to all recommendation cards
+  - Company variant: cohort confidentiality block ("Individual answers are never shared…") appears above radar chart
+  - Extended/public variant: score-routed Calendly CTA block
+  - Company variant: `CalendlyEmbed` rendered, extended CTA block suppressed
+  - `ReferralSection`: company variant shows "Invite a colleague" copy and routes invite URL to `/quiz/[slug]`; invite URL sent in POST body to referral API
+  - Referral API: accepts `inviteUrl` from POST body, falls back to `/quiz`
+
+### Phase 3b — PENDING
 - Retake logic (detect returning respondent by email, increment attempt_number)
 - Privacy hardening (auto-delete after retention period)
 - Advanced cohort comparison view in admin
@@ -282,18 +300,20 @@ src/
   components/
     quiz/
       QuizEngine.tsx
-      QuestionCard.tsx
+      QuestionCard.tsx         ← "Other" free-text input for multiselect Qs
       ProgressBar.tsx
       LeadCaptureForm.tsx
-      CompanyLandingPage.tsx   ← Company intro + language switcher
+      CompanyLandingPage.tsx   ← Company hero (dynamic name, CTA, tiles) + LanguageSwitcher
     results/
-      ScoreDashboard.tsx
+      ScoreDashboard.tsx         ← Full/company results; variant-aware (company/extended)
+      LiteResultsDashboard.tsx   ← Lite quiz results; collapsible referral; own CTA stack
       DimensionBreakdown.tsx
+      RadarChart.tsx
       ShadowAIFlag.tsx
-      RecommendationCard.tsx
-      CalendlyEmbed.tsx
+      RecommendationCard.tsx     ← ctaHref prop → real link; score-band Calendly routing
+      CalendlyEmbed.tsx          ← Score-routed embed (company variant)
       BenchmarkComparison.tsx
-      ReferralSection.tsx
+      ReferralSection.tsx        ← Variant-aware (company: /quiz/[slug] invite URL)
     admin/
       SendReportButton.tsx
       CompanyEditForm.tsx
