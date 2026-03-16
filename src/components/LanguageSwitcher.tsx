@@ -48,6 +48,14 @@ export function LanguageSwitcher({ className = '', variant = 'dark' }: LanguageS
       >
         NL
       </button>
+      <span className={`${divider} select-none`}>|</span>
+      <button
+        onClick={() => switchTo('fr')}
+        className={`px-1.5 py-0.5 rounded transition-colors ${locale === 'fr' ? active : inactive}`}
+        aria-label="Passer au français"
+      >
+        FR
+      </button>
     </div>
   )
 }

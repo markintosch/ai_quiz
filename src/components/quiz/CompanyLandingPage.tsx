@@ -2,16 +2,10 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useTranslations } from 'next-intl'
 import { QuizEngine } from './QuizEngine'
 
-const DIMENSIONS = [
-  { icon: '🧭', label: 'Strategy & Vision' },
-  { icon: '⚡', label: 'Current Usage' },
-  { icon: '🗄️', label: 'Data Readiness' },
-  { icon: '🧑‍💻', label: 'Talent & Culture' },
-  { icon: '🛡️', label: 'Governance & Risk' },
-  { icon: '🔍', label: 'Opportunity Awareness' },
-]
+const DIMENSION_ICONS = ['🧭', '⚡', '🗄️', '🧑‍💻', '🛡️', '🔍']
 
 interface CompanyLandingPageProps {
   name: string
@@ -33,8 +27,17 @@ export function CompanyLandingPage({
   questionCount,
 }: CompanyLandingPageProps) {
   const [started, setStarted] = useState(false)
+  const t = useTranslations('company')
+
   // Display name: replace underscores with spaces for readability
   const displayName = name.replace(/_/g, ' ')
+
+  // Dimension labels from translations
+  const dimensionLabels = t.raw('dimensions') as string[]
+  const dimensions = DIMENSION_ICONS.map((icon, i) => ({
+    icon,
+    label: dimensionLabels[i] ?? '',
+  }))
 
   return (
     <AnimatePresence mode="wait">
@@ -52,13 +55,13 @@ export function CompanyLandingPage({
             <div className="max-w-3xl mx-auto flex items-center justify-between">
               {logoUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={logoUrl} alt={name} className="h-8 object-contain" />
+                <img src={logoUrl} alt={displayName} className="h-8 object-contain" />
               ) : (
                 <div>
                   <p className="text-xs font-bold uppercase tracking-widest" style={{ color: accentColor }}>{displayName}</p>
                 </div>
               )}
-              <p className="text-xs text-gray-500 font-medium">Powered by Brand PWRD Media</p>
+              <p className="text-xs text-gray-500 font-medium">{t('poweredBy')}</p>
             </div>
           </div>
 
@@ -73,21 +76,21 @@ export function CompanyLandingPage({
                 className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-6 border"
                 style={{ color: accentColor, borderColor: `${accentColor}40`, backgroundColor: `${accentColor}15` }}
               >
-                {displayName} · AI Maturity Assessment
+                {displayName} · {t('badge')}
               </span>
 
               <h1 className="text-4xl md:text-5xl font-black mb-5 leading-tight">
-                Where does{' '}
+                {t('heading1')}{' '}
                 <span style={{ color: accentColor }}>{displayName}</span>
-                {' '}stand on AI?
+                {' '}{t('heading2')}
               </h1>
 
               <p className="text-gray-300 text-lg max-w-xl mx-auto mb-4 leading-relaxed">
-                {welcomeMessage ?? `This assessment gives ${displayName} a clear, honest picture of AI maturity — and a practical roadmap for what to do next.`}
+                {welcomeMessage ?? t('defaultWelcome', { name: displayName })}
               </p>
 
               <p className="text-gray-500 text-sm mb-10">
-                {questionCount} questions · ~15 minutes · Your results are confidential
+                {t('meta', { count: questionCount })}
               </p>
 
               <motion.button
@@ -97,7 +100,7 @@ export function CompanyLandingPage({
                 className="px-10 py-4 text-white font-bold text-lg rounded-xl shadow-xl transition-colors"
                 style={{ backgroundColor: accentColor }}
               >
-                Begin Assessment →
+                {t('cta')}
               </motion.button>
             </motion.div>
           </div>
@@ -110,10 +113,10 @@ export function CompanyLandingPage({
               transition={{ delay: 0.3, duration: 0.5 }}
             >
               <p className="text-center text-xs font-bold uppercase tracking-widest text-gray-500 mb-6">
-                What we measure
+                {t('whatWeMeasure')}
               </p>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {DIMENSIONS.map((d, i) => (
+                {dimensions.map((d, i) => (
                   <motion.div
                     key={d.label}
                     initial={{ opacity: 0, y: 12 }}
@@ -132,8 +135,8 @@ export function CompanyLandingPage({
           {/* Trust footer */}
           <div className="border-t border-white/10 px-6 py-6 text-center">
             <p className="text-xs text-gray-600">
-              Your data is handled in accordance with GDPR.{' '}
-              <a href="/privacy" className="underline hover:text-gray-400">Privacy Policy</a>
+              {t('gdpr')}{' '}
+              <a href="/privacy" className="underline hover:text-gray-400">{t('privacyLink')}</a>
             </p>
           </div>
         </motion.div>
@@ -150,11 +153,11 @@ export function CompanyLandingPage({
             <div className="max-w-2xl mx-auto flex items-center justify-between">
               {logoUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={logoUrl} alt={name} className="h-6 object-contain" />
+                <img src={logoUrl} alt={displayName} className="h-6 object-contain" />
               ) : (
                 <p className="text-xs font-bold uppercase tracking-widest" style={{ color: accentColor }}>{displayName}</p>
               )}
-              <p className="text-xs text-gray-400">AI Maturity Assessment</p>
+              <p className="text-xs text-gray-400">{t('quizHeader')}</p>
             </div>
           </div>
 

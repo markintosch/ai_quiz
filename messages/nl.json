@@ -13,7 +13,7 @@
       "ctaMain": "Start de gratis 5-minuten-scan →",
       "ctaSub": "7 vragen · gratis · geen registratie vooraf vereist",
       "ctaFullPre": "Wil je het complete beeld?",
-      "ctaFull": "Doe de uitgebreide assessment met 25 vragen →"
+      "ctaFull": "Doe de uitgebreide assessment met 26 vragen →"
     },
     "trust": [
       "Gebruikt door leiderschapsteams door heel Europa",
@@ -78,6 +78,27 @@
       "contact": "Contact"
     }
   },
+  "company": {
+    "badge": "AI-volwassenheidsassessment",
+    "heading1": "Waar staat",
+    "heading2": "op het gebied van AI?",
+    "defaultWelcome": "Deze assessment geeft {name} een duidelijk, eerlijk beeld van AI-volwassenheid — en een praktische routekaart voor de volgende stappen.",
+    "meta": "{count} vragen · ~15 minuten · Je resultaten zijn vertrouwelijk",
+    "cta": "Begin Assessment →",
+    "whatWeMeasure": "Wat we meten",
+    "poweredBy": "Mogelijk gemaakt door Brand PWRD Media",
+    "gdpr": "Je gegevens worden verwerkt conform de AVG.",
+    "privacyLink": "Privacybeleid",
+    "quizHeader": "AI-volwassenheidsassessment",
+    "dimensions": [
+      "Strategie & Visie",
+      "Huidig gebruik",
+      "Data-gereedheid",
+      "Talent & Cultuur",
+      "Governance & Risico",
+      "Kansenbewustzijn"
+    ]
+  },
   "quiz": {
     "lite": {
       "brand": "Kirk & Blackbeard",
@@ -92,7 +113,7 @@
       "seeResultsLoading": "Bezig met versturen…",
       "postHeadingFull": "Assessment voltooid!",
       "postHeadingLite": "Jouw resultaten zijn klaar",
-      "postSubFull": "Je hebt alle 25 vragen beantwoord. Vul je gegevens in en we genereren je volledige AI-volwassenheidsrapport.",
+      "postSubFull": "Je hebt alle 26 vragen beantwoord. Vul je gegevens in en we genereren je volledige AI-volwassenheidsrapport.",
       "postSubLite": "Vul je gegevens in om je AI-volwassenheidsscore en gepersonaliseerde aanbevelingen te bekijken."
     },
     "lead": {
@@ -152,7 +173,7 @@
     },
     "fullAssessment": {
       "label": "Wil je het volledige beeld?",
-      "heading": "Doe de uitgebreide assessment met 25 vragen",
+      "heading": "Doe de uitgebreide assessment met 26 vragen",
       "body": "Diepgaandere scoring, een complete dimensie-analyse en op maat gemaakte aanbevelingen over alle 6 AI-volwassenheidsgebieden — in ongeveer 15 minuten.",
       "cta": "Start de uitgebreide assessment →",
       "free": "Gratis · Geen extra kosten"

@@ -21,6 +21,12 @@ const LOCALE_META: Record<string, { title: string; description: string; ogLocale
       'Ontdek in 5 minuten hoe ver jouw organisatie is met AI. Gratis diagnose op 6 dimensies — strategie, gebruik, data, talent, governance en kansen.',
     ogLocale: 'nl_NL',
   },
+  fr: {
+    title: 'Évaluation de Maturité IA | Kirk & Blackbeard',
+    description:
+      'Découvrez en 5 minutes où en est votre organisation sur l\'IA. Diagnostic gratuit sur 6 dimensions — stratégie, utilisation, données, talent, gouvernance et opportunités.',
+    ogLocale: 'fr_FR',
+  },
 }
 
 export async function generateMetadata({
@@ -42,6 +48,7 @@ export async function generateMetadata({
       languages: {
         en: `${BASE_URL}/en`,
         nl: `${BASE_URL}/nl`,
+        fr: `${BASE_URL}/fr`,
       },
     },
 

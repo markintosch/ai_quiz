@@ -13,7 +13,7 @@
       "ctaMain": "Start the 5-minute AI scan →",
       "ctaSub": "7 questions · free · no sign-up required upfront",
       "ctaFullPre": "Want the complete picture?",
-      "ctaFull": "Take the full 25-question assessment →"
+      "ctaFull": "Take the full 26-question assessment →"
     },
     "trust": [
       "Used by leadership teams across Europe",
@@ -70,13 +70,34 @@
       "button": "Start the free 5-minute scan →",
       "buttonSub": "7 questions · instant score · no card required",
       "fullPre": "Want the full breakdown instead?",
-      "fullLink": "Take the full 25-question assessment →",
+      "fullLink": "Take the full 26-question assessment →",
       "fullNote": "Free · ~15 minutes · deeper scoring across all 6 dimensions"
     },
     "footer": {
       "privacy": "Privacy Policy",
       "contact": "Contact"
     }
+  },
+  "company": {
+    "badge": "AI Maturity Assessment",
+    "heading1": "Where does",
+    "heading2": "stand on AI?",
+    "defaultWelcome": "This assessment gives {name} a clear, honest picture of AI maturity — and a practical roadmap for what to do next.",
+    "meta": "{count} questions · ~15 minutes · Your results are confidential",
+    "cta": "Begin Assessment →",
+    "whatWeMeasure": "What we measure",
+    "poweredBy": "Powered by Brand PWRD Media",
+    "gdpr": "Your data is handled in accordance with GDPR.",
+    "privacyLink": "Privacy Policy",
+    "quizHeader": "AI Maturity Assessment",
+    "dimensions": [
+      "Strategy & Vision",
+      "Current Usage",
+      "Data Readiness",
+      "Talent & Culture",
+      "Governance & Risk",
+      "Opportunity Awareness"
+    ]
   },
   "quiz": {
     "lite": {
@@ -92,7 +113,7 @@
       "seeResultsLoading": "Submitting…",
       "postHeadingFull": "Assessment complete!",
       "postHeadingLite": "Your results are ready",
-      "postSubFull": "You've completed all 25 questions. Enter your details and we'll generate your full AI Maturity report.",
+      "postSubFull": "You've completed all 26 questions. Enter your details and we'll generate your full AI Maturity report.",
       "postSubLite": "Enter your details to reveal your AI Maturity Score and personalised recommendations."
     },
     "lead": {
@@ -152,7 +173,7 @@
     },
     "fullAssessment": {
       "label": "Want your full picture?",
-      "heading": "Take the 25-question full assessment",
+      "heading": "Take the 26-question full assessment",
       "body": "Deeper scoring, a complete dimension breakdown and tailored recommendations across all 6 AI maturity areas — in about 15 minutes.",
       "cta": "Start the full assessment →",
       "free": "Free · No extra charge"

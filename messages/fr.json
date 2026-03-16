@@ -1,0 +1,243 @@
+{
+  "nav": {
+    "switchLang": "FR",
+    "brand": "Kirk & Blackbeard"
+  },
+  "landing": {
+    "hero": {
+      "badge": "Gratuit · 5 minutes · Résultats immédiats",
+      "heading1": "Vos concurrents utilisent déjà l'IA.",
+      "heading2": "Où en êtes-vous vraiment ?",
+      "sub": "Notre diagnostic de 5 minutes évalue votre maturité IA sur 6 dimensions critiques — et vous indique exactement quoi prioriser.",
+      "authors": "Développé par Mark de Kock & Frank Meeuwsen — spécialistes de la transformation IA avec plus de 30 ans d'expérience digitale combinée.",
+      "ctaMain": "Démarrer le scan IA de 5 minutes →",
+      "ctaSub": "7 questions · gratuit · sans inscription préalable",
+      "ctaFullPre": "Vous voulez le tableau complet ?",
+      "ctaFull": "Faire l'évaluation complète de 26 questions →"
+    },
+    "trust": [
+      "Utilisé par des équipes dirigeantes à travers l'Europe",
+      "Score moyen : 47/100 — où vous situez-vous ?",
+      "Résultats en 5 minutes, gratuit",
+      "Pas de pitch consultant — juste votre score"
+    ],
+    "howItWorks": {
+      "label": "Comment ça marche",
+      "heading": "Trois étapes. Zéro jargon.",
+      "steps": [
+        { "n": "01", "title": "Répondez à 7 questions honnêtes", "desc": "5 minutes · pas de jargon · sans inscription préalable" },
+        { "n": "02", "title": "Visualisez votre score immédiatement", "desc": "Un graphique radar sur les 6 dimensions de maturité IA" },
+        { "n": "03", "title": "Connaissez votre prochaine étape", "desc": "Actions priorisées — adaptées à votre score, pas des conseils génériques" }
+      ]
+    },
+    "dimensions": {
+      "label": "Ce que vous obtenez",
+      "heading": "Un score sur 6 dimensions qui comptent vraiment",
+      "items": [
+        { "icon": "🧭", "label": "Stratégie & Vision", "desc": "L'IA est-elle au cœur de votre compétitivité — ou encore un projet secondaire ?" },
+        { "icon": "⚡", "label": "Utilisation actuelle", "desc": "Les outils IA sont-ils réellement intégrés dans votre organisation ?" },
+        { "icon": "🗄️", "label": "Maturité des données", "desc": "Votre architecture data est-elle prête à soutenir de vrais résultats IA ?" },
+        { "icon": "🧑‍💻", "label": "Talent & Culture", "desc": "Vos équipes se sentent-elles prêtes et motivées à travailler avec l'IA ?" },
+        { "icon": "🛡️", "label": "Gouvernance & Risques", "desc": "Disposez-vous des garde-fous et politiques qu'exige une IA responsable ?" },
+        { "icon": "🔍", "label": "Conscience des opportunités", "desc": "Votre équipe dirigeante est-elle alignée sur où l'IA crée le plus de valeur ?" }
+      ]
+    },
+    "preview": {
+      "label": "Ce que vous recevrez",
+      "heading": "Vos résultats ressembleront à ceci",
+      "sub": "Un radar sur les 6 dimensions, un score global avec contexte benchmark, et des actions concrètes pour vos points faibles.",
+      "exampleLabel": "Exemple de résultat",
+      "exampleLevel": "En expérimentation",
+      "sampleCaption": "Exemple — votre profil réel sera différent"
+    },
+    "practitioners": {
+      "label": "Conçu par des praticiens",
+      "heading": "Pas de théorie. Pas de jargon d'agence.",
+      "sub": "Cette évaluation a été construite par deux personnes qui font ce travail au quotidien — pas une équipe de recherche ou une entreprise logicielle.",
+      "mark": {
+        "role": "AI Transformation Lead · Kirk & Blackbeard",
+        "bio": "Accompagne des équipes dirigeantes à travers l'Europe pour concevoir et mettre en œuvre des stratégies IA concrètes — de l'alignement du conseil à l'adoption par les équipes."
+      },
+      "frank": {
+        "role": "Formateur & Consultant IA · 30 ans d'expérience digitale",
+        "quote": "\"Geen hype, geen bullshit. Gewoon wat werkt in de echte wereld.\"",
+        "translation": "Pas de hype, pas de buzzwords. Juste ce qui fonctionne dans le monde réel."
+      }
+    },
+    "finalCta": {
+      "heading": "Prêt à découvrir où vous en êtes ?",
+      "sub": "Aucune inscription requise avant de voir vos résultats. Gratuit. 5 minutes.",
+      "button": "Démarrer le scan gratuit de 5 minutes →",
+      "buttonSub": "7 questions · score immédiat · sans carte requise",
+      "fullPre": "Vous préférez l'analyse complète ?",
+      "fullLink": "Faire l'évaluation complète de 26 questions →",
+      "fullNote": "Gratuit · ~15 minutes · scoring approfondi sur les 6 dimensions"
+    },
+    "footer": {
+      "privacy": "Politique de confidentialité",
+      "contact": "Contact"
+    }
+  },
+  "company": {
+    "badge": "Évaluation de Maturité IA",
+    "heading1": "Où en est",
+    "heading2": "sur l'IA ?",
+    "defaultWelcome": "Cette évaluation donne à {name} une image claire et honnête de sa maturité IA — et une feuille de route pratique pour la suite.",
+    "meta": "{count} questions · ~15 minutes · Vos résultats sont confidentiels",
+    "cta": "Commencer l'évaluation →",
+    "whatWeMeasure": "Ce que nous mesurons",
+    "poweredBy": "Propulsé par Brand PWRD Media",
+    "gdpr": "Vos données sont traitées conformément au RGPD.",
+    "privacyLink": "Politique de confidentialité",
+    "quizHeader": "Évaluation de Maturité IA",
+    "dimensions": [
+      "Stratégie & Vision",
+      "Utilisation actuelle",
+      "Maturité des données",
+      "Talent & Culture",
+      "Gouvernance & Risques",
+      "Conscience des opportunités"
+    ]
+  },
+  "quiz": {
+    "lite": {
+      "brand": "Kirk & Blackbeard",
+      "heading": "Évaluation de Maturité IA",
+      "sub": "7 questions · ~5 minutes · Score personnalisé immédiat"
+    },
+    "engine": {
+      "submitting": "Calcul de votre score de maturité IA…",
+      "back": "← Retour",
+      "next": "Suivant →",
+      "seeResults": "Voir mes résultats →",
+      "seeResultsLoading": "Envoi en cours…",
+      "postHeadingFull": "Évaluation terminée !",
+      "postHeadingLite": "Vos résultats sont prêts",
+      "postSubFull": "Vous avez répondu aux 26 questions. Renseignez vos coordonnées et nous générerons votre rapport complet de maturité IA.",
+      "postSubLite": "Renseignez vos coordonnées pour révéler votre score de maturité IA et vos recommandations personnalisées."
+    },
+    "lead": {
+      "fullName": "Nom complet",
+      "fullNamePh": "Jean Dupont",
+      "email": "Email professionnel",
+      "emailPh": "jean@entreprise.fr",
+      "jobTitle": "Intitulé de poste",
+      "jobTitlePh": "Directeur Digital",
+      "company": "Nom de l'entreprise",
+      "companyPh": "Acme SAS",
+      "industry": "Secteur",
+      "industrySel": "Sélectionner…",
+      "companySize": "Taille de l'entreprise",
+      "companySizeSuffix": " employés",
+      "privacyLabel": "Vos données & confidentialité",
+      "gdprRequired": "Obligatoire — J'accepte que Brand PWRD Media traite mes données personnelles pour générer et livrer mes résultats d'évaluation. Voir notre {link}.",
+      "privacyLinkText": "Politique de confidentialité",
+      "gdprOptional": "Optionnel — Je souhaite recevoir occasionnellement des insights IA et des actualités de Brand PWRD Media. Je peux me désabonner à tout moment.",
+      "submitPre": "Démarrer l'évaluation →",
+      "submitPost": "Révéler mon score →",
+      "submitLoading": "Veuillez patienter…",
+      "errors": {
+        "nameRequired": "Le nom est requis",
+        "emailRequired": "L'email est requis",
+        "emailInvalid": "Saisissez une adresse email valide",
+        "jobTitleRequired": "L'intitulé de poste est requis",
+        "companyRequired": "Le nom de l'entreprise est requis",
+        "gdprRequired": "Vous devez accepter pour continuer"
+      },
+      "industries": ["Services financiers", "Technologie", "Santé", "Commerce & E-commerce", "Industrie manufacturière", "Services professionnels", "Médias & Divertissement", "Éducation", "Gouvernement & Secteur public", "Autre"]
+    },
+    "progress": "Question {current} sur {total}"
+  },
+  "results": {
+    "scoreLabel": "Votre score de maturité IA",
+    "greeting": "Bonjour {firstName} — voici un aperçu directionnel sur 6 dimensions IA.",
+    "avgLabel": "Score moyen sur toutes les évaluations :",
+    "vsAvgPos": "+{delta} vs moy.",
+    "vsAvgNeg": "{delta} vs moy.",
+    "dimensionProfile": "Votre profil dimensionnel",
+    "insightLabel": "Ce que votre score vous dit",
+    "orgPrioritiesIntro": "Sur la base de vos réponses, voici les priorités les plus urgentes pour votre organisation.",
+    "priorityActions": "Vos actions prioritaires",
+    "alsoWorth": "À traiter également",
+    "discussWithUs": "En discuter avec nous →",
+    "primaryRec": "Recommandation principale",
+    "bookReview": {
+      "title": "AI Transformation Lead",
+      "company": "Kirk & Blackbeard",
+      "badge": "Gratuit · 20 min",
+      "heading": "Vous voulez savoir quoi faire ?",
+      "body": "Réservez une revue de résultats gratuite. Nous parcourons votre radar ensemble, identifions votre levier à plus fort impact et vous donnons une première étape claire — sans pitch, sans obligation.",
+      "cta": "Réserver ma revue de résultats gratuite →",
+      "trainingRef": "Vous préférez un apprentissage en groupe structuré ?",
+      "trainingRefLink": "Voir les prochaines sessions IA pratiques →"
+    },
+    "fullAssessment": {
+      "label": "Vous voulez le tableau complet ?",
+      "heading": "Faites l'évaluation complète de 26 questions",
+      "body": "Un scoring approfondi, une analyse complète des dimensions et des recommandations sur mesure sur les 6 domaines de maturité IA — en environ 15 minutes.",
+      "cta": "Démarrer l'évaluation complète →",
+      "free": "Gratuit · Sans frais supplémentaires"
+    },
+    "referral": {
+      "heading": "Connaissez-vous quelqu'un qui devrait faire ça ?",
+      "sub": "Invitez un collègue — ça prend 10 secondes",
+      "show": "↓ Afficher",
+      "hide": "↑ Masquer",
+      "theirName": "Son prénom",
+      "theirEmail": "Son email",
+      "consent": "Je confirme que cette personne a accepté de recevoir cette invitation. Son email ne sera utilisé que pour envoyer ce message et ne sera ni stocké ni ajouté à une liste de diffusion.",
+      "submit": "Envoyer l'invitation →",
+      "submitting": "Envoi…",
+      "successPrefix": "✓ Invitation envoyée à",
+      "successSub": "Son email ne sera pas stocké ni réutilisé.",
+      "consentError": "Veuillez confirmer le consentement avant d'envoyer."
+    },
+    "shadowAI": {
+      "lowRisk": "Risque faible",
+      "mediumRisk": "Risque moyen",
+      "highRisk": "Risque élevé"
+    },
+    "maturityLevels": {
+      "Unaware": {
+        "insight": "Votre organisation est à un point d'inflexion critique. L'IA n'est plus une considération future — elle remodèle les marchés maintenant. La bonne nouvelle : partir de la prise de conscience signifie que chaque action que vous faites se compose rapidement.",
+        "urgency": "Agissez maintenant — les concurrents creusent déjà l'écart."
+      },
+      "Exploring": {
+        "insight": "Vous commencez à percevoir l'opportunité — mais l'exploration sans direction mène à des investissements gaspillés. Une stratégie claire vous aidera à convertir la curiosité en avantage concurrentiel plus vite que vous ne le pensez.",
+        "urgency": "Des actions structurées dans les 90 prochains jours peuvent vous faire gagner 12+ mois d'avance."
+      },
+      "Experimenting": {
+        "insight": "Vous avez une vraie activité IA en cours, ce qui vous place devant la plupart. Le défi maintenant est de passer de pilotes dispersés à une capacité cohérente qui évolue et crée une différenciation durable.",
+        "urgency": "La plupart des organisations stagnent ici. L'écart entre les pilotes et la capacité à l'échelle est là où l'avantage concurrentiel se gagne ou se perd."
+      },
+      "Scaling": {
+        "insight": "L'IA est intégrée dans votre mode de fonctionnement — un véritable avantage. Les leaders qui restent en tête sont ceux qui ancrent la gouvernance, la culture et les capacités composées avant que la prochaine vague n'arrive.",
+        "urgency": "Protéger et étendre votre avance nécessite une attention délibérée sur les dimensions en retard."
+      },
+      "Leading": {
+        "insight": "Vous opérez à la frontière de l'adoption IA. Le risque à ce stade est la complaisance — le paysage évolue vite et rester en tête nécessite un investissement continu dans les capacités, le talent et la gouvernance.",
+        "urgency": "Maintenir le leadership signifie construire le prochain avantage avant d'en avoir besoin."
+      }
+    },
+    "dimensionLabels": {
+      "strategy_vision": "Stratégie & Vision",
+      "current_usage": "Utilisation actuelle",
+      "data_readiness": "Maturité des données",
+      "talent_culture": "Talent & Culture",
+      "governance_risk": "Gouvernance & Risques",
+      "opportunity_awareness": "Conscience des opportunités"
+    },
+    "radarShortLabels": {
+      "strategy_vision": "Stratégie",
+      "current_usage": "Utilisation",
+      "data_readiness": "Données",
+      "talent_culture": "Talent",
+      "governance_risk": "Gouvernance",
+      "opportunity_awareness": "Opportunités"
+    },
+    "legend": {
+      "yourScore": "Votre score",
+      "baseline": "Référence 50"
+    }
+  }
+}
