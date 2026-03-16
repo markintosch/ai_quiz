@@ -68,9 +68,13 @@ interface CompanyContent {
   badge?: string
   heading1?: string
   heading2?: string
+  headingFallback?: string
   defaultWelcome?: string
   meta?: string
   cta?: string
+  ctaFallback?: string
+  confidentiality?: string
+  valueLine?: string
   whatWeMeasure?: string
   poweredBy?: string
   gdpr?: string
@@ -295,14 +299,18 @@ const FR_LANDING: LandingContent = {
 
 const EN_COMPANY: CompanyContent = {
   badge: 'AI Maturity Assessment',
-  heading1: 'Where does',
-  heading2: 'stand on AI?',
-  defaultWelcome: 'This assessment gives {name} a clear, honest picture of AI maturity — and a practical roadmap for what to do next.',
-  meta: '{count} questions · ~15 minutes · Your results are confidential',
-  cta: 'Start Assessment →',
-  whatWeMeasure: 'What we measure',
+  heading1: 'See where',
+  heading2: 'stands on AI — and what to prioritise next',
+  headingFallback: 'See where your organisation stands on AI — and what to prioritise next',
+  defaultWelcome: 'This 15-minute assessment reveals how AI is understood, used and prioritised across {name} — and surfaces the gaps and opportunities that matter most. Results feed directly into a team workshop, giving leadership a shared fact base for decision-making.',
+  meta: '{count} questions · 15 minutes · Confidential responses · Team workshop included',
+  cta: 'Start the {name} Assessment →',
+  ctaFallback: 'Start Assessment →',
+  confidentiality: 'Individual responses remain confidential. Outcomes are discussed at team level.',
+  valueLine: 'This assessment creates a shared fact base for leadership discussion, prioritisation and next-step planning.',
+  whatWeMeasure: 'What we assess',
   poweredBy: 'Powered by Brand PWRD Media',
-  gdpr: 'Your data is processed in accordance with GDPR.',
+  gdpr: 'Your data is handled in accordance with GDPR.',
   privacyLink: 'Privacy Policy',
   quizHeader: 'AI Maturity Assessment',
   dimensions: [
@@ -317,12 +325,16 @@ const EN_COMPANY: CompanyContent = {
 
 const NL_COMPANY: CompanyContent = {
   badge: 'AI-volwassenheidsassessment',
-  heading1: 'Waar staat',
-  heading2: 'op het gebied van AI?',
-  defaultWelcome: 'Deze assessment geeft {name} een duidelijk, eerlijk beeld van AI-volwassenheid — en een praktische routekaart voor de volgende stappen.',
-  meta: '{count} vragen · ~15 minuten · Je resultaten zijn vertrouwelijk',
-  cta: 'Begin Assessment →',
-  whatWeMeasure: 'Wat we meten',
+  heading1: 'Zie waar',
+  heading2: 'staat op het gebied van AI — en wat als eerste moet worden aangepakt',
+  headingFallback: 'Zie waar jouw organisatie staat op het gebied van AI — en wat als eerste moet worden aangepakt',
+  defaultWelcome: 'Deze 15-minuten-assessment brengt in kaart hoe AI wordt begrepen, gebruikt en geprioriteerd binnen {name} — en maakt de belangrijkste gaps en kansen zichtbaar. De resultaten vormen de basis voor een teamworkshop, zodat het leiderschap beschikt over een gezamenlijk vertrekpunt voor besluitvorming.',
+  meta: '{count} vragen · 15 minuten · Vertrouwelijke antwoorden · Teamworkshop inbegrepen',
+  cta: 'Start de {name} Assessment →',
+  ctaFallback: 'Start Assessment →',
+  confidentiality: 'Individuele antwoorden blijven vertrouwelijk. Uitkomsten worden op teamniveau besproken.',
+  valueLine: 'Deze assessment creëert een gezamenlijke feitenbasis voor leiderschapsdiscussie, prioritering en planvorming.',
+  whatWeMeasure: 'Wat we beoordelen',
   poweredBy: 'Mogelijk gemaakt door Brand PWRD Media',
   gdpr: 'Je gegevens worden verwerkt conform de AVG.',
   privacyLink: 'Privacybeleid',
@@ -340,11 +352,15 @@ const NL_COMPANY: CompanyContent = {
 const FR_COMPANY: CompanyContent = {
   badge: 'Évaluation de Maturité IA',
   heading1: 'Où en est',
-  heading2: 'sur l\'IA ?',
-  defaultWelcome: 'Cette évaluation donne à {name} une image claire et honnête de sa maturité IA — et une feuille de route pratique pour la suite.',
-  meta: '{count} questions · ~15 minutes · Vos résultats sont confidentiels',
-  cta: 'Commencer l\'évaluation →',
-  whatWeMeasure: 'Ce que nous mesurons',
+  heading2: 'sur l\'IA — et quoi prioriser ensuite',
+  headingFallback: 'Où en est votre organisation sur l\'IA — et quoi prioriser ensuite',
+  defaultWelcome: 'Cette évaluation de 15 minutes révèle comment l\'IA est comprise, utilisée et priorisée au sein de {name} — et met en évidence les lacunes et opportunités les plus importantes. Les résultats alimentent directement un atelier d\'équipe, offrant à la direction une base factuelle commune pour la prise de décision.',
+  meta: '{count} questions · 15 minutes · Réponses confidentielles · Atelier d\'équipe inclus',
+  cta: 'Démarrer l\'évaluation {name} →',
+  ctaFallback: 'Démarrer l\'évaluation →',
+  confidentiality: 'Les réponses individuelles restent confidentielles. Les résultats sont discutés au niveau de l\'équipe.',
+  valueLine: 'Cette évaluation crée une base factuelle commune pour la discussion du leadership, la priorisation et la planification des prochaines étapes.',
+  whatWeMeasure: 'Ce que nous évaluons',
   poweredBy: 'Propulsé par Brand PWRD Media',
   gdpr: 'Vos données sont traitées conformément au RGPD.',
   privacyLink: 'Politique de confidentialité',
@@ -751,34 +767,66 @@ export default function ContentPage() {
 
             <Section title="Intro page — before quiz starts">
               <p className="text-xs text-gray-500 -mt-2">
-                Shown on <code className="bg-gray-100 px-1 rounded">/quiz/[company-slug]</code>. The company name is inserted where shown.
+                Shown on <code className="bg-gray-100 px-1 rounded">/quiz/[company-slug]</code>. Use <code className="bg-gray-100 px-1 rounded">{'{name}'}</code> for company name, <code className="bg-gray-100 px-1 rounded">{'{count}'}</code> for question count.
               </p>
               <div className="grid grid-cols-2 gap-4">
                 <Field label="Badge text" value={comp.badge ?? ''} onChange={v => update(['company', 'badge'], v)} />
-                <Field label="Quiz header (slim bar)" value={comp.quizHeader ?? ''} onChange={v => update(['company', 'quizHeader'], v)} />
+                <Field label="Quiz header (slim bar during quiz)" value={comp.quizHeader ?? ''} onChange={v => update(['company', 'quizHeader'], v)} />
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <Field label="Heading line 1 (before name)" value={comp.heading1 ?? ''} onChange={v => update(['company', 'heading1'], v)} placeholder="e.g. Where does" />
-                <Field label="Heading line 2 (after name)" value={comp.heading2 ?? ''} onChange={v => update(['company', 'heading2'], v)} placeholder="e.g. stand on AI?" />
+                <Field label="Headline: before {name}" value={comp.heading1 ?? ''} onChange={v => update(['company', 'heading1'], v)} placeholder="e.g. See where" />
+                <Field label="Headline: after {name}" value={comp.heading2 ?? ''} onChange={v => update(['company', 'heading2'], v)} placeholder="e.g. stands on AI — and what to prioritise next" />
               </div>
               <Field
-                label="Welcome message (use {name} for company name)"
+                label="Headline fallback (no company name)"
+                value={comp.headingFallback ?? ''}
+                onChange={v => update(['company', 'headingFallback'], v)}
+                placeholder="e.g. See where your organisation stands on AI…"
+              />
+              <Field
+                label="Intro paragraph (use {name} for company name)"
                 value={comp.defaultWelcome ?? ''}
                 onChange={v => update(['company', 'defaultWelcome'], v)}
                 multiline
-                placeholder="e.g. This assessment gives {name} a clear picture…"
+                placeholder="e.g. This assessment reveals how AI is understood across {name}…"
               />
               <Field
-                label="Meta line (use {count} for question count)"
+                label="Proof/meta line (use {count} for question count)"
                 value={comp.meta ?? ''}
                 onChange={v => update(['company', 'meta'], v)}
-                placeholder="e.g. {count} questions · ~15 minutes"
+                placeholder="e.g. {count} questions · 15 minutes · Confidential"
               />
-              <Field label="Start button text" value={comp.cta ?? ''} onChange={v => update(['company', 'cta'], v)} />
+              <div className="grid grid-cols-2 gap-4">
+                <Field
+                  label="CTA button (use {name} for company name)"
+                  value={comp.cta ?? ''}
+                  onChange={v => update(['company', 'cta'], v)}
+                  placeholder="e.g. Start the {name} Assessment →"
+                />
+                <Field
+                  label="CTA fallback (no company name)"
+                  value={comp.ctaFallback ?? ''}
+                  onChange={v => update(['company', 'ctaFallback'], v)}
+                  placeholder="e.g. Start Assessment →"
+                />
+              </div>
+              <Field
+                label="Confidentiality note (below CTA)"
+                value={comp.confidentiality ?? ''}
+                onChange={v => update(['company', 'confidentiality'], v)}
+                placeholder="e.g. Individual responses remain confidential…"
+              />
+              <Field
+                label="Value line (optional, below confidentiality)"
+                value={comp.valueLine ?? ''}
+                onChange={v => update(['company', 'valueLine'], v)}
+                multiline
+                placeholder="e.g. This assessment creates a shared fact base…"
+              />
             </Section>
 
             <Section title="Footer & branding">
-              <Field label="'What we measure' label" value={comp.whatWeMeasure ?? ''} onChange={v => update(['company', 'whatWeMeasure'], v)} />
+              <Field label="'What we assess' label" value={comp.whatWeMeasure ?? ''} onChange={v => update(['company', 'whatWeMeasure'], v)} />
               <Field label="'Powered by' text" value={comp.poweredBy ?? ''} onChange={v => update(['company', 'poweredBy'], v)} />
               <div className="grid grid-cols-2 gap-4">
                 <Field label="GDPR notice text" value={comp.gdpr ?? ''} onChange={v => update(['company', 'gdpr'], v)} />

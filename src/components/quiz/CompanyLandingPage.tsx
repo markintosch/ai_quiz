@@ -40,6 +40,20 @@ export function CompanyLandingPage({
     label: dimensionLabels[i] ?? '',
   }))
 
+  const ctaLabel = displayName
+    ? t('cta', { name: displayName })
+    : t('ctaFallback')
+
+  const headingMiddle = displayName ? (
+    <>
+      {t('heading1')}{' '}
+      <span style={{ color: accentColor }}>{displayName}</span>
+      {' '}{t('heading2')}
+    </>
+  ) : (
+    <>{t('headingFallback')}</>
+  )
+
   return (
     <AnimatePresence mode="wait">
       {!started ? (
@@ -76,27 +90,33 @@ export function CompanyLandingPage({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.5 }}
             >
+              {/* 1. Eyebrow badge */}
               <span
-                className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-6 border"
+                className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-8 border"
                 style={{ color: accentColor, borderColor: `${accentColor}40`, backgroundColor: `${accentColor}15` }}
               >
-                {displayName} · {t('badge')}
+                {displayName ? `${displayName} · ${t('badge')}` : t('badge')}
               </span>
 
-              <h1 className="text-4xl md:text-5xl font-black mb-5 leading-tight">
-                {t('heading1')}{' '}
-                <span style={{ color: accentColor }}>{displayName}</span>
-                {' '}{t('heading2')}
+              {/* 2. Headline */}
+              <h1 className="text-4xl md:text-5xl font-black mb-6 leading-tight">
+                {headingMiddle}
               </h1>
 
-              <p className="text-gray-300 text-lg max-w-xl mx-auto mb-4 leading-relaxed">
+              {/* 3. Intro paragraph */}
+              <p className="text-gray-300 text-lg max-w-xl mx-auto mb-5 leading-relaxed">
                 {welcomeMessage ?? t('defaultWelcome', { name: displayName })}
               </p>
 
-              <p className="text-gray-500 text-sm mb-10">
+              {/* 4. Proof line — prominent */}
+              <p
+                className="text-sm font-semibold mb-8 tracking-wide"
+                style={{ color: accentColor }}
+              >
                 {t('meta', { count: questionCount })}
               </p>
 
+              {/* 5. CTA button */}
               <motion.button
                 onClick={() => setStarted(true)}
                 whileHover={{ scale: 1.03 }}
@@ -104,12 +124,22 @@ export function CompanyLandingPage({
                 className="px-10 py-4 text-white font-bold text-lg rounded-xl shadow-xl transition-colors"
                 style={{ backgroundColor: accentColor }}
               >
-                {t('cta')}
+                {ctaLabel}
               </motion.button>
+
+              {/* 6. Confidentiality note */}
+              <p className="text-xs text-gray-500 mt-4">
+                {t('confidentiality')}
+              </p>
+
+              {/* 7. Value line */}
+              <p className="text-sm text-gray-400 mt-3 max-w-md mx-auto leading-relaxed">
+                {t('valueLine')}
+              </p>
             </motion.div>
           </div>
 
-          {/* What we measure */}
+          {/* 8. What we assess tiles */}
           <div className="max-w-3xl mx-auto px-6 pb-16">
             <motion.div
               initial={{ opacity: 0, y: 16 }}

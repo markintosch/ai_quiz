@@ -54,8 +54,7 @@ export default async function FullQuizPage({ params }: PageProps) {
       error: { message: string; code: string } | null
     }
 
-  if (!company) {
-    console.error('[quiz/slug] company not found', { slug, locale, error: companyError })
+  if (!company || companyError) {
     notFound()
   }
 
