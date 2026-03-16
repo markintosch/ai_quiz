@@ -19,13 +19,14 @@ export async function POST(req: NextRequest) {
     referrerScore: number
     referrerLevel: string
     gdprConsent: boolean
+    inviteUrl?: string
   }
 
   if (!body.gdprConsent) {
     return NextResponse.json({ error: 'GDPR consent required.' }, { status: 400 })
   }
 
-  const { inviteeName, inviteeEmail, referrerName, referrerCompany, referrerScore, referrerLevel } = body
+  const { inviteeName, inviteeEmail, referrerName, referrerCompany, referrerScore, referrerLevel, inviteUrl } = body
 
   if (!inviteeName?.trim() || !inviteeEmail?.trim()) {
     return NextResponse.json({ error: 'Name and email are required.' }, { status: 400 })
@@ -43,7 +44,7 @@ export async function POST(req: NextRequest) {
       referrerCompany,
       referrerScore,
       referrerLevel,
-      quizUrl: `${BASE_URL}/quiz`,
+      quizUrl: inviteUrl ?? `${BASE_URL}/quiz`,
     })
   )
 

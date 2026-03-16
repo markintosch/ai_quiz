@@ -9,6 +9,8 @@ interface ReferralSectionProps {
   referrerCompany: string
   referrerScore: number
   referrerLevel: string
+  quizVariant?: 'lite' | 'extended' | 'company'
+  companySlug?: string
 }
 
 export function ReferralSection({
@@ -16,8 +18,11 @@ export function ReferralSection({
   referrerCompany,
   referrerScore,
   referrerLevel,
+  quizVariant = 'extended',
+  companySlug,
 }: ReferralSectionProps) {
   const t = useTranslations('results.referral')
+  const isCompany = quizVariant === 'company'
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [consent, setConsent] = useState(false)
@@ -31,6 +36,11 @@ export function ReferralSection({
     setLoading(true)
     setError('')
 
+    const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? ''
+    const inviteUrl = isCompany && companySlug
+      ? `${BASE_URL}/quiz/${companySlug}`
+      : `${BASE_URL}/quiz`
+
     const res = await fetch('/api/referral', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -42,6 +52,7 @@ export function ReferralSection({
         referrerScore,
         referrerLevel,
         gdprConsent: consent,
+        inviteUrl,
       }),
     })
 
@@ -66,8 +77,14 @@ export function ReferralSection({
           🤝
         </div>
         <div>
-          <h3 className="text-base font-bold text-gray-900">{t('heading')}</h3>
-          <p className="text-sm text-gray-500 mt-0.5">{t('sub')}</p>
+          <h3 className="text-base font-bold text-gray-900">
+            {isCompany ? 'Invite a colleague to complete the assessment' : t('heading')}
+          </h3>
+          <p className="text-sm text-gray-500 mt-0.5">
+            {isCompany
+              ? 'The more of your team that participate, the more complete the team picture becomes.'
+              : t('sub')}
+          </p>
         </div>
       </div>
 

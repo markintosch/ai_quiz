@@ -68,7 +68,8 @@ export default async function ResultsPage({ params }: PageProps) {
   })
 
   const isLite      = response.quiz_version === 'lite'
-  const isCompany   = respondent?.source === 'company_slug'
+  const isCompany   = !!respondent?.source && respondent.source !== 'public'
+  const companySlug = isCompany ? (respondent?.source ?? undefined) : undefined
   const quizVariant = isLite ? 'lite' : isCompany ? 'company' : 'extended'
 
   return (
@@ -90,6 +91,7 @@ export default async function ResultsPage({ params }: PageProps) {
             score={fullScore}
             recommendations={recommendations}
             quizVariant={quizVariant}
+            companySlug={companySlug}
             respondentName={respondent?.name ?? ''}
             respondentEmail={respondent?.email ?? ''}
             respondentCompany={respondent?.company_name ?? ''}

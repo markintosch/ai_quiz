@@ -6,9 +6,10 @@ import type { Recommendation } from '@/lib/scoring/recommendations'
 interface RecommendationCardProps {
   recommendation: Recommendation
   softCta?: boolean
+  ctaHref?: string
 }
 
-export function RecommendationCard({ recommendation, softCta }: RecommendationCardProps) {
+export function RecommendationCard({ recommendation, softCta, ctaHref }: RecommendationCardProps) {
   const t = useTranslations('results')
   const isPrimary = recommendation.priority === 'primary'
 
@@ -39,15 +40,30 @@ export function RecommendationCard({ recommendation, softCta }: RecommendationCa
       >
         {recommendation.body}
       </p>
-      <span
-        className={`inline-block text-xs font-semibold px-4 py-2 rounded-lg transition-colors ${
-          isPrimary
-            ? 'bg-brand-accent text-white hover:bg-opacity-90'
-            : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-        }`}
-      >
-        {softCta ? t('discussWithUs') : recommendation.cta}
-      </span>
+      {ctaHref ? (
+        <a
+          href={ctaHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`inline-block text-xs font-semibold px-4 py-2 rounded-lg transition-colors ${
+            isPrimary
+              ? 'bg-brand-accent text-white hover:bg-orange-700'
+              : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+          }`}
+        >
+          {softCta ? t('discussWithUs') : recommendation.cta}
+        </a>
+      ) : (
+        <span
+          className={`inline-block text-xs font-semibold px-4 py-2 rounded-lg ${
+            isPrimary
+              ? 'bg-brand-accent text-white'
+              : 'bg-gray-100 text-gray-800'
+          }`}
+        >
+          {softCta ? t('discussWithUs') : recommendation.cta}
+        </span>
+      )}
     </div>
   )
 }

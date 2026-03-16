@@ -53,11 +53,19 @@ const stagger = {
   show:   { transition: { staggerChildren: 0.12 } },
 }
 
+const CALENDLY_DISCOVERY = process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL ?? 'https://calendly.com/markiesbpm/ai-intro-meeting-mark-de-kock'
+const CALENDLY_STRATEGY  = process.env.NEXT_PUBLIC_CALENDLY_STRATEGY_URL  ?? 'https://calendly.com/markiesbpm/ai-strategy-session'
+
+function getCalendlyHref(overall: number) {
+  return overall < 50 ? CALENDLY_DISCOVERY : CALENDLY_STRATEGY
+}
+
 interface ScoreDashboardProps {
   score: QuizScore
   recommendations: Recommendation[]
   /** 'lite' | 'extended' → Calendly button CTA; 'company' → inline CalendlyEmbed */
   quizVariant?: 'lite' | 'extended' | 'company'
+  companySlug?: string
   respondentName: string
   respondentEmail: string
   respondentCompany?: string
@@ -68,6 +76,7 @@ export function ScoreDashboard({
   score,
   recommendations,
   quizVariant = 'lite',
+  companySlug,
   respondentName,
   respondentEmail,
   respondentCompany = '',
@@ -77,6 +86,7 @@ export function ScoreDashboard({
   const isCompany = quizVariant === 'company'
   const config = MATURITY_CONFIG[score.maturityLevel]
   const displayScore = useCountUp(score.overall)
+  const calendlyHref = getCalendlyHref(score.overall)
 
   return (
     <motion.div
@@ -136,6 +146,20 @@ export function ScoreDashboard({
         )}
       </motion.div>
 
+      {/* ── Cohort confidentiality block (company only) ── */}
+      {isCompany && (
+        <motion.div
+          variants={fadeUp}
+          className="bg-brand/5 border border-brand/20 rounded-2xl p-5"
+        >
+          <p className="text-sm font-semibold text-brand mb-1">Your responses are confidential</p>
+          <p className="text-sm text-gray-600">
+            Individual answers are never shared with your employer. Your input contributes to
+            an anonymised team picture that helps identify collective priorities.
+          </p>
+        </motion.div>
+      )}
+
       {/* ── Radar chart ── */}
       <motion.div variants={fadeUp} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col items-center">
         <RadarChart dimensionScores={score.dimensionScores} size={280} />
@@ -174,7 +198,10 @@ export function ScoreDashboard({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 + i * 0.1 }}
               >
-                <RecommendationCard recommendation={rec} />
+                <RecommendationCard
+                  recommendation={rec}
+                  ctaHref={calendlyHref}
+                />
               </motion.div>
             ))}
           </div>
@@ -192,57 +219,26 @@ export function ScoreDashboard({
         </motion.div>
       )}
 
-      {/* ── Calendly CTA (lite + extended public) ── */}
-      {!isCompany && (
+      {/* ── CTA block (extended public only) ── */}
+      {!isCompany && !isLite && (
         <motion.div
           variants={fadeUp}
           className="bg-brand rounded-2xl p-6 text-white text-center"
         >
-          {isLite ? (
-            <>
-              <h3 className="text-lg font-bold mb-2">Want your full picture?</h3>
-              <p className="text-sm text-gray-300 mb-1">
-                The Full Assessment covers 25 questions across all 6 AI dimensions —
-                giving you a complete score and deeper recommendations.
-              </p>
-              <p className="text-xs text-gray-400 mb-5">
-                Or book a free call to walk through your results with us.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <a
-                  href="/quiz/extended"
-                  className="inline-block px-5 py-2.5 bg-brand-accent hover:bg-orange-700 text-white font-semibold rounded-xl text-sm transition-colors"
-                >
-                  Take the full assessment →
-                </a>
-                <a
-                  href="https://calendly.com/markiesbpm/ai-intro-meeting-mark-de-kock"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block px-5 py-2.5 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl text-sm transition-colors border border-white/20"
-                >
-                  Book a free call
-                </a>
-              </div>
-            </>
-          ) : (
-            <>
-              <h3 className="text-lg font-bold mb-2">Ready to talk through your results?</h3>
-              <p className="text-sm text-gray-300 mb-5">
-                Book a free 20-minute call with us to discuss your score, what it means
-                for your organisation, and the clearest next steps.
-              </p>
-              <a
-                href="https://calendly.com/markiesbpm/ai-intro-meeting-mark-de-kock"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block px-6 py-2.5 bg-brand-accent hover:bg-orange-700 text-white font-semibold rounded-xl text-sm transition-colors"
-              >
-                Book your free call →
-              </a>
-              <p className="text-xs text-gray-400 mt-3">Free · No obligation · 20 minutes</p>
-            </>
-          )}
+          <h3 className="text-lg font-bold mb-2">Ready to talk through your results?</h3>
+          <p className="text-sm text-gray-300 mb-5">
+            Book a free call with us to discuss your score, what it means
+            for your organisation, and the clearest next steps.
+          </p>
+          <a
+            href={calendlyHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block px-6 py-2.5 bg-brand-accent hover:bg-orange-700 text-white font-semibold rounded-xl text-sm transition-colors"
+          >
+            Book your free call →
+          </a>
+          <p className="text-xs text-gray-400 mt-3">Free · No obligation · 20 minutes</p>
         </motion.div>
       )}
 
@@ -253,6 +249,8 @@ export function ScoreDashboard({
           referrerCompany={respondentCompany}
           referrerScore={score.overall}
           referrerLevel={score.maturityLevel}
+          quizVariant={quizVariant}
+          companySlug={companySlug}
         />
       </motion.div>
     </motion.div>
