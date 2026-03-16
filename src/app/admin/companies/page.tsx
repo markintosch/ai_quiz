@@ -1,6 +1,7 @@
 // FILE: src/app/admin/companies/page.tsx
 import Link from 'next/link'
 import { createServiceClient } from '@/lib/supabase/server'
+import { DeleteCompanyButton } from '@/components/admin/DeleteCompanyButton'
 
 export const dynamic = 'force-dynamic'
 
@@ -96,10 +97,15 @@ export default async function CompaniesPage() {
                   <td className="px-4 py-3 text-right">
                     <Link
                       href={`/admin/companies/${c.id}`}
-                      className="text-brand-accent hover:underline font-medium"
+                      className="text-brand-accent hover:underline font-medium mr-3"
                     >
                       Edit
                     </Link>
+                    <DeleteCompanyButton
+                      companyId={c.id}
+                      name={c.name}
+                      respondentCount={countMap.get(c.id) ?? 0}
+                    />
                   </td>
                 </tr>
               ))}

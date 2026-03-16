@@ -72,11 +72,33 @@ export async function DELETE(
   }
 
   const supabase = createServiceClient()
+  const id = params.id
 
-  const { error } = await supabase
-    .from('companies')
-    .update({ active: false })
-    .eq('id', params.id)
+  // Gather respondent IDs for this company
+  const { data: respondents } = await supabase
+    .from('respondents')
+    .select('id')
+    .eq('company_id', id)
+
+  const respondentIds = (respondents ?? []).map((r) => r.id)
+
+  // Cascade: sessions → responses → respondents → cohorts → company
+  if (respondentIds.length) {
+    await supabase.from('sessions').delete().in('respondent_id', respondentIds)
+    await supabase.from('responses').delete().in('respondent_id', respondentIds)
+    const { error: respErr } = await supabase
+      .from('respondents')
+      .delete()
+      .in('id', respondentIds)
+    if (respErr) {
+      return NextResponse.json({ error: respErr.message }, { status: 500 })
+    }
+  }
+
+  // Cohorts cascade-delete via FK (company_id ON DELETE CASCADE in schema)
+  await supabase.from('cohorts').delete().eq('company_id', id)
+
+  const { error } = await supabase.from('companies').delete().eq('id', id)
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })
