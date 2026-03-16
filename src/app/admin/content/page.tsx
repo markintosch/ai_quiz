@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-type Locale = 'en' | 'nl'
+type Locale = 'en' | 'nl' | 'fr'
 
 interface HeroContent {
   badge?: string
@@ -64,9 +64,29 @@ interface LandingContent {
   finalCta?: FinalCtaContent
 }
 
-// ── Defaults (mirrors messages/en.json and nl.json landing section) ───────────
+interface CompanyContent {
+  badge?: string
+  heading1?: string
+  heading2?: string
+  defaultWelcome?: string
+  meta?: string
+  cta?: string
+  whatWeMeasure?: string
+  poweredBy?: string
+  gdpr?: string
+  privacyLink?: string
+  quizHeader?: string
+  dimensions?: string[]
+}
 
-const EN_DEFAULTS: LandingContent = {
+interface AllContent {
+  landing: LandingContent
+  company: CompanyContent
+}
+
+// ── Defaults ──────────────────────────────────────────────────────────────────
+
+const EN_LANDING: LandingContent = {
   hero: {
     badge: 'Free · 5 minutes · Instant results',
     heading1: 'Your competitors are already using AI.',
@@ -76,7 +96,7 @@ const EN_DEFAULTS: LandingContent = {
     ctaMain: 'Start the 5-minute AI scan →',
     ctaSub: '7 questions · free · no sign-up required upfront',
     ctaFullPre: 'Want the complete picture?',
-    ctaFull: 'Take the full 25-question assessment →',
+    ctaFull: 'Take the full 26-question assessment →',
   },
   trust: [
     'Used by leadership teams across Europe',
@@ -130,81 +150,230 @@ const EN_DEFAULTS: LandingContent = {
     button: 'Start the free 5-minute scan →',
     buttonSub: '7 questions · instant score · no card required',
     fullPre: 'Want the full breakdown instead?',
-    fullLink: 'Take the full 25-question assessment →',
+    fullLink: 'Take the full 26-question assessment →',
     fullNote: 'Free · ~15 minutes · deeper scoring across all 6 dimensions',
   },
 }
 
-const NL_DEFAULTS: LandingContent = {
+const NL_LANDING: LandingContent = {
   hero: {
     badge: 'Gratis · 5 minuten · Direct resultaat',
     heading1: 'Je concurrenten gebruiken AI al.',
-    heading2: 'Waar sta jij écht?',
-    sub: 'Onze 5-minuten-diagnose benchmark jouw AI-volwassenheid op 6 cruciale dimensies — en vertelt je precies wat je als eerste moet aanpakken.',
-    authors: 'Ontwikkeld door Mark de Kock & Frank Meeuwsen — AI-transformatiespecialisten met meer dan 30 jaar gecombineerde digitale ervaring.',
-    ctaMain: 'Start de 5-minuten AI-scan →',
+    heading2: 'Waar sta jij eigenlijk?',
+    sub: 'Onze 5-minuten-diagnose meet je AI-volwassenheid op 6 kritieke dimensies — en vertelt je precies wat je als eerste moet aanpakken.',
+    authors: 'Ontwikkeld door Mark de Kock & Frank Meeuwsen — AI-transformatiespecialisten met ruim 30 jaar gecombineerde digitale ervaring.',
+    ctaMain: 'Start de gratis 5-minuten-scan →',
     ctaSub: '7 vragen · gratis · geen registratie vooraf vereist',
     ctaFullPre: 'Wil je het complete beeld?',
-    ctaFull: 'Doe de volledige 25-vragen assessment →',
+    ctaFull: 'Doe de uitgebreide assessment met 26 vragen →',
   },
   trust: [
-    'Gebruikt door leiderschapsteams in heel Europa',
-    'Gemiddelde score: 47/100 — waar sta jij?',
-    'Resultaten in 5 minuten, gratis',
-    'Geen consultantpitch — gewoon jouw score',
+    'Gebruikt door leiderschapsteams door heel Europa',
+    'Gemiddelde score: 47/100 — hoe scoor jij?',
+    'Resultaat in 5 minuten, gratis',
+    'Geen verkooppraatje — gewoon jouw score',
   ],
   howItWorks: {
     label: 'Hoe het werkt',
-    heading: 'Drie stappen. Zonder jargon.',
+    heading: 'Drie stappen. Geen jargon.',
     steps: [
-      { n: '01', title: 'Beantwoord 7 eerlijke vragen', desc: '5 minuten · geen jargon · geen registratie vooraf' },
-      { n: '02', title: 'Bekijk je score direct', desc: 'Een radargrafiek over alle 6 AI-volwassenheidsdimensies' },
-      { n: '03', title: 'Ken je volgende stap', desc: 'Geprioriteerde acties — specifiek voor jouw score, geen generiek advies' },
+      { n: '01', title: 'Beantwoord 7 eerlijke vragen', desc: '5 minuten · geen jargon · geen registratie vooraf vereist' },
+      { n: '02', title: 'Zie je score direct', desc: 'Een radarkaart over alle 6 AI-volwassenheidsdimensies' },
+      { n: '03', title: 'Weet wat je volgende stap is', desc: 'Geprioriteerde acties — specifiek voor jouw score, geen generiek advies' },
     ],
   },
   dimensions: {
     label: 'Wat je krijgt',
-    heading: 'Een score op 6 dimensies die er écht toe doen',
+    heading: 'Een score op 6 dimensies die er echt toe doen',
     items: [
-      { icon: '🧭', label: 'Strategie & Visie', desc: 'Is AI centraal in hoe je concurreert — of nog steeds een nevenproject?' },
-      { icon: '⚡', label: 'Huidig gebruik', desc: 'Zijn AI-tools echt ingebed in je organisatie?' },
-      { icon: '🗄️', label: 'Data-gereedheid', desc: 'Is jouw dataarchitectuur klaar om echte AI-resultaten te ondersteunen?' },
-      { icon: '🧑‍💻', label: 'Talent & Cultuur', desc: 'Voelen je mensen zich uitgerust en gemotiveerd om met AI te werken?' },
+      { icon: '🧭', label: 'Strategie & Visie', desc: 'Staat AI centraal in hoe je concurreert — of is het nog een bijproject?' },
+      { icon: '⚡', label: 'Huidig gebruik', desc: 'Zijn AI-tools echt ingebed in je hele organisatie?' },
+      { icon: '🗄️', label: 'Data-gereedheid', desc: 'Is je dataarchitectuur klaar voor echte AI-resultaten?' },
+      { icon: '🧑‍💻', label: 'Talent & Cultuur', desc: 'Voelen je mensen zich toegerust en gemotiveerd om met AI te werken?' },
       { icon: '🛡️', label: 'Governance & Risico', desc: 'Heb je de richtlijnen en het beleid dat verantwoord AI vereist?' },
       { icon: '🔍', label: 'Kansenbewustzijn', desc: 'Is jouw leiderschapsteam het eens over waar AI de meeste waarde creëert?' },
     ],
   },
   preview: {
     label: 'Wat je ontvangt',
-    heading: 'Je resultaten zien er zo uit',
-    sub: 'Een radar over alle 6 dimensies, een totaalscore met benchmark-context en specifieke acties voor je zwakste gebieden.',
+    heading: 'Jouw resultaten zien er zo uit',
+    sub: 'Een radar over alle 6 dimensies, een totaalscore met benchmarkcontext en concrete acties voor je zwakste gebieden.',
   },
   practitioners: {
-    label: 'Gebouwd door practitioners',
-    heading: 'Geen theorie. Geen agencypraat.',
-    sub: 'Deze assessment is gebouwd door twee mensen die dit werk dagelijks doen — geen onderzoeksteam of softwarebedrijf.',
+    label: 'Gebouwd door beoefenaars',
+    heading: 'Geen theorie. Geen bureau-gebabbel.',
+    sub: 'Deze assessment is gebouwd door twee mensen die dit werk elke dag doen — geen onderzoeksteam of softwarehuis.',
     mark: {
       role: 'AI Transformation Lead · Kirk & Blackbeard',
-      bio: 'Werkt met leiderschapsteams in heel Europa om praktische AI-strategieën te ontwerpen en te implementeren — van board-alignment tot teamadoptie.',
+      bio: 'Werkt met leiderschapsteams door heel Europa aan het ontwerpen en implementeren van praktische AI-strategieën — van bestuurlijke afstemming tot teamadoptie.',
     },
     frank: {
-      role: 'AI Trainer & Consultant · 30 jaar digitale ervaring',
+      role: 'AI-trainer & Consultant · 30 jaar digitale ervaring',
       quote: '"Geen hype, geen bullshit. Gewoon wat werkt in de echte wereld."',
-      translation: 'No hype, no buzzwords. Just what works in the real world.',
+      translation: 'Geen hype, geen moeilijke woorden. Gewoon wat werkt in de praktijk.',
     },
   },
   finalCta: {
     heading: 'Klaar om te ontdekken waar je staat?',
     sub: 'Geen registratie vereist totdat je je resultaten ziet. Gratis. Duurt 5 minuten.',
     button: 'Start de gratis 5-minuten-scan →',
-    buttonSub: '7 vragen · direct resultaat · geen kaart vereist',
-    fullPre: 'Wil je liever de volledige uitsplitsing?',
-    fullLink: 'Doe de volledige 25-vragen assessment →',
-    fullNote: 'Gratis · ~15 minuten · diepere scoring op alle 6 dimensies',
+    buttonSub: '7 vragen · direct resultaat · geen creditcard vereist',
+    fullPre: 'Wil je liever de volledige analyse?',
+    fullLink: 'Doe de uitgebreide assessment met 26 vragen →',
+    fullNote: 'Gratis · ~15 minuten · diepgaandere scoring op alle 6 dimensies',
   },
 }
 
-const DEFAULTS: Record<Locale, LandingContent> = { en: EN_DEFAULTS, nl: NL_DEFAULTS }
+const FR_LANDING: LandingContent = {
+  hero: {
+    badge: 'Gratuit · 5 minutes · Résultats immédiats',
+    heading1: 'Vos concurrents utilisent déjà l\'IA.',
+    heading2: 'Où en êtes-vous vraiment ?',
+    sub: 'Notre diagnostic de 5 minutes évalue votre maturité IA sur 6 dimensions critiques — et vous indique exactement quoi prioriser.',
+    authors: 'Développé par Mark de Kock & Frank Meeuwsen — spécialistes de la transformation IA avec plus de 30 ans d\'expérience digitale combinée.',
+    ctaMain: 'Démarrer le scan IA de 5 minutes →',
+    ctaSub: '7 questions · gratuit · sans inscription préalable',
+    ctaFullPre: 'Vous voulez le tableau complet ?',
+    ctaFull: 'Faire l\'évaluation complète de 26 questions →',
+  },
+  trust: [
+    'Utilisé par des équipes dirigeantes à travers l\'Europe',
+    'Score moyen : 47/100 — où vous situez-vous ?',
+    'Résultats en 5 minutes, gratuit',
+    'Pas de pitch consultant — juste votre score',
+  ],
+  howItWorks: {
+    label: 'Comment ça marche',
+    heading: 'Trois étapes. Zéro jargon.',
+    steps: [
+      { n: '01', title: 'Répondez à 7 questions honnêtes', desc: '5 minutes · pas de jargon · sans inscription préalable' },
+      { n: '02', title: 'Visualisez votre score immédiatement', desc: 'Un graphique radar sur les 6 dimensions de maturité IA' },
+      { n: '03', title: 'Connaissez votre prochaine étape', desc: 'Actions priorisées — adaptées à votre score, pas des conseils génériques' },
+    ],
+  },
+  dimensions: {
+    label: 'Ce que vous obtenez',
+    heading: 'Un score sur 6 dimensions qui comptent vraiment',
+    items: [
+      { icon: '🧭', label: 'Stratégie & Vision', desc: 'L\'IA est-elle au cœur de votre compétitivité — ou encore un projet secondaire ?' },
+      { icon: '⚡', label: 'Utilisation actuelle', desc: 'Les outils IA sont-ils réellement intégrés dans votre organisation ?' },
+      { icon: '🗄️', label: 'Maturité des données', desc: 'Votre architecture data est-elle prête à soutenir de vrais résultats IA ?' },
+      { icon: '🧑‍💻', label: 'Talent & Culture', desc: 'Vos équipes se sentent-elles prêtes et motivées à travailler avec l\'IA ?' },
+      { icon: '🛡️', label: 'Gouvernance & Risques', desc: 'Disposez-vous des garde-fous et politiques qu\'exige une IA responsable ?' },
+      { icon: '🔍', label: 'Conscience des opportunités', desc: 'Votre équipe dirigeante est-elle alignée sur où l\'IA crée le plus de valeur ?' },
+    ],
+  },
+  preview: {
+    label: 'Ce que vous recevrez',
+    heading: 'Vos résultats ressembleront à ceci',
+    sub: 'Un radar sur les 6 dimensions, un score global avec contexte benchmark, et des actions concrètes pour vos points faibles.',
+  },
+  practitioners: {
+    label: 'Conçu par des praticiens',
+    heading: 'Pas de théorie. Pas de jargon d\'agence.',
+    sub: 'Cette évaluation a été construite par deux personnes qui font ce travail au quotidien — pas une équipe de recherche ou une entreprise logicielle.',
+    mark: {
+      role: 'AI Transformation Lead · Kirk & Blackbeard',
+      bio: 'Accompagne des équipes dirigeantes à travers l\'Europe pour concevoir et mettre en œuvre des stratégies IA concrètes — de l\'alignement du conseil à l\'adoption par les équipes.',
+    },
+    frank: {
+      role: 'Formateur & Consultant IA · 30 ans d\'expérience digitale',
+      quote: '"Geen hype, geen bullshit. Gewoon wat werkt in de echte wereld."',
+      translation: 'Pas de hype, pas de buzzwords. Juste ce qui fonctionne dans le monde réel.',
+    },
+  },
+  finalCta: {
+    heading: 'Prêt à découvrir où vous en êtes ?',
+    sub: 'Aucune inscription requise avant de voir vos résultats. Gratuit. 5 minutes.',
+    button: 'Démarrer le scan gratuit de 5 minutes →',
+    buttonSub: '7 questions · score immédiat · sans carte requise',
+    fullPre: 'Vous préférez l\'analyse complète ?',
+    fullLink: 'Faire l\'évaluation complète de 26 questions →',
+    fullNote: 'Gratuit · ~15 minutes · scoring approfondi sur les 6 dimensions',
+  },
+}
+
+const EN_COMPANY: CompanyContent = {
+  badge: 'AI Maturity Assessment',
+  heading1: 'Where does',
+  heading2: 'stand on AI?',
+  defaultWelcome: 'This assessment gives {name} a clear, honest picture of AI maturity — and a practical roadmap for what to do next.',
+  meta: '{count} questions · ~15 minutes · Your results are confidential',
+  cta: 'Start Assessment →',
+  whatWeMeasure: 'What we measure',
+  poweredBy: 'Powered by Brand PWRD Media',
+  gdpr: 'Your data is processed in accordance with GDPR.',
+  privacyLink: 'Privacy Policy',
+  quizHeader: 'AI Maturity Assessment',
+  dimensions: [
+    'Strategy & Vision',
+    'Current Usage',
+    'Data Readiness',
+    'Talent & Culture',
+    'Governance & Risk',
+    'Opportunity Awareness',
+  ],
+}
+
+const NL_COMPANY: CompanyContent = {
+  badge: 'AI-volwassenheidsassessment',
+  heading1: 'Waar staat',
+  heading2: 'op het gebied van AI?',
+  defaultWelcome: 'Deze assessment geeft {name} een duidelijk, eerlijk beeld van AI-volwassenheid — en een praktische routekaart voor de volgende stappen.',
+  meta: '{count} vragen · ~15 minuten · Je resultaten zijn vertrouwelijk',
+  cta: 'Begin Assessment →',
+  whatWeMeasure: 'Wat we meten',
+  poweredBy: 'Mogelijk gemaakt door Brand PWRD Media',
+  gdpr: 'Je gegevens worden verwerkt conform de AVG.',
+  privacyLink: 'Privacybeleid',
+  quizHeader: 'AI-volwassenheidsassessment',
+  dimensions: [
+    'Strategie & Visie',
+    'Huidig gebruik',
+    'Data-gereedheid',
+    'Talent & Cultuur',
+    'Governance & Risico',
+    'Kansenbewustzijn',
+  ],
+}
+
+const FR_COMPANY: CompanyContent = {
+  badge: 'Évaluation de Maturité IA',
+  heading1: 'Où en est',
+  heading2: 'sur l\'IA ?',
+  defaultWelcome: 'Cette évaluation donne à {name} une image claire et honnête de sa maturité IA — et une feuille de route pratique pour la suite.',
+  meta: '{count} questions · ~15 minutes · Vos résultats sont confidentiels',
+  cta: 'Commencer l\'évaluation →',
+  whatWeMeasure: 'Ce que nous mesurons',
+  poweredBy: 'Propulsé par Brand PWRD Media',
+  gdpr: 'Vos données sont traitées conformément au RGPD.',
+  privacyLink: 'Politique de confidentialité',
+  quizHeader: 'Évaluation de Maturité IA',
+  dimensions: [
+    'Stratégie & Vision',
+    'Utilisation actuelle',
+    'Maturité des données',
+    'Talent & Culture',
+    'Gouvernance & Risques',
+    'Conscience des opportunités',
+  ],
+}
+
+const LANDING_DEFAULTS: Record<Locale, LandingContent> = {
+  en: EN_LANDING,
+  nl: NL_LANDING,
+  fr: FR_LANDING,
+}
+
+const COMPANY_DEFAULTS: Record<Locale, CompanyContent> = {
+  en: EN_COMPANY,
+  nl: NL_COMPANY,
+  fr: FR_COMPANY,
+}
+
+function makeDefaults(loc: Locale): AllContent {
+  return { landing: clone(LANDING_DEFAULTS[loc]), company: clone(COMPANY_DEFAULTS[loc]) }
+}
 
 // ── UI helpers ────────────────────────────────────────────────────────────────
 
@@ -254,6 +423,15 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   )
 }
 
+function SectionGroup({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="space-y-4">
+      <h2 className="text-base font-bold text-gray-700 border-b border-gray-200 pb-2">{title}</h2>
+      {children}
+    </div>
+  )
+}
+
 function SaveBar({ saving, saved, dirty, onSave }: { saving: boolean; saved: boolean; dirty: boolean; onSave: () => void }) {
   return (
     <div className="flex items-center gap-4">
@@ -291,11 +469,36 @@ function set<T extends object>(obj: T, path: string[], value: unknown): T {
   return out
 }
 
+// Client-side deep merge
+function deepMergeClient(
+  a: Record<string, unknown>,
+  b: Record<string, unknown>
+): Record<string, unknown> {
+  const out: Record<string, unknown> = { ...a }
+  for (const key of Object.keys(b)) {
+    if (
+      b[key] !== null &&
+      typeof b[key] === 'object' &&
+      !Array.isArray(b[key]) &&
+      typeof a[key] === 'object' &&
+      !Array.isArray(a[key])
+    ) {
+      out[key] = deepMergeClient(
+        a[key] as Record<string, unknown>,
+        b[key] as Record<string, unknown>
+      )
+    } else {
+      out[key] = b[key]
+    }
+  }
+  return out
+}
+
 // ── Main component ────────────────────────────────────────────────────────────
 
 export default function ContentPage() {
   const [locale, setLocale] = useState<Locale>('en')
-  const [content, setContent] = useState<LandingContent>(clone(DEFAULTS.en))
+  const [content, setContent] = useState<AllContent>(makeDefaults('en'))
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [dirty, setDirty] = useState(false)
@@ -308,13 +511,27 @@ export default function ContentPage() {
     try {
       const res = await fetch(`/api/admin/content?locale=${loc}`)
       if (!res.ok) throw new Error('Failed to load content')
-      const json = await res.json() as { content: LandingContent }
-      // Merge DB overrides on top of defaults so all fields are always populated
-      const merged = deepMergeClient(clone(DEFAULTS[loc]) as Record<string, unknown>, (json.content ?? {}) as Record<string, unknown>)
-      setContent(merged)
+      const json = await res.json() as { content: Record<string, unknown> }
+      const raw = json.content ?? {}
+
+      // Detect legacy flat landing blob (no 'landing' or 'company' key at root)
+      const isNested = 'landing' in raw || 'company' in raw
+      const defaults = makeDefaults(loc)
+
+      const mergedLanding = deepMergeClient(
+        defaults.landing as Record<string, unknown>,
+        isNested ? ((raw.landing as Record<string, unknown>) ?? {}) : raw
+      ) as LandingContent
+
+      const mergedCompany = deepMergeClient(
+        defaults.company as Record<string, unknown>,
+        isNested ? ((raw.company as Record<string, unknown>) ?? {}) : {}
+      ) as CompanyContent
+
+      setContent({ landing: mergedLanding, company: mergedCompany })
     } catch (e) {
       setError((e as Error).message)
-      setContent(clone(DEFAULTS[loc]))
+      setContent(makeDefaults(loc))
     } finally {
       setLoading(false)
       setDirty(false)
@@ -355,22 +572,23 @@ export default function ContentPage() {
     setLocale(loc)
   }
 
-  const h = content.hero ?? {}
-  const trustItems = content.trust ?? []
-  const hiw = content.howItWorks ?? {}
-  const dim = content.dimensions ?? {}
-  const prev = content.preview ?? {}
-  const prac = content.practitioners ?? {}
-  const cta = content.finalCta ?? {}
+  const h = content.landing.hero ?? {}
+  const trustItems = content.landing.trust ?? []
+  const hiw = content.landing.howItWorks ?? {}
+  const dim = content.landing.dimensions ?? {}
+  const prev = content.landing.preview ?? {}
+  const prac = content.landing.practitioners ?? {}
+  const cta = content.landing.finalCta ?? {}
+  const comp = content.company ?? {}
 
   return (
     <div className="space-y-8">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Homepage Content</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Content Management</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Edit the public-facing copy for the landing page. Changes go live on next page load.
+            Edit landing page and company quiz page copy. Changes go live on next page load.
           </p>
         </div>
         <SaveBar saving={saving} saved={saved} dirty={dirty} onSave={handleSave} />
@@ -378,7 +596,7 @@ export default function ContentPage() {
 
       {/* Locale tabs */}
       <div className="flex gap-1 bg-gray-100 rounded-lg p-1 w-fit">
-        {(['en', 'nl'] as const).map((loc) => (
+        {(['en', 'nl', 'fr'] as const).map((loc) => (
           <button
             key={loc}
             onClick={() => handleLocaleChange(loc)}
@@ -388,7 +606,7 @@ export default function ContentPage() {
                 : 'text-gray-500 hover:text-gray-700'
             }`}
           >
-            {loc === 'en' ? '🇬🇧 English' : '🇳🇱 Dutch'}
+            {loc === 'en' ? '🇬🇧 English' : loc === 'nl' ? '🇳🇱 Dutch' : '🇫🇷 French'}
           </button>
         ))}
       </div>
@@ -400,128 +618,194 @@ export default function ContentPage() {
       {loading ? (
         <div className="text-sm text-gray-400">Loading…</div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-10">
 
-          {/* Hero */}
-          <Section title="Hero — top of page">
-            <Field label="Badge (above headline)" value={h.badge ?? ''} onChange={v => update(['hero', 'badge'], v)} />
-            <Field label="Headline line 1" value={h.heading1 ?? ''} onChange={v => update(['hero', 'heading1'], v)} />
-            <Field label="Headline line 2" value={h.heading2 ?? ''} onChange={v => update(['hero', 'heading2'], v)} />
-            <Field label="Subheading" value={h.sub ?? ''} onChange={v => update(['hero', 'sub'], v)} multiline />
-            <Field label="Authors line" value={h.authors ?? ''} onChange={v => update(['hero', 'authors'], v)} multiline />
-            <div className="grid grid-cols-2 gap-4">
-              <Field label="Primary CTA button" value={h.ctaMain ?? ''} onChange={v => update(['hero', 'ctaMain'], v)} />
-              <Field label="CTA sub-label" value={h.ctaSub ?? ''} onChange={v => update(['hero', 'ctaSub'], v)} />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <Field label="Full assessment pre-text" value={h.ctaFullPre ?? ''} onChange={v => update(['hero', 'ctaFullPre'], v)} />
-              <Field label="Full assessment link text" value={h.ctaFull ?? ''} onChange={v => update(['hero', 'ctaFull'], v)} />
-            </div>
-          </Section>
+          {/* ── Landing page sections ── */}
+          <SectionGroup title="Landing Page">
 
-          {/* Trust bar */}
-          <Section title="Trust bar — 4 short statements">
-            {trustItems.map((item, i) => (
+            {/* Hero */}
+            <Section title="Hero — top of page">
+              <Field label="Badge (above headline)" value={h.badge ?? ''} onChange={v => update(['landing', 'hero', 'badge'], v)} />
+              <Field label="Headline line 1" value={h.heading1 ?? ''} onChange={v => update(['landing', 'hero', 'heading1'], v)} />
+              <Field label="Headline line 2" value={h.heading2 ?? ''} onChange={v => update(['landing', 'hero', 'heading2'], v)} />
+              <Field label="Subheading" value={h.sub ?? ''} onChange={v => update(['landing', 'hero', 'sub'], v)} multiline />
+              <Field label="Authors line" value={h.authors ?? ''} onChange={v => update(['landing', 'hero', 'authors'], v)} multiline />
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="Primary CTA button" value={h.ctaMain ?? ''} onChange={v => update(['landing', 'hero', 'ctaMain'], v)} />
+                <Field label="CTA sub-label" value={h.ctaSub ?? ''} onChange={v => update(['landing', 'hero', 'ctaSub'], v)} />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="Full assessment pre-text" value={h.ctaFullPre ?? ''} onChange={v => update(['landing', 'hero', 'ctaFullPre'], v)} />
+                <Field label="Full assessment link text" value={h.ctaFull ?? ''} onChange={v => update(['landing', 'hero', 'ctaFull'], v)} />
+              </div>
+            </Section>
+
+            {/* Trust bar */}
+            <Section title="Trust bar — 4 short statements">
+              {trustItems.map((item, i) => (
+                <Field
+                  key={i}
+                  label={`Statement ${i + 1}`}
+                  value={item}
+                  onChange={v => {
+                    const next = [...trustItems]
+                    next[i] = v
+                    update(['landing', 'trust'], next)
+                  }}
+                />
+              ))}
+            </Section>
+
+            {/* How it works */}
+            <Section title="How it works">
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="Section label" value={hiw.label ?? ''} onChange={v => update(['landing', 'howItWorks', 'label'], v)} />
+                <Field label="Section heading" value={hiw.heading ?? ''} onChange={v => update(['landing', 'howItWorks', 'heading'], v)} />
+              </div>
+              {(hiw.steps ?? []).map((step, i) => (
+                <div key={i} className="grid grid-cols-2 gap-4 border-t border-gray-100 pt-4">
+                  <Field label={`Step ${step.n} title`} value={step.title} onChange={v => {
+                    const steps = clone(hiw.steps ?? [])
+                    steps[i] = { ...steps[i], title: v }
+                    update(['landing', 'howItWorks', 'steps'], steps)
+                  }} />
+                  <Field label={`Step ${step.n} description`} value={step.desc} onChange={v => {
+                    const steps = clone(hiw.steps ?? [])
+                    steps[i] = { ...steps[i], desc: v }
+                    update(['landing', 'howItWorks', 'steps'], steps)
+                  }} />
+                </div>
+              ))}
+            </Section>
+
+            {/* 6 Dimensions */}
+            <Section title="6 Dimensions">
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="Section label" value={dim.label ?? ''} onChange={v => update(['landing', 'dimensions', 'label'], v)} />
+                <Field label="Section heading" value={dim.heading ?? ''} onChange={v => update(['landing', 'dimensions', 'heading'], v)} />
+              </div>
+              {(dim.items ?? []).map((item, i) => (
+                <div key={i} className="grid grid-cols-2 gap-4 border-t border-gray-100 pt-4">
+                  <Field label={`${item.icon} ${item.label} — label`} value={item.label} onChange={v => {
+                    const items = clone(dim.items ?? [])
+                    items[i] = { ...items[i], label: v }
+                    update(['landing', 'dimensions', 'items'], items)
+                  }} />
+                  <Field label="Description" value={item.desc} onChange={v => {
+                    const items = clone(dim.items ?? [])
+                    items[i] = { ...items[i], desc: v }
+                    update(['landing', 'dimensions', 'items'], items)
+                  }} />
+                </div>
+              ))}
+            </Section>
+
+            {/* Results preview */}
+            <Section title="Results preview section">
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="Section label" value={prev.label ?? ''} onChange={v => update(['landing', 'preview', 'label'], v)} />
+                <Field label="Section heading" value={prev.heading ?? ''} onChange={v => update(['landing', 'preview', 'heading'], v)} />
+              </div>
+              <Field label="Description" value={prev.sub ?? ''} onChange={v => update(['landing', 'preview', 'sub'], v)} multiline />
+            </Section>
+
+            {/* Practitioners */}
+            <Section title="Practitioners — about the authors">
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="Section label" value={prac.label ?? ''} onChange={v => update(['landing', 'practitioners', 'label'], v)} />
+                <Field label="Section heading" value={prac.heading ?? ''} onChange={v => update(['landing', 'practitioners', 'heading'], v)} />
+              </div>
+              <Field label="Section sub" value={prac.sub ?? ''} onChange={v => update(['landing', 'practitioners', 'sub'], v)} multiline />
+              <div className="border-t border-gray-100 pt-4 space-y-3">
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Mark de Kock</p>
+                <Field label="Role / title" value={prac.mark?.role ?? ''} onChange={v => update(['landing', 'practitioners', 'mark', 'role'], v)} />
+                <Field label="Bio" value={prac.mark?.bio ?? ''} onChange={v => update(['landing', 'practitioners', 'mark', 'bio'], v)} multiline />
+              </div>
+              <div className="border-t border-gray-100 pt-4 space-y-3">
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Frank Meeuwsen</p>
+                <Field label="Role / title" value={prac.frank?.role ?? ''} onChange={v => update(['landing', 'practitioners', 'frank', 'role'], v)} />
+                <Field label="Quote (shown in original language)" value={prac.frank?.quote ?? ''} onChange={v => update(['landing', 'practitioners', 'frank', 'quote'], v)} />
+                <Field label="Translation (shown below quote)" value={prac.frank?.translation ?? ''} onChange={v => update(['landing', 'practitioners', 'frank', 'translation'], v)} />
+              </div>
+            </Section>
+
+            {/* Final CTA */}
+            <Section title="Final call-to-action">
+              <Field label="Heading" value={cta.heading ?? ''} onChange={v => update(['landing', 'finalCta', 'heading'], v)} />
+              <Field label="Sub-text" value={cta.sub ?? ''} onChange={v => update(['landing', 'finalCta', 'sub'], v)} multiline />
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="Primary button text" value={cta.button ?? ''} onChange={v => update(['landing', 'finalCta', 'button'], v)} />
+                <Field label="Button sub-label" value={cta.buttonSub ?? ''} onChange={v => update(['landing', 'finalCta', 'buttonSub'], v)} />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="Full assessment pre-text" value={cta.fullPre ?? ''} onChange={v => update(['landing', 'finalCta', 'fullPre'], v)} />
+                <Field label="Full assessment link text" value={cta.fullLink ?? ''} onChange={v => update(['landing', 'finalCta', 'fullLink'], v)} />
+              </div>
+              <Field label="Full assessment note" value={cta.fullNote ?? ''} onChange={v => update(['landing', 'finalCta', 'fullNote'], v)} />
+            </Section>
+
+          </SectionGroup>
+
+          {/* ── Company page sections ── */}
+          <SectionGroup title="Company Quiz Page">
+
+            <Section title="Intro page — before quiz starts">
+              <p className="text-xs text-gray-500 -mt-2">
+                Shown on <code className="bg-gray-100 px-1 rounded">/quiz/[company-slug]</code>. The company name is inserted where shown.
+              </p>
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="Badge text" value={comp.badge ?? ''} onChange={v => update(['company', 'badge'], v)} />
+                <Field label="Quiz header (slim bar)" value={comp.quizHeader ?? ''} onChange={v => update(['company', 'quizHeader'], v)} />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="Heading line 1 (before name)" value={comp.heading1 ?? ''} onChange={v => update(['company', 'heading1'], v)} placeholder="e.g. Where does" />
+                <Field label="Heading line 2 (after name)" value={comp.heading2 ?? ''} onChange={v => update(['company', 'heading2'], v)} placeholder="e.g. stand on AI?" />
+              </div>
               <Field
-                key={i}
-                label={`Statement ${i + 1}`}
-                value={item}
-                onChange={v => {
-                  const next = [...trustItems]
-                  next[i] = v
-                  update(['trust'], next)
-                }}
+                label="Welcome message (use {name} for company name)"
+                value={comp.defaultWelcome ?? ''}
+                onChange={v => update(['company', 'defaultWelcome'], v)}
+                multiline
+                placeholder="e.g. This assessment gives {name} a clear picture…"
               />
-            ))}
-          </Section>
+              <Field
+                label="Meta line (use {count} for question count)"
+                value={comp.meta ?? ''}
+                onChange={v => update(['company', 'meta'], v)}
+                placeholder="e.g. {count} questions · ~15 minutes"
+              />
+              <Field label="Start button text" value={comp.cta ?? ''} onChange={v => update(['company', 'cta'], v)} />
+            </Section>
 
-          {/* How it works */}
-          <Section title="How it works">
-            <div className="grid grid-cols-2 gap-4">
-              <Field label="Section label" value={hiw.label ?? ''} onChange={v => update(['howItWorks', 'label'], v)} />
-              <Field label="Section heading" value={hiw.heading ?? ''} onChange={v => update(['howItWorks', 'heading'], v)} />
-            </div>
-            {(hiw.steps ?? []).map((step, i) => (
-              <div key={i} className="grid grid-cols-2 gap-4 border-t border-gray-100 pt-4">
-                <Field label={`Step ${step.n} title`} value={step.title} onChange={v => {
-                  const steps = clone(hiw.steps ?? [])
-                  steps[i] = { ...steps[i], title: v }
-                  update(['howItWorks', 'steps'], steps)
-                }} />
-                <Field label={`Step ${step.n} description`} value={step.desc} onChange={v => {
-                  const steps = clone(hiw.steps ?? [])
-                  steps[i] = { ...steps[i], desc: v }
-                  update(['howItWorks', 'steps'], steps)
-                }} />
+            <Section title="Footer & branding">
+              <Field label="'What we measure' label" value={comp.whatWeMeasure ?? ''} onChange={v => update(['company', 'whatWeMeasure'], v)} />
+              <Field label="'Powered by' text" value={comp.poweredBy ?? ''} onChange={v => update(['company', 'poweredBy'], v)} />
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="GDPR notice text" value={comp.gdpr ?? ''} onChange={v => update(['company', 'gdpr'], v)} />
+                <Field label="Privacy link text" value={comp.privacyLink ?? ''} onChange={v => update(['company', 'privacyLink'], v)} />
               </div>
-            ))}
-          </Section>
+            </Section>
 
-          {/* 6 Dimensions */}
-          <Section title="6 Dimensions">
-            <div className="grid grid-cols-2 gap-4">
-              <Field label="Section label" value={dim.label ?? ''} onChange={v => update(['dimensions', 'label'], v)} />
-              <Field label="Section heading" value={dim.heading ?? ''} onChange={v => update(['dimensions', 'heading'], v)} />
-            </div>
-            {(dim.items ?? []).map((item, i) => (
-              <div key={i} className="grid grid-cols-2 gap-4 border-t border-gray-100 pt-4">
-                <Field label={`${item.icon} ${item.label} — label`} value={item.label} onChange={v => {
-                  const items = clone(dim.items ?? [])
-                  items[i] = { ...items[i], label: v }
-                  update(['dimensions', 'items'], items)
-                }} />
-                <Field label="Description" value={item.desc} onChange={v => {
-                  const items = clone(dim.items ?? [])
-                  items[i] = { ...items[i], desc: v }
-                  update(['dimensions', 'items'], items)
-                }} />
-              </div>
-            ))}
-          </Section>
+            <Section title="Dimension labels (shown on intro page)">
+              <p className="text-xs text-gray-500 -mt-2">These 6 labels are shown as cards on the company intro page.</p>
+              {(comp.dimensions ?? []).map((label, i) => {
+                const icons = ['🧭', '⚡', '🗄️', '🧑‍💻', '🛡️', '🔍']
+                return (
+                  <Field
+                    key={i}
+                    label={`${icons[i] ?? ''} Dimension ${i + 1}`}
+                    value={label}
+                    onChange={v => {
+                      const next = [...(comp.dimensions ?? [])]
+                      next[i] = v
+                      update(['company', 'dimensions'], next)
+                    }}
+                  />
+                )
+              })}
+            </Section>
 
-          {/* Results preview */}
-          <Section title="Results preview section">
-            <div className="grid grid-cols-2 gap-4">
-              <Field label="Section label" value={prev.label ?? ''} onChange={v => update(['preview', 'label'], v)} />
-              <Field label="Section heading" value={prev.heading ?? ''} onChange={v => update(['preview', 'heading'], v)} />
-            </div>
-            <Field label="Description" value={prev.sub ?? ''} onChange={v => update(['preview', 'sub'], v)} multiline />
-          </Section>
-
-          {/* Practitioners */}
-          <Section title="Practitioners — about the authors">
-            <div className="grid grid-cols-2 gap-4">
-              <Field label="Section label" value={prac.label ?? ''} onChange={v => update(['practitioners', 'label'], v)} />
-              <Field label="Section heading" value={prac.heading ?? ''} onChange={v => update(['practitioners', 'heading'], v)} />
-            </div>
-            <Field label="Section sub" value={prac.sub ?? ''} onChange={v => update(['practitioners', 'sub'], v)} multiline />
-            <div className="border-t border-gray-100 pt-4 space-y-3">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Mark de Kock</p>
-              <Field label="Role / title" value={prac.mark?.role ?? ''} onChange={v => update(['practitioners', 'mark', 'role'], v)} />
-              <Field label="Bio" value={prac.mark?.bio ?? ''} onChange={v => update(['practitioners', 'mark', 'bio'], v)} multiline />
-            </div>
-            <div className="border-t border-gray-100 pt-4 space-y-3">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Frank Meeuwsen</p>
-              <Field label="Role / title" value={prac.frank?.role ?? ''} onChange={v => update(['practitioners', 'frank', 'role'], v)} />
-              <Field label="Quote (shown in original language)" value={prac.frank?.quote ?? ''} onChange={v => update(['practitioners', 'frank', 'quote'], v)} />
-              <Field label="Translation (shown below quote)" value={prac.frank?.translation ?? ''} onChange={v => update(['practitioners', 'frank', 'translation'], v)} />
-            </div>
-          </Section>
-
-          {/* Final CTA */}
-          <Section title="Final call-to-action">
-            <Field label="Heading" value={cta.heading ?? ''} onChange={v => update(['finalCta', 'heading'], v)} />
-            <Field label="Sub-text" value={cta.sub ?? ''} onChange={v => update(['finalCta', 'sub'], v)} multiline />
-            <div className="grid grid-cols-2 gap-4">
-              <Field label="Primary button text" value={cta.button ?? ''} onChange={v => update(['finalCta', 'button'], v)} />
-              <Field label="Button sub-label" value={cta.buttonSub ?? ''} onChange={v => update(['finalCta', 'buttonSub'], v)} />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <Field label="Full assessment pre-text" value={cta.fullPre ?? ''} onChange={v => update(['finalCta', 'fullPre'], v)} />
-              <Field label="Full assessment link text" value={cta.fullLink ?? ''} onChange={v => update(['finalCta', 'fullLink'], v)} />
-            </div>
-            <Field label="Full assessment note" value={cta.fullNote ?? ''} onChange={v => update(['finalCta', 'fullNote'], v)} />
-          </Section>
+          </SectionGroup>
 
           {/* Sticky bottom save */}
           <div className="flex justify-end pt-4 border-t border-gray-100">
@@ -532,29 +816,4 @@ export default function ContentPage() {
       )}
     </div>
   )
-}
-
-// Client-side deep merge (same logic as server layout)
-function deepMergeClient(
-  a: Record<string, unknown>,
-  b: Record<string, unknown>
-): LandingContent {
-  const out: Record<string, unknown> = { ...a }
-  for (const key of Object.keys(b)) {
-    if (
-      b[key] !== null &&
-      typeof b[key] === 'object' &&
-      !Array.isArray(b[key]) &&
-      typeof a[key] === 'object' &&
-      !Array.isArray(a[key])
-    ) {
-      out[key] = deepMergeClient(
-        a[key] as Record<string, unknown>,
-        b[key] as Record<string, unknown>
-      )
-    } else {
-      out[key] = b[key]
-    }
-  }
-  return out as LandingContent
 }

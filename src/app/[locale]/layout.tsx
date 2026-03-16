@@ -199,12 +199,27 @@ export default async function LocaleLayout({
       .eq('locale', locale)
       .single() as { data: { content: Record<string, unknown> } | null }
     if (data?.content && Object.keys(data.content).length > 0) {
+      const c = data.content
+      // Support new nested { landing, company } and legacy flat landing blob
+      const isNested = 'landing' in c || 'company' in c
+      const landingOverrides = isNested
+        ? ((c.landing as Record<string, unknown>) ?? {})
+        : c
+      const companyOverrides = isNested
+        ? ((c.company as Record<string, unknown>) ?? {})
+        : {}
       messages = {
         ...baseMessages,
         landing: deepMerge(
           baseMessages.landing as Record<string, unknown>,
-          data.content
+          landingOverrides
         ),
+        ...(Object.keys(companyOverrides).length > 0 ? {
+          company: deepMerge(
+            baseMessages.company as Record<string, unknown>,
+            companyOverrides
+          ),
+        } : {}),
       }
     }
   } catch {
