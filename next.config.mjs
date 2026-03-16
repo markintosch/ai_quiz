@@ -12,6 +12,13 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      // Locale-less quiz URLs → default locale
+      { source: '/quiz/:slug', destination: '/en/quiz/:slug', permanent: false },
+      { source: '/results/:id', destination: '/en/results/:id', permanent: false },
+    ]
+  },
 }
 
 export default withNextIntl(nextConfig)

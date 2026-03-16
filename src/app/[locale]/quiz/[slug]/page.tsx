@@ -5,6 +5,8 @@ import { createClient } from '@/lib/supabase/server'
 import { QUESTIONS } from '@/data/questions'
 import { CompanyLandingPage } from '@/components/quiz/CompanyLandingPage'
 
+export const dynamic = 'force-dynamic'
+
 interface PageProps {
   params: Promise<{ locale: string; slug: string }>
 }
