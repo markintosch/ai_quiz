@@ -12,6 +12,13 @@ interface CompanyRow {
   logo_url: string | null
   active: boolean
   created_at: string
+  product_id: string | null
+}
+
+interface ProductRow {
+  id: string
+  key: string
+  name: string
 }
 
 export default async function CompaniesPage() {
@@ -19,8 +26,14 @@ export default async function CompaniesPage() {
 
   const { data: companies } = await supabase
     .from('companies')
-    .select('*')
+    .select('id, name, slug, logo_url, active, created_at, product_id')
     .order('name', { ascending: true }) as unknown as { data: CompanyRow[] | null }
+
+  const { data: products } = await supabase
+    .from('quiz_products')
+    .select('id, key, name') as unknown as { data: ProductRow[] | null }
+
+  const productMap = new Map((products ?? []).map((p) => [p.id, p]))
 
   const { data: respondents } = await supabase
     .from('respondents')
@@ -55,6 +68,7 @@ export default async function CompaniesPage() {
               <tr>
                 <th className="text-left px-4 py-3">Name</th>
                 <th className="text-left px-4 py-3">Slug</th>
+                <th className="text-left px-4 py-3">Product</th>
                 <th className="text-left px-4 py-3">Respondents</th>
                 <th className="text-left px-4 py-3">Status</th>
                 <th className="text-left px-4 py-3">Created</th>
@@ -62,7 +76,9 @@ export default async function CompaniesPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {(companies ?? []).map((c) => (
+              {(companies ?? []).map((c) => {
+                const product = c.product_id ? productMap.get(c.product_id) : null
+                return (
                 <tr key={c.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-4 py-3 font-medium text-gray-900">{c.name}</td>
                   <td className="px-4 py-3">
@@ -74,6 +90,15 @@ export default async function CompaniesPage() {
                     >
                       /quiz/{c.slug}
                     </a>
+                  </td>
+                  <td className="px-4 py-3">
+                    {product ? (
+                      <code className="text-xs font-mono bg-gray-100 text-gray-700 px-2 py-0.5 rounded">
+                        {product.key}
+                      </code>
+                    ) : (
+                      <span className="text-xs text-gray-400">—</span>
+                    )}
                   </td>
                   <td className="px-4 py-3 text-gray-600">
                     {countMap.get(c.id) ?? 0}
@@ -108,7 +133,8 @@ export default async function CompaniesPage() {
                     />
                   </td>
                 </tr>
-              ))}
+              )})}
+
             </tbody>
           </table>
         </div>

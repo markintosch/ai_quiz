@@ -62,6 +62,7 @@ export async function POST(req: NextRequest) {
     slug: string
     logo_url?: string
     active?: boolean
+    product_id?: string | null
   }
 
   const { data, error } = await supabase
@@ -71,6 +72,7 @@ export async function POST(req: NextRequest) {
       slug: body.slug,
       logo_url: body.logo_url ?? null,
       active: body.active ?? true,
+      product_id: body.product_id ?? null,
     })
     .select()
     .single()

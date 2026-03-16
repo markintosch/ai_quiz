@@ -25,6 +25,13 @@ interface CompanyRow {
   brand_color: string | null
   welcome_message: string | null
   excluded_question_codes: string[] | null
+  product_id: string | null
+}
+
+interface ProductRow {
+  id: string
+  key: string
+  name: string
 }
 
 interface CohortRow {
@@ -79,6 +86,13 @@ export default async function CompanyDetailPage({
     }
   }
 
+  // Products for dropdown
+  const { data: products } = await supabase
+    .from('quiz_products')
+    .select('id, key, name')
+    .eq('active', true)
+    .order('name', { ascending: true }) as unknown as { data: ProductRow[] | null }
+
   // Cohorts for this company
   const { data: cohorts } = await supabase
     .from('cohorts')
@@ -132,7 +146,9 @@ export default async function CompanyDetailPage({
             brand_color: company.brand_color,
             welcome_message: company.welcome_message,
             excluded_question_codes: company.excluded_question_codes,
+            product_id: company.product_id,
           }}
+          products={products ?? []}
         />
       </div>
 

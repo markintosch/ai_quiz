@@ -20,6 +20,12 @@ const GROUPED = FULL_ONLY_QUESTIONS.reduce<Record<string, typeof FULL_ONLY_QUEST
   return acc
 }, {})
 
+interface ProductOption {
+  id: string
+  key: string
+  name: string
+}
+
 interface Company {
   id: string
   name: string
@@ -29,15 +35,22 @@ interface Company {
   brand_color?: string | null
   welcome_message?: string | null
   excluded_question_codes?: string[] | null
+  product_id?: string | null
 }
 
-export default function CompanyEditForm({ company }: { company: Company }) {
+interface CompanyEditFormProps {
+  company: Company
+  products?: ProductOption[]
+}
+
+export default function CompanyEditForm({ company, products = [] }: CompanyEditFormProps) {
   const [name, setName] = useState(company.name)
   const [slug, setSlug] = useState(company.slug)
   const [logoUrl, setLogoUrl] = useState(company.logo_url ?? '')
   const [active, setActive] = useState(company.active)
   const [brandColor, setBrandColor] = useState(company.brand_color ?? '#E8611A')
   const [welcomeMessage, setWelcomeMessage] = useState(company.welcome_message ?? '')
+  const [productId, setProductId] = useState(company.product_id ?? '')
   const [excluded, setExcluded] = useState<Set<string>>(
     new Set(company.excluded_question_codes ?? [])
   )
@@ -72,6 +85,7 @@ export default function CompanyEditForm({ company }: { company: Company }) {
           brand_color: brandColor,
           welcome_message: welcomeMessage.trim() || null,
           excluded_question_codes: Array.from(excluded),
+          product_id: productId || null,
         }),
       })
 
@@ -131,6 +145,25 @@ export default function CompanyEditForm({ company }: { company: Company }) {
         />
       </div>
 
+      {/* Product assignment */}
+      {products.length > 0 && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Assessment product</label>
+          <select
+            value={productId}
+            onChange={(e) => setProductId(e.target.value)}
+            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent bg-white"
+          >
+            <option value="">— Not assigned —</option>
+            {products.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name} ({p.key})
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
       {/* Branding */}
       <div className="border-t border-gray-100 pt-5">
         <p className="text-sm font-semibold text-gray-700 mb-3">Branding</p>
@@ -138,7 +171,7 @@ export default function CompanyEditForm({ company }: { company: Company }) {
         <div className="flex items-center gap-3 mb-4">
           <div className="flex-1">
             <p className="text-sm text-gray-700">Accent colour</p>
-            <p className="text-xs text-gray-500">Used on CTA buttons in the quiz</p>
+            <p className="text-xs text-gray-500">Used on CTA buttons in the assessment</p>
           </div>
           <div className="flex items-center gap-2">
             <input
@@ -158,7 +191,7 @@ export default function CompanyEditForm({ company }: { company: Company }) {
 
         <div>
           <label className="block text-sm text-gray-700 mb-1">
-            Welcome message <span className="text-gray-500 text-xs">(optional — shown above the quiz)</span>
+            Welcome message <span className="text-gray-500 text-xs">(optional — shown above the assessment)</span>
           </label>
           <textarea
             value={welcomeMessage}
@@ -219,7 +252,7 @@ export default function CompanyEditForm({ company }: { company: Company }) {
           className="w-4 h-4 accent-brand-accent"
         />
         <label htmlFor="edit-active" className="text-sm font-medium text-gray-700">
-          Active (quiz accessible at /quiz/{slug})
+          Active (assessment accessible at /quiz/{slug})
         </label>
       </div>
 
