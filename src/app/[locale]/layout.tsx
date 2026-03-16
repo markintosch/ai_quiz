@@ -2,8 +2,10 @@ import type { Metadata } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages, setRequestLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
+import { headers } from 'next/headers'
 import { routing } from '@/i18n/routing'
 import { createServiceClient } from '@/lib/supabase/server'
+import { getProductKeyFromHost } from '@/products'
 
 // ── Per-locale metadata (title, description, OG, hreflang) ───────────────────
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://aiquiz.kirkandblackbeard.com'
@@ -188,6 +190,11 @@ export default async function LocaleLayout({
   // Pass locale explicitly — more reliable on Vercel edge/serverless
   const baseMessages = await getMessages({ locale })
 
+  // Resolve product key from the request host (subdomain routing)
+  const headersList = await headers()
+  const host = headersList.get('host') ?? ''
+  const productKey = getProductKeyFromHost(host)
+
   // Merge CMS overrides from Supabase on top of the JSON messages (landing section only)
   let messages = baseMessages
   try {
@@ -197,6 +204,7 @@ export default async function LocaleLayout({
       .from('site_content')
       .select('content')
       .eq('locale', locale)
+      .eq('product_key', productKey)
       .single() as { data: { content: Record<string, unknown> } | null }
     if (data?.content && Object.keys(data.content).length > 0) {
       const c = data.content

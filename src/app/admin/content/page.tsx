@@ -512,8 +512,16 @@ function deepMergeClient(
 
 // ── Main component ────────────────────────────────────────────────────────────
 
+interface ProductOption {
+  id: string
+  key: string
+  name: string
+}
+
 export default function ContentPage() {
   const [locale, setLocale] = useState<Locale>('en')
+  const [productKey, setProductKey] = useState<string>('ai_maturity')
+  const [products, setProducts] = useState<ProductOption[]>([])
   const [content, setContent] = useState<AllContent>(makeDefaults('en'))
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
@@ -521,11 +529,24 @@ export default function ContentPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const loadContent = useCallback(async (loc: Locale) => {
+  // Fetch available products on mount
+  useEffect(() => {
+    void fetch('/api/admin/products')
+      .then((r) => r.json() as Promise<{ data: ProductOption[] }>)
+      .then(({ data }) => {
+        if (data?.length) {
+          setProducts(data)
+          setProductKey(data[0].key)
+        }
+      })
+      .catch(() => {/* non-fatal — fall back to ai_maturity */})
+  }, [])
+
+  const loadContent = useCallback(async (loc: Locale, pk: string) => {
     setLoading(true)
     setError(null)
     try {
-      const res = await fetch(`/api/admin/content?locale=${loc}`)
+      const res = await fetch(`/api/admin/content?locale=${loc}&product_key=${pk}`)
       if (!res.ok) throw new Error('Failed to load content')
       const json = await res.json() as { content: Record<string, unknown> }
       const raw = json.content ?? {}
@@ -556,8 +577,8 @@ export default function ContentPage() {
   }, [])
 
   useEffect(() => {
-    void loadContent(locale)
-  }, [locale, loadContent])
+    void loadContent(locale, productKey)
+  }, [locale, productKey, loadContent])
 
   function update(path: string[], value: unknown) {
     setContent(prev => set(prev, path, value))
@@ -571,7 +592,7 @@ export default function ContentPage() {
       const res = await fetch('/api/admin/content', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ locale, content }),
+        body: JSON.stringify({ locale, product_key: productKey, content }),
       })
       if (!res.ok) throw new Error('Save failed')
       setSaved(true)
@@ -586,6 +607,11 @@ export default function ContentPage() {
   function handleLocaleChange(loc: Locale) {
     if (dirty && !confirm('You have unsaved changes. Switch locale and lose them?')) return
     setLocale(loc)
+  }
+
+  function handleProductChange(key: string) {
+    if (dirty && !confirm('You have unsaved changes. Switch product and lose them?')) return
+    setProductKey(key)
   }
 
   const h = content.landing.hero ?? {}
@@ -610,21 +636,51 @@ export default function ContentPage() {
         <SaveBar saving={saving} saved={saved} dirty={dirty} onSave={handleSave} />
       </div>
 
-      {/* Locale tabs */}
-      <div className="flex gap-1 bg-gray-100 rounded-lg p-1 w-fit">
-        {(['en', 'nl', 'fr'] as const).map((loc) => (
-          <button
-            key={loc}
-            onClick={() => handleLocaleChange(loc)}
-            className={`px-6 py-2 rounded-md text-sm font-semibold transition-colors ${
-              locale === loc
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-500 hover:text-gray-700'
-            }`}
-          >
-            {loc === 'en' ? '🇬🇧 English' : loc === 'nl' ? '🇳🇱 Dutch' : '🇫🇷 French'}
-          </button>
-        ))}
+      {/* Product selector + Locale tabs */}
+      <div className="flex flex-wrap items-center gap-4">
+        {/* Product selector — only shown when multiple products exist */}
+        {products.length > 1 && (
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Product</span>
+            <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
+              {products.map((p) => (
+                <button
+                  key={p.key}
+                  onClick={() => handleProductChange(p.key)}
+                  className={`px-4 py-2 rounded-md text-sm font-semibold transition-colors ${
+                    productKey === p.key
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  {p.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Locale tabs */}
+        <div className="flex items-center gap-2">
+          {products.length > 1 && (
+            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Language</span>
+          )}
+          <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
+            {(['en', 'nl', 'fr'] as const).map((loc) => (
+              <button
+                key={loc}
+                onClick={() => handleLocaleChange(loc)}
+                className={`px-6 py-2 rounded-md text-sm font-semibold transition-colors ${
+                  locale === loc
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                {loc === 'en' ? '🇬🇧 English' : loc === 'nl' ? '🇳🇱 Dutch' : '🇫🇷 French'}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {error && (
