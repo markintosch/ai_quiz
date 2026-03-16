@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import { createServiceClient } from '@/lib/supabase/server'
 import ScoreBadge from '@/components/admin/ScoreBadge'
+import { DeleteRespondentButton } from '@/components/admin/DeleteRespondentButton'
 
 export const dynamic = 'force-dynamic'
 
@@ -89,6 +90,7 @@ export default async function DashboardPage() {
     const respondent = respondentMap.get(r.respondent_id)
     return {
       id: r.id,
+      respondent_id: r.respondent_id,
       maturity_level: r.maturity_level,
       created_at: r.created_at,
       name: respondent?.name ?? '—',
@@ -169,6 +171,7 @@ export default async function DashboardPage() {
                   <th className="text-left px-4 py-3">Level</th>
                   <th className="text-left px-4 py-3">Date</th>
                   <th className="px-4 py-3"></th>
+                  <th className="px-4 py-3"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -194,6 +197,9 @@ export default async function DashboardPage() {
                       >
                         View →
                       </Link>
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <DeleteRespondentButton respondentId={r.respondent_id} name={r.name} />
                     </td>
                   </tr>
                 ))}

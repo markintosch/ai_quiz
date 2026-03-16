@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import { createServiceClient } from '@/lib/supabase/server'
 import ScoreBadge from '@/components/admin/ScoreBadge'
+import { DeleteRespondentButton } from '@/components/admin/DeleteRespondentButton'
 
 export const dynamic = 'force-dynamic'
 
@@ -137,6 +138,7 @@ export default async function RespondentsPage({
                 <th className="text-left px-4 py-3">Version</th>
                 <th className="text-left px-4 py-3">Date</th>
                 <th className="px-4 py-3"></th>
+                <th className="px-4 py-3"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
@@ -181,6 +183,9 @@ export default async function RespondentsPage({
                           View →
                         </Link>
                       )}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <DeleteRespondentButton respondentId={r.id} name={r.name} />
                     </td>
                   </tr>
                 )

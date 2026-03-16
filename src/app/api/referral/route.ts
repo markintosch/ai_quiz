@@ -5,6 +5,7 @@ import { Resend } from 'resend'
 import { render } from '@react-email/render'
 import { ReferralInviteEmail } from '@/lib/email/templates/referralInvite'
 import { logEmail } from '@/lib/email/sender'
+import { rateLimit, getClientIp } from '@/lib/rateLimit'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 const FROM = 'Brand PWRD Media <results@brandpwrdmedia.com>'
@@ -24,6 +25,13 @@ export async function POST(req: NextRequest) {
 
   if (!body.gdprConsent) {
     return NextResponse.json({ error: 'GDPR consent required.' }, { status: 400 })
+  }
+
+  // ── Rate limiting ──────────────────────────────────────────
+  const ip = getClientIp(req.headers)
+  const rl = rateLimit(`referral:${ip}`, 3, 60 * 60 * 1000)  // 3 per hour
+  if (!rl.allowed) {
+    return NextResponse.json({ error: 'Too many invitations sent. Please try again later.' }, { status: 429 })
   }
 
   const { inviteeName, inviteeEmail, referrerName, referrerCompany, referrerScore, referrerLevel, inviteUrl } = body

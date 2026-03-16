@@ -5,6 +5,7 @@ import { createServiceClient } from '@/lib/supabase/server'
 import { calculateScore } from '@/lib/scoring/engine'
 import { generateRecommendations } from '@/lib/scoring/recommendations'
 import { sendSummaryEmail, sendAdminNotification } from '@/lib/email/sender'
+import { rateLimit, getClientIp } from '@/lib/rateLimit'
 import type { SubmitQuizPayload, SubmitQuizResponse } from '@/types'
 
 export async function POST(req: NextRequest) {
@@ -14,6 +15,13 @@ export async function POST(req: NextRequest) {
     body = await req.json()
   } catch {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
+  }
+
+  // ── Rate limiting ──────────────────────────────────────────
+  const ip = getClientIp(req.headers)
+  const rl = rateLimit(`submit:${ip}`, 5, 10 * 60 * 1000)
+  if (!rl.allowed) {
+    return NextResponse.json({ error: 'Too many submissions. Please wait a few minutes.' }, { status: 429 })
   }
 
   const { version, answers, lead, companySlug, cohortId, locale = 'en' } = body
@@ -41,30 +49,70 @@ export async function POST(req: NextRequest) {
       companyId = (company as { id: string } | null)?.id ?? null
     }
 
-    // ── Insert respondent ─────────────────────────────────────
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data: respondent, error: respondentError } = await (supabase.from('respondents') as any)
-      .insert({
-        cohort_id:         cohortId ?? null,
-        company_id:        companyId,
-        name:              lead.name,
-        email:             lead.email,
-        job_title:         lead.jobTitle,
-        company_name:      lead.companyName,
-        industry:          lead.industry ?? null,
-        company_size:      lead.companySize ?? null,
-        source:            companySlug ? 'company_slug' : 'public',
-        gdpr_consent:      lead.gdprConsent,
-        marketing_consent: lead.marketingConsent ?? false,
-        unsubscribed:      false,
-      })
+    // ── Upsert respondent (retake logic) ──────────────────────
+    const { data: existing } = await supabase
+      .from('respondents')
       .select('id')
-      .single()
+      .ilike('email', lead.email.trim())
+      .maybeSingle() as { data: { id: string } | null; error: unknown }
 
-    if (respondentError || !respondent) {
-      console.error('Respondent insert error:', respondentError)
-      return NextResponse.json({ error: 'Failed to save respondent' }, { status: 500 })
+    let respondentId: string
+
+    if (existing) {
+      // Returning respondent — update their profile and reuse their id
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (supabase.from('respondents') as any)
+        .update({
+          name:         lead.name,
+          job_title:    lead.jobTitle,
+          company_name: lead.companyName,
+          industry:     lead.industry ?? null,
+          company_size: lead.companySize ?? null,
+          company_id:   companyId,
+          source:       companySlug ?? 'public',
+        })
+        .eq('id', existing.id)
+
+      respondentId = existing.id
+    } else {
+      // New respondent — insert
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data: respondent, error: respondentError } = await (supabase.from('respondents') as any)
+        .insert({
+          cohort_id:         cohortId ?? null,
+          company_id:        companyId,
+          name:              lead.name,
+          email:             lead.email,
+          job_title:         lead.jobTitle,
+          company_name:      lead.companyName,
+          industry:          lead.industry ?? null,
+          company_size:      lead.companySize ?? null,
+          source:            companySlug ?? 'public',
+          gdpr_consent:      lead.gdprConsent,
+          marketing_consent: lead.marketingConsent ?? false,
+          unsubscribed:      false,
+        })
+        .select('id')
+        .single()
+
+      if (respondentError || !respondent) {
+        console.error('Respondent insert error:', respondentError)
+        return NextResponse.json({ error: 'Failed to save respondent' }, { status: 500 })
+      }
+
+      respondentId = respondent.id
     }
+
+    // ── Determine attempt number ───────────────────────────────
+    const { data: lastAttempt } = await supabase
+      .from('responses')
+      .select('attempt_number')
+      .eq('respondent_id', respondentId)
+      .order('attempt_number', { ascending: false })
+      .limit(1)
+      .maybeSingle() as { data: { attempt_number: number } | null; error: unknown }
+
+    const attemptNumber = (lastAttempt?.attempt_number ?? 0) + 1
 
     // ── Score ──────────────────────────────────────────────────
     const quizScore = calculateScore(answers, version)
@@ -77,9 +125,9 @@ export async function POST(req: NextRequest) {
     const { data: response, error: responseError } = await supabase
       .from('responses')
       .insert({
-        respondent_id:         respondent.id,
+        respondent_id:         respondentId,
         quiz_version:          version,
-        attempt_number:        1,
+        attempt_number:        attemptNumber,
         answers:               answers as unknown as import('@/types/supabase').Json,
         scores:                quizScore as unknown as import('@/types/supabase').Json,
         maturity_level:        quizScore.maturityLevel,
@@ -97,7 +145,7 @@ export async function POST(req: NextRequest) {
 
     // ── Create session ─────────────────────────────────────────
     await supabase.from('sessions').insert({
-      respondent_id:         respondent.id,
+      respondent_id:         respondentId,
       quiz_version:          version,
       session_status:        'completed',
       consent_timestamp:     new Date().toISOString(),
@@ -114,7 +162,7 @@ export async function POST(req: NextRequest) {
         name:        lead.name,
         score:       quizScore,
         resultsUrl,
-        respondentId: respondent.id,
+        respondentId,
         isLite:      version === 'lite',
       }),
       sendAdminNotification({
@@ -133,7 +181,7 @@ export async function POST(req: NextRequest) {
     ])
 
     const result: SubmitQuizResponse = {
-      respondentId: respondent.id,
+      respondentId,
       responseId:   response.id,
       resultsUrl:   `/results/${response.id}`,
     }
