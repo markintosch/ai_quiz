@@ -34,5 +34,28 @@ export function getAllProducts(): QuizProductConfig[] {
   return Object.values(REGISTRY)
 }
 
+// ── Subdomain → product_key mapping ──────────────────────────────────────────
+// Must stay in sync with middleware.ts and quiz_products.subdomain in Supabase.
+// Add new subdomains here when a product is launched.
+const SUBDOMAIN_MAP: Record<string, string> = {
+  'ai-maturity':         'ai_maturity',
+  // 'digital-readiness':  'digital_readiness',  ← add when product is launched
+}
+
+/**
+ * Extract the product_key from a host header value.
+ * Used by server components to know which product they are serving.
+ *
+ * @example
+ * import { headers } from 'next/headers'
+ * const host = (await headers()).get('host') ?? ''
+ * const productKey = getProductKeyFromHost(host)
+ * const config = getProductConfig(productKey)
+ */
+export function getProductKeyFromHost(host: string): string {
+  const subdomain = host.split('.')[0] ?? ''
+  return SUBDOMAIN_MAP[subdomain] ?? 'ai_maturity'
+}
+
 export type { QuizProductConfig }
 export * from './types'
