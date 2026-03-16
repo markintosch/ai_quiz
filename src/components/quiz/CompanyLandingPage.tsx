@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslations } from 'next-intl'
 import { QuizEngine } from './QuizEngine'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 
 const DIMENSION_ICONS = ['🧭', '⚡', '🗄️', '🧑‍💻', '🛡️', '🔍']
 
@@ -61,7 +62,10 @@ export function CompanyLandingPage({
                   <p className="text-xs font-bold uppercase tracking-widest" style={{ color: accentColor }}>{displayName}</p>
                 </div>
               )}
-              <p className="text-xs text-gray-500 font-medium">{t('poweredBy')}</p>
+              <div className="flex items-center gap-4">
+                <LanguageSwitcher variant="dark" />
+                <p className="text-xs text-gray-500 font-medium">{t('poweredBy')}</p>
+              </div>
             </div>
           </div>
 
@@ -157,7 +161,10 @@ export function CompanyLandingPage({
               ) : (
                 <p className="text-xs font-bold uppercase tracking-widest" style={{ color: accentColor }}>{displayName}</p>
               )}
-              <p className="text-xs text-gray-400">{t('quizHeader')}</p>
+              <div className="flex items-center gap-3">
+                <LanguageSwitcher variant="light" />
+                <p className="text-xs text-gray-400">{t('quizHeader')}</p>
+              </div>
             </div>
           </div>
 
