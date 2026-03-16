@@ -138,9 +138,9 @@ export function CompanyLandingPage({
 
           {/* Trust footer */}
           <div className="border-t border-white/10 px-6 py-6 text-center">
-            <p className="text-xs text-gray-600">
+            <p className="text-xs text-gray-400">
               {t('gdpr')}{' '}
-              <a href="/privacy" className="underline hover:text-gray-400">{t('privacyLink')}</a>
+              <a href="/privacy" className="underline hover:text-white">{t('privacyLink')}</a>
             </p>
           </div>
         </motion.div>
