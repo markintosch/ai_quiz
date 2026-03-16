@@ -3,6 +3,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getMessages, setRequestLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { routing } from '@/i18n/routing'
+import { createServiceClient } from '@/lib/supabase/server'
 
 // ── Per-locale metadata (title, description, OG, hreflang) ───────────────────
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://aiquiz.kirkandblackbeard.com'
@@ -137,6 +138,31 @@ function buildJsonLd(locale: string) {
   }
 }
 
+// Recursively merges b into a (b wins on conflicts)
+function deepMerge(
+  a: Record<string, unknown>,
+  b: Record<string, unknown>
+): Record<string, unknown> {
+  const out: Record<string, unknown> = { ...a }
+  for (const key of Object.keys(b)) {
+    if (
+      b[key] !== null &&
+      typeof b[key] === 'object' &&
+      !Array.isArray(b[key]) &&
+      typeof a[key] === 'object' &&
+      !Array.isArray(a[key])
+    ) {
+      out[key] = deepMerge(
+        a[key] as Record<string, unknown>,
+        b[key] as Record<string, unknown>
+      )
+    } else {
+      out[key] = b[key]
+    }
+  }
+  return out
+}
+
 export default async function LocaleLayout({
   children,
   params,
@@ -153,7 +179,30 @@ export default async function LocaleLayout({
   setRequestLocale(locale)
 
   // Pass locale explicitly — more reliable on Vercel edge/serverless
-  const messages = await getMessages({ locale })
+  const baseMessages = await getMessages({ locale })
+
+  // Merge CMS overrides from Supabase on top of the JSON messages (landing section only)
+  let messages = baseMessages
+  try {
+    const supabase = createServiceClient()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data } = await (supabase as any)
+      .from('site_content')
+      .select('content')
+      .eq('locale', locale)
+      .single() as { data: { content: Record<string, unknown> } | null }
+    if (data?.content && Object.keys(data.content).length > 0) {
+      messages = {
+        ...baseMessages,
+        landing: deepMerge(
+          baseMessages.landing as Record<string, unknown>,
+          data.content
+        ),
+      }
+    }
+  } catch {
+    // CMS table not yet created or unreachable — fall back to JSON messages silently
+  }
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>

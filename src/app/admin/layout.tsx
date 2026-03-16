@@ -8,6 +8,7 @@ const NAV_LINKS = [
   { href: '/admin/companies', label: 'Companies' },
   { href: '/admin/cohorts', label: 'Cohorts' },
   { href: '/admin/benchmark', label: 'Benchmark' },
+  { href: '/admin/content', label: 'Homepage copy' },
 ]
 
 export default function AdminLayout({
