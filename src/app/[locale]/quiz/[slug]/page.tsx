@@ -36,7 +36,7 @@ export default async function FullQuizPage({ params }: PageProps) {
   setRequestLocale(locale)
   const supabase = createClient()
 
-  const { data: company } = await supabase
+  const { data: company, error: companyError } = await supabase
     .from('companies')
     .select('id, name, slug, logo_url, brand_color, welcome_message, excluded_question_codes')
     .eq('slug', slug)
@@ -51,9 +51,11 @@ export default async function FullQuizPage({ params }: PageProps) {
         welcome_message: string | null
         excluded_question_codes: string[] | null
       } | null
+      error: { message: string; code: string } | null
     }
 
   if (!company) {
+    console.error('[quiz/slug] company not found', { slug, locale, error: companyError })
     notFound()
   }
 
