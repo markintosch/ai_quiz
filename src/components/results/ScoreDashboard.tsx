@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import type { QuizScore } from '@/types'
 import type { Recommendation } from '@/lib/scoring/recommendations'
 import { DimensionBreakdown } from './DimensionBreakdown'
+import { RadarChart } from './RadarChart'
 import { ShadowAIFlag } from './ShadowAIFlag'
 import { RecommendationCard } from './RecommendationCard'
 import { CalendlyEmbed } from './CalendlyEmbed'
@@ -133,6 +134,11 @@ export function ScoreDashboard({
             </strong>
           </motion.div>
         )}
+      </motion.div>
+
+      {/* ── Radar chart ── */}
+      <motion.div variants={fadeUp} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col items-center">
+        <RadarChart dimensionScores={score.dimensionScores} size={280} />
       </motion.div>
 
       {/* ── Shadow AI flag ── */}
