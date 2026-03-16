@@ -33,6 +33,8 @@ export function CompanyLandingPage({
   questionCount,
 }: CompanyLandingPageProps) {
   const [started, setStarted] = useState(false)
+  // Display name: replace underscores with spaces for readability
+  const displayName = name.replace(/_/g, ' ')
 
   return (
     <AnimatePresence mode="wait">
@@ -53,7 +55,7 @@ export function CompanyLandingPage({
                 <img src={logoUrl} alt={name} className="h-8 object-contain" />
               ) : (
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-widest" style={{ color: accentColor }}>{name}</p>
+                  <p className="text-xs font-bold uppercase tracking-widest" style={{ color: accentColor }}>{displayName}</p>
                 </div>
               )}
               <p className="text-xs text-gray-500 font-medium">Powered by Brand PWRD Media</p>
@@ -71,17 +73,17 @@ export function CompanyLandingPage({
                 className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-6 border"
                 style={{ color: accentColor, borderColor: `${accentColor}40`, backgroundColor: `${accentColor}15` }}
               >
-                {name} · AI Maturity Assessment
+                {displayName} · AI Maturity Assessment
               </span>
 
               <h1 className="text-4xl md:text-5xl font-black mb-5 leading-tight">
                 Where does{' '}
-                <span style={{ color: accentColor }}>{name}</span>
+                <span style={{ color: accentColor }}>{displayName}</span>
                 {' '}stand on AI?
               </h1>
 
               <p className="text-gray-300 text-lg max-w-xl mx-auto mb-4 leading-relaxed">
-                {welcomeMessage ?? `This assessment gives ${name} a clear, honest picture of AI maturity — and a practical roadmap for what to do next.`}
+                {welcomeMessage ?? `This assessment gives ${displayName} a clear, honest picture of AI maturity — and a practical roadmap for what to do next.`}
               </p>
 
               <p className="text-gray-500 text-sm mb-10">
@@ -150,7 +152,7 @@ export function CompanyLandingPage({
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={logoUrl} alt={name} className="h-6 object-contain" />
               ) : (
-                <p className="text-xs font-bold uppercase tracking-widest" style={{ color: accentColor }}>{name}</p>
+                <p className="text-xs font-bold uppercase tracking-widest" style={{ color: accentColor }}>{displayName}</p>
               )}
               <p className="text-xs text-gray-400">AI Maturity Assessment</p>
             </div>
