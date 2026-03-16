@@ -27,7 +27,7 @@ export default function AdminLayout({
           <p className="text-brand-accent font-bold text-sm tracking-wide leading-tight">
             Brand PWRD Media
           </p>
-          <p className="text-gray-400 text-xs mt-0.5">Admin</p>
+          <p className="text-gray-300 text-xs mt-0.5">Admin</p>
         </div>
 
         {/* Navigation */}

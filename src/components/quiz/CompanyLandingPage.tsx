@@ -78,7 +78,7 @@ export function CompanyLandingPage({
               )}
               <div className="flex items-center gap-4">
                 <LanguageSwitcher variant="dark" />
-                <p className="text-xs text-gray-500 font-medium">{t('poweredBy')}</p>
+                <p className="text-xs text-white/60 font-medium">{t('poweredBy')}</p>
               </div>
             </div>
           </div>
@@ -104,7 +104,7 @@ export function CompanyLandingPage({
               </h1>
 
               {/* 3. Intro paragraph */}
-              <p className="text-gray-300 text-lg max-w-xl mx-auto mb-5 leading-relaxed">
+              <p className="text-white/80 text-lg max-w-xl mx-auto mb-5 leading-relaxed">
                 {welcomeMessage ?? t('defaultWelcome', { name: displayName })}
               </p>
 
@@ -128,12 +128,12 @@ export function CompanyLandingPage({
               </motion.button>
 
               {/* 6. Confidentiality note */}
-              <p className="text-xs text-gray-500 mt-4">
+              <p className="text-xs text-white/60 mt-4">
                 {t('confidentiality')}
               </p>
 
               {/* 7. Value line */}
-              <p className="text-sm text-gray-400 mt-3 max-w-md mx-auto leading-relaxed">
+              <p className="text-white/70 text-sm mt-3 max-w-md mx-auto leading-relaxed">
                 {t('valueLine')}
               </p>
             </motion.div>
@@ -146,7 +146,7 @@ export function CompanyLandingPage({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
             >
-              <p className="text-center text-xs font-bold uppercase tracking-widest text-gray-500 mb-6">
+              <p className="text-center text-xs font-bold uppercase tracking-widest text-white/60 mb-6">
                 {t('whatWeMeasure')}
               </p>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -159,7 +159,7 @@ export function CompanyLandingPage({
                     className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-xl px-4 py-3"
                   >
                     <span className="text-xl">{d.icon}</span>
-                    <span className="text-sm font-medium text-gray-300">{d.label}</span>
+                    <span className="text-sm font-medium text-white/80">{d.label}</span>
                   </motion.div>
                 ))}
               </div>
@@ -168,7 +168,7 @@ export function CompanyLandingPage({
 
           {/* Trust footer */}
           <div className="border-t border-white/10 px-6 py-6 text-center">
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-white/60">
               {t('gdpr')}{' '}
               <a href="/privacy" className="underline hover:text-white">{t('privacyLink')}</a>
             </p>
@@ -193,7 +193,7 @@ export function CompanyLandingPage({
               )}
               <div className="flex items-center gap-3">
                 <LanguageSwitcher variant="light" />
-                <p className="text-xs text-gray-400">{t('quizHeader')}</p>
+                <p className="text-xs text-gray-600">{t('quizHeader')}</p>
               </div>
             </div>
           </div>

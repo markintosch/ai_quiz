@@ -36,7 +36,7 @@ export function DeleteRespondentButton({ respondentId, name }: Props) {
         onClick={handleDelete}
         disabled={loading}
         title={`Delete ${name}`}
-        className="text-gray-300 hover:text-red-500 transition-colors disabled:opacity-40 text-base leading-none"
+        className="text-gray-400 hover:text-red-500 transition-colors disabled:opacity-40 text-base leading-none"
       >
         {loading ? '…' : '✕'}
       </button>

@@ -11,7 +11,7 @@ interface ScoresJsonb {
 }
 
 function cellStyle(score: number | null): string {
-  if (score === null) return 'bg-gray-50 text-gray-400'
+  if (score === null) return 'bg-gray-50 text-gray-500'
   if (score < 40) return 'bg-red-100 text-red-800'
   if (score < 60) return 'bg-orange-100 text-orange-800'
   if (score < 80) return 'bg-teal-100 text-teal-800'
@@ -98,8 +98,8 @@ export default async function BenchmarkPage() {
       <div>
         <h1 className="text-2xl font-bold text-gray-900 mb-6">Benchmark Heatmap</h1>
         <div className="bg-gray-50 rounded-xl p-12 text-center">
-          <p className="text-gray-400">No company responses yet.</p>
-          <p className="text-gray-300 text-sm mt-1">
+          <p className="text-gray-600">No company responses yet.</p>
+          <p className="text-gray-500 text-sm mt-1">
             Responses will appear here once respondents are linked to a company.
           </p>
         </div>
@@ -110,7 +110,7 @@ export default async function BenchmarkPage() {
   return (
     <div>
       <h1 className="text-2xl font-bold text-gray-900 mb-2">Benchmark Heatmap</h1>
-      <p className="text-sm text-gray-400 mb-6">
+      <p className="text-sm text-gray-600 mb-6">
         Average dimension scores per company. Higher is better.
       </p>
 
@@ -132,13 +132,13 @@ export default async function BenchmarkPage() {
         <table className="text-sm border-collapse">
           <thead>
             <tr className="bg-gray-50">
-              <th className="text-left px-4 py-3 text-gray-500 uppercase text-xs font-semibold border-b border-gray-100 min-w-[160px]">
+              <th className="text-left px-4 py-3 text-gray-600 uppercase text-xs font-semibold border-b border-gray-100 min-w-[160px]">
                 Company
               </th>
               {dimensionLabels.map((label) => (
                 <th
                   key={label}
-                  className="px-4 py-3 text-gray-500 uppercase text-xs font-semibold border-b border-gray-100 min-w-[120px] text-center"
+                  className="px-4 py-3 text-gray-600 uppercase text-xs font-semibold border-b border-gray-100 min-w-[120px] text-center"
                 >
                   {label}
                 </th>

@@ -54,7 +54,7 @@ export default function PrivacyPage() {
   return (
     <div>
       <h1 className="text-2xl font-bold text-gray-900 mb-2">Privacy &amp; Data Retention</h1>
-      <p className="text-sm text-gray-400 mb-8">
+      <p className="text-sm text-gray-600 mb-8">
         Manage GDPR compliance. Delete records based on consent status and retention policy.
       </p>
 
@@ -68,7 +68,7 @@ export default function PrivacyPage() {
         {/* Unconsented records card */}
         <div className="bg-white border border-gray-100 rounded-xl p-6 shadow-sm">
           <h2 className="text-base font-semibold text-gray-800 mb-1">Unconsented Records</h2>
-          <p className="text-sm text-gray-500 mb-4">
+          <p className="text-sm text-gray-600 mb-4">
             Respondents who did not give GDPR consent and whose record is older than{' '}
             <strong>{data?.unconsented.cutoffDays ?? 30} days</strong>.
           </p>
@@ -76,7 +76,7 @@ export default function PrivacyPage() {
             <>
               <p className="text-3xl font-bold text-gray-900 mb-4">
                 {data.unconsented.count}{' '}
-                <span className="text-sm font-normal text-gray-400">record{data.unconsented.count !== 1 ? 's' : ''}</span>
+                <span className="text-sm font-normal text-gray-600">record{data.unconsented.count !== 1 ? 's' : ''}</span>
               </p>
               <button
                 onClick={() => handleDelete('unconsented', data.unconsented.count)}
@@ -93,14 +93,14 @@ export default function PrivacyPage() {
               )}
             </>
           ) : (
-            <p className="text-gray-400 text-sm">{fetchError ? 'Unavailable' : 'Loading…'}</p>
+            <p className="text-gray-500 text-sm">{fetchError ? 'Unavailable' : 'Loading…'}</p>
           )}
         </div>
 
         {/* Retention policy card */}
         <div className="bg-white border border-gray-100 rounded-xl p-6 shadow-sm">
           <h2 className="text-base font-semibold text-gray-800 mb-1">Retention Policy</h2>
-          <p className="text-sm text-gray-500 mb-4">
+          <p className="text-sm text-gray-600 mb-4">
             Respondents who gave GDPR consent but whose record is older than{' '}
             <strong>{data?.retention.cutoffDays ?? 730} days</strong> (2 years).
           </p>
@@ -108,7 +108,7 @@ export default function PrivacyPage() {
             <>
               <p className="text-3xl font-bold text-gray-900 mb-4">
                 {data.retention.count}{' '}
-                <span className="text-sm font-normal text-gray-400">record{data.retention.count !== 1 ? 's' : ''}</span>
+                <span className="text-sm font-normal text-gray-600">record{data.retention.count !== 1 ? 's' : ''}</span>
               </p>
               <button
                 onClick={() => handleDelete('retention', data.retention.count)}
@@ -125,7 +125,7 @@ export default function PrivacyPage() {
               )}
             </>
           ) : (
-            <p className="text-gray-400 text-sm">{fetchError ? 'Unavailable' : 'Loading…'}</p>
+            <p className="text-gray-500 text-sm">{fetchError ? 'Unavailable' : 'Loading…'}</p>
           )}
         </div>
       </div>
@@ -133,7 +133,7 @@ export default function PrivacyPage() {
       {/* Individual deletion note */}
       <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
         <h2 className="text-base font-semibold text-gray-800 mb-2">Delete Individual Respondents</h2>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-600">
           To delete a specific respondent, use the{' '}
           <Link href="/admin/respondents" className="text-brand-accent hover:underline font-medium">
             Respondents page

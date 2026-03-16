@@ -45,7 +45,7 @@ export default function AdminLoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="password" className="block text-sm text-gray-400 mb-1">
+              <label htmlFor="password" className="block text-sm text-gray-700 mb-1">
                 Password
               </label>
               <input

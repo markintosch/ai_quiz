@@ -55,15 +55,15 @@ const BAR_COLOURS = [ACCENT, GOLD, TEAL, '#8B5CF6', '#06B6D4', '#84CC16', '#F43F
 function StatCard({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
   return (
     <div className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm">
-      <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">{label}</p>
+      <p className="text-xs font-medium text-gray-600 uppercase tracking-wider">{label}</p>
       <p className="text-3xl font-bold text-gray-900 mt-1">{value}</p>
-      {sub && <p className="text-xs text-gray-400 mt-1">{sub}</p>}
+      {sub && <p className="text-xs text-gray-500 mt-1">{sub}</p>}
     </div>
   )
 }
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
-  return <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">{children}</h2>
+  return <h2 className="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-4">{children}</h2>
 }
 
 function ChartCard({ title, children, className = '' }: { title: string; children: React.ReactNode; className?: string }) {
@@ -101,7 +101,7 @@ export default function StatsPage() {
       .catch(() => { setError('Failed to load stats'); setLoading(false) })
   }, [])
 
-  if (loading) return <div className="text-sm text-gray-400">Loading stats…</div>
+  if (loading) return <div className="text-sm text-gray-500">Loading stats…</div>
   if (error || !data) return <div className="text-sm text-red-500">{error ?? 'No data'}</div>
 
   const completionRate = data.totalRespondents > 0
@@ -125,7 +125,7 @@ export default function StatsPage() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Statistics</h1>
-        <p className="text-sm text-gray-500 mt-1">Live data across all quiz respondents and responses.</p>
+        <p className="text-sm text-gray-600 mt-1">Live data across all quiz respondents and responses.</p>
       </div>
 
       {/* Top KPI cards */}
@@ -142,11 +142,11 @@ export default function StatsPage() {
         <div className="grid grid-cols-2 gap-4 max-w-sm">
           <div className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm text-center">
             <p className="text-3xl font-bold" style={{ color: ACCENT }}>{data.liteCount}</p>
-            <p className="text-xs text-gray-500 mt-1 font-medium">Lite (7 questions)</p>
+            <p className="text-xs text-gray-600 mt-1 font-medium">Lite (7 questions)</p>
           </div>
           <div className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm text-center">
             <p className="text-3xl font-bold" style={{ color: TEAL }}>{data.fullCount}</p>
-            <p className="text-xs text-gray-500 mt-1 font-medium">Full (25 questions)</p>
+            <p className="text-xs text-gray-600 mt-1 font-medium">Full (25 questions)</p>
           </div>
         </div>
       </div>
@@ -175,7 +175,7 @@ export default function StatsPage() {
                 </LineChart>
               </ResponsiveContainer>
             ) : (
-              <p className="text-sm text-gray-400 text-center py-12">Not enough data yet</p>
+              <p className="text-sm text-gray-500 text-center py-12">Not enough data yet</p>
             )}
           </ChartCard>
 
@@ -199,7 +199,7 @@ export default function StatsPage() {
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <p className="text-sm text-gray-400 text-center py-12">No responses yet</p>
+              <p className="text-sm text-gray-500 text-center py-12">No responses yet</p>
             )}
           </ChartCard>
         </div>
@@ -228,7 +228,7 @@ export default function StatsPage() {
               </div>
             )
           })}
-          <p className="text-xs text-gray-400 pt-1">Scores out of 100. Sorted worst → best. Red &lt; 40, amber 40–60, green &gt; 60.</p>
+          <p className="text-xs text-gray-500 pt-1">Scores out of 100. Sorted worst → best. Red &lt; 40, amber 40–60, green &gt; 60.</p>
         </div>
         {/* invisible use to avoid TS unused var warning */}
         <span className="hidden">{dimMax}</span>
@@ -263,7 +263,7 @@ export default function StatsPage() {
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <p className="text-sm text-gray-400 text-center py-12">No industry data yet</p>
+              <p className="text-sm text-gray-500 text-center py-12">No industry data yet</p>
             )}
           </ChartCard>
 
@@ -287,7 +287,7 @@ export default function StatsPage() {
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <p className="text-sm text-gray-400 text-center py-12">No company size data yet</p>
+              <p className="text-sm text-gray-500 text-center py-12">No company size data yet</p>
             )}
           </ChartCard>
         </div>
@@ -300,22 +300,22 @@ export default function StatsPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100">
-                <th className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-5 py-3">Name</th>
-                <th className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-5 py-3">Company</th>
-                <th className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-5 py-3">Level</th>
-                <th className="text-right text-xs font-semibold text-gray-400 uppercase tracking-wider px-5 py-3">Score</th>
-                <th className="text-right text-xs font-semibold text-gray-400 uppercase tracking-wider px-5 py-3">Date</th>
+                <th className="text-left text-xs font-semibold text-gray-600 uppercase tracking-wider px-5 py-3">Name</th>
+                <th className="text-left text-xs font-semibold text-gray-600 uppercase tracking-wider px-5 py-3">Company</th>
+                <th className="text-left text-xs font-semibold text-gray-600 uppercase tracking-wider px-5 py-3">Level</th>
+                <th className="text-right text-xs font-semibold text-gray-600 uppercase tracking-wider px-5 py-3">Score</th>
+                <th className="text-right text-xs font-semibold text-gray-600 uppercase tracking-wider px-5 py-3">Date</th>
               </tr>
             </thead>
             <tbody>
               {data.recentResponses.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="text-center text-gray-400 py-8 text-sm">No responses yet</td>
+                  <td colSpan={5} className="text-center text-gray-500 py-8 text-sm">No responses yet</td>
                 </tr>
               ) : data.recentResponses.map((r) => (
                 <tr key={r.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
                   <td className="px-5 py-3 text-gray-800 font-medium">{r.respondentName || '—'}</td>
-                  <td className="px-5 py-3 text-gray-500">{r.respondentCompany || '—'}</td>
+                  <td className="px-5 py-3 text-gray-600">{r.respondentCompany || '—'}</td>
                   <td className="px-5 py-3">
                     <span
                       className="text-xs font-semibold px-2 py-0.5 rounded-full"
@@ -328,7 +328,7 @@ export default function StatsPage() {
                     </span>
                   </td>
                   <td className="px-5 py-3 text-right font-bold text-gray-800">{r.overallScore}</td>
-                  <td className="px-5 py-3 text-right text-gray-400 text-xs">
+                  <td className="px-5 py-3 text-right text-gray-500 text-xs">
                     {new Date(r.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
                   </td>
                 </tr>

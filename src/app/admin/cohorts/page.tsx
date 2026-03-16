@@ -49,11 +49,11 @@ export default async function CohortsPage() {
       <h1 className="text-2xl font-bold text-gray-900 mb-6">Cohorts</h1>
 
       {(cohorts ?? []).length === 0 ? (
-        <p className="text-gray-400 text-sm">No cohorts yet. Add cohorts from a company page.</p>
+        <p className="text-gray-500 text-sm">No cohorts yet. Add cohorts from a company page.</p>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-gray-100">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 text-gray-500 uppercase text-xs">
+            <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
               <tr>
                 <th className="text-left px-4 py-3">Cohort Name</th>
                 <th className="text-left px-4 py-3">Company</th>
@@ -66,10 +66,10 @@ export default async function CohortsPage() {
               {(cohorts ?? []).map((c) => (
                 <tr key={c.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-4 py-3 font-medium text-gray-900">{c.name}</td>
-                  <td className="px-4 py-3 text-gray-500">
+                  <td className="px-4 py-3 text-gray-600">
                     {companyMap.get(c.company_id) ?? '—'}
                   </td>
-                  <td className="px-4 py-3 text-gray-500">
+                  <td className="px-4 py-3 text-gray-600">
                     {c.date
                       ? new Date(c.date).toLocaleDateString('en-GB', {
                           day: 'numeric',
@@ -78,10 +78,10 @@ export default async function CohortsPage() {
                         })
                       : '—'}
                   </td>
-                  <td className="px-4 py-3 text-gray-500">
+                  <td className="px-4 py-3 text-gray-600">
                     {countMap.get(c.id) ?? 0}
                   </td>
-                  <td className="px-4 py-3 text-gray-400">
+                  <td className="px-4 py-3 text-gray-500">
                     {new Date(c.created_at).toLocaleDateString('en-GB', {
                       day: 'numeric',
                       month: 'short',

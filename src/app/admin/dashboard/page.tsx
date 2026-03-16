@@ -117,7 +117,7 @@ export default async function DashboardPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {statCards.map((card) => (
           <div key={card.label} className="bg-brand rounded-xl p-5 text-white">
-            <p className="text-sm text-gray-400 mb-1">{card.label}</p>
+            <p className="text-sm text-white/70 mb-1">{card.label}</p>
             <p className="text-3xl font-bold">{card.value}</p>
           </div>
         ))}
@@ -138,7 +138,7 @@ export default async function DashboardPage() {
               return (
                 <div key={level} className="flex items-center gap-2 bg-white rounded-lg px-4 py-2 shadow-sm">
                   <div className="flex flex-col">
-                    <span className="text-xs font-medium text-gray-500">{level}</span>
+                    <span className="text-xs font-medium text-gray-700">{level}</span>
                     <span className="text-lg font-bold text-gray-900">{count}</span>
                   </div>
                   <div className="w-16 h-2 bg-gray-100 rounded-full overflow-hidden ml-2">
@@ -147,7 +147,7 @@ export default async function DashboardPage() {
                       style={{ width: `${pct}%` }}
                     />
                   </div>
-                  <span className="text-xs text-gray-400 ml-1">{pct}%</span>
+                  <span className="text-xs text-gray-600 ml-1">{pct}%</span>
                 </div>
               )
             })}
@@ -159,11 +159,11 @@ export default async function DashboardPage() {
       <div>
         <h2 className="text-lg font-semibold text-gray-800 mb-3">Recent Responses</h2>
         {recentResponses.length === 0 ? (
-          <p className="text-gray-400 text-sm">No responses yet.</p>
+          <p className="text-gray-500 text-sm">No responses yet.</p>
         ) : (
           <div className="overflow-x-auto rounded-xl border border-gray-100">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 text-gray-500 uppercase text-xs">
+              <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
                 <tr>
                   <th className="text-left px-4 py-3">Name</th>
                   <th className="text-left px-4 py-3">Company</th>
@@ -178,12 +178,12 @@ export default async function DashboardPage() {
                 {recentResponses.map((r) => (
                   <tr key={r.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-4 py-3 font-medium text-gray-900">{r.name}</td>
-                    <td className="px-4 py-3 text-gray-500">{r.company}</td>
+                    <td className="px-4 py-3 text-gray-600">{r.company}</td>
                     <td className="px-4 py-3 font-semibold text-brand">{r.overallScore}</td>
                     <td className="px-4 py-3">
                       <ScoreBadge level={r.maturity_level} />
                     </td>
-                    <td className="px-4 py-3 text-gray-400">
+                    <td className="px-4 py-3 text-gray-500">
                       {new Date(r.created_at).toLocaleDateString('en-GB', {
                         day: 'numeric',
                         month: 'short',

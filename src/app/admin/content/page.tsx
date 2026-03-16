@@ -408,7 +408,7 @@ function Field({
 }) {
   return (
     <div>
-      <label className="block text-xs font-medium text-gray-500 mb-1">{label}</label>
+      <label className="block text-xs font-medium text-gray-700 mb-1">{label}</label>
       {multiline ? (
         <textarea
           rows={3}
@@ -603,7 +603,7 @@ export default function ContentPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Content Management</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-gray-600 mt-1">
             Edit landing page and company quiz page copy. Changes go live on next page load.
           </p>
         </div>
@@ -632,7 +632,7 @@ export default function ContentPage() {
       )}
 
       {loading ? (
-        <div className="text-sm text-gray-400">Loading…</div>
+        <div className="text-sm text-gray-500">Loading…</div>
       ) : (
         <div className="space-y-10">
 
@@ -733,12 +733,12 @@ export default function ContentPage() {
               </div>
               <Field label="Section sub" value={prac.sub ?? ''} onChange={v => update(['landing', 'practitioners', 'sub'], v)} multiline />
               <div className="border-t border-gray-100 pt-4 space-y-3">
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Mark de Kock</p>
+                <p className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Mark de Kock</p>
                 <Field label="Role / title" value={prac.mark?.role ?? ''} onChange={v => update(['landing', 'practitioners', 'mark', 'role'], v)} />
                 <Field label="Bio" value={prac.mark?.bio ?? ''} onChange={v => update(['landing', 'practitioners', 'mark', 'bio'], v)} multiline />
               </div>
               <div className="border-t border-gray-100 pt-4 space-y-3">
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Frank Meeuwsen</p>
+                <p className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Frank Meeuwsen</p>
                 <Field label="Role / title" value={prac.frank?.role ?? ''} onChange={v => update(['landing', 'practitioners', 'frank', 'role'], v)} />
                 <Field label="Quote (shown in original language)" value={prac.frank?.quote ?? ''} onChange={v => update(['landing', 'practitioners', 'frank', 'quote'], v)} />
                 <Field label="Translation (shown below quote)" value={prac.frank?.translation ?? ''} onChange={v => update(['landing', 'practitioners', 'frank', 'translation'], v)} />
@@ -766,7 +766,7 @@ export default function ContentPage() {
           <SectionGroup title="Company Quiz Page">
 
             <Section title="Intro page — before quiz starts">
-              <p className="text-xs text-gray-500 -mt-2">
+              <p className="text-xs text-gray-600 -mt-2">
                 Shown on <code className="bg-gray-100 px-1 rounded">/quiz/[company-slug]</code>. Use <code className="bg-gray-100 px-1 rounded">{'{name}'}</code> for company name, <code className="bg-gray-100 px-1 rounded">{'{count}'}</code> for question count.
               </p>
               <div className="grid grid-cols-2 gap-4">
@@ -835,7 +835,7 @@ export default function ContentPage() {
             </Section>
 
             <Section title="Dimension labels (shown on intro page)">
-              <p className="text-xs text-gray-500 -mt-2">These 6 labels are shown as cards on the company intro page.</p>
+              <p className="text-xs text-gray-600 -mt-2">These 6 labels are shown as cards on the company intro page.</p>
               {(comp.dimensions ?? []).map((label, i) => {
                 const icons = ['🧭', '⚡', '🗄️', '🧑‍💻', '🛡️', '🔍']
                 return (

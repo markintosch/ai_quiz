@@ -50,10 +50,10 @@ export default function NewCompanyPage() {
   return (
     <div className="max-w-lg">
       <div className="flex items-center gap-3 mb-6">
-        <Link href="/admin/companies" className="text-gray-400 hover:text-gray-600 text-sm">
+        <Link href="/admin/companies" className="text-gray-500 hover:text-gray-600 text-sm">
           ← Companies
         </Link>
-        <span className="text-gray-300">/</span>
+        <span className="text-gray-400">/</span>
         <h1 className="text-2xl font-bold text-gray-900">New Company</h1>
       </div>
 
@@ -77,7 +77,7 @@ export default function NewCompanyPage() {
             Slug <span className="text-brand-accent">*</span>
           </label>
           <div className="flex items-center gap-1">
-            <span className="text-gray-400 text-sm">/quiz/</span>
+            <span className="text-gray-500 text-sm">/quiz/</span>
             <input
               type="text"
               value={slug}
@@ -91,7 +91,7 @@ export default function NewCompanyPage() {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Logo URL <span className="text-gray-400 text-xs">(optional)</span>
+            Logo URL <span className="text-gray-500 text-xs">(optional)</span>
           </label>
           <input
             type="url"

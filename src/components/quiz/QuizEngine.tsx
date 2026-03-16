@@ -238,7 +238,7 @@ export function QuizEngine({
           type="button"
           onClick={handleBack}
           disabled={currentIndex === 0}
-          className="text-sm text-gray-400 hover:text-gray-700 disabled:invisible transition-colors"
+          className="text-sm text-gray-500 hover:text-gray-700 disabled:invisible transition-colors"
         >
           {t('back')}
         </button>

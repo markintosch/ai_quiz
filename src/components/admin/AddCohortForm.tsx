@@ -60,7 +60,7 @@ export default function AddCohortForm({ companyId }: { companyId: string }) {
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Date <span className="text-gray-400 text-xs">(optional)</span>
+          Date <span className="text-gray-500 text-xs">(optional)</span>
         </label>
         <input
           type="date"

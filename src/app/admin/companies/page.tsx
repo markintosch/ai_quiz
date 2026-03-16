@@ -46,11 +46,11 @@ export default async function CompaniesPage() {
       </div>
 
       {(companies ?? []).length === 0 ? (
-        <p className="text-gray-400 text-sm">No companies yet.</p>
+        <p className="text-gray-500 text-sm">No companies yet.</p>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-gray-100">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 text-gray-500 uppercase text-xs">
+            <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
               <tr>
                 <th className="text-left px-4 py-3">Name</th>
                 <th className="text-left px-4 py-3">Slug</th>
@@ -74,7 +74,7 @@ export default async function CompaniesPage() {
                       /quiz/{c.slug}
                     </a>
                   </td>
-                  <td className="px-4 py-3 text-gray-500">
+                  <td className="px-4 py-3 text-gray-600">
                     {countMap.get(c.id) ?? 0}
                   </td>
                   <td className="px-4 py-3">
@@ -86,7 +86,7 @@ export default async function CompaniesPage() {
                       {c.active ? 'Active' : 'Inactive'}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-gray-400">
+                  <td className="px-4 py-3 text-gray-500">
                     {new Date(c.created_at).toLocaleDateString('en-GB', {
                       day: 'numeric',
                       month: 'short',

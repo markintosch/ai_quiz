@@ -94,7 +94,7 @@ export default async function RespondentsPage({
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Respondents</h1>
-          <p className="text-sm text-gray-400 mt-0.5">{totalCount} total</p>
+          <p className="text-sm text-gray-600 mt-0.5">{totalCount} total</p>
         </div>
         <a
           href={`/api/admin/export?version=${version}`}
@@ -123,11 +123,11 @@ export default async function RespondentsPage({
 
       {/* Table */}
       {(respondents ?? []).length === 0 ? (
-        <p className="text-gray-400 text-sm">No respondents found.</p>
+        <p className="text-gray-500 text-sm">No respondents found.</p>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-gray-100">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 text-gray-500 uppercase text-xs">
+            <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
               <tr>
                 <th className="text-left px-4 py-3">Name</th>
                 <th className="text-left px-4 py-3">Email</th>
@@ -147,9 +147,9 @@ export default async function RespondentsPage({
                 return (
                   <tr key={r.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-4 py-3 font-medium text-gray-900">{r.name}</td>
-                    <td className="px-4 py-3 text-gray-500">{r.email}</td>
-                    <td className="px-4 py-3 text-gray-500">{r.company_name}</td>
-                    <td className="px-4 py-3 text-gray-500">{r.job_title}</td>
+                    <td className="px-4 py-3 text-gray-600">{r.email}</td>
+                    <td className="px-4 py-3 text-gray-600">{r.company_name}</td>
+                    <td className="px-4 py-3 text-gray-600">{r.job_title}</td>
                     <td className="px-4 py-3 font-semibold text-brand">
                       {resp ? resp.scores.overall : '—'}
                     </td>
@@ -167,7 +167,7 @@ export default async function RespondentsPage({
                         </span>
                       ) : '—'}
                     </td>
-                    <td className="px-4 py-3 text-gray-400">
+                    <td className="px-4 py-3 text-gray-500">
                       {new Date(r.created_at).toLocaleDateString('en-GB', {
                         day: 'numeric',
                         month: 'short',
@@ -198,7 +198,7 @@ export default async function RespondentsPage({
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between mt-5">
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-gray-500">
             Page {page} of {totalPages}
           </p>
           <div className="flex gap-2">

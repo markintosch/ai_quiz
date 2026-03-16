@@ -107,7 +107,7 @@ export default function CompanyEditForm({ company }: { company: Company }) {
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Slug</label>
         <div className="flex items-center gap-1">
-          <span className="text-gray-400 text-sm">/quiz/</span>
+          <span className="text-gray-500 text-sm">/quiz/</span>
           <input
             type="text"
             value={slug}
@@ -120,7 +120,7 @@ export default function CompanyEditForm({ company }: { company: Company }) {
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Logo URL <span className="text-gray-400 text-xs">(optional)</span>
+          Logo URL <span className="text-gray-500 text-xs">(optional)</span>
         </label>
         <input
           type="url"
@@ -138,7 +138,7 @@ export default function CompanyEditForm({ company }: { company: Company }) {
         <div className="flex items-center gap-3 mb-4">
           <div className="flex-1">
             <p className="text-sm text-gray-700">Accent colour</p>
-            <p className="text-xs text-gray-400">Used on CTA buttons in the quiz</p>
+            <p className="text-xs text-gray-500">Used on CTA buttons in the quiz</p>
           </div>
           <div className="flex items-center gap-2">
             <input
@@ -158,7 +158,7 @@ export default function CompanyEditForm({ company }: { company: Company }) {
 
         <div>
           <label className="block text-sm text-gray-700 mb-1">
-            Welcome message <span className="text-gray-400 text-xs">(optional — shown above the quiz)</span>
+            Welcome message <span className="text-gray-500 text-xs">(optional — shown above the quiz)</span>
           </label>
           <textarea
             value={welcomeMessage}
@@ -174,18 +174,18 @@ export default function CompanyEditForm({ company }: { company: Company }) {
       <div className="border-t border-gray-100 pt-5">
         <div className="flex items-center justify-between mb-1">
           <p className="text-sm font-semibold text-gray-700">Custom question set</p>
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-gray-500">
             {includedCount}/{FULL_ONLY_QUESTIONS.length} full questions included
           </span>
         </div>
-        <p className="text-xs text-gray-400 mb-4">
+        <p className="text-xs text-gray-500 mb-4">
           The 7 lite questions are always included. Uncheck any to skip them in the full assessment.
         </p>
 
         <div className="space-y-4">
           {Object.entries(GROUPED).map(([dim, qs]) => (
             <div key={dim}>
-              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-600 mb-2">
                 {DIMENSION_LABELS[dim] ?? dim}
               </p>
               <div className="space-y-1.5">

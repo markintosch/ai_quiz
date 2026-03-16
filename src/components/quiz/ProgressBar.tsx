@@ -15,7 +15,7 @@ export function ProgressBar({ current, total }: ProgressBarProps) {
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-2">
-        <span className="text-xs font-semibold uppercase tracking-widest text-gray-400">
+        <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">
           {t('progress', { current, total })}
         </span>
         <motion.span

@@ -100,7 +100,7 @@ export function ScoreDashboard({
         variants={fadeUp}
         className="bg-brand rounded-2xl p-8 text-center text-white"
       >
-        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">
+        <p className="text-xs font-semibold uppercase tracking-widest text-white/60 mb-4">
           Your AI Maturity Score
         </p>
 
@@ -126,7 +126,7 @@ export function ScoreDashboard({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.55 }}
-          className="text-gray-300 text-sm max-w-sm mx-auto"
+          className="text-white/80 text-sm max-w-sm mx-auto"
         >
           {maturityDescription(score.maturityLevel)}
         </motion.p>
@@ -136,7 +136,7 @@ export function ScoreDashboard({
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
-            className="mt-5 p-3 bg-white bg-opacity-10 rounded-xl text-sm text-gray-300"
+            className="mt-5 p-3 bg-white bg-opacity-10 rounded-xl text-sm text-white/80"
           >
             This is a directional score based on the Lite assessment.{' '}
             <strong className="text-white">
@@ -226,7 +226,7 @@ export function ScoreDashboard({
           className="bg-brand rounded-2xl p-6 text-white text-center"
         >
           <h3 className="text-lg font-bold mb-2">Ready to talk through your results?</h3>
-          <p className="text-sm text-gray-300 mb-5">
+          <p className="text-sm text-white/80 mb-5">
             Book a free call with us to discuss your score, what it means
             for your organisation, and the clearest next steps.
           </p>
@@ -238,7 +238,7 @@ export function ScoreDashboard({
           >
             Book your free call →
           </a>
-          <p className="text-xs text-gray-400 mt-3">Free · No obligation · 20 minutes</p>
+          <p className="text-xs text-white/60 mt-3">Free · No obligation · 20 minutes</p>
         </motion.div>
       )}
 

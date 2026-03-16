@@ -35,7 +35,7 @@ function BarRow({ label, sublabel, score, yourScore, index }: BarRowProps) {
       <div className="flex items-center justify-between text-sm">
         <div>
           <span className="font-medium text-gray-700">{label}</span>
-          <span className="text-gray-400 text-xs ml-2">{sublabel}</span>
+          <span className="text-gray-500 text-xs ml-2">{sublabel}</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="font-bold text-gray-900">{Math.round(score)}</span>
@@ -68,7 +68,7 @@ function BarRow({ label, sublabel, score, yourScore, index }: BarRowProps) {
         />
       </div>
 
-      <div className="flex justify-between text-xs text-gray-400">
+      <div className="flex justify-between text-xs text-gray-500">
         <span>0</span>
         <span className="text-brand-accent font-medium">You: {yourScore}</span>
         <span>100</span>
@@ -135,7 +135,7 @@ export function BenchmarkComparison({ yourScore, benchmark }: BenchmarkCompariso
       </div>
 
       {benchmark.market.count < 10 && (
-        <p className="text-xs text-gray-400 mt-4 border-t border-gray-50 pt-3">
+        <p className="text-xs text-gray-500 mt-4 border-t border-gray-50 pt-3">
           Benchmarks become more meaningful as more people complete the assessment.
         </p>
       )}

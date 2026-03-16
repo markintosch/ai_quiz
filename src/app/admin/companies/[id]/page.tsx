@@ -89,21 +89,21 @@ export default async function CompanyDetailPage({
   return (
     <div className="max-w-2xl">
       <div className="flex items-center gap-3 mb-6">
-        <Link href="/admin/companies" className="text-gray-400 hover:text-gray-600 text-sm">
+        <Link href="/admin/companies" className="text-gray-500 hover:text-gray-600 text-sm">
           ← Companies
         </Link>
-        <span className="text-gray-300">/</span>
+        <span className="text-gray-400">/</span>
         <h1 className="text-2xl font-bold text-gray-900">{company.name}</h1>
       </div>
 
       {/* Quick stats + actions */}
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div className="bg-brand rounded-xl p-4 text-white">
-          <p className="text-sm text-gray-400 mb-1">Total Respondents</p>
+          <p className="text-sm text-white/70 mb-1">Total Respondents</p>
           <p className="text-3xl font-bold">{respondentCount}</p>
         </div>
         <div className="bg-brand rounded-xl p-4 text-white">
-          <p className="text-sm text-gray-400 mb-1">Avg Score</p>
+          <p className="text-sm text-white/70 mb-1">Avg Score</p>
           <p className="text-3xl font-bold">{avgScore !== null ? avgScore : '—'}</p>
         </div>
       </div>
@@ -143,7 +143,7 @@ export default async function CompanyDetailPage({
         {(cohorts ?? []).length > 0 && (
           <div className="overflow-x-auto rounded-lg border border-gray-100 mb-5">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 text-gray-500 uppercase text-xs">
+              <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
                 <tr>
                   <th className="text-left px-4 py-3">Name</th>
                   <th className="text-left px-4 py-3">Date</th>
@@ -154,7 +154,7 @@ export default async function CompanyDetailPage({
                 {(cohorts ?? []).map((c) => (
                   <tr key={c.id} className="hover:bg-gray-50">
                     <td className="px-4 py-3 font-medium text-gray-900">{c.name}</td>
-                    <td className="px-4 py-3 text-gray-500">
+                    <td className="px-4 py-3 text-gray-600">
                       {c.date
                         ? new Date(c.date).toLocaleDateString('en-GB', {
                             day: 'numeric',
@@ -163,7 +163,7 @@ export default async function CompanyDetailPage({
                           })
                         : '—'}
                     </td>
-                    <td className="px-4 py-3 text-gray-400">
+                    <td className="px-4 py-3 text-gray-500">
                       {new Date(c.created_at).toLocaleDateString('en-GB', {
                         day: 'numeric',
                         month: 'short',

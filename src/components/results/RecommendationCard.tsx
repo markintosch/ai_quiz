@@ -35,7 +35,7 @@ export function RecommendationCard({ recommendation, softCta, ctaHref }: Recomme
       </h4>
       <p
         className={`text-sm leading-relaxed mb-4 ${
-          isPrimary ? 'text-gray-300' : 'text-gray-600'
+          isPrimary ? 'text-white/80' : 'text-gray-600'
         }`}
       >
         {recommendation.body}

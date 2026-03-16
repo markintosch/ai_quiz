@@ -102,7 +102,7 @@ export function LiteResultsDashboard({
         variants={fadeUp}
         className="bg-[#354E5E] rounded-2xl px-8 pt-8 pb-6 text-white text-center"
       >
-        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-5">
+        <p className="text-xs font-semibold uppercase tracking-widest text-white/60 mb-5">
           {t('scoreLabel')}
         </p>
 
@@ -129,7 +129,7 @@ export function LiteResultsDashboard({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="text-gray-300 text-sm max-w-sm mx-auto"
+          className="text-white/80 text-sm max-w-sm mx-auto"
         >
           {t('greeting', { firstName })}
         </motion.p>
@@ -140,7 +140,7 @@ export function LiteResultsDashboard({
           transition={{ delay: 0.65 }}
           className="mt-4 inline-flex items-center gap-3 bg-white/10 border border-white/10 rounded-xl px-4 py-2"
         >
-          <span className="text-xs text-gray-400">{t('avgLabel')} <strong className="text-white">47</strong></span>
+          <span className="text-xs text-white/60">{t('avgLabel')} <strong className="text-white">47</strong></span>
           <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
             score.overall >= 47
               ? 'bg-green-500/20 text-green-300'
@@ -158,7 +158,7 @@ export function LiteResultsDashboard({
         variants={fadeUp}
         className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm"
       >
-        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-widest mb-5 text-center">
+        <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-widest mb-5 text-center">
           {t('dimensionProfile')}
         </h3>
 
@@ -214,7 +214,7 @@ export function LiteResultsDashboard({
           <p className="text-sm text-gray-500 italic mb-4 px-1">
             {t('orgPrioritiesIntro')}
           </p>
-          <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3 px-1">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-gray-700 mb-3 px-1">
             {t('priorityActions')}
           </h3>
           <div className="space-y-3">
@@ -239,7 +239,7 @@ export function LiteResultsDashboard({
       {/* ═══ 6. SUPPORTING RECOMMENDATIONS ══════════════════════ */}
       {supportingRecs.length > 0 && (
         <motion.div variants={fadeUp}>
-          <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3 px-1">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-gray-700 mb-3 px-1">
             {t('alsoWorth')}
           </h3>
           <div className="space-y-3">
@@ -274,10 +274,10 @@ export function LiteResultsDashboard({
           <div>
             <p className="text-white font-bold text-sm leading-tight">Mark de Kock</p>
             <p className="text-[#E8611A] text-xs font-semibold">{t('bookReview.title')}</p>
-            <p className="text-gray-400 text-xs">{t('bookReview.company')}</p>
+            <p className="text-white/60 text-xs">{t('bookReview.company')}</p>
           </div>
           <div className="ml-auto">
-            <span className="text-xs bg-white/10 border border-white/10 rounded-full px-3 py-1 text-gray-300">
+            <span className="text-xs bg-white/10 border border-white/10 rounded-full px-3 py-1 text-white/80">
               {t('bookReview.badge')}
             </span>
           </div>
@@ -286,7 +286,7 @@ export function LiteResultsDashboard({
         <h3 className="text-xl font-bold mb-2">
           {t('bookReview.heading')}
         </h3>
-        <p className="text-gray-300 text-sm mb-6 leading-relaxed">
+        <p className="text-white/80 text-sm mb-6 leading-relaxed">
           {t('bookReview.body')}
         </p>
         <a
@@ -304,7 +304,7 @@ export function LiteResultsDashboard({
         </a>
 
         {/* Training reference — one line, ambient, no hard sell */}
-        <p className="text-center mt-4 text-xs text-gray-400">
+        <p className="text-center mt-4 text-xs text-white/60">
           {t('bookReview.trainingRef')}{' '}
           <a
             href="https://handsonai.nl"
@@ -326,13 +326,13 @@ export function LiteResultsDashboard({
         variants={fadeUp}
         className="border border-gray-200 rounded-2xl p-6 text-center bg-white"
       >
-        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-2">
+        <p className="text-xs font-semibold uppercase tracking-widest text-gray-600 mb-2">
           {t('fullAssessment.label')}
         </p>
         <h3 className="text-base font-bold text-gray-900 mb-2">
           {t('fullAssessment.heading')}
         </h3>
-        <p className="text-sm text-gray-500 mb-5 max-w-sm mx-auto">
+        <p className="text-sm text-gray-600 mb-5 max-w-sm mx-auto">
           {t('fullAssessment.body')}
         </p>
         <a
@@ -345,7 +345,7 @@ export function LiteResultsDashboard({
         >
           {t('fullAssessment.cta')}
         </a>
-        <p className="text-xs text-gray-400 mt-3">{t('fullAssessment.free')}</p>
+        <p className="text-xs text-gray-500 mt-3">{t('fullAssessment.free')}</p>
       </motion.div>
 
       {/* ═══ 9. REFERRAL (collapsible) ═══════════════════════════ */}
@@ -362,10 +362,10 @@ export function LiteResultsDashboard({
             <span className="text-lg">🤝</span>
             <div>
               <p className="text-sm font-semibold text-gray-800">{t('referral.heading')}</p>
-              <p className="text-xs text-gray-400">{t('referral.sub')}</p>
+              <p className="text-xs text-gray-500">{t('referral.sub')}</p>
             </div>
           </div>
-          <span className="text-gray-400 text-sm font-medium">
+          <span className="text-gray-500 text-sm font-medium">
             {referralOpen ? t('referral.hide') : t('referral.show')}
           </span>
         </button>
