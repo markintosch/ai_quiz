@@ -13,12 +13,26 @@ interface QuestionCardProps {
 export function QuestionCard({ question, answer, onAnswer, direction = 1 }: QuestionCardProps) {
   const isMultiselect = question.type === 'multiselect'
 
+  const currentSelections = Array.isArray(answer) ? answer : []
+  const otherSelected = currentSelections.includes('Other')
+  const otherDetailEntry = currentSelections.find(v => v.startsWith('other_detail:'))
+  const otherDetailText = otherDetailEntry ? otherDetailEntry.slice('other_detail:'.length) : ''
+
   function handleMultiselectToggle(label: string) {
     const current = Array.isArray(answer) ? answer : []
-    const next = current.includes(label)
-      ? current.filter(v => v !== label)
-      : [...current, label]
-    onAnswer(next)
+    if (current.includes(label)) {
+      let next = current.filter(v => v !== label)
+      if (label === 'Other') next = next.filter(v => !v.startsWith('other_detail:'))
+      onAnswer(next)
+    } else {
+      onAnswer([...current, label])
+    }
+  }
+
+  function handleOtherDetail(text: string) {
+    const current = Array.isArray(answer) ? answer : []
+    const without = current.filter(v => !v.startsWith('other_detail:'))
+    onAnswer(text.trim() ? [...without, `other_detail:${text}`] : without)
   }
 
   return (
@@ -39,25 +53,43 @@ export function QuestionCard({ question, answer, onAnswer, direction = 1 }: Ques
       </h2>
 
       {isMultiselect ? (
-        <div className="flex flex-wrap gap-2">
-          {question.options.map(opt => {
-            const selected = Array.isArray(answer) && answer.includes(opt.label)
-            return (
-              <motion.button
-                key={opt.label}
-                type="button"
-                onClick={() => handleMultiselectToggle(opt.label)}
-                whileTap={{ scale: 0.96 }}
-                className={`px-4 py-2 rounded-full border text-sm font-medium transition-colors ${
-                  selected
-                    ? 'bg-brand-accent border-brand-accent text-white'
-                    : 'bg-white border-gray-300 text-gray-700 hover:border-brand-accent hover:text-brand-accent'
-                }`}
-              >
-                {opt.label}
-              </motion.button>
-            )
-          })}
+        <div className="space-y-3">
+          <div className="flex flex-wrap gap-2">
+            {question.options.map(opt => {
+              const selected = currentSelections.includes(opt.label)
+              return (
+                <motion.button
+                  key={opt.label}
+                  type="button"
+                  onClick={() => handleMultiselectToggle(opt.label)}
+                  whileTap={{ scale: 0.96 }}
+                  className={`px-4 py-2 rounded-full border text-sm font-medium transition-colors ${
+                    selected
+                      ? 'bg-brand-accent border-brand-accent text-white'
+                      : 'bg-white border-gray-300 text-gray-700 hover:border-brand-accent hover:text-brand-accent'
+                  }`}
+                >
+                  {opt.label}
+                </motion.button>
+              )
+            })}
+          </div>
+          {otherSelected && (
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <input
+                type="text"
+                autoFocus
+                value={otherDetailText}
+                onChange={e => handleOtherDetail(e.target.value)}
+                placeholder="Which tool(s)? e.g. Perplexity, Cursor, Make…"
+                className="w-full text-sm border border-brand-accent/40 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-accent/30 bg-orange-50/30 placeholder-gray-400"
+              />
+            </motion.div>
+          )}
         </div>
       ) : (
         <div className="space-y-2.5">
