@@ -1,0 +1,302 @@
+{
+  "_instructions": "Translate only the 'text' and 'label' fields. Do NOT change codes, values, dimension, type, lite, or scored fields. Return the exact same JSON structure.",
+  "questions": [
+    {
+      "code": "SV1", "dimension": "strategy_vision", "type": "likert", "lite": true, "scored": true,
+      "text": "Hoe centraal staat AI in de huidige strategie van jullie organisatie?",
+      "options": [
+        { "value": 1, "label": "Staat helemaal niet op de agenda" },
+        { "value": 2, "label": "Wordt af en toe besproken, maar zonder concrete plannen" },
+        { "value": 3, "label": "Onderdeel van de strategie op sommige gebieden" },
+        { "value": 4, "label": "Actief geïntegreerd in de strategische planning" },
+        { "value": 5, "label": "Centraal in hoe we opereren en concurreren" }
+      ]
+    },
+    {
+      "code": "SV2", "dimension": "strategy_vision", "type": "likert", "lite": false, "scored": true,
+      "text": "Hoe zou je de betrokkenheid van het leiderschap bij AI-adoptie omschrijven?",
+      "options": [
+        { "value": 1, "label": "Geen zichtbare interesse vanuit het leiderschap" },
+        { "value": 2, "label": "Bewustzijn, maar geen toegewijd sponsorship" },
+        { "value": 3, "label": "Eén of twee senior sponsors zijn actief betrokken" },
+        { "value": 4, "label": "Breed draagvlak bij het leiderschap met toegewezen middelen" },
+        { "value": 5, "label": "AI is een bestuursprioriteit met dedicated investering" }
+      ]
+    },
+    {
+      "code": "SV3", "dimension": "strategy_vision", "type": "likert", "lite": false, "scored": true,
+      "text": "Heeft jullie organisatie een vastgestelde AI-roadmap of implementatieplan?",
+      "options": [
+        { "value": 1, "label": "Er is geen roadmap" },
+        { "value": 2, "label": "Wordt opgesteld maar is nog niet definitief" },
+        { "value": 3, "label": "Bestaat voor specifieke afdelingen of use cases" },
+        { "value": 4, "label": "Bedrijfsbrede roadmap met duidelijke mijlpalen" },
+        { "value": 5, "label": "Levende roadmap die actief per kwartaal wordt herzien en bijgewerkt" }
+      ]
+    },
+    {
+      "code": "SV4", "dimension": "strategy_vision", "type": "likert", "lite": false, "scored": true,
+      "text": "Hoe goed is de AI-visie afgestemd tussen afdelingen?",
+      "options": [
+        { "value": 1, "label": "Iedere afdeling doet zijn eigen ding" },
+        { "value": 2, "label": "Enig bewustzijn, maar geen formele afstemming" },
+        { "value": 3, "label": "Gedeeltelijke afstemming op sommige gebieden" },
+        { "value": 4, "label": "Regelmatige afdelingsoverstijgende coördinatie rondom AI" },
+        { "value": 5, "label": "Volledig afgestemde AI-strategie over alle afdelingen" }
+      ]
+    },
+    {
+      "code": "UA1", "dimension": "current_usage", "type": "frequency", "lite": false, "scored": true,
+      "text": "Hoe vaak gebruik je zelf AI-tools in je werk?",
+      "options": [
+        { "value": 1, "label": "Nooit" },
+        { "value": 2, "label": "Zelden — een paar keer per maand" },
+        { "value": 3, "label": "Maandelijks — incidenteel gebruik" },
+        { "value": 4, "label": "Wekelijks — regelmatig gebruik" },
+        { "value": 5, "label": "Dagelijks — onderdeel van mijn standaard werkwijze" }
+      ]
+    },
+    {
+      "code": "UA2", "dimension": "current_usage", "type": "likert", "lite": true, "scored": true,
+      "text": "Hoe breed worden AI-tools ingezet binnen jullie organisatie?",
+      "options": [
+        { "value": 1, "label": "Slechts enkele individuen experimenteren op eigen initiatief" },
+        { "value": 2, "label": "Alleen specifieke teams of afdelingen" },
+        { "value": 3, "label": "De meeste afdelingen gebruiken het in enige mate" },
+        { "value": 4, "label": "Bedrijfsbrede adoptie met wisselende diepgang" },
+        { "value": 5, "label": "Gestructureerd, organisatiebreed gebruik met meetbare resultaten" }
+      ]
+    },
+    {
+      "code": "UA3", "dimension": "current_usage", "type": "likert", "lite": false, "scored": true,
+      "text": "Hoe zou je de volwassenheid van AI-gebruik in jullie organisatie omschrijven?",
+      "options": [
+        { "value": 1, "label": "Puur experimenteel — geen gestructureerde aanpak" },
+        { "value": 2, "label": "Enkele use cases bewezen maar niet opgeschaald" },
+        { "value": 3, "label": "Meerdere use cases draaien in productie" },
+        { "value": 4, "label": "AI is ingebed in belangrijke bedrijfsprocessen" },
+        { "value": 5, "label": "AI is centraal in ons concurrentievoordeel" }
+      ]
+    },
+    {
+      "code": "UA4", "dimension": "current_usage", "type": "multiselect", "lite": false, "scored": false,
+      "text": "Welke AI-tools worden momenteel gebruikt in jullie organisatie?",
+      "options": [
+        { "value": null, "label": "ChatGPT / OpenAI" },
+        { "value": null, "label": "Claude (Anthropic)" },
+        { "value": null, "label": "Microsoft Copilot" },
+        { "value": null, "label": "Google Gemini" },
+        { "value": null, "label": "Notion AI" },
+        { "value": null, "label": "Midjourney / DALL·E" },
+        { "value": null, "label": "Salesforce Einstein / HubSpot AI" },
+        { "value": null, "label": "GitHub Copilot" },
+        { "value": null, "label": "Eigen interne AI-tools" },
+        { "value": null, "label": "Anders" },
+        { "value": null, "label": "Geen" }
+      ]
+    },
+    {
+      "code": "DR1", "dimension": "data_readiness", "type": "weighted_mc", "lite": true, "scored": true,
+      "text": "Wat beschrijft de datasituatie van jullie organisatie het best?",
+      "options": [
+        { "value": 1, "label": "Data is verspreid over systemen en moeilijk toegankelijk" },
+        { "value": 2, "label": "Data is beschikbaar maar slecht gestructureerd" },
+        { "value": 3, "label": "Schone data bestaat op sommige gebieden" },
+        { "value": 4, "label": "De meeste data is gestructureerd en toegankelijk" },
+        { "value": 5, "label": "Volwassen data-infrastructuur met governance op orde" }
+      ]
+    },
+    {
+      "code": "DR2", "dimension": "data_readiness", "type": "likert", "lite": false, "scored": true,
+      "text": "Hoe goed is de data governance binnen jullie organisatie geregeld?",
+      "options": [
+        { "value": 1, "label": "Geen data governance aanwezig" },
+        { "value": 2, "label": "Ad hoc werkwijzen zonder formeel beleid" },
+        { "value": 3, "label": "Enige governance op belangrijke gebieden" },
+        { "value": 4, "label": "Formeel data governance-beleid en eigenaarschap gedefinieerd" },
+        { "value": 5, "label": "Volwassen governance met datacatalogus, lineage en kwaliteitsbewaking" }
+      ]
+    },
+    {
+      "code": "DR3", "dimension": "data_readiness", "type": "likert", "lite": false, "scored": true,
+      "text": "Hoe beoordeel je de datakwaliteit binnen jullie organisatie?",
+      "options": [
+        { "value": 1, "label": "Data is vaak onvolledig, gedupliceerd of onbetrouwbaar" },
+        { "value": 2, "label": "Kwaliteit verschilt sterk per bron" },
+        { "value": 3, "label": "Acceptabele kwaliteit in de kernsystemen" },
+        { "value": 4, "label": "Consistent hoge kwaliteit op de meeste gebieden" },
+        { "value": 5, "label": "Datakwaliteit wordt actief gemonitord en gehandhaafd" }
+      ]
+    },
+    {
+      "code": "DR4", "dimension": "data_readiness", "type": "likert", "lite": false, "scored": true,
+      "text": "Kunnen jullie teams de data benaderen die ze nodig hebben voor AI-toepassingen?",
+      "options": [
+        { "value": 1, "label": "Aanzienlijke drempels — toegang is traag en bureaucratisch" },
+        { "value": 2, "label": "Mogelijk, maar vereist elke keer betrokkenheid van IT" },
+        { "value": 3, "label": "Self-service toegang beschikbaar voor sommige teams" },
+        { "value": 4, "label": "De meeste teams hebben directe toegang tot relevante data" },
+        { "value": 5, "label": "Drempelloze self-service datatoegang in de hele organisatie" }
+      ]
+    },
+    {
+      "code": "TC1", "dimension": "talent_culture", "type": "likert", "lite": true, "scored": true,
+      "text": "Hoe zou je de algemene houding van je team ten opzichte van AI omschrijven?",
+      "options": [
+        { "value": 1, "label": "Weerstand of gevoel van bedreiging door AI" },
+        { "value": 2, "label": "Voorzichtig — afwachtend maar niet actief betrokken" },
+        { "value": 3, "label": "Nieuwsgierig — bereid om te experimenteren" },
+        { "value": 4, "label": "Enthousiast — actief aan het verkennen" },
+        { "value": 5, "label": "Zelfverzekerd — AI-vaardigheid is een teamverwachting" }
+      ]
+    },
+    {
+      "code": "TC2", "dimension": "talent_culture", "type": "likert", "lite": false, "scored": true,
+      "text": "Hoe beoordeel je de algemene AI-geletterdheid binnen jullie organisatie?",
+      "options": [
+        { "value": 1, "label": "Zeer laag — de meeste mensen hebben geen AI-kennis" },
+        { "value": 2, "label": "Laag — een paar AI-vaardige individuen" },
+        { "value": 3, "label": "Groeiend — training is onderweg op sommige gebieden" },
+        { "value": 4, "label": "Goed — gestructureerde bijscholing is ingericht" },
+        { "value": 5, "label": "Hoog — AI-vaardigheden zijn onderdeel van rolverwachtingen in de hele organisatie" }
+      ]
+    },
+    {
+      "code": "TC3", "dimension": "talent_culture", "type": "likert", "lite": false, "scored": true,
+      "text": "Maakt AI-tooling onderdeel uit van het standaard onboardingprogramma voor nieuwe medewerkers?",
+      "options": [
+        { "value": 1, "label": "Nee, helemaal niet" },
+        { "value": 2, "label": "Wordt genoemd maar niet gestructureerd" },
+        { "value": 3, "label": "Basisrichtlijnen zijn opgenomen" },
+        { "value": 4, "label": "AI-tools worden actief geïntroduceerd en getraind tijdens onboarding" },
+        { "value": 5, "label": "Volledige AI-onboardingmodule met hands-on oefening" }
+      ]
+    },
+    {
+      "code": "TC4", "dimension": "talent_culture", "type": "likert", "lite": false, "scored": true,
+      "text": "Hoe breed worden AI-tools ingezet onder jullie medewerkers?",
+      "options": [
+        { "value": 1, "label": "Slechts enkele individuen experimenteren op eigen initiatief" },
+        { "value": 2, "label": "Alleen specifieke teams of afdelingen" },
+        { "value": 3, "label": "De meeste afdelingen gebruiken het in enige mate" },
+        { "value": 4, "label": "Bedrijfsbrede adoptie met wisselende diepgang" },
+        { "value": 5, "label": "Gestructureerde, organisatiebrede adoptie met actieve meting" }
+      ]
+    },
+    {
+      "code": "TC5", "dimension": "talent_culture", "type": "likert", "lite": false, "scored": true,
+      "text": "Investeert jullie organisatie in AI-bijscholing of trainingsprogramma's?",
+      "options": [
+        { "value": 1, "label": "Geen investering op dit gebied" },
+        { "value": 2, "label": "Ad hoc — medewerkers trainen zichzelf in eigen tijd" },
+        { "value": 3, "label": "Enige team- of afdelingstraining beschikbaar" },
+        { "value": 4, "label": "Gestructureerd trainingsprogramma ingericht" },
+        { "value": 5, "label": "Continue leercultuur met dedicated AI-leerbudget" }
+      ]
+    },
+    {
+      "code": "TC6", "dimension": "talent_culture", "type": "likert", "lite": false, "scored": true,
+      "text": "Hoe psychologisch veilig voelen medewerkers zich bij het experimenteren met AI-tools?",
+      "options": [
+        { "value": 1, "label": "Angst voor falen of oordeel verhindert experimenteren" },
+        { "value": 2, "label": "Experimenteren wordt getolereerd maar niet gestimuleerd" },
+        { "value": 3, "label": "Over het algemeen veilig om nieuwe dingen te proberen" },
+        { "value": 4, "label": "Experimenteren wordt actief aangemoedigd" },
+        { "value": 5, "label": "Falen wordt gevierd als leermoment — innovatie wordt beloond" }
+      ]
+    },
+    {
+      "code": "GR1", "dimension": "governance_risk", "type": "likert", "lite": true, "scored": true,
+      "text": "Heeft jullie organisatie vastgesteld beleid of kaders voor AI-gebruik door medewerkers?",
+      "options": [
+        { "value": 1, "label": "Er is geen beleid" },
+        { "value": 2, "label": "Wordt besproken maar nog niets formeels" },
+        { "value": 3, "label": "Informele richtlijnen zijn aanwezig" },
+        { "value": 4, "label": "Formeel AI-gebruiksbeleid bestaat" },
+        { "value": 5, "label": "Uitgebreid governance-raamwerk inclusief ethiek, dataprivacy en compliance" }
+      ]
+    },
+    {
+      "code": "GR2", "dimension": "governance_risk", "type": "likert", "lite": false, "scored": true,
+      "text": "Hoe gaat jullie organisatie om met AI-gerelateerde dataprivacy- en beveiligingsrisico's?",
+      "options": [
+        { "value": 1, "label": "Niet geadresseerd — we hebben hier niet over nagedacht" },
+        { "value": 2, "label": "Bewustzijn van risico's maar geen formele aanpak" },
+        { "value": 3, "label": "Enkele beheersmaatregelen op specifieke gebieden" },
+        { "value": 4, "label": "Formeel risicoraamwerk met regelmatige review" },
+        { "value": 5, "label": "Ingebed risicomanagement met monitoring en audittrails" }
+      ]
+    },
+    {
+      "code": "GR3", "dimension": "governance_risk", "type": "likert", "lite": false, "scored": true,
+      "text": "Zijn medewerkers op de hoogte van wat wel en niet is toegestaan bij AI-gebruik?",
+      "options": [
+        { "value": 1, "label": "Er is geen richtlijn gecommuniceerd" },
+        { "value": 2, "label": "Minimaal bewustzijn — geen formele communicatie" },
+        { "value": 3, "label": "Richtlijnen bestaan maar het bewustzijn is wisselend" },
+        { "value": 4, "label": "De meeste medewerkers kennen de belangrijkste regels" },
+        { "value": 5, "label": "Helder, goed gecommuniceerd beleid — medewerkers weten precies wat is toegestaan" }
+      ]
+    },
+    {
+      "code": "GR4", "dimension": "governance_risk", "type": "likert", "lite": false, "scored": true,
+      "text": "Hoe gaat jullie organisatie om met AI-ethiek?",
+      "options": [
+        { "value": 1, "label": "Wordt niet overwogen" },
+        { "value": 2, "label": "Informeel bewustzijn maar geen raamwerk" },
+        { "value": 3, "label": "Ethische principes gedefinieerd maar niet geoperationaliseerd" },
+        { "value": 4, "label": "Ethisch raamwerk ingebed in AI-ontwikkeling en -inkoop" },
+        { "value": 5, "label": "Actieve ethische governance inclusief bias-reviews en modelaudits" }
+      ]
+    },
+    {
+      "code": "GR5", "dimension": "governance_risk", "type": "likert", "lite": false, "scored": true,
+      "text": "Hoe worden AI-tools geëvalueerd voordat ze worden goedgekeurd voor gebruik?",
+      "options": [
+        { "value": 1, "label": "Geen evaluatieproces — medewerkers kiezen hun eigen tools" },
+        { "value": 2, "label": "Ad hoc beoordeling per geval" },
+        { "value": 3, "label": "Basischecklist of goedkeuringsproces aanwezig" },
+        { "value": 4, "label": "Gestructureerde leveranciersbeoordeling op beveiliging en compliance" },
+        { "value": 5, "label": "Rigoureus inkoopproces met doorlopende monitoring van goedgekeurde tools" }
+      ]
+    },
+    {
+      "code": "OA1", "dimension": "opportunity_awareness", "type": "likert", "lite": true, "scored": true,
+      "text": "Hoe duidelijk kun je verwoorden waar AI de meeste waarde creëert in jullie organisatie?",
+      "options": [
+        { "value": 1, "label": "We hebben AI-kansen niet in kaart gebracht" },
+        { "value": 2, "label": "Vaag gevoel van potentieel maar geen specifieke use cases geïdentificeerd" },
+        { "value": 3, "label": "Enkele use cases geïdentificeerd maar niet geprioriteerd" },
+        { "value": 4, "label": "Duidelijke use case-kaart met geprioriteerde kansen" },
+        { "value": 5, "label": "Continu bijgewerkte kansenkaart met ROI-tracking" }
+      ]
+    },
+    {
+      "code": "OA2", "dimension": "opportunity_awareness", "type": "multiselect", "lite": true, "scored": false,
+      "text": "Waar zie je de grootste AI-kans binnen jullie organisatie?",
+      "options": [
+        { "value": null, "label": "Sales" },
+        { "value": null, "label": "Marketing" },
+        { "value": null, "label": "Product" },
+        { "value": null, "label": "Operations" },
+        { "value": null, "label": "Finance" },
+        { "value": null, "label": "HR" },
+        { "value": null, "label": "Klantenservice" },
+        { "value": null, "label": "IT" },
+        { "value": null, "label": "Strategische besluitvorming" },
+        { "value": null, "label": "Anders" }
+      ]
+    },
+    {
+      "code": "OA3", "dimension": "opportunity_awareness", "type": "likert", "lite": false, "scored": true,
+      "text": "Hoe eensgezind is jullie leiderschapsteam over waar AI-investeringen op gericht moeten zijn?",
+      "options": [
+        { "value": 1, "label": "Geen gedeelde visie — iedereen heeft een andere mening" },
+        { "value": 2, "label": "Enige afstemming maar significante onenigheid blijft" },
+        { "value": 3, "label": "Brede consensus over 1–2 prioriteitsgebieden" },
+        { "value": 4, "label": "Duidelijke gedeelde prioriteiten met draagvlak in het leiderschapsteam" },
+        { "value": 5, "label": "Volledig afgestemde investeringsthese met gedefinieerde KPI's per gebied" }
+      ]
+    }
+  ]
+}

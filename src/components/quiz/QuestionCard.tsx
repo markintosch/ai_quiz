@@ -1,7 +1,9 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useLocale } from 'next-intl'
 import type { Question } from '@/data/questions'
+import { localizeQuestion, localizeDimension } from '@/data/question-i18n'
 
 interface QuestionCardProps {
   question: Question
@@ -11,6 +13,11 @@ interface QuestionCardProps {
 }
 
 export function QuestionCard({ question, answer, onAnswer, direction = 1 }: QuestionCardProps) {
+  const locale = useLocale()
+  const enOptionLabels = question.options.map(o => o.label)
+  const { text, optionLabels } = localizeQuestion(question.code, question.text, enOptionLabels, locale)
+  const dimLabel = localizeDimension(question.dimension, locale)
+
   const isMultiselect = question.type === 'multiselect'
 
   const currentSelections = Array.isArray(answer) ? answer : []
@@ -45,17 +52,18 @@ export function QuestionCard({ question, answer, onAnswer, direction = 1 }: Ques
       className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8"
     >
       <p className="text-xs font-semibold uppercase tracking-widest text-brand-accent mb-3">
-        {dimensionLabel(question.dimension)}
+        {dimLabel}
       </p>
 
       <h2 className="text-xl font-semibold text-gray-900 mb-6 leading-snug">
-        {question.text}
+        {text}
       </h2>
 
       {isMultiselect ? (
         <div className="space-y-3">
           <div className="flex flex-wrap gap-2">
-            {question.options.map(opt => {
+            {question.options.map((opt, i) => {
+              const localLabel = optionLabels[i] ?? opt.label
               const selected = currentSelections.includes(opt.label)
               return (
                 <motion.button
@@ -69,7 +77,7 @@ export function QuestionCard({ question, answer, onAnswer, direction = 1 }: Ques
                       : 'bg-white border-gray-300 text-gray-700 hover:border-brand-accent hover:text-brand-accent'
                   }`}
                 >
-                  {opt.label}
+                  {localLabel}
                 </motion.button>
               )
             })}
@@ -94,6 +102,7 @@ export function QuestionCard({ question, answer, onAnswer, direction = 1 }: Ques
       ) : (
         <div className="space-y-2.5">
           {question.options.map((opt, i) => {
+            const localLabel = optionLabels[i] ?? opt.label
             const selected = answer === opt.value
             return (
               <motion.button
@@ -110,7 +119,7 @@ export function QuestionCard({ question, answer, onAnswer, direction = 1 }: Ques
                     : 'bg-white border-gray-200 text-gray-700 hover:border-brand hover:bg-gray-50'
                 }`}
               >
-                {opt.label}
+                {localLabel}
               </motion.button>
             )
           })}
@@ -120,14 +129,3 @@ export function QuestionCard({ question, answer, onAnswer, direction = 1 }: Ques
   )
 }
 
-function dimensionLabel(dimension: string): string {
-  const map: Record<string, string> = {
-    strategy_vision:       'Strategy & Vision',
-    current_usage:         'Current Usage',
-    data_readiness:        'Data Readiness',
-    talent_culture:        'Talent & Culture',
-    governance_risk:       'Governance & Risk',
-    opportunity_awareness: 'Opportunity Awareness',
-  }
-  return map[dimension] ?? dimension
-}
