@@ -97,11 +97,7 @@ export async function POST(req: NextRequest) {
 
       if (respondentError || !respondent) {
         console.error('Respondent insert error:', respondentError)
-        // TEMP: expose DB error detail for diagnosis — remove after fixing
-        return NextResponse.json({
-          error: 'Failed to save respondent',
-          detail: respondentError?.message ?? respondentError?.code ?? 'no detail',
-        }, { status: 500 })
+        return NextResponse.json({ error: 'Failed to save respondent' }, { status: 500 })
       }
 
       respondentId = respondent.id
