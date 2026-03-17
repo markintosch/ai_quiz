@@ -65,6 +65,17 @@ export async function POST(req: NextRequest) {
     product_id?: string | null
   }
 
+  // Resolve product_id — if not supplied, fall back to the ai_maturity product
+  let productId = body.product_id ?? null
+  if (!productId) {
+    const { data: defaultProduct } = await supabase
+      .from('quiz_products')
+      .select('id')
+      .eq('key', 'ai_maturity')
+      .single() as unknown as { data: { id: string } | null }
+    productId = defaultProduct?.id ?? null
+  }
+
   const { data, error } = await supabase
     .from('companies')
     .insert({
@@ -72,7 +83,7 @@ export async function POST(req: NextRequest) {
       slug: body.slug,
       logo_url: body.logo_url ?? null,
       active: body.active ?? true,
-      product_id: body.product_id ?? null,
+      product_id: productId,
     })
     .select()
     .single()
