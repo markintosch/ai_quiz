@@ -124,7 +124,7 @@ export function ScoreDashboard({
         className="bg-brand rounded-2xl p-8 text-center text-white"
       >
         <p className="text-xs font-semibold uppercase tracking-widest text-white/60 mb-4">
-          Your AI Maturity Score
+          {productUI?.name ?? 'AI Maturity Score'}
         </p>
 
         <motion.div
