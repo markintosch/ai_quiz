@@ -1,0 +1,302 @@
+{
+  "_instructions": "Translate only the 'text' and 'label' fields. Do NOT change codes, values, dimension, type, lite, or scored fields. Return the exact same JSON structure.",
+  "questions": [
+    {
+      "code": "SV1", "dimension": "strategy_vision", "type": "likert", "lite": true, "scored": true,
+      "text": "Quelle place occupe l'IA dans la stratégie actuelle de votre entreprise ?",
+      "options": [
+        { "value": 1, "label": "Pas du tout à l'ordre du jour" },
+        { "value": 2, "label": "Discutée occasionnellement, mais sans plans concrets" },
+        { "value": 3, "label": "Intégrée à la stratégie dans certains domaines" },
+        { "value": 4, "label": "Activement intégrée dans la planification stratégique" },
+        { "value": 5, "label": "Au cœur de notre façon d'opérer et de rivaliser" }
+      ]
+    },
+    {
+      "code": "SV2", "dimension": "strategy_vision", "type": "likert", "lite": false, "scored": true,
+      "text": "Comment décririez-vous l'engagement de la direction envers l'adoption de l'IA ?",
+      "options": [
+        { "value": 1, "label": "Aucun intérêt visible de la part de la direction" },
+        { "value": 2, "label": "Sensibilisation sans sponsorship dédié" },
+        { "value": 3, "label": "Un ou deux sponsors seniors activement impliqués" },
+        { "value": 4, "label": "Adhésion large de la direction avec ressources allouées" },
+        { "value": 5, "label": "L'IA est une priorité au niveau du conseil d'administration avec un investissement dédié" }
+      ]
+    },
+    {
+      "code": "SV3", "dimension": "strategy_vision", "type": "likert", "lite": false, "scored": true,
+      "text": "Votre organisation dispose-t-elle d'une feuille de route ou d'un plan de déploiement IA défini ?",
+      "options": [
+        { "value": 1, "label": "Aucune feuille de route n'existe" },
+        { "value": 2, "label": "En cours de rédaction mais pas encore finalisée" },
+        { "value": 3, "label": "Existe pour des départements ou cas d'usage spécifiques" },
+        { "value": 4, "label": "Feuille de route à l'échelle de l'entreprise avec des jalons clairs" },
+        { "value": 5, "label": "Feuille de route vivante, activement revue et mise à jour chaque trimestre" }
+      ]
+    },
+    {
+      "code": "SV4", "dimension": "strategy_vision", "type": "likert", "lite": false, "scored": true,
+      "text": "Dans quelle mesure la vision IA est-elle alignée entre les départements ?",
+      "options": [
+        { "value": 1, "label": "Chaque département agit de son côté" },
+        { "value": 2, "label": "Une certaine sensibilisation mais pas d'alignement formel" },
+        { "value": 3, "label": "Alignement partiel dans certains domaines" },
+        { "value": 4, "label": "Coordination interdépartementale régulière sur l'IA" },
+        { "value": 5, "label": "Stratégie IA pleinement alignée dans tous les départements" }
+      ]
+    },
+    {
+      "code": "UA1", "dimension": "current_usage", "type": "frequency", "lite": false, "scored": true,
+      "text": "À quelle fréquence utilisez-vous personnellement des outils d'IA dans votre travail ?",
+      "options": [
+        { "value": 1, "label": "Jamais" },
+        { "value": 2, "label": "Rarement — quelques fois par mois" },
+        { "value": 3, "label": "Mensuellement — utilisation occasionnelle" },
+        { "value": 4, "label": "Hebdomadairement — utilisation régulière" },
+        { "value": 5, "label": "Quotidiennement — intégré à mon flux de travail standard" }
+      ]
+    },
+    {
+      "code": "UA2", "dimension": "current_usage", "type": "likert", "lite": true, "scored": true,
+      "text": "Dans quelle mesure les outils d'IA sont-ils utilisés dans votre organisation ?",
+      "options": [
+        { "value": 1, "label": "Seuls quelques individus expérimentent de manière indépendante" },
+        { "value": 2, "label": "Uniquement dans des équipes ou départements spécifiques" },
+        { "value": 3, "label": "La plupart des départements ont un certain usage" },
+        { "value": 4, "label": "Adoption à l'échelle de l'entreprise avec une profondeur variable" },
+        { "value": 5, "label": "Utilisation structurée à l'échelle de l'organisation avec mesure des résultats" }
+      ]
+    },
+    {
+      "code": "UA3", "dimension": "current_usage", "type": "likert", "lite": false, "scored": true,
+      "text": "Comment décririez-vous la maturité de l'utilisation de l'IA dans votre organisation ?",
+      "options": [
+        { "value": 1, "label": "Purement expérimentale — aucune approche structurée" },
+        { "value": 2, "label": "Quelques cas d'usage prouvés mais non déployés à l'échelle" },
+        { "value": 3, "label": "Plusieurs cas d'usage en production" },
+        { "value": 4, "label": "L'IA est intégrée dans les processus métier clés" },
+        { "value": 5, "label": "L'IA est au cœur de notre avantage concurrentiel" }
+      ]
+    },
+    {
+      "code": "UA4", "dimension": "current_usage", "type": "multiselect", "lite": false, "scored": false,
+      "text": "Quels outils d'IA sont actuellement utilisés dans votre organisation ?",
+      "options": [
+        { "value": null, "label": "ChatGPT / OpenAI" },
+        { "value": null, "label": "Claude (Anthropic)" },
+        { "value": null, "label": "Microsoft Copilot" },
+        { "value": null, "label": "Google Gemini" },
+        { "value": null, "label": "Notion AI" },
+        { "value": null, "label": "Midjourney / DALL·E" },
+        { "value": null, "label": "Salesforce Einstein / HubSpot AI" },
+        { "value": null, "label": "GitHub Copilot" },
+        { "value": null, "label": "Outils IA internes sur mesure" },
+        { "value": null, "label": "Autre" },
+        { "value": null, "label": "Aucun" }
+      ]
+    },
+    {
+      "code": "DR1", "dimension": "data_readiness", "type": "weighted_mc", "lite": true, "scored": true,
+      "text": "Quelle description correspond le mieux à la situation des données dans votre organisation ?",
+      "options": [
+        { "value": 1, "label": "Les données sont dispersées entre les systèmes et difficiles d'accès" },
+        { "value": 2, "label": "Les données sont disponibles mais mal structurées" },
+        { "value": 3, "label": "Des données propres existent dans certains domaines" },
+        { "value": 4, "label": "La plupart des données sont structurées et accessibles" },
+        { "value": 5, "label": "Infrastructure de données mature avec une gouvernance en place" }
+      ]
+    },
+    {
+      "code": "DR2", "dimension": "data_readiness", "type": "likert", "lite": false, "scored": true,
+      "text": "Dans quelle mesure la gouvernance des données est-elle assurée dans votre organisation ?",
+      "options": [
+        { "value": 1, "label": "Aucune pratique de gouvernance des données" },
+        { "value": 2, "label": "Pratiques ad hoc sans politique formelle" },
+        { "value": 3, "label": "Certaine gouvernance dans les domaines clés" },
+        { "value": 4, "label": "Politique formelle de gouvernance des données avec propriété définie" },
+        { "value": 5, "label": "Gouvernance mature avec catalogue de données, traçabilité et suivi de qualité" }
+      ]
+    },
+    {
+      "code": "DR3", "dimension": "data_readiness", "type": "likert", "lite": false, "scored": true,
+      "text": "Comment évaluez-vous la qualité des données dans votre organisation ?",
+      "options": [
+        { "value": 1, "label": "Les données sont souvent incomplètes, dupliquées ou peu fiables" },
+        { "value": 2, "label": "La qualité varie considérablement selon les sources" },
+        { "value": 3, "label": "Qualité acceptable dans les systèmes principaux" },
+        { "value": 4, "label": "Qualité élevée et constante dans la plupart des domaines" },
+        { "value": 5, "label": "La qualité des données est activement surveillée et appliquée" }
+      ]
+    },
+    {
+      "code": "DR4", "dimension": "data_readiness", "type": "likert", "lite": false, "scored": true,
+      "text": "Vos équipes peuvent-elles accéder aux données dont elles ont besoin pour les cas d'usage IA ?",
+      "options": [
+        { "value": 1, "label": "Obstacles importants — l'accès est lent et bureaucratique" },
+        { "value": 2, "label": "Possible mais nécessite l'intervention de l'IT à chaque fois" },
+        { "value": 3, "label": "Accès en libre-service disponible pour certaines équipes" },
+        { "value": 4, "label": "La plupart des équipes ont un accès direct aux données pertinentes" },
+        { "value": 5, "label": "Accès aux données en libre-service et sans friction dans toute l'organisation" }
+      ]
+    },
+    {
+      "code": "TC1", "dimension": "talent_culture", "type": "likert", "lite": true, "scored": true,
+      "text": "Comment décririez-vous l'attitude générale de votre équipe envers l'IA ?",
+      "options": [
+        { "value": 1, "label": "Résistance ou sentiment de menace face à l'IA" },
+        { "value": 2, "label": "Prudence — observation sans engagement actif" },
+        { "value": 3, "label": "Curiosité — disposition à expérimenter" },
+        { "value": 4, "label": "Enthousiasme — exploration active" },
+        { "value": 5, "label": "Confiance — la maîtrise de l'IA est une attente de l'équipe" }
+      ]
+    },
+    {
+      "code": "TC2", "dimension": "talent_culture", "type": "likert", "lite": false, "scored": true,
+      "text": "Comment évaluez-vous le niveau général de littératie IA dans votre organisation ?",
+      "options": [
+        { "value": 1, "label": "Très faible — la plupart des collaborateurs n'ont aucune connaissance en IA" },
+        { "value": 2, "label": "Faible — quelques individus compétents en IA" },
+        { "value": 3, "label": "En croissance — des formations sont en cours dans certains domaines" },
+        { "value": 4, "label": "Bon — montée en compétences structurée en place" },
+        { "value": 5, "label": "Élevé — les compétences IA font partie des attentes de poste dans toute l'organisation" }
+      ]
+    },
+    {
+      "code": "TC3", "dimension": "talent_culture", "type": "likert", "lite": false, "scored": true,
+      "text": "Les outils d'IA font-ils partie du programme d'intégration standard des nouveaux collaborateurs ?",
+      "options": [
+        { "value": 1, "label": "Non, pas du tout" },
+        { "value": 2, "label": "Mentionnés mais pas de manière structurée" },
+        { "value": 3, "label": "Des orientations de base sont incluses" },
+        { "value": 4, "label": "Les outils IA sont activement présentés et formés lors de l'intégration" },
+        { "value": 5, "label": "Module d'intégration IA complet avec exercices pratiques" }
+      ]
+    },
+    {
+      "code": "TC4", "dimension": "talent_culture", "type": "likert", "lite": false, "scored": true,
+      "text": "Dans quelle mesure les outils d'IA sont-ils utilisés par l'ensemble de vos collaborateurs ?",
+      "options": [
+        { "value": 1, "label": "Seuls quelques individus expérimentent de manière indépendante" },
+        { "value": 2, "label": "Uniquement dans des équipes ou départements spécifiques" },
+        { "value": 3, "label": "La plupart des départements ont un certain usage" },
+        { "value": 4, "label": "Adoption à l'échelle de l'entreprise avec une profondeur variable" },
+        { "value": 5, "label": "Adoption structurée à l'échelle de l'organisation avec mesure active" }
+      ]
+    },
+    {
+      "code": "TC5", "dimension": "talent_culture", "type": "likert", "lite": false, "scored": true,
+      "text": "Votre organisation investit-elle dans la montée en compétences ou des programmes de formation en IA ?",
+      "options": [
+        { "value": 1, "label": "Aucun investissement dans ce domaine" },
+        { "value": 2, "label": "Ad hoc — les collaborateurs se forment seuls sur leur temps libre" },
+        { "value": 3, "label": "Certaines formations d'équipe ou de département disponibles" },
+        { "value": 4, "label": "Programme de formation structuré en place" },
+        { "value": 5, "label": "Culture d'apprentissage continu avec budget dédié à la formation IA" }
+      ]
+    },
+    {
+      "code": "TC6", "dimension": "talent_culture", "type": "likert", "lite": false, "scored": true,
+      "text": "Dans quelle mesure les collaborateurs se sentent-ils en sécurité psychologique pour expérimenter avec les outils d'IA ?",
+      "options": [
+        { "value": 1, "label": "La peur de l'échec ou du jugement empêche l'expérimentation" },
+        { "value": 2, "label": "L'expérimentation est tolérée mais pas encouragée" },
+        { "value": 3, "label": "Généralement sûr d'essayer de nouvelles choses" },
+        { "value": 4, "label": "L'expérimentation est activement encouragée" },
+        { "value": 5, "label": "L'échec est célébré comme apprentissage — l'innovation est récompensée" }
+      ]
+    },
+    {
+      "code": "GR1", "dimension": "governance_risk", "type": "likert", "lite": true, "scored": true,
+      "text": "Votre organisation a-t-elle défini des politiques ou des garde-fous pour l'utilisation de l'IA par les collaborateurs ?",
+      "options": [
+        { "value": 1, "label": "Aucune politique n'existe" },
+        { "value": 2, "label": "En cours de discussion mais rien de formel" },
+        { "value": 3, "label": "Des lignes directrices informelles sont en place" },
+        { "value": 4, "label": "Une politique formelle d'utilisation de l'IA existe" },
+        { "value": 5, "label": "Cadre de gouvernance complet incluant éthique, protection des données et conformité" }
+      ]
+    },
+    {
+      "code": "GR2", "dimension": "governance_risk", "type": "likert", "lite": false, "scored": true,
+      "text": "Comment votre organisation gère-t-elle les risques liés à la confidentialité des données et à la sécurité de l'IA ?",
+      "options": [
+        { "value": 1, "label": "Non traité — nous n'y avons pas réfléchi" },
+        { "value": 2, "label": "Sensibilisation aux risques mais pas d'approche formelle" },
+        { "value": 3, "label": "Certains contrôles dans des domaines spécifiques" },
+        { "value": 4, "label": "Cadre de gestion des risques formel avec revue régulière" },
+        { "value": 5, "label": "Gestion des risques intégrée avec surveillance et pistes d'audit" }
+      ]
+    },
+    {
+      "code": "GR3", "dimension": "governance_risk", "type": "likert", "lite": false, "scored": true,
+      "text": "Les collaborateurs savent-ils ce qui est autorisé ou non en matière d'utilisation de l'IA ?",
+      "options": [
+        { "value": 1, "label": "Aucune directive n'a été communiquée" },
+        { "value": 2, "label": "Sensibilisation minimale — pas de communication formelle" },
+        { "value": 3, "label": "Des directives existent mais la sensibilisation est inégale" },
+        { "value": 4, "label": "La plupart des collaborateurs connaissent les règles principales" },
+        { "value": 5, "label": "Politique claire et bien communiquée — les collaborateurs savent exactement ce qui est permis" }
+      ]
+    },
+    {
+      "code": "GR4", "dimension": "governance_risk", "type": "likert", "lite": false, "scored": true,
+      "text": "Comment votre organisation aborde-t-elle l'éthique de l'IA ?",
+      "options": [
+        { "value": 1, "label": "Pas prise en compte" },
+        { "value": 2, "label": "Sensibilisation informelle mais pas de cadre" },
+        { "value": 3, "label": "Principes éthiques définis mais non opérationnalisés" },
+        { "value": 4, "label": "Cadre éthique intégré dans le développement et l'achat d'IA" },
+        { "value": 5, "label": "Gouvernance éthique active incluant revues de biais et audits de modèles" }
+      ]
+    },
+    {
+      "code": "GR5", "dimension": "governance_risk", "type": "likert", "lite": false, "scored": true,
+      "text": "Comment les outils d'IA sont-ils évalués avant d'être approuvés pour utilisation ?",
+      "options": [
+        { "value": 1, "label": "Pas de processus d'évaluation — les collaborateurs choisissent leurs propres outils" },
+        { "value": 2, "label": "Évaluation ad hoc au cas par cas" },
+        { "value": 3, "label": "Checklist de base ou processus d'approbation en place" },
+        { "value": 4, "label": "Évaluation structurée des fournisseurs couvrant sécurité et conformité" },
+        { "value": 5, "label": "Processus d'achat rigoureux avec surveillance continue des outils approuvés" }
+      ]
+    },
+    {
+      "code": "OA1", "dimension": "opportunity_awareness", "type": "likert", "lite": true, "scored": true,
+      "text": "Avec quelle clarté pouvez-vous identifier où l'IA crée le plus de valeur dans votre organisation ?",
+      "options": [
+        { "value": 1, "label": "Nous n'avons pas cartographié les opportunités IA" },
+        { "value": 2, "label": "Impression vague du potentiel mais aucun cas d'usage identifié" },
+        { "value": 3, "label": "Quelques cas d'usage identifiés mais non priorisés" },
+        { "value": 4, "label": "Cartographie claire des cas d'usage avec opportunités priorisées" },
+        { "value": 5, "label": "Cartographie des opportunités continuellement mise à jour avec suivi du ROI" }
+      ]
+    },
+    {
+      "code": "OA2", "dimension": "opportunity_awareness", "type": "multiselect", "lite": true, "scored": false,
+      "text": "Où voyez-vous la plus grande opportunité IA dans votre organisation ?",
+      "options": [
+        { "value": null, "label": "Ventes" },
+        { "value": null, "label": "Marketing" },
+        { "value": null, "label": "Produit" },
+        { "value": null, "label": "Opérations" },
+        { "value": null, "label": "Finance" },
+        { "value": null, "label": "RH" },
+        { "value": null, "label": "Service client" },
+        { "value": null, "label": "IT" },
+        { "value": null, "label": "Prise de décision stratégique" },
+        { "value": null, "label": "Autre" }
+      ]
+    },
+    {
+      "code": "OA3", "dimension": "opportunity_awareness", "type": "likert", "lite": false, "scored": true,
+      "text": "Dans quelle mesure votre équipe de direction est-elle alignée sur les priorités d'investissement en IA ?",
+      "options": [
+        { "value": 1, "label": "Pas de vision partagée — chacun a un avis différent" },
+        { "value": 2, "label": "Certain alignement mais des désaccords significatifs subsistent" },
+        { "value": 3, "label": "Large consensus sur 1 à 2 domaines prioritaires" },
+        { "value": 4, "label": "Priorités partagées claires avec adhésion de l'équipe de direction" },
+        { "value": 5, "label": "Thèse d'investissement pleinement alignée avec des KPI définis par domaine" }
+      ]
+    }
+  ]
+}
