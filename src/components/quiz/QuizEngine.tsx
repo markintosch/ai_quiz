@@ -133,7 +133,9 @@ export function QuizEngine({
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
       setSubmitting(false)
-      setPhase('lead_post')
+      // For pre-capture (company) quiz, return to the lead form at the start.
+      // For post-capture quiz, return to the post-quiz lead form.
+      setPhase(captureMode === 'pre' ? 'lead_pre' : 'lead_post')
     }
   }
 
@@ -166,9 +168,14 @@ export function QuizEngine({
             Complete your details to begin the assessment.
           </p>
         </div>
+        {error && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700">
+            {error}
+          </div>
+        )}
         <LeadCaptureForm
           variant="pre"
-          initialValues={initialLead}
+          initialValues={preLead ?? initialLead}
           onSubmit={handlePreLeadSubmit}
         />
       </div>
