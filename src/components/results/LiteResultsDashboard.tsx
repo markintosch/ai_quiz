@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import type { QuizScore } from '@/types'
 import type { Recommendation } from '@/lib/scoring/recommendations'
 import { RadarChart } from './RadarChart'
@@ -19,6 +19,7 @@ interface LiteResultsDashboardProps {
   respondentName: string
   respondentEmail: string
   respondentCompany?: string
+  responseId: string
 }
 
 // ── Config ────────────────────────────────────────────────────
@@ -60,8 +61,10 @@ export function LiteResultsDashboard({
   respondentName,
   respondentEmail,
   respondentCompany = '',
+  responseId,
 }: LiteResultsDashboardProps) {
   const t = useTranslations('results')
+  const locale = useLocale()
   const firstName  = respondentName?.trim().split(/\s+/)[0] || 'there'
   const config     = MATURITY_COLORS[score.maturityLevel] ?? MATURITY_COLORS.Exploring
   const displayScore = useCountUp(score.overall)
@@ -261,63 +264,34 @@ export function LiteResultsDashboard({
         </motion.div>
       )}
 
-      {/* ═══ 7. BOOK A CALL — PRIMARY CTA ════════════════════════ */}
+      {/* ═══ 7. NEXT STEPS CTA — PRIMARY ═══════════════════════ */}
       <motion.div
         variants={fadeUp}
-        className="bg-[#354E5E] rounded-2xl p-7 text-white"
+        className="bg-[#354E5E] rounded-2xl p-7 text-white text-center"
       >
-        {/* Person intro */}
-        <div className="flex items-center gap-4 mb-5">
-          <div className="w-14 h-14 rounded-full overflow-hidden ring-2 ring-[#E8611A]/50 flex-shrink-0 bg-[#2a3e4b] flex items-center justify-center">
-            <img src="/mark-de-kock.jpg" alt="Mark de Kock" className="w-full h-full object-cover" />
-          </div>
-          <div>
-            <p className="text-white font-bold text-sm leading-tight">Mark de Kock</p>
-            <p className="text-[#E8611A] text-xs font-semibold">{t('bookReview.title')}</p>
-            <p className="text-white/60 text-xs">{t('bookReview.company')}</p>
-          </div>
-          <div className="ml-auto">
-            <span className="text-xs bg-white/10 border border-white/10 rounded-full px-3 py-1 text-white/80">
-              {t('bookReview.badge')}
-            </span>
-          </div>
-        </div>
-
+        <p className="text-xs font-semibold uppercase tracking-widest text-white/60 mb-3">
+          Your recommended next step
+        </p>
         <h3 className="text-xl font-bold mb-2">
-          {t('bookReview.heading')}
+          Ready to see where to go from here?
         </h3>
         <p className="text-white/80 text-sm mb-6 leading-relaxed">
-          {t('bookReview.body')}
+          Based on your score and profile, we&apos;ve put together a set of tailored options —
+          from a quick orientation call to hands-on programmes and implementation support.
         </p>
         <a
-          href="https://calendly.com/markiesbpm/ai-intro-meeting-mark-de-kock"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => trackEvent('book_review_clicked', {
+          href={`/${locale}/next-steps?r=${responseId}`}
+          onClick={() => trackEvent('next_steps_clicked', {
             quiz_variant:   'lite',
             maturity_level: score.maturityLevel,
             overall_score:  score.overall,
           })}
           className="inline-block w-full text-center px-8 py-3.5 bg-[#E8611A] hover:bg-orange-700 text-white font-bold rounded-xl text-sm transition-colors shadow-lg shadow-orange-900/30"
         >
-          {t('bookReview.cta')}
+          See your recommended next steps →
         </a>
-
-        {/* Training reference — one line, ambient, no hard sell */}
-        <p className="text-center mt-4 text-xs text-white/60">
-          {t('bookReview.trainingRef')}{' '}
-          <a
-            href="https://handsonai.nl"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[#E8611A] hover:underline font-medium"
-            onClick={() => trackEvent('training_ref_clicked', {
-              maturity_level: score.maturityLevel,
-              source: 'lite_results',
-            })}
-          >
-            {t('bookReview.trainingRefLink')}
-          </a>
+        <p className="text-center mt-3 text-xs text-white/50">
+          Free · No obligation · Takes 2 minutes to explore
         </p>
       </motion.div>
 

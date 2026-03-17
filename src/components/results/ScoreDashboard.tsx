@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useLocale } from 'next-intl'
 import { motion } from 'framer-motion'
 import type { QuizScore } from '@/types'
 import type { Recommendation } from '@/lib/scoring/recommendations'
@@ -65,7 +66,7 @@ function getCalendlyHref(overall: number) {
 interface ScoreDashboardProps {
   score: QuizScore
   recommendations: Recommendation[]
-  /** 'lite' | 'extended' → Calendly button CTA; 'company' → inline CalendlyEmbed */
+  /** 'lite' | 'extended' → next-steps CTA; 'company' → inline CalendlyEmbed */
   quizVariant?: 'lite' | 'extended' | 'company'
   companySlug?: string
   respondentName: string
@@ -74,6 +75,7 @@ interface ScoreDashboardProps {
   benchmarkData?: BenchmarkData
   /** Serializable product config — drives maturity colours, descriptions, Calendly routing */
   productUI?: ProductUIConfig
+  responseId?: string
 }
 
 export function ScoreDashboard({
@@ -86,9 +88,11 @@ export function ScoreDashboard({
   respondentCompany = '',
   benchmarkData,
   productUI,
+  responseId,
 }: ScoreDashboardProps) {
   const isLite    = quizVariant === 'lite'
   const isCompany = quizVariant === 'company'
+  const locale    = useLocale()
 
   // Resolve maturity colours — from product config when available, else hardcoded defaults
   const threshold = productUI?.maturityThresholds.find(t => t.level === score.maturityLevel)
@@ -229,35 +233,43 @@ export function ScoreDashboard({
 
       {/* ── Calendly embed (company quiz only) ── */}
       {isCompany && (
-        <motion.div variants={fadeUp}>
+        <motion.div variants={fadeUp} className="space-y-4">
           <CalendlyEmbed
             overallScore={score.overall}
             name={respondentName}
             email={respondentEmail}
           />
+          {/* Secondary next-steps link below embed */}
+          <p className="text-center text-sm text-gray-500">
+            Prefer to explore options at your own pace?{' '}
+            <a
+              href={`/${locale}/next-steps${responseId ? `?r=${responseId}` : ''}`}
+              className="text-brand font-medium hover:underline"
+            >
+              See all ways to work with us →
+            </a>
+          </p>
         </motion.div>
       )}
 
-      {/* ── CTA block (extended public only) ── */}
+      {/* ── Next-steps CTA (extended public only) ── */}
       {!isCompany && !isLite && (
         <motion.div
           variants={fadeUp}
           className="bg-brand rounded-2xl p-6 text-white text-center"
         >
-          <h3 className="text-lg font-bold mb-2">Ready to talk through your results?</h3>
+          <h3 className="text-lg font-bold mb-2">Ready to move forward?</h3>
           <p className="text-sm text-white/80 mb-5">
-            Book a free call with us to discuss your score, what it means
-            for your organisation, and the clearest next steps.
+            We&apos;ve put together a set of options matched to your profile —
+            from a short conversation to structured programmes and custom projects.
           </p>
           <a
-            href={calendlyHref}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={`/${locale}/next-steps${responseId ? `?r=${responseId}` : ''}`}
             className="inline-block px-6 py-2.5 bg-brand-accent hover:bg-orange-700 text-white font-semibold rounded-xl text-sm transition-colors"
           >
-            Book your free call →
+            Explore how to move forward →
           </a>
-          <p className="text-xs text-white/60 mt-3">Free · No obligation · 20 minutes</p>
+          <p className="text-xs text-white/60 mt-3">Free · No obligation · Takes 2 minutes to explore</p>
         </motion.div>
       )}
 

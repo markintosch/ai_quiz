@@ -55,6 +55,36 @@ export interface Database {
         }
         Relationships: []
       }
+      interest_registrations: {
+        Row: {
+          id: string
+          service_key: 'intro_session' | 'intro_training' | 'ai_coding' | 'clevel_training' | 'custom_project'
+          respondent_id: string | null
+          name: string
+          email: string
+          options: Json
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          service_key: 'intro_session' | 'intro_training' | 'ai_coding' | 'clevel_training' | 'custom_project'
+          respondent_id?: string | null
+          name: string
+          email: string
+          options?: Json
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          service_key?: 'intro_session' | 'intro_training' | 'ai_coding' | 'clevel_training' | 'custom_project'
+          respondent_id?: string | null
+          name?: string
+          email?: string
+          options?: Json
+          created_at?: string
+        }
+        Relationships: []
+      }
       quiz_products: {
         Row: {
           id: string

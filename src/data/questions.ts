@@ -45,7 +45,7 @@ export const QUESTIONS: Question[] = [
     dimension: 'strategy_vision',
     text: 'How would you describe leadership\'s commitment to AI adoption?',
     type: 'likert',
-    lite: false,
+    lite: true,
     scored: true,
     options: [
       { value: 1, label: 'No visible interest from leadership' },
@@ -122,7 +122,7 @@ export const QUESTIONS: Question[] = [
     dimension: 'current_usage',
     text: 'How would you describe the maturity of AI use in your organization?',
     type: 'likert',
-    lite: false,
+    lite: true,
     scored: true,
     options: [
       { value: 1, label: 'Purely experimental — no structured approach' },
@@ -190,7 +190,7 @@ export const QUESTIONS: Question[] = [
     dimension: 'data_readiness',
     text: 'How would you rate your organization\'s data quality?',
     type: 'likert',
-    lite: false,
+    lite: true,
     scored: true,
     options: [
       { value: 1, label: 'Data is often incomplete, duplicated or unreliable' },
@@ -282,7 +282,7 @@ export const QUESTIONS: Question[] = [
     dimension: 'talent_culture',
     text: 'Does your organization invest in AI upskilling or training programmes?',
     type: 'likert',
-    lite: false,
+    lite: true,
     scored: true,
     options: [
       { value: 1, label: 'No investment in this area' },
@@ -329,7 +329,7 @@ export const QUESTIONS: Question[] = [
     dimension: 'governance_risk',
     text: 'How does your organization address AI-related data privacy and security risks?',
     type: 'likert',
-    lite: false,
+    lite: true,
     scored: true,
     options: [
       { value: 1, label: 'Not addressed — we haven\'t thought about this' },
@@ -426,7 +426,7 @@ export const QUESTIONS: Question[] = [
     dimension: 'opportunity_awareness',
     text: 'How aligned is your leadership team on where AI investments should be focused?',
     type: 'likert',
-    lite: false,
+    lite: true,
     scored: true,
     options: [
       { value: 1, label: 'No shared view — everyone has a different opinion' },

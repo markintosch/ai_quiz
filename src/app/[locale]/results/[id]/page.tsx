@@ -90,6 +90,7 @@ export default async function ResultsPage({ params }: PageProps) {
             respondentName={respondent?.name ?? ''}
             respondentEmail={respondent?.email ?? ''}
             respondentCompany={respondent?.company_name ?? ''}
+            responseId={id}
           />
         ) : (
           /* Extended / company quiz → original full dashboard */
@@ -103,6 +104,7 @@ export default async function ResultsPage({ params }: PageProps) {
             respondentCompany={respondent?.company_name ?? ''}
             benchmarkData={benchmarkData}
             productUI={productUI}
+            responseId={id}
           />
         )}
 

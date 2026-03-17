@@ -11,7 +11,7 @@
       "sub": "Notre diagnostic de 5 minutes évalue votre maturité IA sur 6 dimensions critiques — et vous indique exactement quoi prioriser.",
       "authors": "Développé par Mark de Kock & Frank Meeuwsen — spécialistes de la transformation IA avec plus de 30 ans d'expérience digitale combinée.",
       "ctaMain": "Démarrer le scan IA de 5 minutes →",
-      "ctaSub": "7 questions · gratuit · sans inscription préalable",
+      "ctaSub": "12 questions · gratuit · sans inscription préalable",
       "ctaFullPre": "Vous voulez le tableau complet ?",
       "ctaFull": "Faire l'évaluation complète de 26 questions →"
     },
@@ -25,7 +25,7 @@
       "label": "Comment ça marche",
       "heading": "Trois étapes. Zéro jargon.",
       "steps": [
-        { "n": "01", "title": "Répondez à 7 questions honnêtes", "desc": "5 minutes · pas de jargon · sans inscription préalable" },
+        { "n": "01", "title": "Répondez à 12 questions honnêtes", "desc": "5 minutes · pas de jargon · sans inscription préalable" },
         { "n": "02", "title": "Visualisez votre score immédiatement", "desc": "Un graphique radar sur les 6 dimensions de maturité IA" },
         { "n": "03", "title": "Connaissez votre prochaine étape", "desc": "Actions priorisées — adaptées à votre score, pas des conseils génériques" }
       ]
@@ -68,7 +68,7 @@
       "heading": "Prêt à découvrir où vous en êtes ?",
       "sub": "Aucune inscription requise avant de voir vos résultats. Gratuit. 5 minutes.",
       "button": "Démarrer le scan gratuit de 5 minutes →",
-      "buttonSub": "7 questions · score immédiat · sans carte requise",
+      "buttonSub": "12 questions · score immédiat · sans carte requise",
       "fullPre": "Vous préférez l'analyse complète ?",
       "fullLink": "Faire l'évaluation complète de 26 questions →",
       "fullNote": "Gratuit · ~15 minutes · scoring approfondi sur les 6 dimensions"
@@ -107,7 +107,7 @@
     "lite": {
       "brand": "Kirk & Blackbeard",
       "heading": "Évaluation de Maturité IA",
-      "sub": "7 questions · ~5 minutes · Score personnalisé immédiat"
+      "sub": "12 questions · ~5 minutes · Score personnalisé immédiat"
     },
     "engine": {
       "submitting": "Calcul de votre score de maturité IA…",
