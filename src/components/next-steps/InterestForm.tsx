@@ -12,6 +12,8 @@ interface InterestFormProps {
   initialEmail?: string
 }
 
+const inputCls = 'w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand'
+
 const CONTENT = {
   intro_training: {
     headline: 'Interested in an online introduction to AI?',
@@ -124,7 +126,7 @@ export function InterestForm({
           value={name}
           onChange={e => setName(e.target.value)}
           required
-          className="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand"
+          className={inputCls}
           placeholder="Your name"
         />
       </div>
@@ -142,7 +144,7 @@ export function InterestForm({
           value={email}
           onChange={e => setEmail(e.target.value)}
           required
-          className="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand"
+          className={inputCls}
           placeholder="you@company.com"
         />
       </div>

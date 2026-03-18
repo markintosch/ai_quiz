@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslations, useLocale } from 'next-intl'
 import type { QuizScore } from '@/types'
 import type { Recommendation } from '@/lib/scoring/recommendations'
@@ -54,6 +54,13 @@ function useCountUp(target: number, duration = 1000) {
 const fadeUp = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.1 } } }
 
+// ── Dimension score colour ────────────────────────────────────
+function dimColor(n: number) {
+  if (n >= 60) return 'text-emerald-600'
+  if (n >= 40) return 'text-amber-600'
+  return 'text-red-600'
+}
+
 // ── Component ─────────────────────────────────────────────────
 export function LiteResultsDashboard({
   score,
@@ -103,7 +110,7 @@ export function LiteResultsDashboard({
       {/* ═══ 1. TOP SUMMARY ═══════════════════════════════════════ */}
       <motion.div
         variants={fadeUp}
-        className="bg-[#354E5E] rounded-2xl px-8 pt-8 pb-6 text-white text-center"
+        className="bg-brand rounded-2xl px-8 pt-8 pb-6 text-white text-center"
       >
         <p className="text-xs font-semibold uppercase tracking-widest text-white/60 mb-5">
           {t('scoreLabel')}
@@ -176,10 +183,7 @@ export function LiteResultsDashboard({
               <span className="text-xs text-gray-600 truncate">
                 {t(`dimensionLabels.${ds.dimension}` as Parameters<typeof t>[0]) || ds.label}
               </span>
-              <span
-                className="text-xs font-bold tabular-nums"
-                style={{ color: ds.normalized >= 60 ? '#059669' : ds.normalized >= 40 ? '#d97706' : '#dc2626' }}
-              >
+              <span className={`text-xs font-bold tabular-nums ${dimColor(ds.normalized)}`}>
                 {ds.normalized}
               </span>
             </div>
@@ -197,9 +201,9 @@ export function LiteResultsDashboard({
       {/* ═══ 4. INSIGHT BLOCK ════════════════════════════════════ */}
       <motion.div
         variants={fadeUp}
-        className="bg-white border-l-4 border-[#E8611A] rounded-r-2xl rounded-tl-2xl rounded-bl-none px-6 py-5 shadow-sm"
+        className="bg-white border-l-4 border-brand-accent rounded-r-2xl rounded-tl-2xl rounded-bl-none px-6 py-5 shadow-sm"
       >
-        <p className="text-xs font-semibold uppercase tracking-widest text-[#E8611A] mb-2">
+        <p className="text-xs font-semibold uppercase tracking-widest text-brand-accent mb-2">
           {t('insightLabel')}
         </p>
         <p className="text-gray-800 text-sm leading-relaxed mb-3">
@@ -267,7 +271,7 @@ export function LiteResultsDashboard({
       {/* ═══ 7. NEXT STEPS CTA — PRIMARY ═══════════════════════ */}
       <motion.div
         variants={fadeUp}
-        className="bg-[#354E5E] rounded-2xl p-7 text-white text-center"
+        className="bg-brand rounded-2xl p-7 text-white text-center"
       >
         <p className="text-xs font-semibold uppercase tracking-widest text-white/60 mb-3">
           Your recommended next step
@@ -286,7 +290,7 @@ export function LiteResultsDashboard({
             maturity_level: score.maturityLevel,
             overall_score:  score.overall,
           })}
-          className="inline-block w-full text-center px-8 py-3.5 bg-[#E8611A] hover:bg-orange-700 text-white font-bold rounded-xl text-sm transition-colors shadow-lg shadow-orange-900/30"
+          className="inline-block w-full text-center px-8 py-3.5 bg-brand-accent hover:bg-orange-700 text-white font-bold rounded-xl text-sm transition-colors shadow-lg shadow-orange-900/30"
         >
           See your recommended next steps →
         </a>
@@ -315,7 +319,7 @@ export function LiteResultsDashboard({
             source:         'lite_results',
             maturity_level: score.maturityLevel,
           })}
-          className="inline-block px-6 py-2.5 bg-[#354E5E] hover:bg-[#2a3e4b] text-white font-semibold rounded-xl text-sm transition-colors"
+          className="inline-block px-6 py-2.5 bg-brand hover:bg-brand-light text-white font-semibold rounded-xl text-sm transition-colors"
         >
           {t('fullAssessment.cta')}
         </a>
@@ -344,23 +348,25 @@ export function LiteResultsDashboard({
           </span>
         </button>
 
-        {referralOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden"
-          >
-            <div className="mt-2 rounded-2xl border border-gray-200 bg-white p-5">
-              <ReferralSection
-                referrerName={respondentName}
-                referrerCompany={respondentCompany}
-                referrerScore={score.overall}
-                referrerLevel={score.maturityLevel}
-              />
-            </div>
-          </motion.div>
-        )}
+        <AnimatePresence>
+          {referralOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="overflow-hidden"
+            >
+              <div className="mt-2 rounded-2xl border border-gray-200 bg-white p-5">
+                <ReferralSection
+                  referrerName={respondentName}
+                  referrerCompany={respondentCompany}
+                  referrerScore={score.overall}
+                  referrerLevel={score.maturityLevel}
+                />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
 
     </motion.div>

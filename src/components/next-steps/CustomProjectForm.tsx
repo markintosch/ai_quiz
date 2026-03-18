@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
+const inputCls = 'w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand'
+
 const SUPPORT_TYPES = [
   'Strategy',
   'Team training',
@@ -131,7 +133,7 @@ export function CustomProjectForm({
             value={name}
             onChange={e => setName(e.target.value)}
             required
-            className="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand"
+            className={inputCls}
             placeholder="Your name"
           />
         </div>
@@ -145,7 +147,7 @@ export function CustomProjectForm({
             value={email}
             onChange={e => setEmail(e.target.value)}
             required
-            className="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand"
+            className={inputCls}
             placeholder="you@company.com"
           />
         </div>
@@ -162,7 +164,7 @@ export function CustomProjectForm({
             type="text"
             value={company}
             onChange={e => setCompany(e.target.value)}
-            className="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand"
+            className={inputCls}
             placeholder="Company name"
           />
         </div>
@@ -174,7 +176,7 @@ export function CustomProjectForm({
             type="text"
             value={role}
             onChange={e => setRole(e.target.value)}
-            className="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand"
+            className={inputCls}
             placeholder="e.g. Head of Operations"
           />
         </div>
@@ -190,7 +192,7 @@ export function CustomProjectForm({
           onChange={e => setChallenge(e.target.value)}
           required
           rows={4}
-          className="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand resize-none"
+          className={`${inputCls} resize-none`}
           placeholder="Describe your AI challenge, ambition or question as concretely as you can…"
         />
       </div>
@@ -262,7 +264,7 @@ export function CustomProjectForm({
           type="tel"
           value={phone}
           onChange={e => setPhone(e.target.value)}
-          className="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand"
+          className={inputCls}
           placeholder="+31 6 …"
         />
       </div>

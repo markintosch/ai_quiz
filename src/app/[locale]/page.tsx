@@ -62,13 +62,13 @@ export default function LandingPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#354E5E] text-white">
+    <div className="min-h-screen bg-brand text-white">
 
       {/* ── Nav ── */}
       <nav className="border-b border-white/10 px-6 py-4">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div>
-            <p className="text-[#E8611A] text-xs font-bold tracking-widest uppercase">Kirk &amp; Blackbeard</p>
+            <p className="text-brand-accent text-xs font-bold tracking-widest uppercase">Kirk &amp; Blackbeard</p>
             <p className="text-white text-sm font-semibold leading-tight">AI Maturity Assessment</p>
           </div>
           <div className="flex items-center gap-4">
@@ -76,7 +76,7 @@ export default function LandingPage() {
             <Link
               href="/quiz"
               onClick={() => trackEvent('nav_cta_clicked')}
-              className="px-5 py-2 bg-[#E8611A] hover:bg-orange-700 text-white text-sm font-semibold rounded-lg transition-colors"
+              className="px-5 py-2 bg-brand-accent hover:bg-orange-700 text-white text-sm font-semibold rounded-lg transition-colors"
             >
               {t('hero.ctaMain')}
             </Link>
@@ -89,7 +89,7 @@ export default function LandingPage() {
         <motion.div variants={stagger} initial="hidden" animate="show">
 
           <motion.div variants={fadeUp}>
-            <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-[#E8611A] text-xs font-semibold tracking-widest uppercase mb-6 border border-white/10">
+            <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-brand-accent text-xs font-semibold tracking-widest uppercase mb-6 border border-white/10">
               {t('hero.badge')}
             </span>
           </motion.div>
@@ -99,7 +99,7 @@ export default function LandingPage() {
             className="text-5xl md:text-6xl font-black leading-tight mb-6 tracking-tight"
           >
             {t('hero.heading1')}{' '}
-            <span className="text-[#E8611A]">{t('hero.heading2')}</span>
+            <span className="text-brand-accent">{t('hero.heading2')}</span>
           </motion.h1>
 
           <motion.p
@@ -121,7 +121,7 @@ export default function LandingPage() {
             <Link
               href="/quiz"
               onClick={() => trackEvent('hero_cta_short_clicked')}
-              className="inline-flex flex-col items-center px-10 py-5 bg-[#E8611A] hover:bg-orange-700 text-white font-bold rounded-2xl transition-colors shadow-xl shadow-orange-900/30"
+              className="inline-flex flex-col items-center px-10 py-5 bg-brand-accent hover:bg-orange-700 text-white font-bold rounded-2xl transition-colors shadow-xl shadow-orange-900/30"
             >
               <span className="text-xl">{t('hero.ctaMain')}</span>
               <span className="text-xs font-normal text-white/70 mt-1">{t('hero.ctaSub')}</span>
@@ -134,7 +134,7 @@ export default function LandingPage() {
             <Link
               href="/quiz/extended"
               onClick={() => trackEvent('hero_cta_full_clicked')}
-              className="text-white underline underline-offset-2 hover:text-[#E8611A] transition-colors"
+              className="text-white underline underline-offset-2 hover:text-brand-accent transition-colors"
             >
               {t('hero.ctaFull')}
             </Link>
@@ -163,7 +163,7 @@ export default function LandingPage() {
             whileInView="show"
             viewport={{ once: true, margin: '-80px' }}
           >
-            <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-widest text-[#E8611A] mb-2 text-center">
+            <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-widest text-brand-accent mb-2 text-center">
               {t('howItWorks.label')}
             </motion.p>
             <motion.h2 variants={fadeUp} className="text-3xl font-bold text-center mb-12">
@@ -177,7 +177,7 @@ export default function LandingPage() {
                   variants={fadeUp}
                   className="bg-white/5 border border-white/10 rounded-2xl p-6"
                 >
-                  <p className="text-4xl font-black text-[#E8611A]/30 mb-3">{s.n}</p>
+                  <p className="text-4xl font-black text-brand-accent/30 mb-3">{s.n}</p>
                   <h3 className="text-lg font-bold text-white mb-2">{s.title}</h3>
                   <p className="text-gray-400 text-sm leading-relaxed">{s.desc}</p>
                 </motion.div>
@@ -195,7 +195,7 @@ export default function LandingPage() {
           whileInView="show"
           viewport={{ once: true, margin: '-80px' }}
         >
-          <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-widest text-[#E8611A] mb-2 text-center">
+          <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-widest text-brand-accent mb-2 text-center">
             {t('preview.label')}
           </motion.p>
           <motion.h2 variants={fadeUp} className="text-3xl font-bold text-center mb-3">
@@ -241,7 +241,7 @@ export default function LandingPage() {
           whileInView="show"
           viewport={{ once: true, margin: '-80px' }}
         >
-          <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-widest text-[#E8611A] mb-2 text-center">
+          <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-widest text-brand-accent mb-2 text-center">
             {t('dimensions.label')}
           </motion.p>
           <motion.h2 variants={fadeUp} className="text-3xl font-bold text-center mb-3">
@@ -273,7 +273,7 @@ export default function LandingPage() {
             whileInView="show"
             viewport={{ once: true, margin: '-80px' }}
           >
-            <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-widest text-[#E8611A] mb-2 text-center">
+            <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-widest text-brand-accent mb-2 text-center">
               {t('practitioners.label')}
             </motion.p>
             <motion.h2 variants={fadeUp} className="text-3xl font-bold text-center mb-3">
@@ -286,8 +286,8 @@ export default function LandingPage() {
             <motion.div variants={stagger} className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
 
               {/* Mark */}
-              <motion.div variants={fadeUp} className="bg-[#2a3e4b] border border-white/15 rounded-2xl p-7 flex flex-col items-center text-center">
-                <div className="w-24 h-24 rounded-full overflow-hidden mb-4 ring-2 ring-[#E8611A]/60 bg-[#354E5E] flex items-center justify-center flex-shrink-0">
+              <motion.div variants={fadeUp} className="bg-brand-light border border-white/15 rounded-2xl p-7 flex flex-col items-center text-center">
+                <div className="w-24 h-24 rounded-full overflow-hidden mb-4 ring-2 ring-brand-accent/60 bg-brand flex items-center justify-center flex-shrink-0">
                   <img
                     src="/mark-de-kock.jpg"
                     alt="Mark de Kock"
@@ -300,15 +300,15 @@ export default function LandingPage() {
                   />
                 </div>
                 <h3 className="text-white font-bold text-lg mb-0.5">Mark de Kock</h3>
-                <p className="text-[#E8611A] text-xs font-semibold mb-4">{t('practitioners.mark.role')}</p>
+                <p className="text-brand-accent text-xs font-semibold mb-4">{t('practitioners.mark.role')}</p>
                 <p className="text-gray-300 text-sm leading-relaxed">
                   {t('practitioners.mark.bio')}
                 </p>
               </motion.div>
 
               {/* Frank */}
-              <motion.div variants={fadeUp} className="bg-[#2a3e4b] border border-white/15 rounded-2xl p-7 flex flex-col items-center text-center">
-                <div className="w-24 h-24 rounded-full overflow-hidden mb-4 ring-2 ring-[#E8611A]/60 bg-[#354E5E] flex items-center justify-center flex-shrink-0">
+              <motion.div variants={fadeUp} className="bg-brand-light border border-white/15 rounded-2xl p-7 flex flex-col items-center text-center">
+                <div className="w-24 h-24 rounded-full overflow-hidden mb-4 ring-2 ring-brand-accent/60 bg-brand flex items-center justify-center flex-shrink-0">
                   <img
                     src="/frank-meeuwsen.jpg"
                     alt="Frank Meeuwsen"
@@ -321,7 +321,7 @@ export default function LandingPage() {
                   />
                 </div>
                 <h3 className="text-white font-bold text-lg mb-0.5">Frank Meeuwsen</h3>
-                <p className="text-[#E8611A] text-xs font-semibold mb-4">{t('practitioners.frank.role')}</p>
+                <p className="text-brand-accent text-xs font-semibold mb-4">{t('practitioners.frank.role')}</p>
                 <p className="text-white text-sm leading-relaxed italic mb-2">
                   {t('practitioners.frank.quote')}
                 </p>
@@ -351,7 +351,7 @@ export default function LandingPage() {
             <Link
               href="/quiz"
               onClick={() => trackEvent('final_cta_short_clicked')}
-              className="inline-flex flex-col items-center px-12 py-5 bg-[#E8611A] hover:bg-orange-700 text-white font-bold rounded-2xl transition-colors shadow-xl shadow-orange-900/30"
+              className="inline-flex flex-col items-center px-12 py-5 bg-brand-accent hover:bg-orange-700 text-white font-bold rounded-2xl transition-colors shadow-xl shadow-orange-900/30"
             >
               <span className="text-xl">{t('finalCta.button')}</span>
               <span className="text-xs font-normal text-white/70 mt-1">{t('finalCta.buttonSub')}</span>
