@@ -36,6 +36,7 @@ interface Company {
   welcome_message?: string | null
   excluded_question_codes?: string[] | null
   product_id?: string | null
+  access_code?: string | null
 }
 
 interface CompanyEditFormProps {
@@ -51,6 +52,8 @@ export default function CompanyEditForm({ company, products = [] }: CompanyEditF
   const [brandColor, setBrandColor] = useState(company.brand_color ?? '#E8611A')
   const [welcomeMessage, setWelcomeMessage] = useState(company.welcome_message ?? '')
   const [productId, setProductId] = useState(company.product_id ?? '')
+  const [accessCode, setAccessCode] = useState(company.access_code ?? '')
+  const [showAccessCode, setShowAccessCode] = useState(false)
   const [excluded, setExcluded] = useState<Set<string>>(
     new Set(company.excluded_question_codes ?? [])
   )
@@ -86,6 +89,7 @@ export default function CompanyEditForm({ company, products = [] }: CompanyEditF
           welcome_message: welcomeMessage.trim() || null,
           excluded_question_codes: Array.from(excluded),
           product_id: productId || null,
+          access_code: accessCode.trim() || null,
         }),
       })
 
@@ -201,6 +205,46 @@ export default function CompanyEditForm({ company, products = [] }: CompanyEditF
             className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent resize-none"
           />
         </div>
+      </div>
+
+      {/* Access code */}
+      <div className="border-t border-gray-100 pt-5">
+        <p className="text-sm font-semibold text-gray-700 mb-1">Access code</p>
+        <p className="text-xs text-gray-500 mb-3">
+          Optional. If set, participants must enter this code before seeing the assessment.
+          Leave blank for open access.
+        </p>
+        <div className="flex items-center gap-2">
+          <input
+            type={showAccessCode ? 'text' : 'password'}
+            value={accessCode}
+            onChange={(e) => setAccessCode(e.target.value)}
+            placeholder="e.g. acme2025"
+            autoComplete="new-password"
+            className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-brand-accent"
+          />
+          <button
+            type="button"
+            onClick={() => setShowAccessCode((v) => !v)}
+            className="px-3 py-2 text-xs text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            {showAccessCode ? 'Hide' : 'Show'}
+          </button>
+          {accessCode && (
+            <button
+              type="button"
+              onClick={() => setAccessCode('')}
+              className="px-3 py-2 text-xs text-red-500 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"
+            >
+              Clear
+            </button>
+          )}
+        </div>
+        {accessCode && (
+          <p className="text-xs text-amber-600 mt-2">
+            Code set — participants will be asked to enter this before starting.
+          </p>
+        )}
       </div>
 
       {/* Question selection */}

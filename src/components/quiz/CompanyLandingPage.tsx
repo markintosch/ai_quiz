@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslations } from 'next-intl'
 import { QuizEngine } from './QuizEngine'
@@ -59,6 +59,101 @@ function EyeIcon({ className }: { className?: string }) {
 
 const DIMENSION_ICONS = [CompassIcon, ZapIcon, DatabaseIcon, UsersIcon, ShieldIcon, EyeIcon]
 
+// ── Access code gate ──────────────────────────────────────────
+function LockIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    </svg>
+  )
+}
+
+interface AccessCodeGateProps {
+  accessCode: string
+  slug: string
+  accentColor: string
+  displayName: string
+  logoUrl: string | null
+  onUnlock: () => void
+}
+
+function AccessCodeGate({ accessCode, slug, accentColor, displayName, logoUrl, onUnlock }: AccessCodeGateProps) {
+  const [value, setValue] = useState('')
+  const [wrong, setWrong] = useState(false)
+  const [shakeKey, setShakeKey] = useState(0)
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (value.trim() === accessCode.trim()) {
+      try { localStorage.setItem(`kb_access_${slug}`, '1') } catch { /* ignore */ }
+      onUnlock()
+    } else {
+      setWrong(true)
+      setShakeKey((k) => k + 1)
+      setValue('')
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-brand flex flex-col items-center justify-center px-6">
+      <motion.div
+        key={shakeKey}
+        animate={wrong ? { x: [0, -10, 10, -10, 10, 0] } : { x: 0 }}
+        transition={{ duration: 0.4 }}
+        onAnimationComplete={() => setWrong(false)}
+        className="w-full max-w-sm"
+      >
+        <div className="text-center mb-8">
+          {logoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={logoUrl} alt={displayName} className="h-10 object-contain mx-auto mb-4" />
+          ) : (
+            <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: accentColor }}>
+              {displayName}
+            </p>
+          )}
+          <div className="flex justify-center mb-4">
+            <LockIcon className="w-8 h-8 text-white/40" />
+          </div>
+          <h1 className="text-white text-2xl font-bold mb-2">Access required</h1>
+          <p className="text-white/60 text-sm">Enter the access code to start the assessment</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <input
+            type="password"
+            value={value}
+            onChange={(e) => { setValue(e.target.value); setWrong(false) }}
+            placeholder="Access code"
+            autoFocus
+            autoComplete="off"
+            className={`w-full bg-white/10 border rounded-xl px-4 py-3 text-white placeholder-white/40 text-center text-base tracking-widest focus:outline-none focus:ring-2 transition-colors ${
+              wrong ? 'border-red-400 focus:ring-red-400/50' : 'border-white/20 focus:ring-white/30'
+            }`}
+          />
+          {wrong && (
+            <p className="text-red-400 text-sm text-center">Incorrect access code. Try again.</p>
+          )}
+          <button
+            type="submit"
+            className="w-full py-3 rounded-xl font-bold text-white text-sm transition-opacity hover:opacity-90"
+            style={{ backgroundColor: accentColor }}
+          >
+            Continue →
+          </button>
+        </form>
+
+        <p className="text-white/30 text-xs text-center mt-6">
+          Contact your project lead if you need the access code.
+        </p>
+      </motion.div>
+    </div>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────
+
 interface CompanyLandingPageProps {
   name: string
   slug: string
@@ -69,6 +164,8 @@ interface CompanyLandingPageProps {
   questionCount: number
   /** Product key forwarded to QuizEngine for multi-product routing */
   productKey?: string
+  /** Optional access code — if set, a gate is shown before the landing page */
+  accessCode?: string | null
 }
 
 export function CompanyLandingPage({
@@ -80,8 +177,19 @@ export function CompanyLandingPage({
   excludedCodes,
   questionCount,
   productKey,
+  accessCode,
 }: CompanyLandingPageProps) {
   const [started, setStarted] = useState(false)
+  // Gate: false = locked, true = unlocked. If no code required, start unlocked.
+  const [unlocked, setUnlocked] = useState(!accessCode)
+
+  // On mount: check localStorage — skip the gate if already unlocked in this browser
+  useEffect(() => {
+    try {
+      if (localStorage.getItem(`kb_access_${slug}`) === '1') setUnlocked(true)
+    } catch { /* ignore */ }
+  }, [slug])
+
   const t = useTranslations('company')
 
   // Display name: replace underscores with spaces for readability
@@ -107,6 +215,20 @@ export function CompanyLandingPage({
   ) : (
     <>{t('headingFallback')}</>
   )
+
+  // Show access gate before landing page if code is required and not yet unlocked
+  if (!unlocked) {
+    return (
+      <AccessCodeGate
+        accessCode={accessCode!}
+        slug={slug}
+        accentColor={accentColor}
+        displayName={displayName}
+        logoUrl={logoUrl}
+        onUnlock={() => setUnlocked(true)}
+      />
+    )
+  }
 
   return (
     <AnimatePresence mode="wait">

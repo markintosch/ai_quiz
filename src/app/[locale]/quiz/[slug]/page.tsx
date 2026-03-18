@@ -38,7 +38,7 @@ export default async function FullQuizPage({ params }: PageProps) {
 
   const { data: company, error: companyError } = await supabase
     .from('companies')
-    .select('id, name, slug, logo_url, brand_color, welcome_message, excluded_question_codes, quiz_products!product_id(key)')
+    .select('id, name, slug, logo_url, brand_color, welcome_message, excluded_question_codes, access_code, quiz_products!product_id(key)')
     .eq('slug', slug)
     .eq('active', true)
     .single() as unknown as {
@@ -50,6 +50,7 @@ export default async function FullQuizPage({ params }: PageProps) {
         brand_color: string | null
         welcome_message: string | null
         excluded_question_codes: string[] | null
+        access_code: string | null
         quiz_products: { key: string } | null
       } | null
       error: { message: string; code: string } | null
@@ -75,6 +76,7 @@ export default async function FullQuizPage({ params }: PageProps) {
       excludedCodes={excludedCodes}
       questionCount={questionCount}
       productKey={productKey}
+      accessCode={company.access_code}
     />
   )
 }
