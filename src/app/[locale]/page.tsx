@@ -143,7 +143,7 @@ export default function LandingPage() {
           {/* ── Trust strip ── */}
           <motion.div
             variants={fadeUp}
-            className="mt-12 flex flex-wrap justify-center gap-6 text-xs text-gray-500 border-t border-white/10 pt-10"
+            className="mt-12 flex flex-wrap justify-center gap-6 text-xs text-white/70 border-t border-white/10 pt-10"
           >
             {trustItems.map((item) => (
               <span key={item} className="flex items-center gap-2">
