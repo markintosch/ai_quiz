@@ -142,7 +142,7 @@ export default function StatsPage() {
         <div className="grid grid-cols-2 gap-4 max-w-sm">
           <div className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm text-center">
             <p className="text-3xl font-bold" style={{ color: ACCENT }}>{data.liteCount}</p>
-            <p className="text-xs text-gray-600 mt-1 font-medium">Lite (7 questions)</p>
+            <p className="text-xs text-gray-600 mt-1 font-medium">Lite (12 questions)</p>
           </div>
           <div className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm text-center">
             <p className="text-3xl font-bold" style={{ color: TEAL }}>{data.fullCount}</p>

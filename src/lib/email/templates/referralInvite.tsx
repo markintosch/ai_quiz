@@ -49,7 +49,7 @@ export function ReferralInviteEmail({
             <Button style={button} href={quizUrl}>
               Take the free assessment →
             </Button>
-            <Text style={subText}>Free · 7 questions · Instant results</Text>
+            <Text style={subText}>Free · 12 questions · Instant results</Text>
           </Section>
 
           <Hr style={divider} />
