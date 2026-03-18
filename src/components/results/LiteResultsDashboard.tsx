@@ -50,6 +50,19 @@ function useCountUp(target: number, duration = 1000) {
   return value
 }
 
+// ── Icons ─────────────────────────────────────────────────────
+function Share2Icon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="18" cy="5" r="3"/>
+      <circle cx="6" cy="12" r="3"/>
+      <circle cx="18" cy="19" r="3"/>
+      <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
+      <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
+    </svg>
+  )
+}
+
 // ── Animation variants ────────────────────────────────────────
 const fadeUp = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.1 } } }
@@ -337,7 +350,7 @@ export function LiteResultsDashboard({
           className="w-full flex items-center justify-between text-left px-5 py-4 bg-white border border-gray-200 rounded-2xl hover:bg-gray-50 transition-colors"
         >
           <div className="flex items-center gap-3">
-            <span className="text-lg">🤝</span>
+            <Share2Icon className="w-5 h-5 flex-shrink-0 text-gray-500" />
             <div>
               <p className="text-sm font-semibold text-gray-800">{t('referral.heading')}</p>
               <p className="text-xs text-gray-500">{t('referral.sub')}</p>

@@ -6,7 +6,58 @@ import { useTranslations } from 'next-intl'
 import { QuizEngine } from './QuizEngine'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 
-const DIMENSION_ICONS = ['🧭', '⚡', '🗄️', '🧑‍💻', '🛡️', '🔍']
+// ── Dimension icons ───────────────────────────────────────────
+function CompassIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10"/>
+      <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+    </svg>
+  )
+}
+function ZapIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>
+    </svg>
+  )
+}
+function DatabaseIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <ellipse cx="12" cy="5" rx="9" ry="3"/>
+      <path d="M3 5v14a9 3 0 0 0 18 0V5"/>
+      <path d="M3 12a9 3 0 0 0 18 0"/>
+    </svg>
+  )
+}
+function UsersIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+      <circle cx="9" cy="7" r="4"/>
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+    </svg>
+  )
+}
+function ShieldIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
+    </svg>
+  )
+}
+function EyeIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </svg>
+  )
+}
+
+const DIMENSION_ICONS = [CompassIcon, ZapIcon, DatabaseIcon, UsersIcon, ShieldIcon, EyeIcon]
 
 interface CompanyLandingPageProps {
   name: string
@@ -38,8 +89,8 @@ export function CompanyLandingPage({
 
   // Dimension labels from translations
   const dimensionLabels = t.raw('dimensions') as string[]
-  const dimensions = DIMENSION_ICONS.map((icon, i) => ({
-    icon,
+  const dimensions = DIMENSION_ICONS.map((Icon, i) => ({
+    Icon,
     label: dimensionLabels[i] ?? '',
   }))
 
@@ -161,7 +212,7 @@ export function CompanyLandingPage({
                     transition={{ delay: 0.35 + i * 0.06 }}
                     className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-xl px-4 py-3"
                   >
-                    <span className="text-xl">{d.icon}</span>
+                    <d.Icon className="w-5 h-5 flex-shrink-0 text-white/70" />
                     <span className="text-sm font-medium text-white/80">{d.label}</span>
                   </motion.div>
                 ))}
