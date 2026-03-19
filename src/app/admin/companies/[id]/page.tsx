@@ -26,6 +26,8 @@ interface CompanyRow {
   welcome_message: string | null
   excluded_question_codes: string[] | null
   product_id: string | null
+  access_code: string | null
+  notify_email: string | null
 }
 
 interface ProductRow {
@@ -147,6 +149,8 @@ export default async function CompanyDetailPage({
             welcome_message: company.welcome_message,
             excluded_question_codes: company.excluded_question_codes,
             product_id: company.product_id,
+            access_code: company.access_code,
+            notify_email: company.notify_email,
           }}
           products={products ?? []}
         />

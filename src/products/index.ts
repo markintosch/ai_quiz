@@ -43,6 +43,7 @@ const SUBDOMAIN_MAP: Record<string, string> = {
   'ai':                  'ai_maturity',           // ai.brandpwrdmedia.nl
   'ai-maturity':         'ai_maturity',
   'check':               'cloud_readiness',       // check.truefullstaq.nl (TrueFullstaq)
+  'arena':               'cloud_arena',           // arena.truefullstaq.nl (live game)
   // 'digital-readiness':  'digital_readiness',  ← add when product is launched
 }
 
