@@ -15,7 +15,10 @@ const nextConfig = {
   async redirects() {
     return [
       // Locale-less quiz URLs → default locale
-      { source: '/quiz/:slug', destination: '/en/quiz/:slug', permanent: false },
+      { source: '/quiz/:slug', destination: '/en/a/:slug', permanent: false },
+      { source: '/en/quiz/:slug', destination: '/en/a/:slug', permanent: false },
+      { source: '/nl/quiz/:slug', destination: '/nl/a/:slug', permanent: false },
+      { source: '/fr/quiz/:slug', destination: '/fr/a/:slug', permanent: false },
       { source: '/results/:id', destination: '/en/results/:id', permanent: false },
     ]
   },

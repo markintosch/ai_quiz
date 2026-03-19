@@ -38,8 +38,8 @@ export function ReferralSection({
 
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? ''
     const inviteUrl = isCompany && companySlug
-      ? `${BASE_URL}/quiz/${companySlug}`
-      : `${BASE_URL}/quiz`
+      ? `${BASE_URL}/a/${companySlug}`
+      : `${BASE_URL}/en`
 
     const res = await fetch('/api/referral', {
       method: 'POST',

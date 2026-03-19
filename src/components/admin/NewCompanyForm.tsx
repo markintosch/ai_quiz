@@ -20,10 +20,30 @@ export default function NewCompanyForm({ products }: NewCompanyFormProps) {
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
   const [logoUrl, setLogoUrl] = useState('')
+  const [uploading, setUploading] = useState(false)
   const [active, setActive] = useState(true)
   const [productId, setProductId] = useState(defaultProductId)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  async function handleLogoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true)
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
+      if (res.ok) {
+        const json = await res.json() as { url: string }
+        setLogoUrl(json.url)
+      } else {
+        const json = await res.json() as { error?: string }
+        setError(json.error ?? 'Upload failed')
+      }
+    } catch { setError('Upload failed') }
+    setUploading(false)
+  }
 
   function handleNameChange(value: string) {
     setName(value)
@@ -82,7 +102,7 @@ export default function NewCompanyForm({ products }: NewCompanyFormProps) {
           Slug <span className="text-brand-accent">*</span>
         </label>
         <div className="flex items-center gap-1">
-          <span className="text-gray-500 text-sm">/quiz/</span>
+          <span className="text-gray-500 text-sm">/a/</span>
           <input
             type="text"
             value={slug}
@@ -96,15 +116,28 @@ export default function NewCompanyForm({ products }: NewCompanyFormProps) {
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Logo URL <span className="text-gray-500 text-xs">(optional)</span>
+          Logo <span className="text-gray-500 text-xs">(optional)</span>
         </label>
-        <input
-          type="url"
-          value={logoUrl}
-          onChange={(e) => setLogoUrl(e.target.value)}
-          placeholder="https://example.com/logo.png"
-          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent"
-        />
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <label className="cursor-pointer px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded-lg transition-colors whitespace-nowrap">
+              {uploading ? 'Uploading…' : 'Upload file'}
+              <input type="file" accept="image/*,.svg" className="hidden" onChange={handleLogoUpload} disabled={uploading} />
+            </label>
+            <span className="text-gray-400 text-xs">or paste URL:</span>
+            <input
+              type="text"
+              value={logoUrl}
+              onChange={(e) => setLogoUrl(e.target.value)}
+              placeholder="https://example.com/logo.png"
+              className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent"
+            />
+          </div>
+          {logoUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={logoUrl} alt="Logo preview" className="h-8 object-contain rounded border border-gray-100 bg-brand p-1" />
+          )}
+        </div>
       </div>
 
       {/* Product assignment */}
@@ -139,7 +172,7 @@ export default function NewCompanyForm({ products }: NewCompanyFormProps) {
           className="w-4 h-4 accent-brand-accent"
         />
         <label htmlFor="active" className="text-sm font-medium text-gray-700">
-          Active (assessment accessible at /quiz/[slug])
+          Active (assessment accessible at /a/[slug])
         </label>
       </div>
 

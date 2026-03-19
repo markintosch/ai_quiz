@@ -83,12 +83,12 @@ export default async function CompaniesPage() {
                   <td className="px-4 py-3 font-medium text-gray-900">{c.name}</td>
                   <td className="px-4 py-3">
                     <a
-                      href={`/quiz/${c.slug}`}
+                      href={`/a/${c.slug}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-brand-accent hover:underline font-mono text-xs"
                     >
-                      /quiz/{c.slug}
+                      /a/{c.slug}
                     </a>
                   </td>
                   <td className="px-4 py-3">
