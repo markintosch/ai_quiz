@@ -1,7 +1,7 @@
 {
   "nav": {
     "switchLang": "FR",
-    "brand": "Kirk & Blackbeard"
+    "brand": "Brand PWRD Media"
   },
   "landing": {
     "hero": {
@@ -105,7 +105,7 @@
   },
   "quiz": {
     "lite": {
-      "brand": "Kirk & Blackbeard",
+      "brand": "Brand PWRD Media",
       "heading": "Évaluation de Maturité IA",
       "sub": "12 questions · ~5 minutes · Score personnalisé immédiat"
     },
@@ -167,7 +167,7 @@
     "primaryRec": "Recommandation principale",
     "bookReview": {
       "title": "AI Transformation Lead",
-      "company": "Kirk & Blackbeard",
+      "company": "Brand PWRD Media",
       "badge": "Gratuit · 20 min",
       "heading": "Vous voulez savoir quoi faire ?",
       "body": "Réservez une revue de résultats gratuite. Nous parcourons votre radar ensemble, identifions votre levier à plus fort impact et vous donnons une première étape claire — sans pitch, sans obligation.",
