@@ -65,6 +65,9 @@ export default async function FullQuizPage({ params }: PageProps) {
   const excludedCodes = company.excluded_question_codes ?? []
   const accentColor = company.brand_color ?? '#E8611A'
   const questionCount = productConfig.questions.filter((q) => !excludedCodes.includes(q.code)).length
+  const dimensionLabels = productConfig.dimensions.map(d => d.label)
+  // "Cloud Readiness Assessment" → "Cloud Readiness", "AI Maturity Assessment" → "AI Maturity"
+  const productSubject = productConfig.name.replace(/ Assessment$/, '').replace(/ Quiz$/, '')
 
   return (
     <CompanyLandingPage
@@ -77,6 +80,8 @@ export default async function FullQuizPage({ params }: PageProps) {
       questionCount={questionCount}
       productKey={productKey}
       accessCode={company.access_code}
+      dimensionLabels={dimensionLabels}
+      productSubject={productSubject}
     />
   )
 }

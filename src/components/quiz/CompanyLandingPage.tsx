@@ -166,6 +166,10 @@ interface CompanyLandingPageProps {
   productKey?: string
   /** Optional access code — if set, a gate is shown before the landing page */
   accessCode?: string | null
+  /** Dimension labels from the product config — overrides translation defaults */
+  dimensionLabels?: string[]
+  /** Short product subject for heading: "AI Maturity", "Cloud Readiness", etc. */
+  productSubject?: string
 }
 
 export function CompanyLandingPage({
@@ -178,6 +182,8 @@ export function CompanyLandingPage({
   questionCount,
   productKey,
   accessCode,
+  dimensionLabels: dimensionLabelsProp,
+  productSubject,
 }: CompanyLandingPageProps) {
   const [started, setStarted] = useState(false)
   // Gate: false = locked, true = unlocked. If no code required, start unlocked.
@@ -195,22 +201,25 @@ export function CompanyLandingPage({
   // Display name: replace underscores with spaces for readability
   const displayName = name.replace(/_/g, ' ')
 
-  // Dimension labels from translations
-  const dimensionLabels = t.raw('dimensions') as string[]
+  // Dimension labels: prefer product config prop over translation fallback
+  const resolvedDimensionLabels = dimensionLabelsProp ?? (t.raw('dimensions') as string[])
   const dimensions = DIMENSION_ICONS.map((Icon, i) => ({
     Icon,
-    label: dimensionLabels[i] ?? '',
+    label: resolvedDimensionLabels[i] ?? '',
   }))
 
   const ctaLabel = displayName
     ? t('cta', { name: displayName })
     : t('ctaFallback')
 
+  // heading2: "stand on Cloud Readiness?" when productSubject provided, else translation default
+  const heading2 = productSubject ? `stand on ${productSubject}?` : t('heading2')
+
   const headingMiddle = displayName ? (
     <>
       {t('heading1')}{' '}
       <span style={{ color: accentColor }}>{displayName}</span>
-      {' '}{t('heading2')}
+      {' '}{heading2}
     </>
   ) : (
     <>{t('headingFallback')}</>
@@ -271,7 +280,9 @@ export function CompanyLandingPage({
                 className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-8 border"
                 style={{ color: accentColor, borderColor: `${accentColor}40`, backgroundColor: `${accentColor}15` }}
               >
-                {displayName ? `${displayName} · ${t('badge')}` : t('badge')}
+                {displayName
+                  ? `${displayName} · ${productSubject ?? t('badge')}`
+                  : (productSubject ?? t('badge'))}
               </span>
 
               {/* 2. Headline */}

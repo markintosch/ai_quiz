@@ -42,7 +42,7 @@ export function getAllProducts(): QuizProductConfig[] {
 const SUBDOMAIN_MAP: Record<string, string> = {
   'ai':           'ai_maturity',    // ai.brandpwrdmedia.nl
   'ai-maturity':  'ai_maturity',    // legacy alias
-  'cloud':        'cloud_readiness',// cloud.brandpwrdmedia.com
+  'cloud':        'cloud_readiness',// cloud.brandpwrdmedia.nl
   'check':        'cloud_readiness',// legacy alias (truefullstaq.nl)
   'arena':        'cloud_arena',    // arena.brandpwrdmedia.nl
   // 'digital-readiness': 'digital_readiness',  ← add when product is launched
