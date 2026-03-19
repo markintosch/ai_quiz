@@ -320,14 +320,18 @@ export function NextStepsPageClient({
             <div className="flex-1 h-px bg-gray-200" />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <CompactCard service={secondary} responseId={responseId} locale={locale} />
-            {/* Fallback third card — the intro session unless it's already primary/secondary */}
-            {recommendedKey !== 'intro_session' && secondaryKey !== 'intro_session' && (() => {
-              const fallback = services.find(s => s.key === 'intro_session')
-              return fallback ? <CompactCard service={fallback} responseId={responseId} locale={locale} /> : null
-            })()}
-          </div>
+          {(() => {
+            // Always build 2 compact cards — pick any services not used as primary/secondary
+            const extras = services.filter(s => s.key !== recommendedKey && s.key !== secondaryKey)
+            const compactCards = [secondary, ...(extras.length > 0 ? [extras[0]] : [])]
+            return (
+              <div className={`grid gap-4 ${compactCards.length > 1 ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'}`}>
+                {compactCards.map(s => (
+                  <CompactCard key={s.key} service={s} responseId={responseId} locale={locale} />
+                ))}
+              </div>
+            )
+          })()}
         </motion.div>
 
         {/* ── Section 4: Not ready yet ─────────────────────────────── */}
