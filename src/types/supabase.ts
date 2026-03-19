@@ -340,6 +340,156 @@ export interface Database {
         }
         Relationships: []
       }
+      arena_questions: {
+        Row: {
+          id: string
+          product_key: string
+          question_text: string
+          options: Json
+          correct_value: string
+          explanation: string | null
+          difficulty: string
+          topic: string | null
+          ai_generated: boolean
+          active: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          product_key?: string
+          question_text: string
+          options: Json
+          correct_value: string
+          explanation?: string | null
+          difficulty?: string
+          topic?: string | null
+          ai_generated?: boolean
+          active?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          product_key?: string
+          question_text?: string
+          options?: Json
+          correct_value?: string
+          explanation?: string | null
+          difficulty?: string
+          topic?: string | null
+          ai_generated?: boolean
+          active?: boolean
+          created_at?: string
+        }
+        Relationships: []
+      }
+      arena_sessions: {
+        Row: {
+          id: string
+          company_id: string | null
+          join_code: string
+          host_name: string
+          status: string
+          question_count: number
+          time_per_q: number
+          questions: Json
+          started_at: string | null
+          ended_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          company_id?: string | null
+          join_code: string
+          host_name: string
+          status?: string
+          question_count?: number
+          time_per_q?: number
+          questions?: Json
+          started_at?: string | null
+          ended_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          company_id?: string | null
+          join_code?: string
+          host_name?: string
+          status?: string
+          question_count?: number
+          time_per_q?: number
+          questions?: Json
+          started_at?: string | null
+          ended_at?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
+      arena_participants: {
+        Row: {
+          id: string
+          session_id: string
+          display_name: string
+          email: string | null
+          score: number
+          rank: number | null
+          joined_at: string
+        }
+        Insert: {
+          id?: string
+          session_id: string
+          display_name: string
+          email?: string | null
+          score?: number
+          rank?: number | null
+          joined_at?: string
+        }
+        Update: {
+          id?: string
+          session_id?: string
+          display_name?: string
+          email?: string | null
+          score?: number
+          rank?: number | null
+          joined_at?: string
+        }
+        Relationships: []
+      }
+      arena_answers: {
+        Row: {
+          id: string
+          session_id: string
+          participant_id: string
+          question_index: number
+          answer_value: string
+          is_correct: boolean
+          time_taken_ms: number | null
+          points: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          session_id: string
+          participant_id: string
+          question_index: number
+          answer_value: string
+          is_correct: boolean
+          time_taken_ms?: number | null
+          points?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          session_id?: string
+          participant_id?: string
+          question_index?: number
+          answer_value?: string
+          is_correct?: boolean
+          time_taken_ms?: number | null
+          points?: number
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: Record<string, never>
     Functions: Record<string, never>

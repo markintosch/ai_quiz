@@ -22,16 +22,17 @@ export interface ArenaOption {
 
 export type ArenaDifficulty = 'easy' | 'medium' | 'hard'
 
+// Uses snake_case to match DB column names directly (no mapping needed)
 export interface ArenaQuestion {
   id: string
-  productKey: string
-  questionText: string
+  product_key: string
+  question_text: string
   options: ArenaOption[]
-  correctValue: string
+  correct_value: string
   explanation?: string | null
   difficulty: ArenaDifficulty
   topic?: string | null
-  aiGenerated: boolean
+  ai_generated: boolean
   active: boolean
 }
 

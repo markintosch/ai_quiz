@@ -13,6 +13,7 @@ const NAV_LINKS = [
   { href: '/admin/content', label: 'Homepage copy' },
   { href: '/admin/products', label: 'Products' },
   { href: '/admin/interests', label: 'Interests' },
+  { href: '/admin/arena', label: 'Arena' },
 ]
 
 export default function AdminLayout({
