@@ -27,6 +27,7 @@ export default async function NextStepsPage({ params, searchParams }: PageProps)
         score={null}
         maturityLevel={null}
         recommendedKey="intro_session"
+        secondaryKey="intro_training"
         services={services}
         locale={locale}
       />
@@ -56,6 +57,7 @@ export default async function NextStepsPage({ params, searchParams }: PageProps)
         score={null}
         maturityLevel={null}
         recommendedKey="intro_session"
+        secondaryKey="intro_training"
         services={services}
         locale={locale}
       />
@@ -84,7 +86,7 @@ export default async function NextStepsPage({ params, searchParams }: PageProps)
   const jobTitle = respondent?.job_title ?? ''
   const companyName = respondent?.company_name ?? ''
 
-  const recommendedKey = recommendService(jobTitle, score, companyName)
+  const { primary: recommendedKey, secondary: secondaryKey } = recommendService(jobTitle, score, companyName)
 
   return (
     <NextStepsPageClient
@@ -93,6 +95,7 @@ export default async function NextStepsPage({ params, searchParams }: PageProps)
       score={score}
       maturityLevel={response.maturity_level}
       recommendedKey={recommendedKey}
+      secondaryKey={secondaryKey}
       services={services}
       locale={locale}
     />
