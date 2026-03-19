@@ -52,6 +52,7 @@ export async function PUT(
     excluded_question_codes?: string[]
     product_id?: string | null
     access_code?: string | null
+    notify_email?: string | null
   }
 
   const { data, error } = await supabase

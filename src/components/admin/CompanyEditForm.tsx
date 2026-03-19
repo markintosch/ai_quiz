@@ -37,6 +37,7 @@ interface Company {
   excluded_question_codes?: string[] | null
   product_id?: string | null
   access_code?: string | null
+  notify_email?: string | null
 }
 
 interface CompanyEditFormProps {
@@ -54,6 +55,7 @@ export default function CompanyEditForm({ company, products = [] }: CompanyEditF
   const [productId, setProductId] = useState(company.product_id ?? '')
   const [accessCode, setAccessCode] = useState(company.access_code ?? '')
   const [showAccessCode, setShowAccessCode] = useState(false)
+  const [notifyEmail, setNotifyEmail] = useState(company.notify_email ?? '')
   const [excluded, setExcluded] = useState<Set<string>>(
     new Set(company.excluded_question_codes ?? [])
   )
@@ -90,6 +92,7 @@ export default function CompanyEditForm({ company, products = [] }: CompanyEditF
           excluded_question_codes: Array.from(excluded),
           product_id: productId || null,
           access_code: accessCode.trim() || null,
+          notify_email: notifyEmail.trim() || null,
         }),
       })
 
@@ -245,6 +248,21 @@ export default function CompanyEditForm({ company, products = [] }: CompanyEditF
             Code set — participants will be asked to enter this before starting.
           </p>
         )}
+      </div>
+
+      {/* Lead notification email */}
+      <div className="border-t border-gray-100 pt-5">
+        <p className="text-sm font-semibold text-gray-700 mb-1">Lead notification email</p>
+        <p className="text-xs text-gray-500 mb-3">
+          Optional. When set, an email with lead details and score is sent to this address after every submission.
+        </p>
+        <input
+          type="email"
+          value={notifyEmail}
+          onChange={(e) => setNotifyEmail(e.target.value)}
+          placeholder="e.g. leads@truefullstaq.nl"
+          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent"
+        />
       </div>
 
       {/* Question selection */}

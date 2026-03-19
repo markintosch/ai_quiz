@@ -7,10 +7,12 @@
 //   3. INSERT INTO quiz_products (key, name, subdomain, ...) in Supabase
 
 import { AI_MATURITY_CONFIG } from './ai_maturity/config'
+import { CLOUD_READINESS_CONFIG } from './cloud_readiness/config'
 import type { QuizProductConfig } from './types'
 
 const REGISTRY: Record<string, QuizProductConfig> = {
-  ai_maturity: AI_MATURITY_CONFIG,
+  ai_maturity:      AI_MATURITY_CONFIG,
+  cloud_readiness:  CLOUD_READINESS_CONFIG,
   // digital_readiness: DIGITAL_READINESS_CONFIG,   ← add future products here
   // esg_maturity:      ESG_MATURITY_CONFIG,
 }
@@ -40,6 +42,7 @@ export function getAllProducts(): QuizProductConfig[] {
 const SUBDOMAIN_MAP: Record<string, string> = {
   'ai':                  'ai_maturity',           // ai.brandpwrdmedia.nl
   'ai-maturity':         'ai_maturity',
+  'check':               'cloud_readiness',       // check.truefullstaq.nl (TrueFullstaq)
   // 'digital-readiness':  'digital_readiness',  ← add when product is launched
 }
 

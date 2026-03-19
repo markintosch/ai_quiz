@@ -94,6 +94,55 @@ export async function sendSummaryEmail(params: SendSummaryEmailParams) {
   }
 }
 
+// ── sendLeadNotification ──────────────────────────────────────────────────────
+// Sends lead data to a company's notify_email (e.g. TrueFullstaq sales inbox).
+// Fire-and-forget — never throws so it cannot break the submit flow.
+
+interface SendLeadNotificationParams {
+  notifyEmail: string
+  respondent: {
+    name: string
+    email: string
+    jobTitle: string
+    companyName: string
+    industry?: string
+    companySize?: string
+  }
+  score: QuizScore
+  resultsUrl: string
+  productName: string
+}
+
+export async function sendLeadNotification(params: SendLeadNotificationParams) {
+  const { notifyEmail, respondent, score, resultsUrl, productName } = params
+  const subject = `[New Lead] ${respondent.name} · ${respondent.companyName} · ${score.overall}/100 — ${score.maturityLevel}`
+
+  const html = `
+    <div style="font-family:sans-serif;max-width:600px;padding:24px">
+      <h2 style="color:#354E5E">${productName} — New Submission</h2>
+      <table style="border-collapse:collapse;width:100%">
+        <tr><td style="padding:6px 12px;color:#555;width:140px">Name</td><td style="padding:6px 12px;font-weight:600">${respondent.name}</td></tr>
+        <tr style="background:#f9f9f9"><td style="padding:6px 12px;color:#555">Email</td><td style="padding:6px 12px"><a href="mailto:${respondent.email}">${respondent.email}</a></td></tr>
+        <tr><td style="padding:6px 12px;color:#555">Job Title</td><td style="padding:6px 12px">${respondent.jobTitle}</td></tr>
+        <tr style="background:#f9f9f9"><td style="padding:6px 12px;color:#555">Company</td><td style="padding:6px 12px">${respondent.companyName}</td></tr>
+        ${respondent.industry ? `<tr><td style="padding:6px 12px;color:#555">Industry</td><td style="padding:6px 12px">${respondent.industry}</td></tr>` : ''}
+        ${respondent.companySize ? `<tr style="background:#f9f9f9"><td style="padding:6px 12px;color:#555">Company Size</td><td style="padding:6px 12px">${respondent.companySize}</td></tr>` : ''}
+        <tr><td style="padding:6px 12px;color:#555">Score</td><td style="padding:6px 12px;font-weight:600;color:#E8611A">${score.overall}/100 — ${score.maturityLevel}</td></tr>
+      </table>
+      <p style="margin-top:24px">
+        <a href="${resultsUrl}" style="background:#354E5E;color:#fff;padding:10px 20px;border-radius:6px;text-decoration:none;font-weight:600">View Full Results →</a>
+      </p>
+    </div>
+  `
+
+  try {
+    await resend.emails.send({ from: FROM, to: notifyEmail, subject, html })
+  } catch (err) {
+    console.error('[sendLeadNotification] failed:', err)
+    // Never rethrow — this is a secondary notification
+  }
+}
+
 // ── sendAdminNotification ─────────────────────────────────────────────────────
 
 interface SendAdminNotificationParams {

@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 import { calculateScore } from '@/lib/scoring/engine'
 import { getProductConfig } from '@/products'
-import { sendSummaryEmail, sendAdminNotification } from '@/lib/email/sender'
+import { sendSummaryEmail, sendAdminNotification, sendLeadNotification } from '@/lib/email/sender'
 import { rateLimit, getClientIp } from '@/lib/rateLimit'
 import type { SubmitQuizPayload, SubmitQuizResponse } from '@/types'
 
@@ -39,14 +39,16 @@ export async function POST(req: NextRequest) {
   try {
     // ── Resolve company (if slug provided) ───────────────────
     let companyId: string | null = null
+    let companyNotifyEmail: string | null = null
     if (companySlug) {
       const { data: company } = await supabase
         .from('companies')
-        .select('id')
+        .select('id, notify_email')
         .eq('slug', companySlug)
         .eq('active', true)
-        .single() as { data: { id: string } | null; error: unknown }
-      companyId = (company as { id: string } | null)?.id ?? null
+        .single() as { data: { id: string; notify_email: string | null } | null; error: unknown }
+      companyId = company?.id ?? null
+      companyNotifyEmail = company?.notify_email ?? null
     }
 
     // ── Upsert respondent (retake logic) ──────────────────────
@@ -181,6 +183,21 @@ export async function POST(req: NextRequest) {
         version,
         resultsUrl,
       }),
+      // Company lead notification — only fires when notify_email is set on the company
+      ...(companyNotifyEmail ? [sendLeadNotification({
+        notifyEmail: companyNotifyEmail,
+        respondent: {
+          name: lead.name,
+          email: lead.email,
+          jobTitle: lead.jobTitle,
+          companyName: lead.companyName,
+          industry: lead.industry,
+          companySize: lead.companySize,
+        },
+        score: quizScore,
+        resultsUrl,
+        productName: getProductConfig(productKey).name,
+      })] : []),
     ])
 
     const result: SubmitQuizResponse = {
