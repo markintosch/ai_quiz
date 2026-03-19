@@ -6,7 +6,7 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'AI Maturity Assessment | Kirk & Blackbeard',
+  title: 'AI Maturity Assessment | Brand PWRD Media',
   description: 'Benchmark your AI maturity across 6 dimensions in 5 minutes. Free, instant results.',
 }
 

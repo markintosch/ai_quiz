@@ -12,19 +12,19 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://aiquiz.kirkandblac
 
 const LOCALE_META: Record<string, { title: string; description: string; ogLocale: string }> = {
   en: {
-    title: 'AI Maturity Assessment | Kirk & Blackbeard',
+    title: 'AI Maturity Assessment | Brand PWRD Media',
     description:
       'Find out where your organisation stands on AI in 5 minutes. Free diagnostic across 6 dimensions — strategy, usage, data, talent, governance and opportunity.',
     ogLocale: 'en_GB',
   },
   nl: {
-    title: 'AI Volwassenheidsanalyse | Kirk & Blackbeard',
+    title: 'AI Volwassenheidsanalyse | Brand PWRD Media',
     description:
       'Ontdek in 5 minuten hoe ver jouw organisatie is met AI. Gratis diagnose op 6 dimensies — strategie, gebruik, data, talent, governance en kansen.',
     ogLocale: 'nl_NL',
   },
   fr: {
-    title: 'Évaluation de Maturité IA | Kirk & Blackbeard',
+    title: 'Évaluation de Maturité IA | Brand PWRD Media',
     description:
       'Découvrez en 5 minutes où en est votre organisation sur l\'IA. Diagnostic gratuit sur 6 dimensions — stratégie, utilisation, données, talent, gouvernance et opportunités.',
     ogLocale: 'fr_FR',
@@ -62,7 +62,7 @@ export async function generateMetadata({
       description: meta.description,
       locale:      meta.ogLocale,
       alternateLocale: locale === 'en' ? ['nl_NL'] : ['en_GB'],
-      siteName:    'Kirk & Blackbeard — AI Maturity Assessment',
+      siteName:    'Brand PWRD Media — AI Maturity Assessment',
       // opengraph-image.tsx in this segment auto-generates the OG image
     },
 
@@ -75,8 +75,8 @@ export async function generateMetadata({
 
     // ── Additional signals ────────────────────────────────────────────────────
     keywords: locale === 'en'
-      ? ['AI maturity', 'AI assessment', 'AI readiness', 'artificial intelligence', 'digital transformation', 'Kirk & Blackbeard']
-      : ['AI volwassenheid', 'AI assessment', 'kunstmatige intelligentie', 'digitale transformatie', 'Kirk & Blackbeard'],
+      ? ['AI maturity', 'AI assessment', 'AI readiness', 'artificial intelligence', 'digital transformation', 'Brand PWRD Media']
+      : ['AI volwassenheid', 'AI assessment', 'kunstmatige intelligentie', 'digitale transformatie', 'Brand PWRD Media'],
     authors: [
       { name: 'Mark de Kock' },
       { name: 'Frank Meeuwsen', url: 'https://frankmeeuwsen.com' },
@@ -126,7 +126,7 @@ function buildJsonLd(locale: string) {
             jobTitle:   'AI Transformation Lead',
             worksFor: {
               '@type': 'Organization',
-              name:    'Kirk & Blackbeard',
+              name:    'Brand PWRD Media',
             },
           },
           {
@@ -140,7 +140,7 @@ function buildJsonLd(locale: string) {
       {
         '@type': 'Organization',
         '@id':   `${BASE_URL}/#org`,
-        name:    'Kirk & Blackbeard',
+        name:    'Brand PWRD Media',
         url:     BASE_URL,
       },
     ],

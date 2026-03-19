@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og'
 
 export const runtime = 'edge'
-export const alt    = 'AI Maturity Assessment — Kirk & Blackbeard'
+export const alt    = 'AI Maturity Assessment — Brand PWRD Media'
 export const size   = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -53,7 +53,7 @@ export default async function OGImage({
               textTransform: 'uppercase',
             }}
           >
-            Kirk &amp; Blackbeard
+            Brand PWRD Media
           </div>
           <div style={{ color: '#8aa8bb', fontSize: '14px', marginLeft: '16px' }}>
             AI Maturity Assessment

@@ -68,7 +68,7 @@ export default function LandingPage() {
       <nav className="border-b border-white/10 px-6 py-4">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div>
-            <p className="text-brand-accent text-xs font-bold tracking-widest uppercase">Kirk &amp; Blackbeard</p>
+            <p className="text-brand-accent text-xs font-bold tracking-widest uppercase">Brand PWRD Media</p>
             <p className="text-white text-sm font-semibold leading-tight">AI Maturity Assessment</p>
           </div>
           <div className="flex items-center gap-4">
@@ -375,7 +375,7 @@ export default function LandingPage() {
       {/* ── Footer ── */}
       <footer className="border-t border-white/10 px-6 py-8">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-500">
-          <p>© {new Date().getFullYear()} Kirk &amp; Blackbeard · Brand PWRD Media. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Brand PWRD Media. All rights reserved.</p>
           <div className="flex gap-6">
             <Link href="/privacy" className="hover:text-gray-300 transition-colors">{t('footer.privacy')}</Link>
             <a href="mailto:mark@brandpwrdmedia.com" className="hover:text-gray-300 transition-colors">{t('footer.contact')}</a>
