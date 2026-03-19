@@ -6,8 +6,8 @@ const LOCALES = ['en', 'nl']
 // Public pages that should be indexed
 const PUBLIC_PATHS = [
   { path: '',         priority: 1.0,  changeFrequency: 'weekly'  as const },
-  { path: '/quiz',    priority: 0.9,  changeFrequency: 'monthly' as const },
-  { path: '/quiz/extended', priority: 0.8, changeFrequency: 'monthly' as const },
+  { path: '/a',          priority: 0.9,  changeFrequency: 'monthly' as const },
+  { path: '/a/extended', priority: 0.8,  changeFrequency: 'monthly' as const },
 ]
 
 export default function sitemap(): MetadataRoute.Sitemap {

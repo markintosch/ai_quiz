@@ -823,7 +823,7 @@ export default function ContentPage() {
 
             <Section title="Intro page — before quiz starts">
               <p className="text-xs text-gray-600 -mt-2">
-                Shown on <code className="bg-gray-100 px-1 rounded">/quiz/[company-slug]</code>. Use <code className="bg-gray-100 px-1 rounded">{'{name}'}</code> for company name, <code className="bg-gray-100 px-1 rounded">{'{count}'}</code> for question count.
+                Shown on <code className="bg-gray-100 px-1 rounded">/a/[company-slug]</code>. Use <code className="bg-gray-100 px-1 rounded">{'{name}'}</code> for company name, <code className="bg-gray-100 px-1 rounded">{'{count}'}</code> for question count.
               </p>
               <div className="grid grid-cols-2 gap-4">
                 <Field label="Badge text" value={comp.badge ?? ''} onChange={v => update(['company', 'badge'], v)} />

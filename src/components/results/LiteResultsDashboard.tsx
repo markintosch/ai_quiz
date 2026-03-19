@@ -327,7 +327,7 @@ export function LiteResultsDashboard({
           {t('fullAssessment.body')}
         </p>
         <a
-          href="/quiz/extended"
+          href="/a/extended"
           onClick={() => trackEvent('full_assessment_clicked', {
             source:         'lite_results',
             maturity_level: score.maturityLevel,

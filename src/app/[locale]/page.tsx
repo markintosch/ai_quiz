@@ -74,7 +74,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-4">
             <LanguageSwitcher />
             <Link
-              href="/quiz"
+              href="/a"
               onClick={() => trackEvent('nav_cta_clicked')}
               className="px-5 py-2 bg-brand-accent hover:bg-orange-700 text-white text-sm font-semibold rounded-lg transition-colors"
             >
@@ -119,7 +119,7 @@ export default function LandingPage() {
           {/* ── Primary CTA ── */}
           <motion.div variants={fadeUp}>
             <Link
-              href="/quiz"
+              href="/a"
               onClick={() => trackEvent('hero_cta_short_clicked')}
               className="inline-flex flex-col items-center px-10 py-5 bg-brand-accent hover:bg-orange-700 text-white font-bold rounded-2xl transition-colors shadow-xl shadow-orange-900/30"
             >
@@ -132,7 +132,7 @@ export default function LandingPage() {
           <motion.p variants={fadeUp} className="mt-5 text-sm text-gray-400">
             {t('hero.ctaFullPre')}{' '}
             <Link
-              href="/quiz/extended"
+              href="/a/extended"
               onClick={() => trackEvent('hero_cta_full_clicked')}
               className="text-white underline underline-offset-2 hover:text-brand-accent transition-colors"
             >
@@ -349,7 +349,7 @@ export default function LandingPage() {
           </motion.p>
           <motion.div variants={fadeUp}>
             <Link
-              href="/quiz"
+              href="/a"
               onClick={() => trackEvent('final_cta_short_clicked')}
               className="inline-flex flex-col items-center px-12 py-5 bg-brand-accent hover:bg-orange-700 text-white font-bold rounded-2xl transition-colors shadow-xl shadow-orange-900/30"
             >
@@ -360,7 +360,7 @@ export default function LandingPage() {
           <motion.p variants={fadeUp} className="mt-6 text-sm text-gray-500">
             {t('finalCta.fullPre')}{' '}
             <Link
-              href="/quiz/extended"
+              href="/a/extended"
               className="text-gray-400 underline underline-offset-2 hover:text-white transition-colors"
             >
               {t('finalCta.fullLink')}

@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
       referrerCompany,
       referrerScore,
       referrerLevel,
-      quizUrl: inviteUrl ?? `${BASE_URL}/quiz`,
+      quizUrl: inviteUrl ?? `${BASE_URL}/a`,
     })
   )
 

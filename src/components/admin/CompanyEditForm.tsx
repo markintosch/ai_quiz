@@ -148,7 +148,7 @@ export default function CompanyEditForm({ company, products = [] }: CompanyEditF
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Slug</label>
         <div className="flex items-center gap-1">
-          <span className="text-gray-500 text-sm">/quiz/</span>
+          <span className="text-gray-500 text-sm">/a/</span>
           <input
             type="text"
             value={slug}

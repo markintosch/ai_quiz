@@ -30,10 +30,10 @@ export default function ResultsError({
             Try again
           </button>
           <Link
-            href="/quiz"
+            href="/a"
             className="px-5 py-2.5 bg-white border border-gray-200 text-gray-700 font-semibold rounded-xl text-sm hover:bg-gray-50 transition-colors"
           >
-            Retake quiz
+            Retake assessment
           </Link>
         </div>
       </div>
