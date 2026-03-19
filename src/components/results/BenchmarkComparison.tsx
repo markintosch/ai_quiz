@@ -23,7 +23,7 @@ interface BarRowProps {
 
 function BarRow({ label, sublabel, score, yourScore, index }: BarRowProps) {
   const isAhead = yourScore > score
-  const diff = Math.abs(yourScore - score)
+  const diff = Math.round(Math.abs(yourScore - score) * 10) / 10
 
   return (
     <motion.div
