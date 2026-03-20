@@ -4,6 +4,7 @@ export const dynamic = 'force-dynamic'
 // POST — subscribe email to be notified when a scheduled arena session starts
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
+import { arenaEmailHtml } from '@/lib/email/arenaEmail'
 
 export async function POST(
   req: NextRequest,
@@ -62,21 +63,32 @@ async function sendConfirmation(
       ? new Date(scheduledAt).toLocaleString('en-GB', { dateStyle: 'long', timeStyle: 'short', timeZone: 'Europe/Amsterdam' })
       : 'shortly'
 
+    const bodyHtml = `
+      <p style="margin:0 0 20px;color:#374151;font-size:15px;line-height:1.6">
+        You&rsquo;re registered for <strong style="color:#354E5E">${eventName}</strong>.<br>
+        We&rsquo;ll email you the moment the game goes live &mdash; no need to keep refreshing.
+      </p>
+      <div style="background:#f8f9fa;border-radius:10px;padding:16px 20px;margin-bottom:20px">
+        <p style="margin:0 0 4px;color:#9ca3af;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-weight:600">Scheduled start</p>
+        <p style="margin:0;color:#354E5E;font-size:16px;font-weight:700">${scheduledStr}</p>
+      </div>
+      <p style="margin:0;color:#6b7280;font-size:13px;line-height:1.5">
+        You can also bookmark the game page and check back — once the game is live you can play up to <strong>5 times</strong> and your best score counts.
+      </p>
+    `
+
     await resend.emails.send({
       from:    'Cloud Arena <results@brandpwrdmedia.com>',
       to:      email,
       subject: `You're signed up for ${eventName}`,
-      html:    `<div style="font-family:sans-serif;max-width:480px;padding:24px">
-        <h2 style="color:#354E5E">You're in!</h2>
-        <p>We'll send you an email the moment <strong>${eventName}</strong> goes live.</p>
-        <p style="color:#6b7280;font-size:14px">Scheduled for: <strong>${scheduledStr}</strong></p>
-        <p style="margin:24px 0">
-          <a href="${joinUrl}" style="background:#354E5E;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700;display:inline-block">
-            Bookmark the game page →
-          </a>
-        </p>
-        <p style="color:#9ca3af;font-size:12px">Join code: <strong>${code}</strong></p>
-      </div>`,
+      html:    arenaEmailHtml({
+        title:    `You&rsquo;re in for ${eventName}!`,
+        preheader: `You're registered for ${eventName}. We'll notify you when the game goes live.`,
+        bodyHtml,
+        ctaLabel: 'Bookmark the game page →',
+        ctaUrl:   joinUrl,
+        joinCode: code,
+      }),
     })
   } catch (err) {
     console.error('[arena/subscribe] confirmation email failed:', err)

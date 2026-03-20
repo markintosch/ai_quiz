@@ -7,6 +7,13 @@ import { useRouter } from 'next/navigation'
 
 interface Participant { id: string; display_name: string }
 
+interface LeaderboardEntry {
+  display_name: string
+  best_score: number
+  attempts: number
+  rank: number
+}
+
 interface Props {
   joinCode: string
   hostName: string
@@ -16,6 +23,7 @@ interface Props {
   timePerQ: number
   scheduledAt: string | null
   initialParticipants: Participant[]
+  initialLeaderboard: LeaderboardEntry[]
 }
 
 function formatCountdown(ms: number) {
@@ -30,7 +38,7 @@ function formatCountdown(ms: number) {
 
 export default function ArenaJoinClient({
   joinCode, hostName, title, status: initialStatus,
-  questionCount, timePerQ, scheduledAt, initialParticipants,
+  questionCount, timePerQ, scheduledAt, initialParticipants, initialLeaderboard,
 }: Props) {
   const router = useRouter()
   const eventName = title ?? 'Cloud Arena'
@@ -47,6 +55,7 @@ export default function ArenaJoinClient({
   const [sessionStatus, setSessionStatus] = useState(initialStatus)
   const [loading, setLoading]         = useState(false)
   const [error, setError]             = useState('')
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>(initialLeaderboard)
 
   // Countdown state
   const [timeLeft, setTimeLeft] = useState<ReturnType<typeof formatCountdown>>(
@@ -126,6 +135,21 @@ export default function ArenaJoinClient({
     const interval = setInterval(poll, 2000)
     return () => clearInterval(interval)
   }, [phase, poll])
+
+  // Leaderboard polling when session is active
+  useEffect(() => {
+    if (sessionStatus !== 'active') return
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/arena/sessions/${joinCode}/leaderboard`, { cache: 'no-store' })
+        if (res.ok) {
+          const json = await res.json() as { leaderboard: LeaderboardEntry[] }
+          setLeaderboard(json.leaderboard)
+        }
+      } catch { /* ignore */ }
+    }, 10000)
+    return () => clearInterval(interval)
+  }, [joinCode, sessionStatus])
 
   async function handleSubscribe(e: React.FormEvent) {
     e.preventDefault()
@@ -325,6 +349,13 @@ export default function ArenaJoinClient({
         <p className="text-white/50 text-xs mt-1">{questionCount} questions · {timePerQ}s each</p>
       </div>
 
+      {sessionStatus === 'active' && (
+        <div className="bg-brand-accent/20 border border-brand-accent/40 rounded-xl px-4 py-3 text-center">
+          <p className="text-white font-bold text-sm">🎮 Game is live — join now!</p>
+          <p className="text-white/60 text-xs mt-0.5">5 attempts · best score counts</p>
+        </div>
+      )}
+
       <form onSubmit={handleJoin} className="bg-white/10 rounded-2xl p-6 space-y-4 backdrop-blur-sm">
         <div>
           <label className="block text-white/80 text-sm font-medium mb-1">Your name</label>
@@ -362,6 +393,36 @@ export default function ArenaJoinClient({
           {loading ? 'Joining…' : 'Join Game →'}
         </button>
       </form>
+
+      {sessionStatus === 'active' && leaderboard.length > 0 && (
+        <div className="bg-black border border-yellow-400/30 overflow-hidden"
+          style={{ boxShadow: '0 0 30px rgba(255,215,0,0.1)' }}>
+          <div className="px-4 py-2 border-b border-yellow-400/20 bg-yellow-400/5 text-center">
+            <p className="text-yellow-400 tracking-[0.4em] text-sm font-mono">
+              TOP {leaderboard.length} · HALL OF FAME
+            </p>
+          </div>
+          <div className="divide-y divide-white/5 font-mono">
+            {leaderboard.map((entry) => (
+              <div key={entry.rank} className="grid grid-cols-[1.5rem_1fr_auto] gap-3 px-4 py-2 hover:bg-white/5">
+                <span className={`text-lg tabular-nums ${
+                  entry.rank === 1 ? 'text-yellow-400' :
+                  entry.rank === 2 ? 'text-gray-300' :
+                  entry.rank === 3 ? 'text-orange-400' : 'text-white/30'
+                }`}>
+                  {entry.rank.toString().padStart(2, '0')}
+                </span>
+                <span className="text-lg text-white truncate tracking-wide">
+                  {entry.display_name.toUpperCase().slice(0, 14)}
+                </span>
+                <span className="text-lg tabular-nums font-bold text-green-400">
+                  {entry.best_score.toString().padStart(6, '0')}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

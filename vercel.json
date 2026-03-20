@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/arena/cron/daily-standings",
+      "schedule": "0 7 * * *"
+    }
+  ]
+}

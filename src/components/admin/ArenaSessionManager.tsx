@@ -1,8 +1,8 @@
 'use client'
 
 // FILE: src/components/admin/ArenaSessionManager.tsx
-// Live session management: polls participant list, start button, status display
 import { useState, useEffect, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 
 interface Participant {
   id: string
@@ -30,10 +30,13 @@ export default function ArenaSessionManager({
   session: Session
   initialParticipants: Participant[]
 }) {
+  const router = useRouter()
   const [session, setSession] = useState(initialSession)
   const [participants, setParticipants] = useState(initialParticipants)
   const [starting, setStarting] = useState(false)
+  const [ending, setEnding] = useState(false)
   const [error, setError] = useState('')
+  const [endError, setEndError] = useState('')
 
   const poll = useCallback(async () => {
     try {
@@ -46,8 +49,8 @@ export default function ArenaSessionManager({
   }, [session.join_code])
 
   useEffect(() => {
-    if (session.status === 'lobby') {
-      const interval = setInterval(poll, 3000)
+    if (session.status === 'lobby' || session.status === 'active') {
+      const interval = setInterval(poll, 5000)
       return () => clearInterval(interval)
     }
   }, [session.status, poll])
@@ -67,6 +70,25 @@ export default function ArenaSessionManager({
       setError('Something went wrong.')
     } finally {
       setStarting(false)
+    }
+  }
+
+  async function handleEnd() {
+    setEndError('')
+    setEnding(true)
+    try {
+      const res = await fetch(`/api/arena/sessions/${session.join_code}/end`, { method: 'POST' })
+      if (res.ok) {
+        await poll()
+        router.refresh()
+      } else {
+        const json = await res.json() as { error?: string }
+        setEndError(json.error ?? 'Failed to end game')
+      }
+    } catch {
+      setEndError('Something went wrong.')
+    } finally {
+      setEnding(false)
     }
   }
 
@@ -116,17 +138,34 @@ export default function ArenaSessionManager({
         )}
 
         {session.status === 'active' && (
-          <div className="border-t border-gray-100 pt-4">
-            <p className="text-sm text-green-600 font-medium">Game in progress</p>
-            <p className="text-xs text-gray-400 mt-0.5">
-              Started {session.started_at ? new Date(session.started_at).toLocaleTimeString() : ''}
-            </p>
+          <div className="border-t border-gray-100 pt-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-green-600 font-medium">Game in progress</p>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  Started {session.started_at ? new Date(session.started_at).toLocaleTimeString() : ''}
+                </p>
+              </div>
+              <button
+                onClick={handleEnd}
+                disabled={ending}
+                className="bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+              >
+                {ending ? 'Ending…' : 'End Game'}
+              </button>
+            </div>
+            {endError && <p className="text-red-500 text-sm">{endError}</p>}
           </div>
         )}
 
         {session.status === 'completed' && (
           <div className="border-t border-gray-100 pt-4">
             <p className="text-sm text-gray-600 font-medium">Game completed</p>
+            {session.ended_at && (
+              <p className="text-xs text-gray-400 mt-0.5">
+                Ended {new Date(session.ended_at).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}
+              </p>
+            )}
           </div>
         )}
       </div>

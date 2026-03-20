@@ -6,6 +6,13 @@ import { notFound } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase/server'
 import ArenaJoinClient from '@/components/arena/ArenaJoinClient'
 
+interface LeaderboardEntry {
+  display_name: string
+  best_score: number
+  attempts: number
+  rank: number
+}
+
 export default async function ArenaJoinPage({ params }: { params: { code: string } }) {
   const supabase = createServiceClient()
   const code = params.code.toUpperCase()
@@ -24,6 +31,23 @@ export default async function ArenaJoinPage({ params }: { params: { code: string
     .eq('session_id', session.id)
     .order('joined_at', { ascending: true })
 
+  // Fetch leaderboard if session is active
+  let leaderboard: LeaderboardEntry[] = []
+  if (session.status === 'active') {
+    try {
+      const lbRes = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'}/api/arena/sessions/${session.join_code}/leaderboard`,
+        { cache: 'no-store' }
+      )
+      if (lbRes.ok) {
+        const lbJson = await lbRes.json() as { leaderboard: LeaderboardEntry[] }
+        leaderboard = lbJson.leaderboard
+      }
+    } catch {
+      // Non-fatal — leaderboard will be empty on first render
+    }
+  }
+
   return (
     <main className="min-h-screen bg-brand flex items-center justify-center px-4">
       <ArenaJoinClient
@@ -35,6 +59,7 @@ export default async function ArenaJoinPage({ params }: { params: { code: string
         timePerQ={session.time_per_q}
         scheduledAt={session.scheduled_at}
         initialParticipants={participants ?? []}
+        initialLeaderboard={leaderboard}
       />
     </main>
   )

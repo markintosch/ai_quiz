@@ -5,6 +5,7 @@ export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 import { isAuthorised } from '@/lib/admin/auth'
+import { arenaEmailHtml } from '@/lib/email/arenaEmail'
 
 export async function POST(
   req: NextRequest,
@@ -15,9 +16,9 @@ export async function POST(
 
   const { data: session } = await supabase
     .from('arena_sessions')
-    .select('id, status, question_count, time_per_q, scheduled_at')
+    .select('id, status, question_count, time_per_q, scheduled_at, title')
     .eq('join_code', code)
-    .single() as { data: { id: string; status: string; question_count: number; time_per_q: number; scheduled_at: string | null } | null }
+    .single() as { data: { id: string; status: string; question_count: number; time_per_q: number; scheduled_at: string | null; title: string | null } | null }
 
   if (!session) return NextResponse.json({ error: 'Session not found' }, { status: 404 })
   if (session.status !== 'lobby') {
@@ -60,7 +61,7 @@ export async function POST(
   }
 
   // Notify subscribers (fire-and-forget)
-  void notifySubscribers(supabase, session.id, code)
+  void notifySubscribers(supabase, session.id, code, session.title)
 
   return NextResponse.json({ ok: true, questionCount: selected.length })
 }
@@ -68,7 +69,8 @@ export async function POST(
 async function notifySubscribers(
   supabase: ReturnType<typeof import('@/lib/supabase/server').createServiceClient>,
   sessionId: string,
-  code: string
+  code: string,
+  title: string | null
 ) {
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -83,23 +85,39 @@ async function notifySubscribers(
     const { Resend } = await import('resend')
     const resend = new Resend(process.env.RESEND_API_KEY)
     const joinUrl = `${process.env.NEXT_PUBLIC_BASE_URL ?? ''}/arena/${code}`
+    const eventName = title ?? 'Cloud Arena'
+
+    const bodyHtml = `
+      <p style="margin:0 0 20px;color:#374151;font-size:15px;line-height:1.6">
+        The game is <strong style="color:#E8611A">live right now</strong> &mdash; jump in before others get ahead of you.
+      </p>
+      <div style="display:flex;gap:12px;margin-bottom:20px">
+        <div style="flex:1;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:14px 16px;text-align:center">
+          <p style="margin:0 0 3px;color:#9ca3af;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-weight:600">Attempts</p>
+          <p style="margin:0;color:#E8611A;font-size:20px;font-weight:800">5 max</p>
+        </div>
+        <div style="flex:1;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:14px 16px;text-align:center">
+          <p style="margin:0 0 3px;color:#9ca3af;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-weight:600">Scoring</p>
+          <p style="margin:0;color:#16a34a;font-size:20px;font-weight:800">Best wins</p>
+        </div>
+      </div>
+      <p style="margin:0;color:#6b7280;font-size:13px">Your best score across all attempts counts toward the leaderboard.</p>
+    `
 
     await Promise.allSettled(
       subscribers.map(s =>
         resend.emails.send({
           from:    'Cloud Arena <results@brandpwrdmedia.com>',
           to:      s.email,
-          subject: '🎮 The Cloud Arena game is starting now!',
-          html:    `<div style="font-family:sans-serif;max-width:480px;padding:24px">
-            <h2 style="color:#354E5E">The game is live!</h2>
-            <p>The Cloud Arena session you signed up for is starting right now.</p>
-            <p style="margin:24px 0">
-              <a href="${joinUrl}" style="background:#E8611A;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700;display:inline-block">
-                Join the game →
-              </a>
-            </p>
-            <p style="color:#9ca3af;font-size:12px">Join code: <strong>${code}</strong></p>
-          </div>`,
+          subject: '🎮 The game is live — join now!',
+          html:    arenaEmailHtml({
+            title:     'The game is live!',
+            preheader: 'Your Cloud Arena game has just started. Jump in now — 5 attempts, best score wins.',
+            bodyHtml,
+            ctaLabel:  'Join the game now →',
+            ctaUrl:    joinUrl,
+            joinCode:  code,
+          }),
         })
       )
     )
