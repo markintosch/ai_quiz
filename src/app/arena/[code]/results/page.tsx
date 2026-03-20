@@ -44,9 +44,9 @@ export default async function ArenaResultsPage({ params, searchParams }: PagePro
 
   const { data: participants } = await supabase
     .from('arena_participants')
-    .select('id, display_name, email, score')
+    .select('id, display_name, email, score, attempt_number')
     .eq('session_id', session.id)
-    .order('score', { ascending: false }) as { data: ParticipantRow[] | null }
+    .order('score', { ascending: false }) as { data: (ParticipantRow & { attempt_number: number })[] | null }
 
   // Find "me" by participantId
   const me = (participants ?? []).find(p => p.id === myParticipantId)
@@ -77,6 +77,8 @@ export default async function ArenaResultsPage({ params, searchParams }: PagePro
   const myInTop20 = top20.some(e => e.isMe)
   const myFullRank = myKey ? sorted.findIndex(([key]) => key === myKey) + 1 : null
   const myEntry = myKey ? map.get(myKey) : null
+  const attemptsUsed = myEntry?.attempts ?? 0
+  const attemptsLeft = Math.max(0, 5 - attemptsUsed)
 
   const eventName = session.title ?? 'Cloud Arena'
   const totalUnique = map.size
@@ -246,14 +248,19 @@ export default async function ArenaResultsPage({ params, searchParams }: PagePro
 
             {/* CTA */}
             <div className="mt-8 flex flex-col sm:flex-row items-center gap-4">
-              {session.status === 'active' && (
+              {session.status === 'active' && attemptsLeft > 0 && (
                 <Link
                   href={`/arena/${code}`}
                   className="inline-block border-2 border-orange-400 text-orange-400 px-8 py-3 text-xl tracking-widest hover:bg-orange-400 hover:text-black transition-colors"
                   style={{ fontFamily: 'var(--font-press-start)', fontSize: '10px', textShadow: '0 0 10px #FF6600' }}
                 >
-                  PLAY AGAIN
+                  PLAY AGAIN ({attemptsLeft} LEFT)
                 </Link>
+              )}
+              {session.status === 'active' && attemptsLeft === 0 && (
+                <p className="text-green-400/70 text-xl tracking-widest">
+                  ALL 5 ATTEMPTS USED — BEST SCORE COUNTS
+                </p>
               )}
               <p className="text-white/20 text-xl tracking-widest">
                 POWERED BY TRUEFULLSTAQ

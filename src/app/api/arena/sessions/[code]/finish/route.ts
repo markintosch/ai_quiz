@@ -29,22 +29,33 @@ export async function POST(
     .eq('session_id', session.id)
     .order('score', { ascending: false })
 
+  // Update ranks based on best score per unique player (deduplicated by email → display_name)
   if (participants) {
-    for (let i = 0; i < participants.length; i++) {
+    const map = new Map<string, { id: string; score: number }>()
+    for (const p of participants) {
+      const key = (p as unknown as Record<string, unknown>)['email'] as string | null
+        ? ((p as unknown as Record<string, unknown>)['email'] as string).trim().toLowerCase()
+        : (p as unknown as Record<string, unknown>)['display_name'] as string
+      const score = (p.score as number) ?? 0
+      const existing = map.get(key)
+      if (!existing || score > existing.score) {
+        // Track the best-score row id for each player
+        map.set(key, { id: p.id, score })
+      }
+    }
+
+    // Rank the deduplicated best rows
+    const ranked = Array.from(map.values()).sort((a, b) => b.score - a.score)
+    for (let i = 0; i < ranked.length; i++) {
       await supabase
         .from('arena_participants')
         .update({ rank: i + 1 })
-        .eq('id', participants[i].id)
+        .eq('id', ranked[i].id)
     }
   }
 
-  // Mark session completed if still active (first finisher triggers it)
-  if (session.status === 'active') {
-    await supabase
-      .from('arena_sessions')
-      .update({ status: 'completed', ended_at: new Date().toISOString() })
-      .eq('id', session.id)
-  }
+  // Session stays ACTIVE — only admin can end it via /end route.
+  // This allows multi-attempt gameplay (up to 5 attempts per player).
 
   return NextResponse.json({ ok: true })
 }
