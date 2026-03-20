@@ -33,6 +33,9 @@ export function middleware(req: NextRequest) {
   // ── Arena routes: locale-free, no auth ───────────────────────────────────
   if (pathname.startsWith('/arena')) return NextResponse.next()
 
+  // ── Dashboard routes: locale-free, token-gated at page level ─────────────
+  if (pathname.startsWith('/dashboard')) return NextResponse.next()
+
   // ── Public routes: locale routing via next-intl ───────────────────────────
   // Note: product_key is resolved from the host header directly in server
   // components and API routes via getProductKeyFromHost() in src/products/index.ts

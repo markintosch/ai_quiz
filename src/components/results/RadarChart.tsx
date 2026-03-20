@@ -12,15 +12,26 @@ interface RadarChartProps {
   animate?: boolean
   /** Use light colours for legend/labels when rendered on a dark background */
   dark?: boolean
+  /** Optional second dataset (wave 0 ghost outline for wave comparison) */
+  secondaryData?: DimensionScore[]
+  /** Label for primary data in legend when secondaryData is present */
+  primaryLabel?: string
+  /** Label for secondary data in legend when secondaryData is present */
+  secondaryLabel?: string
 }
 
 const COLORS = {
-  user:     '#E8611A', // brand-accent orange
-  baseline: '#6b7280', // gray-500
-  grid:     '#e5e7eb', // gray-200
-  axis:     '#d1d5db', // gray-300
-  fill:     'rgba(232, 97, 26, 0.15)',
-  baseFill: 'rgba(107, 114, 128, 0.08)',
+  user:      '#E8611A', // brand-accent orange (single wave / wave 1)
+  baseline:  '#6b7280', // gray-500
+  grid:      '#e5e7eb', // gray-200
+  axis:      '#d1d5db', // gray-300
+  fill:      'rgba(232, 97, 26, 0.15)',
+  baseFill:  'rgba(107, 114, 128, 0.08)',
+  // Wave overlay colours
+  wave1:     '#0D7377', // teal — current/wave 1
+  wave1Fill: 'rgba(13, 115, 119, 0.15)',
+  wave0:     '#1B4080', // cobalt — previous/wave 0
+  wave0Fill: 'rgba(27, 64, 128, 0.10)',
 }
 
 // Short labels fallback for the radar axes
@@ -63,7 +74,7 @@ function labelPos(i: number, n: number, cx: number, cy: number, r: number, paddi
   }
 }
 
-export function RadarChart({ dimensionScores, size = 300, animate = true, dark = false }: RadarChartProps) {
+export function RadarChart({ dimensionScores, size = 300, animate = true, dark = false, secondaryData, primaryLabel, secondaryLabel }: RadarChartProps) {
   const t = useTranslations('results')
 
   const labelColor  = dark ? '#e5e7eb' : '#374151'   // gray-200 vs gray-700
@@ -76,8 +87,10 @@ export function RadarChart({ dimensionScores, size = 300, animate = true, dark =
   const labelPad = size * 0.10
   const legendY  = size + 22    // legend sits below the chart content
 
+  const hasOverlay     = Boolean(secondaryData && secondaryData.length === dimensionScores.length)
   const userValues     = dimensionScores.map(d => d.normalized)
   const baselineValues = dimensionScores.map(() => 50)
+  const secondaryValues = secondaryData?.map(d => d.normalized) ?? []
 
   // Animate the user polygon from 0 → actual on mount
   const [progress, setProgress] = useState(animate ? 0 : 1)
@@ -142,25 +155,39 @@ export function RadarChart({ dimensionScores, size = 300, animate = true, dark =
         )
       })}
 
-      {/* ── Baseline polygon (50) ── */}
-      <polygon
-        points={polygonPoints(baselineValues, cx, cy, r)}
-        fill={COLORS.baseFill}
-        stroke={COLORS.baseline}
-        strokeWidth={1.5}
-        strokeDasharray="4 3"
-      />
+      {/* ── Baseline polygon (50) — only shown in single-wave mode ── */}
+      {!hasOverlay && (
+        <polygon
+          points={polygonPoints(baselineValues, cx, cy, r)}
+          fill={COLORS.baseFill}
+          stroke={COLORS.baseline}
+          strokeWidth={1.5}
+          strokeDasharray="4 3"
+        />
+      )}
 
-      {/* ── User score polygon ── */}
+      {/* ── Wave 0 ghost polygon (overlay mode only) ── */}
+      {hasOverlay && secondaryValues.length > 0 && (
+        <polygon
+          points={polygonPoints(secondaryValues, cx, cy, r)}
+          fill={COLORS.wave0Fill}
+          stroke={COLORS.wave0}
+          strokeWidth={1.5}
+          strokeDasharray="5 3"
+          strokeLinejoin="round"
+        />
+      )}
+
+      {/* ── User / Wave 1 score polygon ── */}
       <polygon
         points={polygonPoints(animatedValues, cx, cy, r)}
-        fill={COLORS.fill}
-        stroke={COLORS.user}
+        fill={hasOverlay ? COLORS.wave1Fill : COLORS.fill}
+        stroke={hasOverlay ? COLORS.wave1 : COLORS.user}
         strokeWidth={2.5}
         strokeLinejoin="round"
       />
 
-      {/* ── User score dots ── */}
+      {/* ── User / Wave 1 score dots ── */}
       {animatedValues.map((v, i) => {
         const angle = toRad(-90 + (360 / n) * i)
         const frac  = v / 100
@@ -170,7 +197,7 @@ export function RadarChart({ dimensionScores, size = 300, animate = true, dark =
           <circle
             key={i}
             cx={x} cy={y} r={4}
-            fill={COLORS.user}
+            fill={hasOverlay ? COLORS.wave1 : COLORS.user}
             stroke="#fff"
             strokeWidth={1.5}
           />
@@ -206,19 +233,39 @@ export function RadarChart({ dimensionScores, size = 300, animate = true, dark =
       {/* Score value labels disabled — scores are shown in the dimension breakdown list below */}
 
       {/* ── Legend ── */}
-      <g transform={`translate(${cx - 68}, ${legendY})`}>
-        <line x1={0} y1={0} x2={16} y2={0} stroke={COLORS.user} strokeWidth={2.5} />
-        <circle cx={8} cy={0} r={3} fill={COLORS.user} />
-        <text x={20} y={0} dominantBaseline="middle" fontSize={size * 0.038} fill={labelColor} fontFamily="Inter, sans-serif">
-          {t('legend.yourScore')}
-        </text>
-      </g>
-      <g transform={`translate(${cx + 10}, ${legendY})`}>
-        <line x1={0} y1={0} x2={16} y2={0} stroke={COLORS.baseline} strokeWidth={1.5} strokeDasharray="4 3" />
-        <text x={20} y={0} dominantBaseline="middle" fontSize={size * 0.038} fill={legendMuted} fontFamily="Inter, sans-serif">
-          {t('legend.baseline')}
-        </text>
-      </g>
+      {hasOverlay ? (
+        <>
+          <g transform={`translate(${cx - 80}, ${legendY})`}>
+            <line x1={0} y1={0} x2={16} y2={0} stroke={COLORS.wave1} strokeWidth={2.5} />
+            <circle cx={8} cy={0} r={3} fill={COLORS.wave1} />
+            <text x={20} y={0} dominantBaseline="middle" fontSize={size * 0.038} fill={labelColor} fontFamily="Inter, sans-serif">
+              {primaryLabel ?? 'Wave 1'}
+            </text>
+          </g>
+          <g transform={`translate(${cx + 8}, ${legendY})`}>
+            <line x1={0} y1={0} x2={16} y2={0} stroke={COLORS.wave0} strokeWidth={1.5} strokeDasharray="5 3" />
+            <text x={20} y={0} dominantBaseline="middle" fontSize={size * 0.038} fill={legendMuted} fontFamily="Inter, sans-serif">
+              {secondaryLabel ?? 'Wave 0'}
+            </text>
+          </g>
+        </>
+      ) : (
+        <>
+          <g transform={`translate(${cx - 68}, ${legendY})`}>
+            <line x1={0} y1={0} x2={16} y2={0} stroke={COLORS.user} strokeWidth={2.5} />
+            <circle cx={8} cy={0} r={3} fill={COLORS.user} />
+            <text x={20} y={0} dominantBaseline="middle" fontSize={size * 0.038} fill={labelColor} fontFamily="Inter, sans-serif">
+              {t('legend.yourScore')}
+            </text>
+          </g>
+          <g transform={`translate(${cx + 10}, ${legendY})`}>
+            <line x1={0} y1={0} x2={16} y2={0} stroke={COLORS.baseline} strokeWidth={1.5} strokeDasharray="4 3" />
+            <text x={20} y={0} dominantBaseline="middle" fontSize={size * 0.038} fill={legendMuted} fontFamily="Inter, sans-serif">
+              {t('legend.baseline')}
+            </text>
+          </g>
+        </>
+      )}
     </svg>
   )
 }

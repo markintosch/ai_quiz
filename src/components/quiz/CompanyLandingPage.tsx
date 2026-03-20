@@ -166,6 +166,10 @@ interface CompanyLandingPageProps {
   productKey?: string
   /** Optional access code — if set, a gate is shown before the landing page */
   accessCode?: string | null
+  /** Cohort ID for the currently open wave — auto-links submission */
+  cohortId?: string | null
+  /** Wave ID for the currently open wave — auto-links submission */
+  waveId?: string | null
   /** Dimension labels from the product config — overrides translation defaults */
   dimensionLabels?: string[]
   /** Short product subject for heading: "AI Maturity", "Cloud Readiness", etc. */
@@ -182,6 +186,8 @@ export function CompanyLandingPage({
   questionCount,
   productKey,
   accessCode,
+  cohortId,
+  waveId,
   dimensionLabels: dimensionLabelsProp,
   productSubject,
 }: CompanyLandingPageProps) {
@@ -394,6 +400,8 @@ export function CompanyLandingPage({
               excludedCodes={excludedCodes}
               accentColor={accentColor}
               productKey={productKey}
+              cohortId={cohortId ?? undefined}
+              waveId={waveId ?? undefined}
             />
           </div>
         </motion.div>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, type Variants } from 'framer-motion'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/routing'
@@ -8,6 +8,29 @@ import { trackEvent } from '@/lib/analytics'
 import { RadarChart } from '@/components/results/RadarChart'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import type { DimensionScore } from '@/types'
+
+function CopyLinkButton() {
+  const [copied, setCopied] = useState(false)
+  function handleCopy() {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+      trackEvent('share_link_copied', { source: 'landing_hero' })
+    })
+  }
+  return (
+    <button
+      onClick={handleCopy}
+      className="text-xs text-white/50 hover:text-white/80 transition-colors flex items-center gap-1.5 mx-auto"
+    >
+      <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+        <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
+      </svg>
+      {copied ? 'Link copied!' : 'Share with a colleague'}
+    </button>
+  )
+}
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 24 },
@@ -139,6 +162,11 @@ export default function LandingPage() {
               {t('hero.ctaFull')}
             </Link>
           </motion.p>
+
+          {/* ── Share with a colleague ── */}
+          <motion.div variants={fadeUp} className="mt-4">
+            <CopyLinkButton />
+          </motion.div>
 
           {/* ── Trust strip ── */}
           <motion.div

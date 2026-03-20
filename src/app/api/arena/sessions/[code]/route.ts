@@ -12,11 +12,12 @@ export async function GET(
   const supabase = createServiceClient()
   const code = params.code.toUpperCase()
 
-  const { data: session, error } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: session, error } = await (supabase as any)
     .from('arena_sessions')
-    .select('id, join_code, host_name, status, question_count, time_per_q, questions, started_at, ended_at, created_at, company_id')
+    .select('id, join_code, host_name, title, status, question_count, time_per_q, questions, started_at, ended_at, created_at, company_id, scheduled_at')
     .eq('join_code', code)
-    .single()
+    .single() as { data: Record<string, unknown> | null; error: unknown }
 
   if (error || !session) {
     return NextResponse.json({ error: 'Session not found' }, { status: 404 })
@@ -25,7 +26,7 @@ export async function GET(
   const { data: participants } = await supabase
     .from('arena_participants')
     .select('id, display_name, score, rank, joined_at')
-    .eq('session_id', session.id)
+    .eq('session_id', session.id as string)
     .order('score', { ascending: false })
 
   return NextResponse.json({ session, participants: participants ?? [] })

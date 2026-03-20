@@ -18,7 +18,7 @@ import { BenchmarkComparison, type BenchmarkData } from './BenchmarkComparison'
 const MATURITY_CONFIG = {
   Unaware:       { color: 'text-red-500',    bg: 'bg-red-50',    ring: 'ring-red-200'    },
   Exploring:     { color: 'text-orange-500', bg: 'bg-orange-50', ring: 'ring-orange-200' },
-  Experimenting: { color: 'text-yellow-500', bg: 'bg-yellow-50', ring: 'ring-yellow-200' },
+  Experimenting: { color: 'text-yellow-600', bg: 'bg-yellow-50', ring: 'ring-yellow-200' },
   Scaling:       { color: 'text-teal-500',   bg: 'bg-teal-50',   ring: 'ring-teal-200'   },
   Leading:       { color: 'text-green-500',  bg: 'bg-green-50',  ring: 'ring-green-200'  },
 }
@@ -54,6 +54,57 @@ const fadeUp = {
 const stagger = {
   hidden: {},
   show:   { transition: { staggerChildren: 0.12 } },
+}
+
+// ── Share results bar (extended public only) ───────────────────────────────
+function ShareResultsBar({ score, maturityLevel, responseId, locale }: {
+  score: number
+  maturityLevel: string
+  responseId?: string
+  locale: string
+}) {
+  const [copied, setCopied] = useState(false)
+  const resultsPath = responseId ? `/${locale}/results/${responseId}` : `/${locale}`
+  const resultsUrl = typeof window !== 'undefined' ? `${window.location.origin}${resultsPath}` : ''
+  const linkedInText = encodeURIComponent(
+    `I scored ${score}/100 on the AI Maturity Assessment — ${maturityLevel} level. Curious where your organisation stands?`
+  )
+  const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(resultsUrl)}&summary=${linkedInText}`
+
+  function handleCopy() {
+    navigator.clipboard.writeText(resultsUrl).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
+
+  return (
+    <div className="rounded-2xl border border-gray-100 bg-white shadow-sm p-5">
+      <p className="text-sm font-semibold text-gray-700 mb-3">Share your results</p>
+      <div className="flex gap-3 flex-wrap">
+        <button
+          onClick={handleCopy}
+          className="flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+          {copied ? 'Link copied!' : 'Copy results link'}
+        </button>
+        <a
+          href={linkedInUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl border border-[#0A66C2]/30 text-sm font-medium text-[#0A66C2] hover:bg-[#0A66C2]/5 transition-colors"
+        >
+          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
+          Share on LinkedIn
+        </a>
+      </div>
+    </div>
+  )
 }
 
 const CALENDLY_DISCOVERY = process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL ?? 'https://calendly.com/markiesbpm/ai-intro-meeting-mark-de-kock'
@@ -270,6 +321,18 @@ export function ScoreDashboard({
             Explore how to move forward →
           </a>
           <p className="text-xs text-white/60 mt-3">Free · No obligation · Takes 2 minutes to explore</p>
+        </motion.div>
+      )}
+
+      {/* ── Share results (extended public only) ── */}
+      {!isCompany && !isLite && (
+        <motion.div variants={fadeUp}>
+          <ShareResultsBar
+            score={score.overall}
+            maturityLevel={score.maturityLevel}
+            responseId={responseId}
+            locale={locale}
+          />
         </motion.div>
       )}
 

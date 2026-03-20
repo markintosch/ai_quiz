@@ -67,6 +67,47 @@ function Share2Icon({ className }: { className?: string }) {
 const fadeUp = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.1 } } }
 
+// ── Share results bar ─────────────────────────────────────────
+function ShareResultsBar({ score, maturityLevel, responseId, locale }: { score: number; maturityLevel: string; responseId: string; locale: string }) {
+  const [copied, setCopied] = useState(false)
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
+  const resultsUrl = `${baseUrl}/${locale}/results/${responseId}`
+  const linkedInText = encodeURIComponent(`I scored ${score}/100 on the AI Maturity Assessment — ${maturityLevel} level. Curious where your organisation stands?`)
+  const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(resultsUrl)}&summary=${linkedInText}`
+
+  function handleCopy() {
+    navigator.clipboard.writeText(resultsUrl).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
+
+  return (
+    <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+      <p className="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-3">Share your results</p>
+      <div className="flex gap-3">
+        <button
+          onClick={handleCopy}
+          className="flex-1 flex items-center justify-center gap-2 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+        >
+          <Share2Icon className="w-4 h-4" />
+          {copied ? 'Copied!' : 'Copy results link'}
+        </button>
+        <a
+          href={linkedInUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => trackEvent('results_shared', { channel: 'linkedin', quiz_variant: 'lite' })}
+          className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-[#0A66C2] text-white rounded-xl text-sm font-medium hover:bg-[#0958a8] transition-colors"
+        >
+          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          Share on LinkedIn
+        </a>
+      </div>
+    </div>
+  )
+}
+
 // ── Dimension score colour ────────────────────────────────────
 function dimColor(n: number) {
   if (n >= 60) return 'text-emerald-600'
@@ -189,17 +230,35 @@ export function LiteResultsDashboard({
           <RadarChart dimensionScores={score.dimensionScores} size={300} />
         </div>
 
-        {/* Dimension mini-list under chart */}
-        <div className="mt-5 grid grid-cols-2 gap-x-6 gap-y-2">
-          {score.dimensionScores.map(ds => (
-            <div key={ds.dimension} className="flex items-center justify-between gap-2">
-              <span className="text-xs text-gray-600 truncate">
-                {t(`dimensionLabels.${ds.dimension}` as Parameters<typeof t>[0]) || ds.label}
-              </span>
-              <span className={`text-xs font-bold tabular-nums ${dimColor(ds.normalized)}`}>
-                {ds.normalized}
-              </span>
-            </div>
+        {/* Dimension animated bars */}
+        <div className="mt-5 space-y-3">
+          {score.dimensionScores.map((ds, i) => (
+            <motion.div
+              key={ds.dimension}
+              initial={{ opacity: 0, x: -16 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.08, ease: 'easeOut' }}
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs text-gray-600">
+                  {t(`dimensionLabels.${ds.dimension}` as Parameters<typeof t>[0]) || ds.label}
+                </span>
+                <span className={`text-xs font-bold tabular-nums ${dimColor(ds.normalized)}`}>
+                  {ds.normalized}
+                </span>
+              </div>
+              <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                <motion.div
+                  className={`h-full rounded-full ${
+                    ds.normalized >= 60 ? 'bg-emerald-500' :
+                    ds.normalized >= 40 ? 'bg-amber-500' : 'bg-red-500'
+                  }`}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${ds.normalized}%` }}
+                  transition={{ delay: i * 0.08 + 0.2, duration: 0.6, ease: 'easeOut' }}
+                />
+              </div>
+            </motion.div>
           ))}
         </div>
       </motion.div>
@@ -339,7 +398,12 @@ export function LiteResultsDashboard({
         <p className="text-xs text-gray-500 mt-3">{t('fullAssessment.free')}</p>
       </motion.div>
 
-      {/* ═══ 9. REFERRAL (collapsible) ═══════════════════════════ */}
+      {/* ═══ 9. SHARE RESULTS ════════════════════════════════════ */}
+      <motion.div variants={fadeUp}>
+        <ShareResultsBar score={score.overall} maturityLevel={score.maturityLevel} responseId={responseId} locale={locale} />
+      </motion.div>
+
+      {/* ═══ 10. REFERRAL (collapsible) ══════════════════════════ */}
       <motion.div variants={fadeUp}>
         <button
           onClick={() => {

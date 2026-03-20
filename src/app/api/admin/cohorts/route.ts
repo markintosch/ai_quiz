@@ -71,22 +71,37 @@ export async function POST(req: NextRequest) {
   const body = await req.json() as {
     company_id: string
     name: string
+    organisation?: string | null
+    access_code?: string | null
     date?: string
+    wave_label?: string
+    wave_date?: string | null
   }
 
-  const { data, error } = await supabase
+  const { data: cohort, error } = await supabase
     .from('cohorts')
     .insert({
-      company_id: body.company_id,
-      name: body.name,
-      date: body.date ?? null,
+      company_id:   body.company_id,
+      name:         body.name,
+      organisation: body.organisation ?? null,
+      access_code:  body.access_code ?? null,
+      date:         body.date ?? null,
     })
     .select()
-    .single()
+    .single() as unknown as { data: { id: string } | null; error: { message: string } | null }
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error || !cohort) {
+    return NextResponse.json({ error: error?.message ?? 'Insert failed' }, { status: 500 })
   }
 
-  return NextResponse.json({ data }, { status: 201 })
+  // Auto-create wave 0 (baseline) for every new cohort
+  await supabase.from('cohort_waves').insert({
+    cohort_id:   cohort.id,
+    wave_number: 0,
+    label:       body.wave_label ?? 'Baseline',
+    wave_date:   body.wave_date ?? null,
+    is_open:     true,
+  })
+
+  return NextResponse.json({ data: cohort }, { status: 201 })
 }

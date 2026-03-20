@@ -8,6 +8,8 @@ interface CompanyOption { id: string; name: string }
 
 export default function NewArenaSessionForm({ companies }: { companies: CompanyOption[] }) {
   const [hostName, setHostName]       = useState('')
+  const [title, setTitle]             = useState('')
+  const [scheduledAt, setScheduledAt] = useState('')
   const [questionCount, setQCount]    = useState(10)
   const [timePerQ, setTimePerQ]       = useState(30)
   const [companyId, setCompanyId]     = useState('')
@@ -26,6 +28,8 @@ export default function NewArenaSessionForm({ companies }: { companies: CompanyO
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           host_name:      hostName.trim(),
+          title:          title.trim() || null,
+          scheduled_at:   scheduledAt || null,
           question_count: questionCount,
           time_per_q:     timePerQ,
           company_id:     companyId || null,
@@ -47,6 +51,10 @@ export default function NewArenaSessionForm({ companies }: { companies: CompanyO
   }
 
   if (result) {
+    const joinUrl = typeof window !== 'undefined'
+      ? `${window.location.origin}/arena/${result.joinCode}`
+      : `/arena/${result.joinCode}`
+
     return (
       <div className="bg-white border border-gray-100 rounded-xl p-8 shadow-sm text-center space-y-6">
         <div>
@@ -54,8 +62,23 @@ export default function NewArenaSessionForm({ companies }: { companies: CompanyO
           <div className="inline-block bg-brand rounded-xl px-10 py-6">
             <p className="text-5xl font-black tracking-widest text-white font-mono">{result.joinCode}</p>
           </div>
-          <p className="text-xs text-gray-400 mt-3">
-            Players visit this site and enter the code to join
+        </div>
+
+        <div className="bg-gray-50 rounded-xl p-4 text-left space-y-2">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Shareable URL</p>
+          <div className="flex items-center gap-2">
+            <code className="flex-1 text-xs text-brand break-all">{joinUrl}</code>
+            <button
+              type="button"
+              onClick={() => navigator.clipboard.writeText(joinUrl)}
+              className="text-xs text-gray-500 border border-gray-200 px-2 py-1 rounded hover:bg-white transition-colors whitespace-nowrap"
+            >
+              Copy
+            </button>
+          </div>
+          <p className="text-xs text-gray-400">
+            Post this on LinkedIn or share in Slack — players click it directly.
+            {scheduledAt && ' They\'ll see a countdown and can register for email notification.'}
           </p>
         </div>
 
@@ -81,6 +104,19 @@ export default function NewArenaSessionForm({ companies }: { companies: CompanyO
     <form onSubmit={handleSubmit} className="bg-white border border-gray-100 rounded-xl p-6 space-y-5 shadow-sm">
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
+          Event title <span className="text-gray-400 font-normal">(optional — shown to players)</span>
+        </label>
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="e.g. TrueFullstaq Cloud Knowledge Challenge"
+          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
           Host name <span className="text-brand-accent">*</span>
         </label>
         <input
@@ -91,6 +127,23 @@ export default function NewArenaSessionForm({ companies }: { companies: CompanyO
           placeholder="e.g. Mark de Kock"
           className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent"
         />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Scheduled start <span className="text-gray-400 font-normal">(optional — leave blank for manual start)</span>
+        </label>
+        <input
+          type="datetime-local"
+          value={scheduledAt}
+          onChange={(e) => setScheduledAt(e.target.value)}
+          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent"
+        />
+        {scheduledAt && (
+          <p className="text-xs text-teal-600 mt-1">
+            Game will auto-start at this time. Share the URL now — players can register for email notification.
+          </p>
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-4">

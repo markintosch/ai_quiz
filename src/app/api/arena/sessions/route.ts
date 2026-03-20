@@ -23,6 +23,8 @@ export async function POST(req: NextRequest) {
   const supabase = createServiceClient()
   const body = await req.json() as {
     host_name: string
+    title?: string | null
+    scheduled_at?: string | null
     question_count?: number
     time_per_q?: number
     company_id?: string | null
@@ -53,6 +55,8 @@ export async function POST(req: NextRequest) {
     .from('arena_sessions')
     .insert({
       host_name:      body.host_name.trim(),
+      title:          body.title?.trim() || null,
+      scheduled_at:   body.scheduled_at || null,
       join_code:      joinCode,
       question_count: body.question_count ?? 10,
       time_per_q:     body.time_per_q ?? 30,

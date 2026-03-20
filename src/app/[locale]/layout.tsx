@@ -10,25 +10,56 @@ import { getProductKeyFromHost } from '@/products'
 // ── Per-locale metadata (title, description, OG, hreflang) ───────────────────
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://aiquiz.kirkandblackbeard.com'
 
-const LOCALE_META: Record<string, { title: string; description: string; ogLocale: string }> = {
-  en: {
-    title: 'AI Maturity Assessment | Brand PWRD Media',
-    description:
-      'Find out where your organisation stands on AI in 5 minutes. Free diagnostic across 6 dimensions — strategy, usage, data, talent, governance and opportunity.',
-    ogLocale: 'en_GB',
+type LocaleMeta = { title: string; description: string; ogLocale: string }
+
+// Product-specific metadata per locale
+const PRODUCT_META: Record<string, Record<string, LocaleMeta>> = {
+  ai_maturity: {
+    en: {
+      title: 'AI Maturity Assessment | Brand PWRD Media',
+      description:
+        'Find out where your organisation stands on AI in 5 minutes. Free diagnostic across 6 dimensions — strategy, usage, data, talent, governance and opportunity.',
+      ogLocale: 'en_GB',
+    },
+    nl: {
+      title: 'AI Volwassenheidsanalyse | Brand PWRD Media',
+      description:
+        'Ontdek in 5 minuten hoe ver jouw organisatie is met AI. Gratis diagnose op 6 dimensies — strategie, gebruik, data, talent, governance en kansen.',
+      ogLocale: 'nl_NL',
+    },
+    fr: {
+      title: 'Évaluation de Maturité IA | Brand PWRD Media',
+      description:
+        'Découvrez en 5 minutes où en est votre organisation sur l\'IA. Diagnostic gratuit sur 6 dimensions — stratégie, utilisation, données, talent, gouvernance et opportunités.',
+      ogLocale: 'fr_FR',
+    },
   },
-  nl: {
-    title: 'AI Volwassenheidsanalyse | Brand PWRD Media',
-    description:
-      'Ontdek in 5 minuten hoe ver jouw organisatie is met AI. Gratis diagnose op 6 dimensies — strategie, gebruik, data, talent, governance en kansen.',
-    ogLocale: 'nl_NL',
+  cloud_readiness: {
+    en: {
+      title: 'Cloud Readiness Assessment | TrueFullstaq',
+      description:
+        'Discover where your organisation stands on cloud adoption. Free diagnostic across 6 dimensions — strategy, adoption, infrastructure, DevOps, security and cost.',
+      ogLocale: 'en_GB',
+    },
+    nl: {
+      title: 'Cloud Readiness Assessment | TrueFullstaq',
+      description:
+        'Ontdek hoe ver jouw organisatie is met cloud adoptie. Gratis diagnose op 6 dimensies — strategie, adoptie, infrastructuur, DevOps, security en kosten.',
+      ogLocale: 'nl_NL',
+    },
+    fr: {
+      title: 'Évaluation Cloud Readiness | TrueFullstaq',
+      description:
+        'Découvrez où en est votre organisation sur l\'adoption du cloud. Diagnostic gratuit sur 6 dimensions.',
+      ogLocale: 'fr_FR',
+    },
   },
-  fr: {
-    title: 'Évaluation de Maturité IA | Brand PWRD Media',
-    description:
-      'Découvrez en 5 minutes où en est votre organisation sur l\'IA. Diagnostic gratuit sur 6 dimensions — stratégie, utilisation, données, talent, gouvernance et opportunités.',
-    ogLocale: 'fr_FR',
-  },
+}
+
+// Fallback for any product not listed above
+function getLocaleMeta(productKey: string, locale: string): LocaleMeta {
+  const productMeta = PRODUCT_META[productKey] ?? PRODUCT_META['ai_maturity']
+  return productMeta[locale] ?? productMeta['en']
 }
 
 export async function generateMetadata({
@@ -37,7 +68,10 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
-  const meta = LOCALE_META[locale] ?? LOCALE_META.en
+  const headersList = await headers()
+  const host = headersList.get('host') ?? ''
+  const productKey = getProductKeyFromHost(host)
+  const meta = getLocaleMeta(productKey, locale)
 
   return {
     title: meta.title,
@@ -62,7 +96,7 @@ export async function generateMetadata({
       description: meta.description,
       locale:      meta.ogLocale,
       alternateLocale: locale === 'en' ? ['nl_NL'] : ['en_GB'],
-      siteName:    'Brand PWRD Media — AI Maturity Assessment',
+      siteName:    meta.title.split('|')[0].trim(),
       // opengraph-image.tsx in this segment auto-generates the OG image
     },
 
@@ -100,8 +134,8 @@ export function generateStaticParams() {
 }
 
 // ── JSON-LD structured data ───────────────────────────────────────────────────
-function buildJsonLd(locale: string) {
-  const meta = LOCALE_META[locale] ?? LOCALE_META.en
+function buildJsonLd(locale: string, productKey = 'ai_maturity') {
+  const meta = getLocaleMeta(productKey, locale)
   return {
     '@context': 'https://schema.org',
     '@graph': [
@@ -238,7 +272,7 @@ export default async function LocaleLayout({
     <NextIntlClientProvider locale={locale} messages={messages}>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildJsonLd(locale)) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildJsonLd(locale, productKey)) }}
       />
       {children}
     </NextIntlClientProvider>

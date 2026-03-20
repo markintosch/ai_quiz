@@ -107,6 +107,7 @@ export interface SubmitQuizPayload {
   lead: LeadFormData
   companySlug?: string
   cohortId?: string
+  waveId?: string
   /** Active locale — used by API to build locale-prefixed email links */
   locale?: string
   /** Product key for multi-product routing — defaults to 'ai_maturity' */

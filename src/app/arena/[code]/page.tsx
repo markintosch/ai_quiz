@@ -12,9 +12,9 @@ export default async function ArenaJoinPage({ params }: { params: { code: string
 
   const { data: session } = await supabase
     .from('arena_sessions')
-    .select('id, join_code, host_name, status, question_count, time_per_q')
+    .select('id, join_code, host_name, title, status, question_count, time_per_q, scheduled_at')
     .eq('join_code', code)
-    .single()
+    .single() as { data: { id: string; join_code: string; host_name: string; title: string | null; status: string; question_count: number; time_per_q: number; scheduled_at: string | null } | null }
 
   if (!session) notFound()
 
@@ -29,9 +29,11 @@ export default async function ArenaJoinPage({ params }: { params: { code: string
       <ArenaJoinClient
         joinCode={session.join_code}
         hostName={session.host_name}
+        title={session.title}
         status={session.status}
         questionCount={session.question_count}
         timePerQ={session.time_per_q}
+        scheduledAt={session.scheduled_at}
         initialParticipants={participants ?? []}
       />
     </main>

@@ -31,6 +31,10 @@ interface QuizEngineProps {
   accentColor?: string
   /** Product key for multi-product scoring — forwarded to /api/submit */
   productKey?: string
+  /** Cohort ID — links this submission to a cohort wave */
+  cohortId?: string
+  /** Wave ID — links this submission to a specific wave */
+  waveId?: string
 }
 
 export function QuizEngine({
@@ -42,6 +46,8 @@ export function QuizEngine({
   excludedCodes = [],
   accentColor,
   productKey,
+  cohortId,
+  waveId,
 }: QuizEngineProps) {
   const t = useTranslations('quiz.engine')
   const locale = useLocale()
@@ -112,6 +118,8 @@ export function QuizEngine({
         answers,
         lead,
         companySlug,
+        cohortId,
+        waveId,
         locale,
         productKey,
       }

@@ -2,6 +2,7 @@ import { Resend } from 'resend'
 import { render } from '@react-email/render'
 import { SummaryEmail } from './templates/summary'
 import { AdminNotificationEmail } from './templates/adminNotification'
+import { FollowUpEmail } from './templates/followUp'
 import { createServiceClient } from '@/lib/supabase/server'
 import type { QuizScore, QuizVersion } from '@/types'
 
@@ -16,6 +17,7 @@ const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'mark@brandpwrdmedia.com'
 
 export type EmailType =
   | 'quiz_summary'
+  | 'quiz_followup'
   | 'admin_notification'
   | 'referral_invite'
   | 'company_report'
@@ -191,5 +193,57 @@ export async function sendAdminNotification(params: SendAdminNotificationParams)
   if (error) {
     console.error('Admin notification email send error:', error)
     throw error
+  }
+}
+
+// ── sendFollowUpEmail ─────────────────────────────────────────────────────────
+// Scheduled 48h after submit via Resend scheduledAt.
+// Fire-and-forget — never throws, logs result.
+
+interface SendFollowUpEmailParams {
+  to: string
+  name: string
+  score: number
+  maturityLevel: string
+  resultsUrl: string
+  nextStepsUrl: string
+  respondentId: string
+  productName?: string
+}
+
+export async function sendFollowUpEmail(params: SendFollowUpEmailParams) {
+  const { to, name, score, maturityLevel, resultsUrl, nextStepsUrl, respondentId, productName } = params
+  const firstName = name.trim().split(/\s+/)[0]
+
+  const html = await render(
+    FollowUpEmail({ firstName, score, maturityLevel, resultsUrl, nextStepsUrl, productName })
+  )
+
+  const subject = `Still thinking about your ${productName ?? 'assessment'} score? Here's your next step, ${firstName}.`
+
+  const scheduledAt = new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString()
+
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to,
+      subject,
+      html,
+      scheduledAt,
+    } as any)
+
+    await logEmail({
+      respondentId,
+      emailType:    'quiz_followup',
+      subject,
+      toEmail:      to,
+      status:       error ? 'failed' : 'sent',
+      errorMessage: error ? String(error) : undefined,
+    })
+
+    if (error) console.error('[sendFollowUpEmail] send error:', error)
+  } catch (err) {
+    console.error('[sendFollowUpEmail] unexpected error:', err)
   }
 }

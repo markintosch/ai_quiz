@@ -127,6 +127,10 @@ export interface Database {
           company_id: string
           name: string
           date: string | null
+          organisation: string | null
+          access_code: string | null
+          client_token: string | null
+          client_link_expires_at: string | null
           created_at: string
         }
         Insert: {
@@ -134,6 +138,10 @@ export interface Database {
           company_id: string
           name: string
           date?: string | null
+          organisation?: string | null
+          access_code?: string | null
+          client_token?: string | null
+          client_link_expires_at?: string | null
           created_at?: string
         }
         Update: {
@@ -141,6 +149,64 @@ export interface Database {
           company_id?: string
           name?: string
           date?: string | null
+          organisation?: string | null
+          access_code?: string | null
+          client_token?: string | null
+          client_link_expires_at?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
+      cohort_waves: {
+        Row: {
+          id: string
+          cohort_id: string
+          wave_number: number
+          label: string
+          wave_date: string | null
+          is_open: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          cohort_id: string
+          wave_number: number
+          label?: string
+          wave_date?: string | null
+          is_open?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          cohort_id?: string
+          wave_number?: number
+          label?: string
+          wave_date?: string | null
+          is_open?: boolean
+          created_at?: string
+        }
+        Relationships: []
+      }
+      cohort_responses: {
+        Row: {
+          id: string
+          cohort_id: string
+          wave_id: string
+          response_id: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          cohort_id: string
+          wave_id: string
+          response_id: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          cohort_id?: string
+          wave_id?: string
+          response_id?: string
           created_at?: string
         }
         Relationships: []

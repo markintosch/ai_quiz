@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 import { calculateScore } from '@/lib/scoring/engine'
 import { getProductConfig } from '@/products'
-import { sendSummaryEmail, sendAdminNotification, sendLeadNotification } from '@/lib/email/sender'
+import { sendSummaryEmail, sendAdminNotification, sendLeadNotification, sendFollowUpEmail } from '@/lib/email/sender'
 import { rateLimit, getClientIp } from '@/lib/rateLimit'
 import type { SubmitQuizPayload, SubmitQuizResponse } from '@/types'
 
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Too many submissions. Please wait a few minutes.' }, { status: 429 })
   }
 
-  const { version, answers, lead, companySlug, cohortId, locale = 'en', productKey = 'ai_maturity' } = body
+  const { version, answers, lead, companySlug, cohortId, waveId, locale = 'en', productKey = 'ai_maturity' } = body
 
   // ── Basic validation ──────────────────────────────────────
   if (!version || !answers || !lead) {
@@ -148,6 +148,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Failed to save response' }, { status: 500 })
     }
 
+    // ── Link to cohort wave (if applicable) ───────────────────
+    if (cohortId && waveId) {
+      await supabase.from('cohort_responses').insert({
+        cohort_id:   cohortId,
+        wave_id:     waveId,
+        response_id: response.id,
+      })
+      // Best-effort: also stamp respondent.cohort_id for backward compat
+      await supabase.from('respondents').update({ cohort_id: cohortId }).eq('id', respondentId)
+    }
+
     // ── Create session ─────────────────────────────────────────
     await supabase.from('sessions').insert({
       respondent_id:         respondentId,
@@ -183,6 +194,17 @@ export async function POST(req: NextRequest) {
         version,
         resultsUrl,
       }),
+      // 48h follow-up email — only for marketing_consent or B2B company source
+      ...(lead.marketingConsent || companySlug ? [sendFollowUpEmail({
+        to:           lead.email,
+        name:         lead.name,
+        score:        quizScore.overall,
+        maturityLevel: quizScore.maturityLevel,
+        resultsUrl,
+        nextStepsUrl: `${baseUrl}/${locale}/next-steps?r=${response.id}`,
+        respondentId,
+        productName:  productConfig.name,
+      })] : []),
       // Company lead notification — only fires when notify_email is set on the company
       ...(companyNotifyEmail ? [sendLeadNotification({
         notifyEmail: companyNotifyEmail,
