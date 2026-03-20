@@ -85,14 +85,14 @@ export default async function ArenaResultsPage({ params, searchParams }: PagePro
 
   return (
     <main
-      className={`min-h-screen bg-black ${pressStart.variable} ${vt323.variable}`}
+      className={`min-h-screen bg-brand ${pressStart.variable} ${vt323.variable}`}
       style={{ fontFamily: 'var(--font-vt323), monospace' }}
     >
       {/* Scanline overlay */}
       <div
-        className="pointer-events-none fixed inset-0 z-10 opacity-[0.03]"
+        className="pointer-events-none fixed inset-0 z-10 opacity-[0.06]"
         style={{
-          backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.5) 2px, rgba(255,255,255,0.5) 4px)',
+          backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.4) 2px, rgba(0,0,0,0.4) 4px)',
         }}
       />
 
@@ -268,18 +268,21 @@ export default async function ArenaResultsPage({ params, searchParams }: PagePro
             </div>
           </div>
 
-          {/* Right: sponsors sidebar */}
+          {/* Right: sponsors + prizes sidebar */}
           <div className="hidden lg:flex flex-col gap-4 w-52 flex-shrink-0">
+
+            {/* Sponsors */}
             <div className="border border-white/10 p-3">
               <p
                 className="text-white/30 text-center mb-4 tracking-widest"
                 style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px' }}
               >
-                SPONSORS
+                POWERED BY
               </p>
-              {/* Sponsor slot 1 */}
-              <div className="border border-white/10 bg-white/5 h-20 flex items-center justify-center mb-3">
-                <p className="text-white/20 text-lg tracking-widest text-center">YOUR LOGO<br/>HERE</p>
+              {/* TrueFullstaq logo */}
+              <div className="border border-white/10 bg-white/5 h-20 flex items-center justify-center mb-3 px-4">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/logos/truefullstaq.svg" alt="TrueFullstaq" className="max-h-12 w-auto opacity-80" />
               </div>
               {/* Sponsor slot 2 */}
               <div className="border border-white/10 bg-white/5 h-20 flex items-center justify-center mb-3">
@@ -291,6 +294,40 @@ export default async function ArenaResultsPage({ params, searchParams }: PagePro
               </div>
             </div>
 
+            {/* Prizes */}
+            <div className="border border-yellow-400/30 p-3" style={{ boxShadow: '0 0 15px rgba(255,215,0,0.08)' }}>
+              <p
+                className="text-yellow-400/60 text-center mb-4 tracking-widest"
+                style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px', textShadow: '0 0 8px #FFD700' }}
+              >
+                PRIZES
+              </p>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 border border-yellow-400/20 bg-yellow-400/5 px-3 py-2">
+                  <span className="text-2xl">🥇</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-yellow-400 text-lg tracking-wide truncate">1ST PLACE</p>
+                    <p className="text-white/40 text-base tracking-wide truncate">TBD</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 border border-white/10 bg-white/5 px-3 py-2">
+                  <span className="text-2xl">🥈</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-gray-300 text-lg tracking-wide truncate">2ND PLACE</p>
+                    <p className="text-white/40 text-base tracking-wide truncate">TBD</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 border border-white/10 bg-white/5 px-3 py-2">
+                  <span className="text-2xl">🥉</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-orange-400 text-lg tracking-wide truncate">3RD PLACE</p>
+                    <p className="text-white/40 text-base tracking-wide truncate">TBD</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Stats */}
             <div className="border border-white/10 p-3 text-center space-y-1">
               <p className="text-white/20 text-xl tracking-widest">{totalUnique} PLAYERS</p>
               <p className="text-white/20 text-xl tracking-widest">{session.question_count} QUESTIONS</p>
