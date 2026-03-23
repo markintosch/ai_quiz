@@ -54,6 +54,26 @@ const PRODUCT_META: Record<string, Record<string, LocaleMeta>> = {
       ogLocale: 'fr_FR',
     },
   },
+  manda_readiness: {
+    en: {
+      title: 'AI & M&A Readiness Assessment | Hofstede & de Kock',
+      description:
+        'Is your company AI & M&A ready? Find out in 10 minutes. Seven dimensions — leadership, commercial engine, AI capability, operations, narrative, value creation & culture.',
+      ogLocale: 'en_GB',
+    },
+    nl: {
+      title: 'AI & M&A Gereedheidsanalyse | Hofstede & de Kock',
+      description:
+        'Is uw bedrijf AI & M&A-klaar? Ontdek het in 10 minuten. Zeven dimensies — leiderschap, commerciële motor, AI-capaciteit, operaties, narratief, waardecreatie & cultuur.',
+      ogLocale: 'nl_NL',
+    },
+    fr: {
+      title: 'Évaluation de Maturité IA & M&A | Hofstede & de Kock',
+      description:
+        'Votre entreprise est-elle prête pour l\'IA et les fusions-acquisitions ? Découvrez-le en 10 minutes. Sept dimensions — leadership, moteur commercial, capacité IA, opérations, récit, création de valeur & culture.',
+      ogLocale: 'fr_FR',
+    },
+  },
 }
 
 // Fallback for any product not listed above

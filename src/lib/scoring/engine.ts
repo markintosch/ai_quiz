@@ -32,7 +32,8 @@ export interface QuizScore {
 }
 
 // ─── Dimension weights (must sum to 1.0) — AI Maturity defaults ──────────
-const DIMENSION_WEIGHTS: Record<Dimension, number> = {
+// AI Maturity defaults — Partial because new products add their own dimension keys
+const DIMENSION_WEIGHTS: Partial<Record<Dimension, number>> = {
   strategy_vision:      0.22,
   governance_risk:      0.22,
   current_usage:        0.16,
@@ -41,7 +42,7 @@ const DIMENSION_WEIGHTS: Record<Dimension, number> = {
   opportunity_awareness: 0.10,
 }
 
-const DIMENSION_LABELS: Record<Dimension, string> = {
+const DIMENSION_LABELS: Partial<Record<Dimension, string>> = {
   strategy_vision:      'Strategy & Vision',
   governance_risk:      'Governance & Risk',
   current_usage:        'Current Usage',
@@ -142,8 +143,8 @@ export function calculateScore(
     ? productConfig.dimensions.map(d => ({ key: d.key, label: d.label, weight: d.weight }))
     : (Object.keys(DIMENSION_WEIGHTS) as Dimension[]).map(key => ({
         key,
-        label: DIMENSION_LABELS[key],
-        weight: DIMENSION_WEIGHTS[key],
+        label: DIMENSION_LABELS[key] ?? key,
+        weight: DIMENSION_WEIGHTS[key] ?? 0,
       }))
 
   const dimensionScores = dims.map(dim =>

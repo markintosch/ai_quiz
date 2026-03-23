@@ -1,12 +1,21 @@
 export type QuestionType = 'likert' | 'frequency' | 'weighted_mc' | 'multiselect'
 
 export type Dimension =
+  // ── AI Maturity ───────────────────────────────────────────
   | 'strategy_vision'
   | 'current_usage'
   | 'data_readiness'
   | 'talent_culture'
   | 'governance_risk'
   | 'opportunity_awareness'
+  // ── M&A Readiness ─────────────────────────────────────────
+  | 'leadership_change'
+  | 'commercial_engine'
+  | 'ai_digital'
+  | 'operational_scale'
+  | 'commercial_narrative'
+  | 'value_creation'
+  | 'psychological_safety'
 
 export interface QuestionOption {
   value: number | null // null for unscored multiselect

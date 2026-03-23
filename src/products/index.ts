@@ -8,11 +8,13 @@
 
 import { AI_MATURITY_CONFIG } from './ai_maturity/config'
 import { CLOUD_READINESS_CONFIG } from './cloud_readiness/config'
+import { MANDA_CONFIG } from './manda/config'
 import type { QuizProductConfig } from './types'
 
 const REGISTRY: Record<string, QuizProductConfig> = {
   ai_maturity:      AI_MATURITY_CONFIG,
   cloud_readiness:  CLOUD_READINESS_CONFIG,
+  manda_readiness:  MANDA_CONFIG,
   // digital_readiness: DIGITAL_READINESS_CONFIG,   ← add future products here
   // esg_maturity:      ESG_MATURITY_CONFIG,
 }
@@ -45,6 +47,8 @@ const SUBDOMAIN_MAP: Record<string, string> = {
   'cloud':        'cloud_readiness',// cloud.brandpwrdmedia.nl
   'check':        'cloud_readiness',// legacy alias (truefullstaq.nl)
   'arena':        'cloud_arena',    // arena.brandpwrdmedia.nl
+  'manda':        'manda_readiness',// manda.brandpwrdmedia.nl (Hofstede & de Kock)
+  'hdk':          'manda_readiness',// hdk.brandpwrdmedia.nl  (alias)
   // 'digital-readiness': 'digital_readiness',  ← add when product is launched
 }
 
