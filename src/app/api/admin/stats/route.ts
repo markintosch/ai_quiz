@@ -91,7 +91,9 @@ export async function GET() {
   if (allResponses && allResponses.length > 0) {
     let totalScore = 0
     for (const r of allResponses) {
+      if (!r.scores) continue                              // skip incomplete/null responses
       const scores = r.scores as unknown as ScoresJsonb
+      if (typeof scores !== 'object') continue
       totalScore += scores.overall ?? 0
 
       const level = r.maturity_level as MaturityKey

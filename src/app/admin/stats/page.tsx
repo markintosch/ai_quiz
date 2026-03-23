@@ -96,13 +96,32 @@ export default function StatsPage() {
 
   useEffect(() => {
     fetch('/api/admin/stats')
-      .then(r => r.json())
-      .then((d: StatsData) => { setData(d); setLoading(false) })
-      .catch(() => { setError('Failed to load stats'); setLoading(false) })
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`)
+        return r.json()
+      })
+      .then((d: StatsData) => {
+        // Guard against unexpected API shape (e.g. { error: '...' } from a 4xx/5xx)
+        if (!d || typeof d.totalRespondents !== 'number') {
+          throw new Error('Unexpected API response shape')
+        }
+        setData(d)
+        setLoading(false)
+      })
+      .catch((err: unknown) => {
+        setError(err instanceof Error ? err.message : 'Failed to load stats')
+        setLoading(false)
+      })
   }, [])
 
   if (loading) return <div className="text-sm text-gray-500">Loading stats…</div>
-  if (error || !data) return <div className="text-sm text-red-500">{error ?? 'No data'}</div>
+  if (error || !data) return (
+    <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-sm text-red-700">
+      <p className="font-semibold mb-1">Failed to load statistics</p>
+      <p className="text-red-500">{error ?? 'No data returned from API'}</p>
+      <p className="mt-3 text-xs text-red-400">If this is a 401 error, please <a href="/admin/login" className="underline">log in again</a> — the admin session may have expired.</p>
+    </div>
+  )
 
   const completionRate = data.totalRespondents > 0
     ? Math.round((data.totalResponses / data.totalRespondents) * 100)
