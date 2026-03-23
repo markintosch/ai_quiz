@@ -35,6 +35,8 @@ interface QuizEngineProps {
   cohortId?: string
   /** Wave ID — links this submission to a specific wave */
   waveId?: string
+  /** Override the default question set — when provided, used instead of LITE_QUESTIONS/QUESTIONS */
+  questions?: Question[]
 }
 
 export function QuizEngine({
@@ -48,6 +50,7 @@ export function QuizEngine({
   productKey,
   cohortId,
   waveId,
+  questions: questionsProp,
 }: QuizEngineProps) {
   const t = useTranslations('quiz.engine')
   const locale = useLocale()
@@ -56,7 +59,7 @@ export function QuizEngine({
   const captureMode = leadCapture ?? (version === 'full' && companySlug ? 'pre' : 'post')
 
   const router = useRouter()
-  const baseQuestions: Question[] = version === 'lite' ? LITE_QUESTIONS : QUESTIONS
+  const baseQuestions: Question[] = questionsProp ?? (version === 'lite' ? LITE_QUESTIONS : QUESTIONS)
   const questions: Question[] = excludedCodes.length > 0
     ? baseQuestions.filter((q) => !excludedCodes.includes(q.code))
     : baseQuestions

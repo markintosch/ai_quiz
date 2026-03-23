@@ -1,33 +1,18 @@
-'use client'
+import { headers } from 'next/headers'
+import { getProductKeyFromHost, getProductConfig } from '@/products'
+import LiteQuizPageClient from './LiteQuizPageClient'
 
-import { useTranslations } from 'next-intl'
-import { LanguageSwitcher } from '@/components/LanguageSwitcher'
-import { QuizEngine } from '@/components/quiz/QuizEngine'
-
-export default function LiteQuizPage() {
-  const t = useTranslations('quiz.lite')
-
+export default async function LiteQuizPage() {
+  const host = (await headers()).get('host') ?? ''
+  const productKey = getProductKeyFromHost(host)
+  const config = getProductConfig(productKey)
+  const liteQuestions = config.questions.filter(q => q.lite)
+  const productShortName = config.name.replace(/ Assessment$/, '').replace(/ Quiz$/, '')
   return (
-    <main className="min-h-screen bg-gray-50">
-      <div className="max-w-2xl mx-auto px-4 py-12">
-        {/* Page header */}
-        <div className="text-center mb-10 relative">
-          <div className="absolute right-0 top-0">
-            <LanguageSwitcher variant="light" />
-          </div>
-          <p className="text-xs font-semibold uppercase tracking-widest text-brand-accent mb-2">
-            {t('brand')}
-          </p>
-          <h1 className="text-3xl font-bold text-gray-900 mb-3">
-            {t('heading')}
-          </h1>
-          <p className="text-gray-500 text-base max-w-md mx-auto">
-            {t('sub')}
-          </p>
-        </div>
-
-        <QuizEngine version="lite" />
-      </div>
-    </main>
+    <LiteQuizPageClient
+      productKey={productKey}
+      productShortName={productShortName}
+      liteQuestions={liteQuestions}
+    />
   )
 }

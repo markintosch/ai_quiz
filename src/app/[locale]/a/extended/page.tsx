@@ -1,13 +1,16 @@
-import type { Metadata } from 'next'
+import { headers } from 'next/headers'
+import { getProductKeyFromHost, getProductConfig } from '@/products'
 import { QuizEngine } from '@/components/quiz/QuizEngine'
 
-export const metadata: Metadata = {
-  title: 'Full AI Maturity Assessment — Brand PWRD Media',
-  description:
-    'A comprehensive 25-question AI Maturity Assessment. Get your full score, dimension breakdown and personalised recommendations.',
-}
+export const dynamic = 'force-dynamic'
 
-export default function ExtendedQuizPage() {
+export default async function ExtendedQuizPage() {
+  const host = (await headers()).get('host') ?? ''
+  const productKey = getProductKeyFromHost(host)
+  const config = getProductConfig(productKey)
+  const allQuestions = config.questions
+  const productShortName = config.name.replace(/ Assessment$/, '').replace(/ Quiz$/, '')
+
   return (
     <main className="min-h-screen bg-gray-50">
       <div className="max-w-2xl mx-auto px-4 py-12">
@@ -16,14 +19,13 @@ export default function ExtendedQuizPage() {
             Brand PWRD Media
           </p>
           <h1 className="text-3xl font-bold text-gray-900 mb-3">
-            Full AI Maturity Assessment
+            Full {productShortName} Assessment
           </h1>
           <p className="text-gray-500 text-base max-w-md mx-auto">
-            25 questions · ~10 minutes · Full score + dimension breakdown + recommendations
+            {allQuestions.length} questions · ~10 minutes · Full score + dimension breakdown + recommendations
           </p>
         </div>
-
-        <QuizEngine version="full" leadCapture="post" />
+        <QuizEngine version="full" leadCapture="post" questions={allQuestions} productKey={productKey} />
       </div>
     </main>
   )
