@@ -33,6 +33,7 @@ interface Company {
   logo_url: string | null
   active: boolean
   brand_color?: string | null
+  secondary_color?: string | null
   welcome_message?: string | null
   excluded_question_codes?: string[] | null
   product_id?: string | null
@@ -52,6 +53,7 @@ export default function CompanyEditForm({ company, products = [] }: CompanyEditF
   const [uploading, setUploading] = useState(false)
   const [active, setActive] = useState(company.active)
   const [brandColor, setBrandColor] = useState(company.brand_color ?? '#E8611A')
+  const [secondaryColor, setSecondaryColor] = useState(company.secondary_color ?? '#F5A820')
   const [welcomeMessage, setWelcomeMessage] = useState(company.welcome_message ?? '')
   const [productId, setProductId] = useState(company.product_id ?? '')
   const [accessCode, setAccessCode] = useState(company.access_code ?? '')
@@ -108,6 +110,7 @@ export default function CompanyEditForm({ company, products = [] }: CompanyEditF
           logo_url: logoUrl.trim() || null,
           active,
           brand_color: brandColor,
+          secondary_color: secondaryColor,
           welcome_message: welcomeMessage.trim() || null,
           excluded_question_codes: Array.from(excluded),
           product_id: productId || null,
@@ -206,26 +209,113 @@ export default function CompanyEditForm({ company, products = [] }: CompanyEditF
 
       {/* Branding */}
       <div className="border-t border-gray-100 pt-5">
-        <p className="text-sm font-semibold text-gray-700 mb-3">Branding</p>
+        <p className="text-sm font-semibold text-gray-700 mb-1">Brand colours</p>
+        <p className="text-xs text-gray-500 mb-4">
+          Applied to buttons, badges and accents on the company landing page.
+        </p>
 
-        <div className="flex items-center gap-3 mb-4">
-          <div className="flex-1">
-            <p className="text-sm text-gray-700">Accent colour</p>
-            <p className="text-xs text-gray-500">Used on CTA buttons in the assessment</p>
+        {/* Colour pickers */}
+        <div className="grid grid-cols-2 gap-4 mb-5">
+          {/* Primary */}
+          <div className="space-y-2">
+            <p className="text-xs font-medium text-gray-700">Primary colour</p>
+            <p className="text-xs text-gray-400">Buttons · headline · badges</p>
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <input
+                  type="color"
+                  value={brandColor}
+                  onChange={(e) => setBrandColor(e.target.value)}
+                  className="w-10 h-10 rounded-lg cursor-pointer border border-gray-200 p-0.5"
+                />
+              </div>
+              <input
+                type="text"
+                value={brandColor}
+                onChange={(e) => {
+                  const v = e.target.value
+                  setBrandColor(v)
+                }}
+                maxLength={7}
+                className="flex-1 border border-gray-200 rounded-lg px-2 py-2 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-brand-accent uppercase"
+              />
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <input
-              type="color"
-              value={brandColor}
-              onChange={(e) => setBrandColor(e.target.value)}
-              className="w-10 h-10 rounded cursor-pointer border border-gray-200"
-            />
-            <input
-              type="text"
-              value={brandColor}
-              onChange={(e) => setBrandColor(e.target.value)}
-              className="w-24 border border-gray-200 rounded-lg px-2 py-1.5 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-brand-accent"
-            />
+
+          {/* Secondary */}
+          <div className="space-y-2">
+            <p className="text-xs font-medium text-gray-700">Secondary colour</p>
+            <p className="text-xs text-gray-400">Gradient · accents</p>
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <input
+                  type="color"
+                  value={secondaryColor}
+                  onChange={(e) => setSecondaryColor(e.target.value)}
+                  className="w-10 h-10 rounded-lg cursor-pointer border border-gray-200 p-0.5"
+                />
+              </div>
+              <input
+                type="text"
+                value={secondaryColor}
+                onChange={(e) => {
+                  const v = e.target.value
+                  setSecondaryColor(v)
+                }}
+                maxLength={7}
+                className="flex-1 border border-gray-200 rounded-lg px-2 py-2 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-brand-accent uppercase"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Live preview */}
+        <div className="rounded-xl overflow-hidden border border-gray-200 mb-5">
+          <div className="bg-gray-100 px-3 py-1.5 flex items-center gap-2 border-b border-gray-200">
+            <div className="flex gap-1">
+              <span className="w-2.5 h-2.5 rounded-full bg-gray-300" />
+              <span className="w-2.5 h-2.5 rounded-full bg-gray-300" />
+              <span className="w-2.5 h-2.5 rounded-full bg-gray-300" />
+            </div>
+            <span className="text-xs text-gray-400 font-mono">/a/{slug || 'company'}</span>
+          </div>
+          {/* Simulated landing page hero */}
+          <div className="bg-[#354E5E] px-6 py-6">
+            {/* Badge */}
+            <div
+              className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold mb-4"
+              style={{
+                background: `linear-gradient(135deg, ${secondaryColor}25, ${brandColor}25)`,
+                border: `1px solid ${brandColor}50`,
+                color: brandColor,
+              }}
+            >
+              {name || 'Company'} · AI Maturity Assessment
+            </div>
+            {/* Headline */}
+            <p className="text-white text-sm font-bold mb-1 leading-snug">
+              How does{' '}
+              <span style={{ color: brandColor }}>{name || 'Company'}</span>
+              {' '}stand on AI?
+            </p>
+            <p className="text-white/50 text-xs mb-4">
+              26 questions · 12 minutes · Confidential results
+            </p>
+            {/* CTA */}
+            <button
+              type="button"
+              className="px-5 py-2 rounded-lg text-xs font-bold text-white transition-opacity hover:opacity-90"
+              style={{ background: `linear-gradient(135deg, ${secondaryColor}, ${brandColor})` }}
+            >
+              Start the assessment →
+            </button>
+            {/* Logo preview */}
+            {logoUrl && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <div className="mt-4 pt-4 border-t border-white/10 flex items-center gap-2">
+                <img src={logoUrl} alt={name} className="h-6 object-contain" />
+              </div>
+            )}
           </div>
         </div>
 

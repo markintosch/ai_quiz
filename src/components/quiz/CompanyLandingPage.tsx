@@ -159,6 +159,7 @@ interface CompanyLandingPageProps {
   slug: string
   logoUrl: string | null
   accentColor: string
+  secondaryColor?: string
   welcomeMessage: string | null
   excludedCodes: string[]
   questionCount: number
@@ -181,6 +182,7 @@ export function CompanyLandingPage({
   slug,
   logoUrl,
   accentColor,
+  secondaryColor = '#F5A820',
   welcomeMessage,
   excludedCodes,
   questionCount,
@@ -284,7 +286,11 @@ export function CompanyLandingPage({
               {/* 1. Eyebrow badge */}
               <span
                 className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-8 border"
-                style={{ color: accentColor, borderColor: `${accentColor}40`, backgroundColor: `${accentColor}15` }}
+                style={{
+                  color: accentColor,
+                  borderColor: `${accentColor}40`,
+                  background: `linear-gradient(135deg, ${secondaryColor}20, ${accentColor}20)`,
+                }}
               >
                 {displayName
                   ? `${displayName} · ${productSubject ?? t('badge')}`
@@ -314,8 +320,8 @@ export function CompanyLandingPage({
                 onClick={() => setStarted(true)}
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                className="px-10 py-4 text-white font-bold text-lg rounded-xl shadow-xl transition-colors"
-                style={{ backgroundColor: accentColor }}
+                className="px-10 py-4 text-white font-bold text-lg rounded-xl shadow-xl transition-opacity"
+                style={{ background: `linear-gradient(135deg, ${secondaryColor}, ${accentColor})` }}
               >
                 {ctaLabel}
               </motion.button>

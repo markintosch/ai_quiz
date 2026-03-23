@@ -48,6 +48,7 @@ export async function PUT(
     logo_url?: string | null
     active?: boolean
     brand_color?: string | null
+    secondary_color?: string | null
     welcome_message?: string | null
     excluded_question_codes?: string[]
     product_id?: string | null
