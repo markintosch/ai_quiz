@@ -72,23 +72,26 @@ const COPY = {
       steps: [
         { title: 'Take the assessment', desc: '26 questions across 7 dimensions. Honest answers only — this is your mirror, not a pitch deck.' },
         { title: 'Get your readiness report', desc: "Instant scores per pillar. Shadow AI detection. A clear view of where you're strong and where deals get difficult." },
-        { title: 'Talk to Sandra & Mark', desc: "Book a free 30-minute debrief. We'll tell you where you stand, what it means for your M&A situation, and whether we can help." },
+        { title: 'Talk to Wouter, Sandra & Mark', desc: "Book a free 30-minute debrief. We'll tell you where you stand, what it means for your M&A situation, and whether we can help." },
       ],
       cta: 'Start your free assessment →',
     },
     partnership: {
       label: 'The partnership',
-      heading: 'One partnership. Two disciplines. No gap.',
-      sub: 'We close the space where strategy gets defined but execution stalls. Boardroom to market.',
+      heading: 'One partnership. Three disciplines. No gap.',
+      sub: 'We close the space where strategy gets defined but execution stalls. Deal desk to market.',
       sandraRole: 'Strategic Leadership & Integration',
       sandraBio: 'Governance, M&A integration, turnaround. When organisations stall or scale, Sandra steps in as the leader who creates ownership and restores momentum.',
       sandraCurrentLabel: 'Currently',
       sandraCurrent: 'Managing Director at Hibou/Contenture — leading the merger and integration of two companies into one unified brand and team.',
       markRole: 'Commercial Acceleration & Growth',
-      markBio: 'Revenue growth, go-to-market, brand positioning. Mark translates strategy into market results. 20+ years scaling B2B/B2C tech and consumer brands.',
-      markBioExtra: 'From €300K to €1.5M at Digidentity, managing large budgets delivering €5M net margin at Omnicom.',
+      markBio: 'Revenue growth, go-to-market, brand positioning. Mark translates strategy into market results. 20+ years scaling B2B/B2C tech and consumer brands across multiple sectors.',
       markCurrentLabel: 'Currently',
       markCurrent: 'Fractional CMO through Kirk & Blackbeard, serving B2B/B2C companies (Tech / Fast movers / Health).',
+      wouterRole: 'M&A Strategy & Deal Advisory',
+      wouterBio: 'Deal structuring, investor relations and strategic advisory. Wouter guides leadership teams through acquisitions, fundraising and exit processes — bringing the transactional perspective that Sandra and Mark translate into operations and commercial results.',
+      wouterCurrentLabel: 'Currently',
+      wouterCurrent: 'Senior Consultant and Fractional CMO at Aquasium Consultants, advising growth companies on strategy, deals and commercial positioning.',
     },
     services: {
       label: 'Services',
@@ -166,23 +169,26 @@ const COPY = {
       steps: [
         { title: 'Doe het assessment', desc: '26 vragen over 7 dimensies. Alleen eerlijke antwoorden — dit is jouw spiegel, geen pitchdeck.' },
         { title: 'Ontvang jouw gereedheidsrapport', desc: 'Direct scores per pijler. Shadow AI-detectie. Een helder beeld van waar je sterk staat en waar deals moeilijk worden.' },
-        { title: 'Praat met Sandra & Mark', desc: 'Boek een gratis debrief van 30 minuten. We vertellen je waar je staat, wat het betekent voor jouw M&A-situatie en of we kunnen helpen.' },
+        { title: 'Praat met Wouter, Sandra & Mark', desc: 'Boek een gratis debrief van 30 minuten. We vertellen je waar je staat, wat het betekent voor jouw M&A-situatie en of we kunnen helpen.' },
       ],
       cta: 'Start jouw gratis assessment →',
     },
     partnership: {
       label: 'Het partnerschap',
-      heading: 'Één partnerschap. Twee disciplines. Geen kloof.',
-      sub: 'We sluiten de ruimte waar strategie wordt gedefinieerd maar executie stagneert. Van boardroom tot markt.',
+      heading: 'Één partnerschap. Drie disciplines. Geen kloof.',
+      sub: 'We sluiten de ruimte waar strategie wordt gedefinieerd maar executie stagneert. Van dealdesk tot markt.',
       sandraRole: 'Strategisch Leiderschap & Integratie',
       sandraBio: 'Governance, M&A-integratie, turnaround. Als organisaties stagneren of schalen, stapt Sandra in als de leider die eigenaarschap creëert en momentum herstelt.',
       sandraCurrentLabel: 'Huidig',
       sandraCurrent: 'Managing Director bij Hibou/Contenture — leidt de fusie en integratie van twee bedrijven tot één unified merk en team.',
       markRole: 'Commerciële Versnelling & Groei',
-      markBio: 'Omzetgroei, go-to-market, merkpositionering. Mark vertaalt strategie naar marktresultaten. 20+ jaar B2B/B2C tech en consumentenmerken schalen.',
-      markBioExtra: 'Van €300K naar €1,5M bij Digidentity, grote budgetten beheren en €5M nettomarge realiseren bij Omnicom.',
+      markBio: 'Omzetgroei, go-to-market, merkpositionering. Mark vertaalt strategie naar marktresultaten. 20+ jaar B2B/B2C tech en consumentenmerken schalen in meerdere sectoren.',
       markCurrentLabel: 'Huidig',
       markCurrent: 'Fractional CMO via Kirk & Blackbeard, voor B2B/B2C-bedrijven (Tech / Fast movers / Health).',
+      wouterRole: 'M&A Strategie & Deal Advisory',
+      wouterBio: 'Dealstructurering, investeerdersrelaties en strategisch advies. Wouter begeleidt leiderschapsteams door overnames, financieringsrondes en exitprocessen — hij brengt het transactionele perspectief dat Sandra en Mark vertalen naar operatie en commercieel resultaat.',
+      wouterCurrentLabel: 'Huidig',
+      wouterCurrent: 'Senior Consultant en Fractional CMO bij Aquasium Consultants, adviseert groeibedrijven op het gebied van strategie, deals en commerciële positionering.',
     },
     services: {
       label: 'Diensten',
@@ -260,23 +266,26 @@ const COPY = {
       steps: [
         { title: 'Assessment durchführen', desc: '26 Fragen über 7 Dimensionen. Nur ehrliche Antworten — das ist Ihr Spiegel, kein Pitch-Deck.' },
         { title: 'Readiness-Bericht erhalten', desc: 'Sofortige Scores pro Pfeiler. Shadow-KI-Erkennung. Ein klares Bild, wo Sie stark sind und wo Deals schwierig werden.' },
-        { title: 'Mit Sandra & Mark sprechen', desc: 'Buchen Sie ein kostenloses 30-minütiges Debrief. Wir sagen Ihnen, wo Sie stehen, was das für Ihre M&A-Situation bedeutet und ob wir helfen können.' },
+        { title: 'Mit Wouter, Sandra & Mark sprechen', desc: 'Buchen Sie ein kostenloses 30-minütiges Debrief. Wir sagen Ihnen, wo Sie stehen, was das für Ihre M&A-Situation bedeutet und ob wir helfen können.' },
       ],
       cta: 'Kostenloses Assessment starten →',
     },
     partnership: {
       label: 'Die Partnerschaft',
-      heading: 'Eine Partnerschaft. Zwei Disziplinen. Keine Lücke.',
-      sub: 'Wir schließen den Raum, in dem Strategie definiert, aber Ausführung gestoppt wird. Vom Boardroom zum Markt.',
+      heading: 'Eine Partnerschaft. Drei Disziplinen. Keine Lücke.',
+      sub: 'Wir schließen den Raum, in dem Strategie definiert, aber Ausführung gestoppt wird. Vom Deal-Desk zum Markt.',
       sandraRole: 'Strategische Führung & Integration',
       sandraBio: 'Governance, M&A-Integration, Turnaround. Wenn Organisationen stagnieren oder skalieren, tritt Sandra als Führungskraft ein, die Eigenverantwortung schafft und Momentum wiederherstellt.',
       sandraCurrentLabel: 'Aktuell',
       sandraCurrent: 'Managing Director bei Hibou/Contenture — leitet die Fusion und Integration zweier Unternehmen zu einer einheitlichen Marke und einem Team.',
       markRole: 'Kommerzielle Beschleunigung & Wachstum',
-      markBio: 'Umsatzwachstum, Go-to-Market, Markenpositionierung. Mark übersetzt Strategie in Marktergebnisse. 20+ Jahre B2B/B2C Tech- und Konsumentenmarken skalieren.',
-      markBioExtra: 'Von €300K auf €1,5M bei Digidentity, große Budgets verwalten und €5M Nettomarge bei Omnicom liefern.',
+      markBio: 'Umsatzwachstum, Go-to-Market, Markenpositionierung. Mark übersetzt Strategie in Marktergebnisse. 20+ Jahre B2B/B2C Tech- und Konsumentenmarken in mehreren Sektoren skalieren.',
       markCurrentLabel: 'Aktuell',
       markCurrent: 'Fractional CMO über Kirk & Blackbeard, für B2B/B2C-Unternehmen (Tech / Fast Movers / Health).',
+      wouterRole: 'M&A-Strategie & Deal Advisory',
+      wouterBio: 'Deal-Strukturierung, Investorenbeziehungen und strategische Beratung. Wouter begleitet Führungsteams durch Akquisitionen, Finanzierungsrunden und Exit-Prozesse — er bringt die transaktionale Perspektive, die Sandra und Mark in operative und kommerzielle Ergebnisse übersetzen.',
+      wouterCurrentLabel: 'Aktuell',
+      wouterCurrent: 'Senior Consultant und Fractional CMO bei Aquasium Consultants, berät Wachstumsunternehmen zu Strategie, Deals und kommerzieller Positionierung.',
     },
     services: {
       label: 'Leistungen',
@@ -321,7 +330,7 @@ export default function MandaLandingPage() {
       <nav style={{ background: HDK.navy, borderBottom: `3px solid ${HDK.gold}`, position: 'sticky', top: 0, zIndex: 50 }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 68 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-            <span style={{ color: HDK.white, fontWeight: 800, fontSize: '1.1rem', letterSpacing: '-0.02em' }}>HOFSTEDE &amp; DE KOCK</span>
+            <span style={{ color: HDK.white, fontWeight: 800, fontSize: '1.1rem', letterSpacing: '-0.02em' }}>BLOK, HOFSTEDE &amp; DE KOCK</span>
             <span style={{ color: HDK.gold, fontSize: '0.75rem', fontStyle: 'italic', fontWeight: 400 }}>{copy.nav.tagline}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -654,7 +663,7 @@ export default function MandaLandingPage() {
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '2rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
             {/* Sandra */}
             <div style={{ background: HDK.cream, border: `1px solid ${HDK.border}`, borderTop: `4px solid #2D5A8B`, borderRadius: 12, padding: '2rem' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', marginBottom: '1rem' }}>
@@ -699,13 +708,38 @@ export default function MandaLandingPage() {
               <p style={{ color: HDK.muted, fontSize: '0.9rem', lineHeight: 1.6, margin: '0 0 1rem' }}>
                 {copy.partnership.markBio}
               </p>
-              <p style={{ color: HDK.muted, fontSize: '0.85rem', margin: '0 0 1rem' }}>{copy.partnership.markBioExtra}</p>
               <div style={{ borderTop: `1px solid ${HDK.border}`, paddingTop: '1rem' }}>
                 <p style={{ color: '#2E7D5A', fontSize: '0.8rem', fontWeight: 600, margin: '0 0 0.25rem' }}>{copy.partnership.markCurrentLabel}</p>
                 <p style={{ color: HDK.muted, fontSize: '0.82rem', margin: 0, fontStyle: 'italic' }}>{copy.partnership.markCurrent}</p>
               </div>
               <a href="https://linkedin.com/in/markdekock" target="_blank" rel="noopener" style={{ display: 'inline-block', marginTop: '1rem', color: '#2E7D5A', fontSize: '0.82rem', fontWeight: 700, textDecoration: 'none' }}>
                 linkedin.com/in/markdekock →
+              </a>
+            </div>
+
+            {/* Wouter */}
+            <div style={{ background: HDK.cream, border: `1px solid ${HDK.border}`, borderTop: `4px solid #8B3A5A`, borderRadius: 12, padding: '2rem' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', marginBottom: '1rem' }}>
+                <div style={{
+                  width: 52, height: 52, borderRadius: '50%',
+                  background: '#8B3A5A',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: HDK.white, fontWeight: 900, fontSize: '1.25rem', flexShrink: 0,
+                }}>W</div>
+                <div>
+                  <h3 style={{ color: HDK.navy, fontWeight: 800, fontSize: '1.1rem', margin: '0 0 0.2rem' }}>Wouter Blok</h3>
+                  <p style={{ color: '#8B3A5A', fontSize: '0.82rem', fontWeight: 600, margin: 0, fontStyle: 'italic' }}>{copy.partnership.wouterRole}</p>
+                </div>
+              </div>
+              <p style={{ color: HDK.muted, fontSize: '0.9rem', lineHeight: 1.6, margin: '0 0 1rem' }}>
+                {copy.partnership.wouterBio}
+              </p>
+              <div style={{ borderTop: `1px solid ${HDK.border}`, paddingTop: '1rem' }}>
+                <p style={{ color: '#8B3A5A', fontSize: '0.8rem', fontWeight: 600, margin: '0 0 0.25rem' }}>{copy.partnership.wouterCurrentLabel}</p>
+                <p style={{ color: HDK.muted, fontSize: '0.82rem', margin: 0, fontStyle: 'italic' }}>{copy.partnership.wouterCurrent}</p>
+              </div>
+              <a href="https://linkedin.com/in/wouterblok" target="_blank" rel="noopener" style={{ display: 'inline-block', marginTop: '1rem', color: '#8B3A5A', fontSize: '0.82rem', fontWeight: 700, textDecoration: 'none' }}>
+                linkedin.com/in/wouterblok →
               </a>
             </div>
           </div>
@@ -842,10 +876,11 @@ export default function MandaLandingPage() {
       <footer style={{ background: HDK.navyDark, borderTop: `3px solid ${HDK.gold}`, padding: '2rem' }}>
         <div style={{ maxWidth: 1000, margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
           <div>
-            <p style={{ color: HDK.white, fontWeight: 800, fontSize: '0.95rem', margin: '0 0 0.2rem', letterSpacing: '-0.01em' }}>HOFSTEDE &amp; DE KOCK</p>
+            <p style={{ color: HDK.white, fontWeight: 800, fontSize: '0.95rem', margin: '0 0 0.2rem', letterSpacing: '-0.01em' }}>BLOK, HOFSTEDE &amp; DE KOCK</p>
             <p style={{ color: HDK.gold, fontSize: '0.78rem', margin: 0, fontStyle: 'italic' }}>{copy.footer.tagline}</p>
           </div>
           <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+            <a href="https://linkedin.com/in/wouterblok" target="_blank" rel="noopener" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.82rem', textDecoration: 'none' }}>Wouter Blok · Aquasium</a>
             <a href="https://linkedin.com/in/sandrahofstede" target="_blank" rel="noopener" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.82rem', textDecoration: 'none' }}>Sandra Hofstede</a>
             <a href="https://linkedin.com/in/markdekock" target="_blank" rel="noopener" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.82rem', textDecoration: 'none' }}>Mark de Kock · Kirk &amp; Blackbeard</a>
           </div>
