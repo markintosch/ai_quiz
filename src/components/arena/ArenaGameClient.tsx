@@ -109,10 +109,24 @@ export default function ArenaGameClient({ joinCode, participantId, questions, ti
 
   if (done) {
     return (
-      <div className="text-white text-center">
-        <p className="text-xl font-bold mb-4">Game over!</p>
-        <a href={`/arena/${joinCode}/results?pid=${participantId}`} className="bg-brand-accent text-white font-bold px-6 py-3 rounded-xl">
-          See results →
+      <div className="text-center space-y-4">
+        <p
+          className="tracking-widest mb-4"
+          style={{ fontFamily: 'var(--font-press-start)', fontSize: '13px', color: '#00E5FF', textShadow: '0 0 15px rgba(0,229,255,0.7)' }}
+        >
+          GAME OVER
+        </p>
+        <a
+          href={`/arena/${joinCode}/results?pid=${participantId}`}
+          className="inline-block text-black font-black px-8 py-4 tracking-widest transition-all hover:opacity-90"
+          style={{
+            fontFamily: 'var(--font-press-start)',
+            fontSize: '10px',
+            background: 'linear-gradient(135deg, #C1440E 0%, #FF6B1A 100%)',
+            boxShadow: '0 0 20px rgba(193,68,14,0.5)',
+          }}
+        >
+          SEE RESULTS →
         </a>
       </div>
     )
@@ -120,73 +134,89 @@ export default function ArenaGameClient({ joinCode, participantId, questions, ti
 
   if (!question) {
     return (
-      <div className="text-white text-center">
-        <p>Loading…</p>
+      <div className="text-center">
+        <p className="text-cyan-400/60 text-2xl tracking-widest" style={{ fontFamily: 'var(--font-vt323)' }}>
+          LOADING…
+        </p>
       </div>
     )
   }
 
   const progressPct = ((qIndex) / questions.length) * 100
   const timerPct = (timeLeft / timePerQ) * 100
-  const timerColor = timerPct > 50 ? 'bg-green-400' : timerPct > 25 ? 'bg-yellow-400' : 'bg-red-400'
+  const timerColor = timerPct > 50 ? '#00E5FF' : timerPct > 25 ? '#F5A820' : '#FF3B3B'
 
   const optionStyle = (opt: ArenaOption) => {
     if (!result) {
       return selectedValue === opt.value
-        ? 'border-white/60 bg-white/20 text-white'
-        : 'border-white/20 bg-white/5 text-white/90 hover:bg-white/10 hover:border-white/40 cursor-pointer'
+        ? 'border-cyan-400 bg-cyan-400/10 text-white'
+        : 'border-cyan-400/20 bg-black/20 text-white/80 hover:bg-cyan-400/5 hover:border-cyan-400/40 cursor-pointer'
     }
-    if (opt.value === question.correct_value) return 'border-green-400 bg-green-400/20 text-white'
-    if (opt.value === selectedValue && !result.is_correct) return 'border-red-400 bg-red-400/20 text-white'
-    return 'border-white/10 bg-white/5 text-white/40'
+    if (opt.value === question.correct_value) return 'border-green-400 bg-green-400/15 text-green-200'
+    if (opt.value === selectedValue && !result.is_correct) return 'border-red-400 bg-red-400/15 text-red-200'
+    return 'border-white/10 bg-black/20 text-white/30'
   }
 
   return (
-    <div className="w-full max-w-xl space-y-4">
-      {/* Progress + score */}
-      <div className="flex items-center justify-between text-white/70 text-xs">
-        <span>{qIndex + 1} / {questions.length}</span>
-        <span className="font-bold text-white">{totalScore} pts</span>
-      </div>
-      <div className="w-full bg-white/10 rounded-full h-1">
-        <div className="bg-white/40 h-1 rounded-full transition-all" style={{ width: `${progressPct}%` }} />
+    <div className="w-full max-w-xl space-y-3">
+      {/* Progress + score header */}
+      <div className="flex items-center justify-between">
+        <span className="text-cyan-400/60 text-xl tracking-widest">
+          Q{qIndex + 1}/{questions.length}
+        </span>
+        <span
+          className="tabular-nums"
+          style={{ fontFamily: 'var(--font-press-start)', fontSize: '11px', color: '#F5A820', textShadow: '0 0 8px rgba(245,168,32,0.6)' }}
+        >
+          {totalScore.toString().padStart(6, '0')}
+        </span>
       </div>
 
-      {/* Timer */}
+      {/* Progress bar */}
+      <div className="w-full h-1" style={{ background: 'rgba(0,229,255,0.1)' }}>
+        <div className="h-1 transition-all" style={{ width: `${progressPct}%`, background: 'rgba(0,229,255,0.4)' }} />
+      </div>
+
+      {/* Timer bar */}
       {!result && (
-        <div className="w-full bg-white/10 rounded-full h-2">
+        <div className="w-full h-2" style={{ background: 'rgba(255,255,255,0.08)' }}>
           <div
-            className={`h-2 rounded-full transition-all duration-1000 ${timerColor}`}
-            style={{ width: `${timerPct}%` }}
+            className="h-2 transition-all duration-1000"
+            style={{ width: `${timerPct}%`, background: timerColor, boxShadow: `0 0 8px ${timerColor}80` }}
           />
         </div>
       )}
 
-      {/* Question */}
-      <div className="bg-white/10 rounded-2xl p-6 backdrop-blur-sm">
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-xs text-white/50 uppercase tracking-wide">{question.topic ?? 'Cloud'}</span>
-          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-            question.difficulty === 'hard' ? 'bg-red-400/20 text-red-300' :
-            question.difficulty === 'medium' ? 'bg-yellow-400/20 text-yellow-300' :
-            'bg-green-400/20 text-green-300'
-          }`}>
-            {question.difficulty}
+      {/* Question card */}
+      <div
+        className="p-5"
+        style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(0,229,255,0.2)', boxShadow: '0 0 20px rgba(0,229,255,0.05)' }}
+      >
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-cyan-400/50 text-lg tracking-widest uppercase">{question.topic ?? 'Cloud'}</span>
+          <span className={`text-base px-2 py-0.5 tracking-widest ${
+            question.difficulty === 'hard' ? 'text-red-400 border border-red-400/30' :
+            question.difficulty === 'medium' ? 'text-yellow-400 border border-yellow-400/30' :
+            'text-green-400 border border-green-400/30'
+          }`}
+            style={{ fontFamily: 'var(--font-press-start)', fontSize: '7px' }}
+          >
+            {question.difficulty?.toUpperCase()}
           </span>
         </div>
-        <p className="text-white font-semibold text-base leading-snug">{question.question_text}</p>
+        <p className="text-white text-xl leading-snug tracking-wide">{question.question_text}</p>
       </div>
 
-      {/* Options */}
+      {/* Answer options */}
       <div className="space-y-2">
         {(question.options as ArenaOption[]).map((opt) => (
           <button
             key={opt.value}
             onClick={() => handleSelect(opt.value)}
             disabled={!!result || submitting}
-            className={`w-full text-left px-4 py-3 rounded-xl border text-sm font-medium transition-all ${optionStyle(opt)}`}
+            className={`w-full text-left px-4 py-3 border transition-all text-xl tracking-wide ${optionStyle(opt)}`}
           >
-            <span className="font-bold mr-2 opacity-60">{opt.label}</span>
+            <span className="mr-3 text-cyan-400/50" style={{ fontFamily: 'var(--font-press-start)', fontSize: '9px' }}>{opt.label}</span>
             {opt.text}
           </button>
         ))}
@@ -194,27 +224,39 @@ export default function ArenaGameClient({ joinCode, participantId, questions, ti
 
       {/* Feedback */}
       {result && (
-        <div className={`rounded-xl p-4 text-sm ${result.is_correct ? 'bg-green-400/20 text-green-200' : 'bg-red-400/20 text-red-200'}`}>
-          <p className="font-bold mb-1">
-            {result.is_correct ? `Correct! +${result.points} points` : 'Incorrect'}
+        <div
+          className={`p-4 text-xl tracking-wide ${result.is_correct ? 'text-green-300' : 'text-red-300'}`}
+          style={{
+            border: result.is_correct ? '1px solid rgba(74,222,128,0.4)' : '1px solid rgba(248,113,113,0.4)',
+            background: result.is_correct ? 'rgba(74,222,128,0.08)' : 'rgba(248,113,113,0.08)',
+          }}
+        >
+          <p className="mb-1 tracking-widest" style={{ fontFamily: 'var(--font-press-start)', fontSize: '9px' }}>
+            {result.is_correct ? `+${result.points} PTS` : 'WRONG'}
           </p>
-          {result.explanation && <p className="text-xs opacity-80">{result.explanation}</p>}
+          {result.explanation && <p className="text-base opacity-70 mt-1">{result.explanation}</p>}
         </div>
       )}
 
       {result && (
         <button
           onClick={handleNext}
-          className="w-full bg-brand-accent hover:bg-orange-500 text-white font-bold py-3 rounded-xl transition-colors"
+          className="w-full text-black font-black py-4 tracking-widest transition-all hover:opacity-90"
+          style={{
+            fontFamily: 'var(--font-press-start)',
+            fontSize: '10px',
+            background: 'linear-gradient(135deg, #C1440E 0%, #FF6B1A 100%)',
+            boxShadow: '0 0 20px rgba(193,68,14,0.4)',
+          }}
         >
-          {qIndex + 1 >= questions.length ? 'See Results →' : 'Next Question →'}
+          {qIndex + 1 >= questions.length ? 'SEE RESULTS →' : 'NEXT →'}
         </button>
       )}
 
-      {/* Timed out */}
+      {/* Timed out message */}
       {!result && timeLeft === 0 && (
-        <div className="bg-white/10 rounded-xl p-4 text-white/60 text-sm text-center">
-          Time&apos;s up!
+        <div className="p-4 text-center text-xl tracking-[0.3em]" style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.4)' }}>
+          TIME&apos;S UP
         </div>
       )}
     </div>

@@ -85,8 +85,8 @@ export default async function ArenaResultsPage({ params, searchParams }: PagePro
 
   return (
     <main
-      className={`min-h-screen bg-brand ${pressStart.variable} ${vt323.variable}`}
-      style={{ fontFamily: 'var(--font-vt323), monospace' }}
+      className={`min-h-screen ${pressStart.variable} ${vt323.variable}`}
+      style={{ background: '#050A14', fontFamily: 'var(--font-vt323), monospace' }}
     >
       {/* Scanline overlay */}
       <div
@@ -99,26 +99,26 @@ export default async function ArenaResultsPage({ params, searchParams }: PagePro
       <div className="relative z-0 min-h-screen flex flex-col">
 
         {/* ── Header image area ───────────────────────────── */}
-        <div className="w-full border-b-2 border-yellow-400/30 relative overflow-hidden" style={{ minHeight: '220px' }}>
-          {/* Hero image */}
+        <div className="w-full border-b-2 border-cyan-400/20 relative overflow-hidden" style={{ minHeight: '480px' }}>
+          {/* Mars hero image */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/arena-header.jpg"
+            src="/truefullstaq-mars.png"
             alt="Cloud Arena"
             className="absolute inset-0 w-full h-full object-cover object-center"
-            style={{ filter: 'brightness(0.55)' }}
+            style={{ filter: 'brightness(0.45)' }}
           />
           {/* Overlay gradient so title stays readable */}
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.1) 100%)' }} />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(5,10,20,0.97) 0%, rgba(5,10,20,0.4) 55%, rgba(5,10,20,0.15) 100%)' }} />
           {/* Title on top */}
-          <div className="relative z-10 max-w-5xl mx-auto px-4 h-full flex flex-col items-center justify-end pb-6 pt-8">
+          <div className="relative z-10 max-w-5xl mx-auto px-4 h-full flex flex-col items-center justify-end pb-8 pt-8">
             <p
-              className="text-yellow-400 text-center tracking-widest"
-              style={{ fontFamily: 'var(--font-press-start)', fontSize: 'clamp(14px, 4vw, 28px)', textShadow: '0 0 20px #FFD700, 0 0 40px #FFD700' }}
+              className="text-center tracking-widest"
+              style={{ fontFamily: 'var(--font-press-start)', fontSize: 'clamp(14px, 4vw, 28px)', color: '#00E5FF', textShadow: '0 0 20px rgba(0,229,255,0.8), 0 0 40px rgba(0,229,255,0.4)' }}
             >
               ☁ CLOUD ARENA
             </p>
-            <p className="text-orange-400 mt-2 tracking-[0.5em]" style={{ fontFamily: 'var(--font-press-start)', fontSize: '10px' }}>
+            <p className="mt-2 tracking-[0.5em]" style={{ fontFamily: 'var(--font-press-start)', fontSize: '10px', color: '#FF6B1A' }}>
               {eventName.toUpperCase()}
             </p>
           </div>
@@ -138,7 +138,7 @@ export default async function ArenaResultsPage({ params, searchParams }: PagePro
               >
                 HALL OF FAME
               </p>
-              <p className="text-white/40 text-xl tracking-widest">TODAY&apos;S GREATEST</p>
+              <p className="text-white/30 text-xl tracking-widest">TODAY&apos;S GREATEST</p>
             </div>
 
             {/* My score highlight (if participated) */}
@@ -164,10 +164,10 @@ export default async function ArenaResultsPage({ params, searchParams }: PagePro
             {/* Top 20 table */}
             <div className="border border-white/10">
               {/* Table header */}
-              <div className="grid grid-cols-[2rem_1fr_auto] gap-4 px-4 py-2 border-b border-yellow-400/30 bg-yellow-400/5">
-                <span className="text-yellow-400/60 text-sm tracking-widest">#</span>
-                <span className="text-yellow-400/60 text-sm tracking-widest">NAME</span>
-                <span className="text-yellow-400/60 text-sm tracking-widest">SCORE</span>
+              <div className="grid grid-cols-[2rem_1fr_auto] gap-4 px-4 py-2 border-b border-cyan-400/25" style={{ background: 'rgba(0,229,255,0.04)' }}>
+                <span className="text-cyan-400/50 text-sm tracking-widest">#</span>
+                <span className="text-cyan-400/50 text-sm tracking-widest">NAME</span>
+                <span className="text-cyan-400/50 text-sm tracking-widest">SCORE</span>
               </div>
 
               {top20.length === 0 && (
@@ -251,8 +251,13 @@ export default async function ArenaResultsPage({ params, searchParams }: PagePro
               {session.status === 'active' && attemptsLeft > 0 && (
                 <Link
                   href={`/arena/${code}`}
-                  className="inline-block border-2 border-orange-400 text-orange-400 px-8 py-3 text-xl tracking-widest hover:bg-orange-400 hover:text-black transition-colors"
-                  style={{ fontFamily: 'var(--font-press-start)', fontSize: '10px', textShadow: '0 0 10px #FF6600' }}
+                  className="inline-block text-black font-black px-8 py-3 tracking-widest transition-all hover:opacity-90"
+                  style={{
+                    fontFamily: 'var(--font-press-start)',
+                    fontSize: '10px',
+                    background: 'linear-gradient(135deg, #C1440E 0%, #FF6B1A 100%)',
+                    boxShadow: '0 0 20px rgba(193,68,14,0.5)',
+                  }}
                 >
                   PLAY AGAIN ({attemptsLeft} LEFT)
                 </Link>
@@ -272,9 +277,9 @@ export default async function ArenaResultsPage({ params, searchParams }: PagePro
           <div className="hidden lg:flex flex-col gap-4 w-52 flex-shrink-0">
 
             {/* Sponsors */}
-            <div className="border border-white/10 p-3">
+            <div className="border border-cyan-400/15 p-3">
               <p
-                className="text-white/30 text-center mb-4 tracking-widest"
+                className="text-cyan-400/40 text-center mb-4 tracking-widest"
                 style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px' }}
               >
                 POWERED BY
@@ -295,7 +300,7 @@ export default async function ArenaResultsPage({ params, searchParams }: PagePro
             </div>
 
             {/* Prizes */}
-            <div className="border border-yellow-400/30 p-3" style={{ boxShadow: '0 0 15px rgba(255,215,0,0.08)' }}>
+            <div className="border border-yellow-400/25 p-3" style={{ boxShadow: '0 0 15px rgba(255,215,0,0.06)' }}>
               <p
                 className="text-yellow-400/60 text-center mb-4 tracking-widest"
                 style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px', textShadow: '0 0 8px #FFD700' }}
@@ -328,7 +333,7 @@ export default async function ArenaResultsPage({ params, searchParams }: PagePro
             </div>
 
             {/* Stats */}
-            <div className="border border-white/10 p-3 text-center space-y-1">
+            <div className="border border-cyan-400/15 p-3 text-center space-y-1">
               <p className="text-white/20 text-xl tracking-widest">{totalUnique} PLAYERS</p>
               <p className="text-white/20 text-xl tracking-widest">{session.question_count} QUESTIONS</p>
             </div>
@@ -337,10 +342,10 @@ export default async function ArenaResultsPage({ params, searchParams }: PagePro
         </div>
 
         {/* Footer credits bar */}
-        <div className="border-t-2 border-yellow-400/20 py-3 text-center">
+        <div className="border-t-2 border-cyan-400/15 py-3 text-center">
           <p
-            className="text-yellow-400/30 tracking-[0.5em]"
-            style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px' }}
+            className="tracking-[0.5em]"
+            style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px', color: 'rgba(0,229,255,0.25)' }}
           >
             CLOUD ARENA · {code} · INSERT COIN
           </p>
