@@ -525,8 +525,8 @@ export default function MandaLandingPage() {
                 <p style={{ color: '#2E7D5A', fontSize: '0.8rem', fontWeight: 600, margin: '0 0 0.25rem' }}>Currently</p>
                 <p style={{ color: HDK.muted, fontSize: '0.82rem', margin: 0, fontStyle: 'italic' }}>Fractional CMO through Kirk & Blackbeard, serving B2B/B2C companies (Tech / Fast movers / Health).</p>
               </div>
-              <a href="https://linkedin.com/in/markderksen" target="_blank" rel="noopener" style={{ display: 'inline-block', marginTop: '1rem', color: '#2E7D5A', fontSize: '0.82rem', fontWeight: 700, textDecoration: 'none' }}>
-                linkedin.com/in/markderksen →
+              <a href="https://linkedin.com/in/markdekock" target="_blank" rel="noopener" style={{ display: 'inline-block', marginTop: '1rem', color: '#2E7D5A', fontSize: '0.82rem', fontWeight: 700, textDecoration: 'none' }}>
+                linkedin.com/in/markdekock →
               </a>
             </div>
           </div>
@@ -671,7 +671,7 @@ export default function MandaLandingPage() {
           </div>
           <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
             <a href="https://linkedin.com/in/sandrahofstede" target="_blank" rel="noopener" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.82rem', textDecoration: 'none' }}>Sandra Hofstede</a>
-            <a href="https://linkedin.com/in/markderksen" target="_blank" rel="noopener" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.82rem', textDecoration: 'none' }}>Mark de Kock · Kirk & Blackbeard</a>
+            <a href="https://linkedin.com/in/markdekock" target="_blank" rel="noopener" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.82rem', textDecoration: 'none' }}>Mark de Kock · Kirk & Blackbeard</a>
           </div>
           <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.75rem', margin: 0 }}>
             Assessment powered by Brand PWRD Media
