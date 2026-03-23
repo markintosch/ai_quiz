@@ -56,8 +56,8 @@ export default async function ArenaJoinPage({ params }: { params: { code: string
 
   return (
     <main
-      className={`min-h-screen bg-brand ${pressStart.variable} ${vt323.variable}`}
-      style={{ fontFamily: 'var(--font-vt323), monospace' }}
+      className={`min-h-screen ${pressStart.variable} ${vt323.variable}`}
+      style={{ background: '#050A14', fontFamily: 'var(--font-vt323), monospace' }}
     >
       {/* Scanline overlay */}
       <div
@@ -70,39 +70,48 @@ export default async function ArenaJoinPage({ params }: { params: { code: string
       <div className="relative z-0 min-h-screen flex flex-col">
 
         {/* ── Arena header image ─────────────────────────────── */}
-        <div className="w-full border-b-2 border-yellow-400/30 relative overflow-hidden" style={{ minHeight: '220px' }}>
+        <div className="w-full relative overflow-hidden" style={{ minHeight: '480px' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/arena-header.jpg"
+            src="/truefullstaq-mars.png"
             alt="Cloud Arena"
             className="absolute inset-0 w-full h-full object-cover object-center"
             style={{ filter: 'brightness(0.5)' }}
           />
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0.1) 100%)' }} />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(5,10,20,0.5) 0%, rgba(5,10,20,0.25) 30%, rgba(5,10,20,0.75) 65%, rgba(5,10,20,0.98) 100%)' }} />
           <div className="relative z-10 max-w-5xl mx-auto px-4 h-full flex flex-col items-center justify-end pb-6 pt-8 gap-3">
             <p
-              className="text-yellow-400 text-center tracking-widest"
-              style={{ fontFamily: 'var(--font-press-start)', fontSize: 'clamp(14px, 4vw, 26px)', textShadow: '0 0 20px #FFD700, 0 0 40px #FFD700' }}
+              className="text-center tracking-widest"
+              style={{ fontFamily: 'var(--font-press-start)', fontSize: 'clamp(14px, 4vw, 26px)', color: '#00E5FF', textShadow: '0 0 20px rgba(0,229,255,0.8), 0 0 60px rgba(0,229,255,0.4)' }}
             >
               ☁ CLOUD ARENA
             </p>
             <p
-              className="text-orange-400 tracking-[0.4em] text-center"
-              style={{ fontFamily: 'var(--font-press-start)', fontSize: '10px' }}
+              className="tracking-[0.4em] text-center"
+              style={{ fontFamily: 'var(--font-press-start)', fontSize: '10px', color: 'rgba(0,229,255,0.6)' }}
             >
               {eventName.toUpperCase()}
             </p>
             {/* Game info strip */}
-            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mt-2">
+            <div style={{
+              display: 'flex', gap: 0, justifyContent: 'center',
+              border: '1px solid rgba(0,229,255,0.3)',
+              borderRadius: 8, overflow: 'hidden',
+              maxWidth: 560, margin: '1rem auto 0',
+              background: 'rgba(0,0,0,0.5)',
+            }}>
               {[
                 { label: 'HOSTED BY', value: session.host_name.toUpperCase() },
                 { label: 'QUESTIONS', value: String(session.question_count) },
                 { label: 'TIME / Q', value: `${session.time_per_q}S` },
                 { label: 'ATTEMPTS', value: '5 MAX' },
-              ].map(({ label, value }) => (
-                <div key={label} className="text-center">
-                  <p className="text-white/40 text-base tracking-widest">{label}</p>
-                  <p className="text-yellow-400 text-xl tracking-wide">{value}</p>
+              ].map(({ label, value }, i) => (
+                <div key={label} style={{
+                  flex: 1, padding: '0.65rem 0.5rem', textAlign: 'center',
+                  borderLeft: i > 0 ? '1px solid rgba(0,229,255,0.2)' : 'none',
+                }}>
+                  <p style={{ fontFamily: 'var(--font-press-start)', fontSize: '0.42rem', color: 'rgba(0,229,255,0.55)', marginBottom: '0.3rem', letterSpacing: '0.05em' }}>{label}</p>
+                  <p style={{ fontFamily: 'var(--font-vt323)', fontSize: '1.5rem', color: '#FFD700', lineHeight: 1 }}>{value}</p>
                 </div>
               ))}
             </div>
@@ -110,12 +119,12 @@ export default async function ArenaJoinPage({ params }: { params: { code: string
         </div>
 
         {/* ── What is Cloud Arena? explainer band ─────────────── */}
-        <div className="border-b border-white/10 bg-black/30">
+        <div style={{ borderBottom: '1px solid rgba(0,229,255,0.1)', background: 'rgba(0,0,0,0.4)' }}>
           <div className="max-w-5xl mx-auto px-4 py-5 flex flex-col sm:flex-row gap-6 items-start">
             <div className="flex-1">
               <p
-                className="text-orange-400/80 mb-2 tracking-widest"
-                style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px' }}
+                className="mb-2 tracking-widest"
+                style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px', color: '#00E5FF', opacity: 0.7 }}
               >
                 WHAT IS THIS?
               </p>
@@ -127,8 +136,8 @@ export default async function ArenaJoinPage({ params }: { params: { code: string
             </div>
             <div className="flex-1">
               <p
-                className="text-orange-400/80 mb-2 tracking-widest"
-                style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px' }}
+                className="mb-2 tracking-widest"
+                style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px', color: '#00E5FF', opacity: 0.7 }}
               >
                 HOW SCORING WORKS
               </p>
@@ -157,10 +166,10 @@ export default async function ArenaJoinPage({ params }: { params: { code: string
         </div>
 
         {/* ── Footer credits bar ────────────────────────────────── */}
-        <div className="border-t-2 border-yellow-400/20 py-3 text-center">
+        <div className="border-t-2 border-cyan-400/20 py-3 text-center">
           <p
-            className="text-yellow-400/30 tracking-[0.5em]"
-            style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px' }}
+            className="tracking-[0.5em]"
+            style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px', color: 'rgba(0,229,255,0.25)' }}
           >
             CLOUD ARENA · {code} · INSERT COIN
           </p>

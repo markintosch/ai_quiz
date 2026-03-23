@@ -58,10 +58,10 @@ function Sidebar({
     <div className="w-full lg:w-72 flex-shrink-0 space-y-4">
 
       {/* How to play */}
-      <div className="border border-white/10 bg-black/20 p-4">
+      <div style={{ background: 'rgba(0,229,255,0.04)', border: '1px solid rgba(0,229,255,0.2)', borderRadius: 10, padding: '1rem' }}>
         <p
-          className="text-yellow-400/50 mb-4 tracking-widest"
-          style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px' }}
+          className="mb-4 tracking-widest"
+          style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px', color: 'rgba(0,229,255,0.6)' }}
         >
           HOW TO PLAY
         </p>
@@ -73,8 +73,8 @@ function Sidebar({
             { n: '04', text: '5 attempts allowed — best score is what counts' },
           ].map(({ n, text }) => (
             <div key={n} className="flex gap-3 items-start">
-              <span className="text-yellow-400/40 text-xl tabular-nums w-7 flex-shrink-0">{n}</span>
-              <span className="text-white/60 text-xl leading-snug">{text}</span>
+              <span className="text-xl tabular-nums w-7 flex-shrink-0" style={{ color: 'rgba(193,68,14,0.8)' }}>{n}</span>
+              <span className="text-white/65 text-xl leading-snug">{text}</span>
             </div>
           ))}
         </div>
@@ -82,7 +82,7 @@ function Sidebar({
 
       {/* Live leaderboard (when active) */}
       {isActive && leaderboard.length > 0 && (
-        <div className="border border-yellow-400/30 bg-black/20" style={{ boxShadow: '0 0 20px rgba(255,215,0,0.08)' }}>
+        <div className="bg-black/20" style={{ border: '1px solid rgba(255,215,0,0.3)', boxShadow: '0 0 20px rgba(255,215,0,0.08)' }}>
           <div className="px-4 py-2 border-b border-yellow-400/20 bg-yellow-400/5 text-center">
             <p
               className="text-yellow-400 tracking-[0.3em]"
@@ -118,10 +118,10 @@ function Sidebar({
 
       {/* Participants in lobby (when waiting) */}
       {!isActive && participants.length > 0 && (
-        <div className="border border-white/10 bg-black/20 p-4">
+        <div style={{ background: 'rgba(0,229,255,0.04)', border: '1px solid rgba(0,229,255,0.2)', borderRadius: 10, padding: '1rem' }}>
           <p
-            className="text-white/40 mb-3 tracking-widest"
-            style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px' }}
+            className="mb-3 tracking-widest"
+            style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px', color: 'rgba(0,229,255,0.5)' }}
           >
             {participants.length} PLAYER{participants.length !== 1 ? 'S' : ''} WAITING
           </p>
@@ -345,10 +345,10 @@ export default function ArenaJoinClient({
       <div className="max-w-5xl mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
         {/* Main: countdown */}
         <div className="flex-1 space-y-6">
-          <div className="border border-white/10 bg-black/30 p-6 text-center">
+          <div className="p-6 text-center" style={{ background: 'rgba(0,229,255,0.04)', border: '1px solid rgba(0,229,255,0.2)', borderRadius: 10 }}>
             <p
-              className="text-orange-400/70 mb-5 tracking-widest"
-              style={{ fontFamily: 'var(--font-press-start)', fontSize: '9px' }}
+              className="mb-5 tracking-widest"
+              style={{ fontFamily: 'var(--font-press-start)', fontSize: '9px', color: 'rgba(0,229,255,0.65)' }}
             >
               GAME STARTS IN
             </p>
@@ -404,7 +404,7 @@ export default function ArenaJoinClient({
           </div>
 
           {/* Subscribe */}
-          <div className="border border-white/10 bg-black/20 p-5">
+          <div className="p-5" style={{ background: 'rgba(0,229,255,0.04)', border: '1px solid rgba(0,229,255,0.2)', borderRadius: 10 }}>
             <p
               className="text-white/50 mb-4 tracking-widest"
               style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px' }}
@@ -474,11 +474,11 @@ export default function ArenaJoinClient({
             </p>
           </div>
 
-          <div className="border border-white/10 bg-black/20 p-5">
+          <div className="bg-black/20 p-5">
             <div className="flex items-center gap-3 mb-4">
               <p
-                className="text-white/40 tracking-widest"
-                style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px' }}
+                className="tracking-widest"
+                style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px', color: 'rgba(0,229,255,0.5)' }}
               >
                 PLAYERS IN LOBBY
               </p>
@@ -502,7 +502,7 @@ export default function ArenaJoinClient({
             {[0, 1, 2, 3, 4].map(i => (
               <span
                 key={i}
-                className="w-3 h-3 rounded-full bg-yellow-400/40 animate-pulse"
+                className="w-3 h-3 rounded-full bg-cyan-400/40 animate-pulse"
                 style={{ animationDelay: `${i * 0.15}s` }}
               />
             ))}
@@ -546,10 +546,10 @@ export default function ArenaJoinClient({
         )}
 
         {/* Form card */}
-        <div className="border border-white/10 bg-black/30 p-6 space-y-5 backdrop-blur-sm">
+        <div className="space-y-5 backdrop-blur-sm" style={{ background: 'rgba(0,229,255,0.04)', border: '2px solid rgba(0,229,255,0.3)', borderRadius: 12, padding: '1.75rem', boxShadow: '0 0 40px rgba(0,229,255,0.06)' }}>
           <p
-            className="text-orange-400/70 tracking-widest"
-            style={{ fontFamily: 'var(--font-press-start)', fontSize: '9px' }}
+            className="tracking-widest"
+            style={{ fontFamily: 'var(--font-press-start)', fontSize: '9px', color: 'rgba(0,229,255,0.75)' }}
           >
             ENTER YOUR CALLSIGN
           </p>
@@ -565,7 +565,8 @@ export default function ArenaJoinClient({
                 maxLength={30}
                 placeholder="e.g. SARAH"
                 autoFocus
-                className="w-full bg-black/60 border border-white/20 px-4 py-3 text-white text-2xl tracking-widest placeholder-white/20 focus:outline-none focus:border-yellow-400/50 uppercase"
+                className="w-full bg-black/60 px-4 py-3 text-white text-2xl tracking-widest placeholder-white/20 focus:outline-none focus:border-cyan-400/50 uppercase"
+                style={{ borderColor: 'rgba(0,229,255,0.25)', background: 'rgba(0,0,0,0.5)', borderRadius: 6, border: '1px solid rgba(0,229,255,0.25)' }}
               />
             </div>
 
@@ -578,7 +579,8 @@ export default function ArenaJoinClient({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@company.com"
-                className="w-full bg-black/60 border border-white/20 px-4 py-3 text-white text-2xl tracking-wide placeholder-white/20 focus:outline-none focus:border-yellow-400/50"
+                className="w-full bg-black/60 px-4 py-3 text-white text-2xl tracking-wide placeholder-white/20 focus:outline-none focus:border-cyan-400/50"
+                style={{ borderColor: 'rgba(0,229,255,0.25)', background: 'rgba(0,0,0,0.5)', borderRadius: 6, border: '1px solid rgba(0,229,255,0.25)' }}
               />
             </div>
 
@@ -591,8 +593,19 @@ export default function ArenaJoinClient({
             <button
               type="submit"
               disabled={loading || !displayName.trim()}
-              className="w-full border-2 border-orange-400 text-orange-400 hover:bg-orange-400 hover:text-black disabled:opacity-40 disabled:cursor-not-allowed py-4 text-2xl tracking-[0.3em] transition-colors font-bold"
-              style={{ fontFamily: 'var(--font-press-start)', fontSize: '11px', textShadow: loading ? 'none' : '0 0 10px #FF6600' }}
+              className="tracking-[0.3em] font-bold"
+              style={{
+                fontFamily: 'var(--font-press-start)', fontSize: '11px',
+                width: '100%',
+                background: loading || !displayName.trim() ? 'rgba(193,68,14,0.3)' : 'linear-gradient(135deg, #C1440E 0%, #FF6B1A 100%)',
+                border: 'none',
+                borderRadius: 8,
+                padding: '1rem',
+                color: '#fff',
+                cursor: loading || !displayName.trim() ? 'not-allowed' : 'pointer',
+                boxShadow: loading || !displayName.trim() ? 'none' : '0 4px 20px rgba(193,68,14,0.4)',
+                opacity: loading || !displayName.trim() ? 0.5 : 1,
+              }}
             >
               {loading ? 'JOINING…' : 'INSERT COIN — PLAY →'}
             </button>
@@ -602,7 +615,7 @@ export default function ArenaJoinClient({
         {/* Game code display */}
         <div className="border border-white/5 bg-black/10 px-5 py-3 text-center">
           <p className="text-white/30 text-xl tracking-widest">
-            JOIN CODE: <span className="text-yellow-400/60 tabular-nums">{joinCode}</span>
+            JOIN CODE: <span className="tabular-nums" style={{ color: 'rgba(0,229,255,0.5)' }}>{joinCode}</span>
             <span className="text-white/20 mx-3">·</span>
             {questionCount} QUESTIONS
             <span className="text-white/20 mx-3">·</span>

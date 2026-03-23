@@ -259,8 +259,8 @@ export function CompanyLandingPage({
     : displayName ? t('cta', { name: displayName }) : t('ctaFallback')
 
   // ── Heading ─────────────────────────────────────────────────
-  // heading2: "stand on Cloud Readiness?" when productSubject provided, else translation default
-  const heading2 = productSubject ? `stand on ${productSubject}?` : t('heading2')
+  // heading2: "stands on Cloud Readiness?" when productSubject provided, else translation default
+  const heading2 = productSubject ? `stands on ${productSubject}?` : t('heading2')
 
   const headingMiddle = isExternal ? (
     // External: "See where your organisation stands on AI"
