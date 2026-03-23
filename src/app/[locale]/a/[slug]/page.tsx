@@ -50,7 +50,7 @@ export default async function FullQuizPage({ params }: PageProps) {
 
   const { data: company, error: companyError } = await supabase
     .from('companies')
-    .select('id, name, slug, logo_url, brand_color, secondary_color, welcome_message, excluded_question_codes, access_code, quiz_products!product_id(key)')
+    .select('id, name, slug, logo_url, brand_color, secondary_color, bg_color, assessment_mode, welcome_message, excluded_question_codes, access_code, quiz_products!product_id(key)')
     .eq('slug', slug)
     .eq('active', true)
     .single() as unknown as {
@@ -61,6 +61,8 @@ export default async function FullQuizPage({ params }: PageProps) {
         logo_url: string | null
         brand_color: string | null
         secondary_color: string | null
+        bg_color: string | null
+        assessment_mode: string | null
         welcome_message: string | null
         excluded_question_codes: string[] | null
         access_code: string | null
@@ -100,6 +102,8 @@ export default async function FullQuizPage({ params }: PageProps) {
   const excludedCodes = company.excluded_question_codes ?? []
   const accentColor = company.brand_color ?? '#E8611A'
   const secondaryColor = company.secondary_color ?? '#F5A820'
+  const bgColor = company.bg_color ?? '#354E5E'
+  const assessmentMode = (company.assessment_mode === 'external' ? 'external' : 'internal') as 'internal' | 'external'
   const questionCount = productConfig.questions.filter((q) => !excludedCodes.includes(q.code)).length
   const dimensionLabels = productConfig.dimensions.map(d => d.label)
   // "Cloud Readiness Assessment" → "Cloud Readiness", "AI Maturity Assessment" → "AI Maturity"
@@ -112,6 +116,8 @@ export default async function FullQuizPage({ params }: PageProps) {
       logoUrl={company.logo_url}
       accentColor={accentColor}
       secondaryColor={secondaryColor}
+      bgColor={bgColor}
+      assessmentMode={assessmentMode}
       welcomeMessage={company.welcome_message}
       excludedCodes={excludedCodes}
       questionCount={questionCount}

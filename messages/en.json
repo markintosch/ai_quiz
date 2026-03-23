@@ -71,7 +71,7 @@
       "buttonSub": "12 questions · instant score · no card required",
       "fullPre": "Want the full breakdown instead?",
       "fullLink": "Take the full 26-question assessment →",
-      "fullNote": "Free · ~15 minutes · deeper scoring across all 6 dimensions"
+      "fullNote": "Free · ~10 minutes · deeper scoring across all 6 dimensions"
     },
     "footer": {
       "privacy": "Privacy Policy",
@@ -83,14 +83,18 @@
     "heading1": "See where",
     "heading2": "stands on AI — and what to prioritise next",
     "headingFallback": "See where your organisation stands on AI — and what to prioritise next",
-    "defaultWelcome": "This 15-minute assessment reveals how AI is understood, used and prioritised across {name} — and surfaces the gaps and opportunities that matter most. Results feed directly into a team workshop, giving leadership a shared fact base for decision-making.",
-    "meta": "{count} questions · 15 minutes · Confidential responses · Team workshop included",
+    "headingExternalAccent": "your organisation",
+    "defaultWelcome": "This 10-minute assessment reveals how AI is understood, used and prioritised across {name} — and surfaces the gaps and opportunities that matter most. Results feed directly into a team workshop, giving leadership a shared fact base for decision-making.",
+    "defaultWelcomeExternal": "This 10-minute assessment reveals how AI is understood, used and prioritised across your organisation — and surfaces the gaps and opportunities that matter most. Use your results to identify priorities and plan your next steps.",
+    "meta": "{count} questions · 10 minutes · Confidential responses · Team workshop included",
     "cta": "Start the {name} Assessment →",
     "ctaFallback": "Start Assessment →",
+    "ctaExternal": "Discover your AI maturity →",
     "confidentiality": "Individual responses remain confidential. Outcomes are discussed at team level.",
     "valueLine": "This assessment creates a shared fact base for leadership discussion, prioritisation and next-step planning.",
     "whatWeMeasure": "What we assess",
     "poweredBy": "Powered by Brand PWRD Media",
+    "presentedBy": "Brought to you by {name}",
     "gdpr": "Your data is handled in accordance with GDPR.",
     "privacyLink": "Privacy Policy",
     "quizHeader": "AI Maturity Assessment",
@@ -178,7 +182,7 @@
     "fullAssessment": {
       "label": "Want your full picture?",
       "heading": "Take the 26-question full assessment",
-      "body": "Deeper scoring, a complete dimension breakdown and tailored recommendations across all 6 AI maturity areas — in about 15 minutes.",
+      "body": "Deeper scoring, a complete dimension breakdown and tailored recommendations across all 6 AI maturity areas — in about 10 minutes.",
       "cta": "Start the full assessment →",
       "free": "Free · No extra charge"
     },

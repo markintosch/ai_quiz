@@ -71,7 +71,7 @@
       "buttonSub": "12 vragen · direct resultaat · geen creditcard vereist",
       "fullPre": "Wil je liever de volledige analyse?",
       "fullLink": "Doe de uitgebreide assessment met 25 vragen →",
-      "fullNote": "Gratis · ~15 minuten · diepgaandere scoring op alle 6 dimensies"
+      "fullNote": "Gratis · ~10 minuten · diepgaandere scoring op alle 6 dimensies"
     },
     "footer": {
       "privacy": "Privacybeleid",
@@ -83,14 +83,18 @@
     "heading1": "Zie waar",
     "heading2": "staat op het gebied van AI — en wat als eerste moet worden aangepakt",
     "headingFallback": "Zie waar jouw organisatie staat op het gebied van AI — en wat als eerste moet worden aangepakt",
-    "defaultWelcome": "Deze 15-minuten-assessment brengt in kaart hoe AI wordt begrepen, gebruikt en geprioriteerd binnen {name} — en maakt de belangrijkste gaps en kansen zichtbaar. De resultaten vormen de basis voor een teamworkshop, zodat het leiderschap beschikt over een gezamenlijk vertrekpunt voor besluitvorming.",
-    "meta": "{count} vragen · 15 minuten · Vertrouwelijke antwoorden · Teamworkshop inbegrepen",
+    "headingExternalAccent": "jouw organisatie",
+    "defaultWelcome": "Deze 10-minuten-assessment brengt in kaart hoe AI wordt begrepen, gebruikt en geprioriteerd binnen {name} — en maakt de belangrijkste gaps en kansen zichtbaar. De resultaten vormen de basis voor een teamworkshop, zodat het leiderschap beschikt over een gezamenlijk vertrekpunt voor besluitvorming.",
+    "defaultWelcomeExternal": "Deze 10-minuten-assessment brengt in kaart hoe AI wordt begrepen, gebruikt en geprioriteerd binnen jouw organisatie — en maakt de belangrijkste gaps en kansen zichtbaar. Gebruik de resultaten om prioriteiten te bepalen en je volgende stappen te plannen.",
+    "meta": "{count} vragen · 10 minuten · Vertrouwelijke antwoorden · Teamworkshop inbegrepen",
     "cta": "Start de {name} Assessment →",
     "ctaFallback": "Start Assessment →",
+    "ctaExternal": "Ontdek jouw AI-volwassenheid →",
     "confidentiality": "Individuele antwoorden blijven vertrouwelijk. Uitkomsten worden op teamniveau besproken.",
     "valueLine": "Deze assessment creëert een gezamenlijke feitenbasis voor leiderschapsdiscussie, prioritering en planvorming.",
     "whatWeMeasure": "Wat we beoordelen",
     "poweredBy": "Mogelijk gemaakt door Brand PWRD Media",
+    "presentedBy": "Aangeboden door {name}",
     "gdpr": "Je gegevens worden verwerkt conform de AVG.",
     "privacyLink": "Privacybeleid",
     "quizHeader": "AI-volwassenheidsassessment",
@@ -178,7 +182,7 @@
     "fullAssessment": {
       "label": "Wil je het volledige beeld?",
       "heading": "Doe de uitgebreide assessment met 26 vragen",
-      "body": "Diepgaandere scoring, een complete dimensie-analyse en op maat gemaakte aanbevelingen over alle 6 AI-volwassenheidsgebieden — in ongeveer 15 minuten.",
+      "body": "Diepgaandere scoring, een complete dimensie-analyse en op maat gemaakte aanbevelingen over alle 6 AI-volwassenheidsgebieden — in ongeveer 10 minuten.",
       "cta": "Start de uitgebreide assessment →",
       "free": "Gratis · Geen extra kosten"
     },

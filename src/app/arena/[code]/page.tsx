@@ -4,7 +4,11 @@ export const dynamic = 'force-dynamic'
 
 import { notFound } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase/server'
+import { Press_Start_2P, VT323 } from 'next/font/google'
 import ArenaJoinClient from '@/components/arena/ArenaJoinClient'
+
+const pressStart = Press_Start_2P({ weight: '400', subsets: ['latin'], variable: '--font-press-start' })
+const vt323 = VT323({ weight: '400', subsets: ['latin'], variable: '--font-vt323' })
 
 interface LeaderboardEntry {
   display_name: string
@@ -48,19 +52,121 @@ export default async function ArenaJoinPage({ params }: { params: { code: string
     }
   }
 
+  const eventName = session.title ?? 'Cloud Arena'
+
   return (
-    <main className="min-h-screen bg-brand flex items-center justify-center px-4">
-      <ArenaJoinClient
-        joinCode={session.join_code}
-        hostName={session.host_name}
-        title={session.title}
-        status={session.status}
-        questionCount={session.question_count}
-        timePerQ={session.time_per_q}
-        scheduledAt={session.scheduled_at}
-        initialParticipants={participants ?? []}
-        initialLeaderboard={leaderboard}
+    <main
+      className={`min-h-screen bg-brand ${pressStart.variable} ${vt323.variable}`}
+      style={{ fontFamily: 'var(--font-vt323), monospace' }}
+    >
+      {/* Scanline overlay */}
+      <div
+        className="pointer-events-none fixed inset-0 z-10 opacity-[0.06]"
+        style={{
+          backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.4) 2px, rgba(0,0,0,0.4) 4px)',
+        }}
       />
+
+      <div className="relative z-0 min-h-screen flex flex-col">
+
+        {/* ── Arena header image ─────────────────────────────── */}
+        <div className="w-full border-b-2 border-yellow-400/30 relative overflow-hidden" style={{ minHeight: '220px' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/arena-header.jpg"
+            alt="Cloud Arena"
+            className="absolute inset-0 w-full h-full object-cover object-center"
+            style={{ filter: 'brightness(0.5)' }}
+          />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0.1) 100%)' }} />
+          <div className="relative z-10 max-w-5xl mx-auto px-4 h-full flex flex-col items-center justify-end pb-6 pt-8 gap-3">
+            <p
+              className="text-yellow-400 text-center tracking-widest"
+              style={{ fontFamily: 'var(--font-press-start)', fontSize: 'clamp(14px, 4vw, 26px)', textShadow: '0 0 20px #FFD700, 0 0 40px #FFD700' }}
+            >
+              ☁ CLOUD ARENA
+            </p>
+            <p
+              className="text-orange-400 tracking-[0.4em] text-center"
+              style={{ fontFamily: 'var(--font-press-start)', fontSize: '10px' }}
+            >
+              {eventName.toUpperCase()}
+            </p>
+            {/* Game info strip */}
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mt-2">
+              {[
+                { label: 'HOSTED BY', value: session.host_name.toUpperCase() },
+                { label: 'QUESTIONS', value: String(session.question_count) },
+                { label: 'TIME / Q', value: `${session.time_per_q}S` },
+                { label: 'ATTEMPTS', value: '5 MAX' },
+              ].map(({ label, value }) => (
+                <div key={label} className="text-center">
+                  <p className="text-white/40 text-base tracking-widest">{label}</p>
+                  <p className="text-yellow-400 text-xl tracking-wide">{value}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* ── What is Cloud Arena? explainer band ─────────────── */}
+        <div className="border-b border-white/10 bg-black/30">
+          <div className="max-w-5xl mx-auto px-4 py-5 flex flex-col sm:flex-row gap-6 items-start">
+            <div className="flex-1">
+              <p
+                className="text-orange-400/80 mb-2 tracking-widest"
+                style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px' }}
+              >
+                WHAT IS THIS?
+              </p>
+              <p className="text-white/70 text-xl leading-relaxed">
+                Cloud Arena is a <span className="text-yellow-400">live knowledge game</span> about cloud technology.
+                Answer questions quickly and accurately to climb the leaderboard.
+                Every player has <span className="text-orange-400">5 attempts</span> — only your best score counts.
+              </p>
+            </div>
+            <div className="flex-1">
+              <p
+                className="text-orange-400/80 mb-2 tracking-widest"
+                style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px' }}
+              >
+                HOW SCORING WORKS
+              </p>
+              <p className="text-white/70 text-xl leading-relaxed">
+                Each correct answer earns points. A <span className="text-green-400">speed bonus</span> rewards
+                fast answers. Wrong or slow answers score zero. Final rank is based on your
+                <span className="text-cyan-400"> highest score</span> across all attempts.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Main interactive content ─────────────────────────── */}
+        <div className="flex-1">
+          <ArenaJoinClient
+            joinCode={session.join_code}
+            hostName={session.host_name}
+            title={session.title}
+            status={session.status}
+            questionCount={session.question_count}
+            timePerQ={session.time_per_q}
+            scheduledAt={session.scheduled_at}
+            initialParticipants={participants ?? []}
+            initialLeaderboard={leaderboard}
+          />
+        </div>
+
+        {/* ── Footer credits bar ────────────────────────────────── */}
+        <div className="border-t-2 border-yellow-400/20 py-3 text-center">
+          <p
+            className="text-yellow-400/30 tracking-[0.5em]"
+            style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px' }}
+          >
+            CLOUD ARENA · {code} · INSERT COIN
+          </p>
+        </div>
+
+      </div>
     </main>
   )
 }

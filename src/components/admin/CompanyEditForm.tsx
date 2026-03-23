@@ -3,6 +3,7 @@
 
 import { useState } from 'react'
 import { QUESTIONS } from '@/data/questions'
+import BrandColorDetector from './BrandColorDetector'
 
 const DIMENSION_LABELS: Record<string, string> = {
   strategy_vision: 'Strategy & Vision',
@@ -34,11 +35,21 @@ interface Company {
   active: boolean
   brand_color?: string | null
   secondary_color?: string | null
+  bg_color?: string | null
+  assessment_mode?: string | null
   welcome_message?: string | null
   excluded_question_codes?: string[] | null
   product_id?: string | null
   access_code?: string | null
   notify_email?: string | null
+}
+
+function isLightBg(hex: string) {
+  const h = hex.replace('#', '')
+  const r = parseInt(h.slice(0, 2) || 'ff', 16)
+  const g = parseInt(h.slice(2, 4) || 'ff', 16)
+  const b = parseInt(h.slice(4, 6) || 'ff', 16)
+  return (r * 299 + g * 587 + b * 114) / 1000 > 140
 }
 
 interface CompanyEditFormProps {
@@ -54,6 +65,10 @@ export default function CompanyEditForm({ company, products = [] }: CompanyEditF
   const [active, setActive] = useState(company.active)
   const [brandColor, setBrandColor] = useState(company.brand_color ?? '#E8611A')
   const [secondaryColor, setSecondaryColor] = useState(company.secondary_color ?? '#F5A820')
+  const [bgColor, setBgColor] = useState(company.bg_color ?? '#354E5E')
+  const [assessmentMode, setAssessmentMode] = useState<'internal' | 'external'>(
+    company.assessment_mode === 'external' ? 'external' : 'internal'
+  )
   const [welcomeMessage, setWelcomeMessage] = useState(company.welcome_message ?? '')
   const [productId, setProductId] = useState(company.product_id ?? '')
   const [accessCode, setAccessCode] = useState(company.access_code ?? '')
@@ -111,11 +126,13 @@ export default function CompanyEditForm({ company, products = [] }: CompanyEditF
           active,
           brand_color: brandColor,
           secondary_color: secondaryColor,
+          bg_color: bgColor,
           welcome_message: welcomeMessage.trim() || null,
           excluded_question_codes: Array.from(excluded),
           product_id: productId || null,
           access_code: accessCode.trim() || null,
           notify_email: notifyEmail.trim() || null,
+          assessment_mode: assessmentMode,
         }),
       })
 
@@ -209,33 +226,62 @@ export default function CompanyEditForm({ company, products = [] }: CompanyEditF
 
       {/* Branding */}
       <div className="border-t border-gray-100 pt-5">
-        <p className="text-sm font-semibold text-gray-700 mb-1">Brand colours</p>
-        <p className="text-xs text-gray-500 mb-4">
-          Applied to buttons, badges and accents on the company landing page.
+        <div className="flex items-center justify-between mb-1">
+          <p className="text-sm font-semibold text-gray-700">Brand colours</p>
+        </div>
+        <p className="text-xs text-gray-500 mb-3">
+          Set the page background and brand accent colours. The live preview adapts automatically.
         </p>
 
-        {/* Colour pickers */}
-        <div className="grid grid-cols-2 gap-4 mb-5">
+        {/* Auto-detect */}
+        <div className="mb-4">
+          <BrandColorDetector
+            onApply={(hex, slot) => {
+              if (slot === 'bg') setBgColor(hex)
+              else if (slot === 'primary') setBrandColor(hex)
+              else setSecondaryColor(hex)
+            }}
+          />
+        </div>
+
+        {/* Colour pickers — 3 columns */}
+        <div className="grid grid-cols-3 gap-3 mb-5">
+          {/* Background */}
+          <div className="space-y-2">
+            <p className="text-xs font-medium text-gray-700">Background</p>
+            <p className="text-xs text-gray-400">Page hero bg</p>
+            <div className="flex items-center gap-2">
+              <input
+                type="color"
+                value={bgColor}
+                onChange={(e) => setBgColor(e.target.value)}
+                className="w-10 h-10 rounded-lg cursor-pointer border border-gray-200 p-0.5"
+              />
+              <input
+                type="text"
+                value={bgColor}
+                onChange={(e) => setBgColor(e.target.value)}
+                maxLength={7}
+                className="flex-1 border border-gray-200 rounded-lg px-2 py-2 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-brand-accent uppercase"
+              />
+            </div>
+          </div>
+
           {/* Primary */}
           <div className="space-y-2">
             <p className="text-xs font-medium text-gray-700">Primary colour</p>
-            <p className="text-xs text-gray-400">Buttons · headline · badges</p>
+            <p className="text-xs text-gray-400">Buttons · badges</p>
             <div className="flex items-center gap-2">
-              <div className="relative">
-                <input
-                  type="color"
-                  value={brandColor}
-                  onChange={(e) => setBrandColor(e.target.value)}
-                  className="w-10 h-10 rounded-lg cursor-pointer border border-gray-200 p-0.5"
-                />
-              </div>
+              <input
+                type="color"
+                value={brandColor}
+                onChange={(e) => setBrandColor(e.target.value)}
+                className="w-10 h-10 rounded-lg cursor-pointer border border-gray-200 p-0.5"
+              />
               <input
                 type="text"
                 value={brandColor}
-                onChange={(e) => {
-                  const v = e.target.value
-                  setBrandColor(v)
-                }}
+                onChange={(e) => setBrandColor(e.target.value)}
                 maxLength={7}
                 className="flex-1 border border-gray-200 rounded-lg px-2 py-2 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-brand-accent uppercase"
               />
@@ -247,21 +293,16 @@ export default function CompanyEditForm({ company, products = [] }: CompanyEditF
             <p className="text-xs font-medium text-gray-700">Secondary colour</p>
             <p className="text-xs text-gray-400">Gradient · accents</p>
             <div className="flex items-center gap-2">
-              <div className="relative">
-                <input
-                  type="color"
-                  value={secondaryColor}
-                  onChange={(e) => setSecondaryColor(e.target.value)}
-                  className="w-10 h-10 rounded-lg cursor-pointer border border-gray-200 p-0.5"
-                />
-              </div>
+              <input
+                type="color"
+                value={secondaryColor}
+                onChange={(e) => setSecondaryColor(e.target.value)}
+                className="w-10 h-10 rounded-lg cursor-pointer border border-gray-200 p-0.5"
+              />
               <input
                 type="text"
                 value={secondaryColor}
-                onChange={(e) => {
-                  const v = e.target.value
-                  setSecondaryColor(v)
-                }}
+                onChange={(e) => setSecondaryColor(e.target.value)}
                 maxLength={7}
                 className="flex-1 border border-gray-200 rounded-lg px-2 py-2 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-brand-accent uppercase"
               />
@@ -269,55 +310,62 @@ export default function CompanyEditForm({ company, products = [] }: CompanyEditF
           </div>
         </div>
 
-        {/* Live preview */}
-        <div className="rounded-xl overflow-hidden border border-gray-200 mb-5">
-          <div className="bg-gray-100 px-3 py-1.5 flex items-center gap-2 border-b border-gray-200">
-            <div className="flex gap-1">
-              <span className="w-2.5 h-2.5 rounded-full bg-gray-300" />
-              <span className="w-2.5 h-2.5 rounded-full bg-gray-300" />
-              <span className="w-2.5 h-2.5 rounded-full bg-gray-300" />
-            </div>
-            <span className="text-xs text-gray-400 font-mono">/a/{slug || 'company'}</span>
-          </div>
-          {/* Simulated landing page hero */}
-          <div className="bg-[#354E5E] px-6 py-6">
-            {/* Badge */}
-            <div
-              className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold mb-4"
-              style={{
-                background: `linear-gradient(135deg, ${secondaryColor}25, ${brandColor}25)`,
-                border: `1px solid ${brandColor}50`,
-                color: brandColor,
-              }}
-            >
-              {name || 'Company'} · AI Maturity Assessment
-            </div>
-            {/* Headline */}
-            <p className="text-white text-sm font-bold mb-1 leading-snug">
-              How does{' '}
-              <span style={{ color: brandColor }}>{name || 'Company'}</span>
-              {' '}stand on AI?
-            </p>
-            <p className="text-white/50 text-xs mb-4">
-              26 questions · 12 minutes · Confidential results
-            </p>
-            {/* CTA */}
-            <button
-              type="button"
-              className="px-5 py-2 rounded-lg text-xs font-bold text-white transition-opacity hover:opacity-90"
-              style={{ background: `linear-gradient(135deg, ${secondaryColor}, ${brandColor})` }}
-            >
-              Start the assessment →
-            </button>
-            {/* Logo preview */}
-            {logoUrl && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <div className="mt-4 pt-4 border-t border-white/10 flex items-center gap-2">
-                <img src={logoUrl} alt={name} className="h-6 object-contain" />
+        {/* Live preview — adapts to bgColor */}
+        {(() => {
+          const light = isLightBg(bgColor)
+          const fg = light ? '#111827' : '#ffffff'
+          const fgMuted = light ? 'rgba(0,0,0,0.55)' : 'rgba(255,255,255,0.55)'
+          const borderCol = light ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.10)'
+          return (
+            <div className="rounded-xl overflow-hidden border border-gray-200 mb-5">
+              <div className="bg-gray-100 px-3 py-1.5 flex items-center gap-2 border-b border-gray-200">
+                <div className="flex gap-1">
+                  <span className="w-2.5 h-2.5 rounded-full bg-gray-300" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-gray-300" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-gray-300" />
+                </div>
+                <span className="text-xs text-gray-400 font-mono">/a/{slug || 'company'}</span>
               </div>
-            )}
-          </div>
-        </div>
+              <div className="px-6 py-6" style={{ background: bgColor }}>
+                {/* Badge */}
+                <div
+                  className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold mb-4"
+                  style={{
+                    background: `linear-gradient(135deg, ${secondaryColor}25, ${brandColor}25)`,
+                    border: `1px solid ${brandColor}50`,
+                    color: brandColor,
+                  }}
+                >
+                  {name || 'Company'} · AI Maturity Assessment
+                </div>
+                {/* Headline */}
+                <p className="text-sm font-bold mb-1 leading-snug" style={{ color: fg }}>
+                  How does{' '}
+                  <span style={{ color: brandColor }}>{name || 'Company'}</span>
+                  {' '}stand on AI?
+                </p>
+                <p className="text-xs mb-4" style={{ color: fgMuted }}>
+                  26 questions · 10 minutes · Confidential results
+                </p>
+                {/* CTA */}
+                <button
+                  type="button"
+                  className="px-5 py-2 rounded-lg text-xs font-bold text-white"
+                  style={{ background: `linear-gradient(135deg, ${secondaryColor}, ${brandColor})` }}
+                >
+                  Start the assessment →
+                </button>
+                {/* Logo preview */}
+                {logoUrl && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <div className="mt-4 pt-4 flex items-center gap-2" style={{ borderTop: `1px solid ${borderCol}` }}>
+                    <img src={logoUrl} alt={name} className="h-6 object-contain" />
+                  </div>
+                )}
+              </div>
+            </div>
+          )
+        })()}
 
         <div>
           <label className="block text-sm text-gray-700 mb-1">
@@ -330,6 +378,51 @@ export default function CompanyEditForm({ company, products = [] }: CompanyEditF
             placeholder="e.g. Welcome to the Acme Corp AI readiness assessment. This takes about 15 minutes…"
             className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent resize-none"
           />
+        </div>
+      </div>
+
+      {/* Assessment mode */}
+      <div className="border-t border-gray-100 pt-5">
+        <p className="text-sm font-semibold text-gray-700 mb-1">Assessment mode</p>
+        <p className="text-xs text-gray-500 mb-3">
+          Choose who is being assessed. This changes the copy on the landing page.
+        </p>
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            onClick={() => setAssessmentMode('internal')}
+            className={`flex flex-col items-start gap-1 p-4 rounded-xl border-2 text-left transition-all ${
+              assessmentMode === 'internal'
+                ? 'border-brand-accent bg-orange-50'
+                : 'border-gray-200 hover:border-gray-300 bg-white'
+            }`}
+          >
+            <span className="text-sm font-semibold text-gray-800">🏢 Own team</span>
+            <span className="text-xs text-gray-500 leading-relaxed">
+              The company is assessing its own employees. Company name appears as the subject.
+            </span>
+            <span className={`mt-1 text-xs font-medium ${assessmentMode === 'internal' ? 'text-brand-accent' : 'text-gray-400'}`}>
+              "How does <em>{name || 'Acme'}</em> stand on AI?"
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setAssessmentMode('external')}
+            className={`flex flex-col items-start gap-1 p-4 rounded-xl border-2 text-left transition-all ${
+              assessmentMode === 'external'
+                ? 'border-brand-accent bg-orange-50'
+                : 'border-gray-200 hover:border-gray-300 bg-white'
+            }`}
+          >
+            <span className="text-sm font-semibold text-gray-800">🤝 Clients / prospects</span>
+            <span className="text-xs text-gray-500 leading-relaxed">
+              The company is assessing clients or prospects. Respondent&apos;s own org is the subject.
+            </span>
+            <span className={`mt-1 text-xs font-medium ${assessmentMode === 'external' ? 'text-brand-accent' : 'text-gray-400'}`}>
+              "Presented by <em>{name || 'Acme'}</em>"
+            </span>
+          </button>
         </div>
       </div>
 

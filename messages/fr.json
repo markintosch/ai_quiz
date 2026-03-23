@@ -71,7 +71,7 @@
       "buttonSub": "12 questions · score immédiat · sans carte requise",
       "fullPre": "Vous préférez l'analyse complète ?",
       "fullLink": "Faire l'évaluation complète de 26 questions →",
-      "fullNote": "Gratuit · ~15 minutes · scoring approfondi sur les 6 dimensions"
+      "fullNote": "Gratuit · ~10 minutes · scoring approfondi sur les 6 dimensions"
     },
     "footer": {
       "privacy": "Politique de confidentialité",
@@ -83,14 +83,18 @@
     "heading1": "Où en est",
     "heading2": "sur l'IA — et quoi prioriser ensuite",
     "headingFallback": "Où en est votre organisation sur l'IA — et quoi prioriser ensuite",
-    "defaultWelcome": "Cette évaluation de 15 minutes révèle comment l'IA est comprise, utilisée et priorisée au sein de {name} — et met en évidence les lacunes et opportunités les plus importantes. Les résultats alimentent directement un atelier d'équipe, offrant à la direction une base factuelle commune pour la prise de décision.",
-    "meta": "{count} questions · 15 minutes · Réponses confidentielles · Atelier d'équipe inclus",
+    "headingExternalAccent": "votre organisation",
+    "defaultWelcome": "Cette évaluation de 10 minutes révèle comment l'IA est comprise, utilisée et priorisée au sein de {name} — et met en évidence les lacunes et opportunités les plus importantes. Les résultats alimentent directement un atelier d'équipe, offrant à la direction une base factuelle commune pour la prise de décision.",
+    "defaultWelcomeExternal": "Cette évaluation de 10 minutes révèle comment l'IA est comprise, utilisée et priorisée au sein de votre organisation — et met en évidence les lacunes et opportunités les plus importantes. Utilisez vos résultats pour identifier vos priorités et planifier vos prochaines étapes.",
+    "meta": "{count} questions · 10 minutes · Réponses confidentielles · Atelier d'équipe inclus",
     "cta": "Démarrer l'évaluation {name} →",
     "ctaFallback": "Démarrer l'évaluation →",
+    "ctaExternal": "Découvrez votre maturité IA →",
     "confidentiality": "Les réponses individuelles restent confidentielles. Les résultats sont discutés au niveau de l'équipe.",
     "valueLine": "Cette évaluation crée une base factuelle commune pour la discussion du leadership, la priorisation et la planification des prochaines étapes.",
     "whatWeMeasure": "Ce que nous évaluons",
     "poweredBy": "Propulsé par Brand PWRD Media",
+    "presentedBy": "Proposé par {name}",
     "gdpr": "Vos données sont traitées conformément au RGPD.",
     "privacyLink": "Politique de confidentialité",
     "quizHeader": "Évaluation de Maturité IA",
@@ -178,7 +182,7 @@
     "fullAssessment": {
       "label": "Vous voulez le tableau complet ?",
       "heading": "Faites l'évaluation complète de 26 questions",
-      "body": "Un scoring approfondi, une analyse complète des dimensions et des recommandations sur mesure sur les 6 domaines de maturité IA — en environ 15 minutes.",
+      "body": "Un scoring approfondi, une analyse complète des dimensions et des recommandations sur mesure sur les 6 domaines de maturité IA — en environ 10 minutes.",
       "cta": "Démarrer l'évaluation complète →",
       "free": "Gratuit · Sans frais supplémentaires"
     },

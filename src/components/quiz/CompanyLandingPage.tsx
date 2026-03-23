@@ -73,15 +73,17 @@ interface AccessCodeGateProps {
   accessCode: string
   slug: string
   accentColor: string
+  bgColor: string
   displayName: string
   logoUrl: string | null
   onUnlock: () => void
 }
 
-function AccessCodeGate({ accessCode, slug, accentColor, displayName, logoUrl, onUnlock }: AccessCodeGateProps) {
+function AccessCodeGate({ accessCode, slug, accentColor, bgColor, displayName, logoUrl, onUnlock }: AccessCodeGateProps) {
   const [value, setValue] = useState('')
   const [wrong, setWrong] = useState(false)
   const [shakeKey, setShakeKey] = useState(0)
+  const theme = buildTheme(bgColor)
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -96,7 +98,7 @@ function AccessCodeGate({ accessCode, slug, accentColor, displayName, logoUrl, o
   }
 
   return (
-    <div className="min-h-screen bg-brand flex flex-col items-center justify-center px-6">
+    <div className="min-h-screen flex flex-col items-center justify-center px-6" style={{ background: theme.bg }}>
       <motion.div
         key={shakeKey}
         animate={wrong ? { x: [0, -10, 10, -10, 10, 0] } : { x: 0 }}
@@ -114,10 +116,10 @@ function AccessCodeGate({ accessCode, slug, accentColor, displayName, logoUrl, o
             </p>
           )}
           <div className="flex justify-center mb-4">
-            <LockIcon className="w-8 h-8 text-white/40" />
+            <LockIcon className="w-8 h-8" style={{ color: theme.fgSubtle }} />
           </div>
-          <h1 className="text-white text-2xl font-bold mb-2">Access required</h1>
-          <p className="text-white/60 text-sm">Enter the access code to start the assessment</p>
+          <h1 className="text-2xl font-bold mb-2" style={{ color: theme.fg }}>Access required</h1>
+          <p className="text-sm" style={{ color: theme.fgMuted }}>Enter the access code to start the assessment</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-3">
@@ -128,9 +130,12 @@ function AccessCodeGate({ accessCode, slug, accentColor, displayName, logoUrl, o
             placeholder="Access code"
             autoFocus
             autoComplete="off"
-            className={`w-full bg-white/10 border rounded-xl px-4 py-3 text-white placeholder-white/40 text-center text-base tracking-widest focus:outline-none focus:ring-2 transition-colors ${
-              wrong ? 'border-red-400 focus:ring-red-400/50' : 'border-white/20 focus:ring-white/30'
-            }`}
+            className="w-full border rounded-xl px-4 py-3 text-center text-base tracking-widest focus:outline-none focus:ring-2 transition-colors"
+            style={{
+              background: theme.cardBg,
+              borderColor: wrong ? '#f87171' : theme.cardBorder,
+              color: theme.fg,
+            }}
           />
           {wrong && (
             <p className="text-red-400 text-sm text-center">Incorrect access code. Try again.</p>
@@ -144,7 +149,7 @@ function AccessCodeGate({ accessCode, slug, accentColor, displayName, logoUrl, o
           </button>
         </form>
 
-        <p className="text-white/30 text-xs text-center mt-6">
+        <p className="text-xs text-center mt-6" style={{ color: theme.fgVerySubtle }}>
           Contact your project lead if you need the access code.
         </p>
       </motion.div>
@@ -154,12 +159,39 @@ function AccessCodeGate({ accessCode, slug, accentColor, displayName, logoUrl, o
 
 // ─────────────────────────────────────────────────────────────
 
+/** Compute whether a hex background is light or dark, and return adaptive theme values */
+function buildTheme(bgHex: string) {
+  const h = bgHex.replace('#', '')
+  const r = parseInt(h.slice(0, 2) || 'ff', 16)
+  const g = parseInt(h.slice(2, 4) || 'ff', 16)
+  const b = parseInt(h.slice(4, 6) || 'ff', 16)
+  const lum = (r * 299 + g * 587 + b * 114) / 1000
+  const isDark = lum < 140
+
+  return {
+    isDark,
+    bg: bgHex,
+    fg:          isDark ? '#ffffff'                    : '#111827',
+    fgMuted:     isDark ? 'rgba(255,255,255,0.75)'     : 'rgba(0,0,0,0.60)',
+    fgSubtle:    isDark ? 'rgba(255,255,255,0.55)'     : 'rgba(0,0,0,0.45)',
+    fgVerySubtle:isDark ? 'rgba(255,255,255,0.35)'     : 'rgba(0,0,0,0.30)',
+    cardBg:      isDark ? 'rgba(255,255,255,0.06)'     : 'rgba(0,0,0,0.04)',
+    cardBorder:  isDark ? 'rgba(255,255,255,0.12)'     : 'rgba(0,0,0,0.10)',
+    headerBorder:isDark ? 'rgba(255,255,255,0.10)'     : 'rgba(0,0,0,0.08)',
+    langVariant: (isDark ? 'dark' : 'light') as 'dark' | 'light',
+  }
+}
+
 interface CompanyLandingPageProps {
   name: string
   slug: string
   logoUrl: string | null
   accentColor: string
   secondaryColor?: string
+  /** Background colour of the landing page hero — defaults to brand dark teal */
+  bgColor?: string
+  /** internal = assessing own employees; external = assessing clients/prospects */
+  assessmentMode?: 'internal' | 'external'
   welcomeMessage: string | null
   excludedCodes: string[]
   questionCount: number
@@ -183,6 +215,8 @@ export function CompanyLandingPage({
   logoUrl,
   accentColor,
   secondaryColor = '#F5A820',
+  bgColor = '#354E5E',
+  assessmentMode = 'internal',
   welcomeMessage,
   excludedCodes,
   questionCount,
@@ -193,6 +227,7 @@ export function CompanyLandingPage({
   dimensionLabels: dimensionLabelsProp,
   productSubject,
 }: CompanyLandingPageProps) {
+  const theme = buildTheme(bgColor)
   const [started, setStarted] = useState(false)
   // Gate: false = locked, true = unlocked. If no code required, start unlocked.
   const [unlocked, setUnlocked] = useState(!accessCode)
@@ -216,14 +251,26 @@ export function CompanyLandingPage({
     label: resolvedDimensionLabels[i] ?? '',
   }))
 
-  const ctaLabel = displayName
-    ? t('cta', { name: displayName })
-    : t('ctaFallback')
+  const isExternal = assessmentMode === 'external'
 
+  // ── CTA label ───────────────────────────────────────────────
+  const ctaLabel = isExternal
+    ? t('ctaExternal')
+    : displayName ? t('cta', { name: displayName }) : t('ctaFallback')
+
+  // ── Heading ─────────────────────────────────────────────────
   // heading2: "stand on Cloud Readiness?" when productSubject provided, else translation default
   const heading2 = productSubject ? `stand on ${productSubject}?` : t('heading2')
 
-  const headingMiddle = displayName ? (
+  const headingMiddle = isExternal ? (
+    // External: "See where your organisation stands on AI"
+    <>
+      {t('heading1')}{' '}
+      <span style={{ color: accentColor }}>{t('headingExternalAccent')}</span>
+      {' '}{heading2}
+    </>
+  ) : displayName ? (
+    // Internal: "See where TrueFullstaq stands on AI"
     <>
       {t('heading1')}{' '}
       <span style={{ color: accentColor }}>{displayName}</span>
@@ -233,6 +280,17 @@ export function CompanyLandingPage({
     <>{t('headingFallback')}</>
   )
 
+  // ── Badge text ──────────────────────────────────────────────
+  const badgeText = isExternal
+    ? (productSubject ?? t('badge'))
+    : displayName
+      ? `${displayName} · ${productSubject ?? t('badge')}`
+      : (productSubject ?? t('badge'))
+
+  // ── Welcome / intro ─────────────────────────────────────────
+  const introText = welcomeMessage
+    ?? (isExternal ? t('defaultWelcomeExternal') : t('defaultWelcome', { name: displayName }))
+
   // Show access gate before landing page if code is required and not yet unlocked
   if (!unlocked) {
     return (
@@ -240,6 +298,7 @@ export function CompanyLandingPage({
         accessCode={accessCode!}
         slug={slug}
         accentColor={accentColor}
+        bgColor={bgColor}
         displayName={displayName}
         logoUrl={logoUrl}
         onUnlock={() => setUnlocked(true)}
@@ -256,22 +315,29 @@ export function CompanyLandingPage({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.35 }}
-          className="min-h-screen bg-brand text-white"
+          style={{ background: theme.bg }}
+          className="min-h-screen"
         >
           {/* Header bar */}
-          <div className="border-b border-white/10 px-6 py-4">
+          <div className="px-6 py-4" style={{ borderBottom: `1px solid ${theme.headerBorder}` }}>
             <div className="max-w-3xl mx-auto flex items-center justify-between">
-              {logoUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={logoUrl} alt={displayName} className="h-8 object-contain" />
-              ) : (
-                <div>
+              {/* Logo — always shown; in external mode also shows "Brought to you by" label */}
+              <div>
+                {logoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={logoUrl} alt={displayName} className="h-8 object-contain" />
+                ) : (
                   <p className="text-xs font-bold uppercase tracking-widest" style={{ color: accentColor }}>{displayName}</p>
-                </div>
-              )}
+                )}
+                {isExternal && displayName && (
+                  <p className="text-[10px] mt-0.5" style={{ color: theme.fgVerySubtle }}>
+                    {t('presentedBy', { name: displayName })}
+                  </p>
+                )}
+              </div>
               <div className="flex items-center gap-4">
-                <LanguageSwitcher variant="dark" />
-                <p className="text-xs text-white/60 font-medium">{t('poweredBy')}</p>
+                <LanguageSwitcher variant={theme.langVariant} />
+                <p className="text-xs font-medium" style={{ color: theme.fgSubtle }}>{t('poweredBy')}</p>
               </div>
             </div>
           </div>
@@ -292,19 +358,17 @@ export function CompanyLandingPage({
                   background: `linear-gradient(135deg, ${secondaryColor}20, ${accentColor}20)`,
                 }}
               >
-                {displayName
-                  ? `${displayName} · ${productSubject ?? t('badge')}`
-                  : (productSubject ?? t('badge'))}
+                {badgeText}
               </span>
 
               {/* 2. Headline */}
-              <h1 className="text-4xl md:text-5xl font-black mb-6 leading-tight">
+              <h1 className="text-4xl md:text-5xl font-black mb-6 leading-tight" style={{ color: theme.fg }}>
                 {headingMiddle}
               </h1>
 
               {/* 3. Intro paragraph */}
-              <p className="text-white/80 text-lg max-w-xl mx-auto mb-5 leading-relaxed">
-                {welcomeMessage ?? t('defaultWelcome', { name: displayName })}
+              <p className="text-lg max-w-xl mx-auto mb-5 leading-relaxed" style={{ color: theme.fgMuted }}>
+                {introText}
               </p>
 
               {/* 4. Proof line — prominent */}
@@ -327,12 +391,12 @@ export function CompanyLandingPage({
               </motion.button>
 
               {/* 6. Confidentiality note */}
-              <p className="text-xs text-white/60 mt-4">
+              <p className="text-xs mt-4" style={{ color: theme.fgSubtle }}>
                 {t('confidentiality')}
               </p>
 
               {/* 7. Value line */}
-              <p className="text-white/70 text-sm mt-3 max-w-md mx-auto leading-relaxed">
+              <p className="text-sm mt-3 max-w-md mx-auto leading-relaxed" style={{ color: theme.fgMuted }}>
                 {t('valueLine')}
               </p>
             </motion.div>
@@ -345,7 +409,7 @@ export function CompanyLandingPage({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
             >
-              <p className="text-center text-xs font-bold uppercase tracking-widest text-white/60 mb-6">
+              <p className="text-center text-xs font-bold uppercase tracking-widest mb-6" style={{ color: theme.fgSubtle }}>
                 {t('whatWeMeasure')}
               </p>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -355,10 +419,11 @@ export function CompanyLandingPage({
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.35 + i * 0.06 }}
-                    className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-xl px-4 py-3"
+                    className="flex items-center gap-3 rounded-xl px-4 py-3"
+                    style={{ background: theme.cardBg, border: `1px solid ${theme.cardBorder}` }}
                   >
-                    <d.Icon className="w-5 h-5 flex-shrink-0 text-white/70" />
-                    <span className="text-sm font-medium text-white/80">{d.label}</span>
+                    <d.Icon className="w-5 h-5 flex-shrink-0" style={{ color: theme.fgMuted } as React.CSSProperties} />
+                    <span className="text-sm font-medium" style={{ color: theme.fgMuted }}>{d.label}</span>
                   </motion.div>
                 ))}
               </div>
@@ -366,10 +431,10 @@ export function CompanyLandingPage({
           </div>
 
           {/* Trust footer */}
-          <div className="border-t border-white/10 px-6 py-6 text-center">
-            <p className="text-xs text-white/60">
+          <div className="px-6 py-6 text-center" style={{ borderTop: `1px solid ${theme.headerBorder}` }}>
+            <p className="text-xs" style={{ color: theme.fgSubtle }}>
               {t('gdpr')}{' '}
-              <a href="/privacy" className="underline hover:text-white">{t('privacyLink')}</a>
+              <a href="/privacy" className="underline" style={{ color: theme.fgSubtle }}>{t('privacyLink')}</a>
             </p>
           </div>
         </motion.div>

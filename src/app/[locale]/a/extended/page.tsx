@@ -19,7 +19,7 @@ export default function ExtendedQuizPage() {
             Full AI Maturity Assessment
           </h1>
           <p className="text-gray-500 text-base max-w-md mx-auto">
-            25 questions · ~15 minutes · Full score + dimension breakdown + recommendations
+            25 questions · ~10 minutes · Full score + dimension breakdown + recommendations
           </p>
         </div>
 

@@ -63,6 +63,10 @@ export async function POST(req: NextRequest) {
     logo_url?: string
     active?: boolean
     product_id?: string | null
+    brand_color?: string | null
+    secondary_color?: string | null
+    bg_color?: string | null
+    assessment_mode?: 'internal' | 'external'
   }
 
   // Resolve product_id — if not supplied, fall back to the ai_maturity product
@@ -84,6 +88,10 @@ export async function POST(req: NextRequest) {
       logo_url: body.logo_url ?? null,
       active: body.active ?? true,
       product_id: productId,
+      brand_color: body.brand_color ?? '#E8611A',
+      secondary_color: body.secondary_color ?? '#F5A820',
+      bg_color: body.bg_color ?? '#354E5E',
+      assessment_mode: body.assessment_mode ?? 'internal',
     })
     .select()
     .single()
