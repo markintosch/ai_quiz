@@ -35,7 +35,7 @@ const COPY = {
       h1a: 'Does your company survive',
       h1b: "a buyer's lens?",
       sub1: "Portfolio companies don't fail because of bad strategy.<br/>They fail because <strong>strategy never reaches the market.</strong>",
-      sub2: 'Ten minutes. Six dimensions. One clear picture of your AI & M&A readiness — before the buyer, investor or board gets there first.',
+      sub2: 'Ten minutes. Seven dimensions. One clear picture of your AI & M&A readiness — before the buyer, investor or board gets there first.',
       roles: ['Company Owner', 'PE / VC Investor', 'Portfolio Company', 'M&A Advisor'],
       ctaMain: 'Start your free readiness scan →',
       ctaSub: '10 minutes · No login required · Instant results',
