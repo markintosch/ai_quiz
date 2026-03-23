@@ -255,7 +255,7 @@ export function CompanyLandingPage({
 
   // ── CTA label ───────────────────────────────────────────────
   const ctaLabel = isExternal
-    ? t('ctaExternal')
+    ? (productSubject ? `Discover your ${productSubject} maturity →` : t('ctaExternal'))
     : displayName ? t('cta', { name: displayName }) : t('ctaFallback')
 
   // ── Heading ─────────────────────────────────────────────────

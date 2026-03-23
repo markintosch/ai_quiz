@@ -81,6 +81,16 @@ const PILLARS = [
       'What is the real upside case — and can leadership actually deliver it? We map untapped opportunity, quick-win potential, AI-enabled growth levers and execution capacity.',
     signals: ['Untapped market potential', 'Quick-win backlog', 'AI growth levers', 'Execution capacity'],
   },
+  {
+    number: '07',
+    title: 'Psychological Safety & Culture',
+    owner: 'Sandra',
+    icon: '🛡️',
+    color: '#7B4F8E',
+    description:
+      'The hidden risk every buyer misses. Do teams speak up before problems become crises? Do people trust leadership enough to flag failure early? Psychological safety is the canary in the coalmine for post-deal success.',
+    signals: ['Team voice & candour', 'Leadership trust', 'Change appetite', 'Cross-team collaboration'],
+  },
 ]
 
 // ─── Audience cards ───────────────────────────────────────────────────────────
@@ -338,7 +348,7 @@ export default function MandaLandingPage() {
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
             <p style={{ color: HDK.gold, fontWeight: 700, fontSize: '0.78rem', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>What gets assessed</p>
             <h2 style={{ color: HDK.navy, fontSize: 'clamp(1.75rem, 3vw, 2.5rem)', fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 0.75rem' }}>
-              Six dimensions. Two disciplines. One verdict.
+              Seven dimensions. Two disciplines. One verdict.
             </h2>
             <p style={{ color: HDK.muted, fontSize: '1rem', maxWidth: 580, margin: '0 auto' }}>
               Each pillar maps to either Sandra&apos;s leadership lens or Mark&apos;s commercial lens — or both. Together they give you the full picture buyers, investors and boards actually look for.

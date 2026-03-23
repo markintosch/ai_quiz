@@ -16,17 +16,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const supabase = createClient()
   const { data: company } = await supabase
     .from('companies')
-    .select('name')
+    .select('name, quiz_products!product_id(key)')
     .eq('slug', slug)
     .eq('active', true)
-    .single()
+    .single() as unknown as {
+      data: { name: string; quiz_products: { key: string } | null } | null
+    }
 
   if (!company) {
     return { title: 'Assessment Not Found' }
   }
 
-  const title = `AI Assessment — ${company.name}`
-  const description = `Complete the AI Maturity Assessment for ${company.name}. Discover where your organisation stands and what to do next.`
+  const productKey = company.quiz_products?.key ?? 'ai_maturity'
+  const productConfig = getProductConfig(productKey)
+  const productName = productConfig.name  // e.g. "Cloud Readiness Assessment"
+
+  const title = `${productName} — ${company.name}`
+  const description = `Complete the ${productName} for ${company.name}. Discover where your organisation stands and what to do next.`
   return {
     title,
     description,
