@@ -61,7 +61,7 @@ export async function extractColorsFromImageFile(file: File): Promise<ExtractedC
         }
 
         // Sort by frequency, take top 6
-        const results: ExtractedColor[] = [...buckets.entries()]
+        const results: ExtractedColor[] = Array.from(buckets.entries())
           .sort((a, b) => b[1] - a[1])
           .slice(0, 6)
           .map(([key], idx) => {

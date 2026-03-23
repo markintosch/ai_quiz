@@ -120,7 +120,7 @@ export async function POST(req: NextRequest) {
   }
 
   // ── 4. CSS custom properties in <style> blocks ───────────────
-  const styleBlocks = [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)]
+  const styleBlocks = Array.from(html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi))
   for (const block of styleBlocks) {
     const css = block[1]
     // Common brand variable names (order = priority)
@@ -131,7 +131,7 @@ export async function POST(req: NextRequest) {
     ]
     for (const name of varNames) {
       const pattern = new RegExp(`${escapeRegex(name)}\\s*:\\s*([^;}{]+)`, 'gi')
-      for (const match of css.matchAll(pattern)) {
+      for (const match of Array.from(css.matchAll(pattern))) {
         const raw = match[1].trim()
         const hex = toHex(raw)
         if (hex) {
@@ -146,7 +146,7 @@ export async function POST(req: NextRequest) {
     /<(?:body|header|nav|main)[^>]*style=["']([^"']*background(?:-color)?:[^;'"]+)[^>]*>/gi,
   ]
   for (const pattern of tagPatterns) {
-    for (const match of html.matchAll(pattern)) {
+    for (const match of Array.from(html.matchAll(pattern))) {
       const styleStr = match[1]
       const bgMatch = styleStr.match(/background(?:-color)?\s*:\s*([^;'"]+)/i)
       if (bgMatch) {
@@ -203,7 +203,7 @@ function toHex(value: string): string | null {
 
   // 3-digit hex → expand
   if (/^#[0-9a-f]{3}$/.test(value)) {
-    const [, r, g, b] = value
+    const r = value[1], g = value[2], b = value[3]
     return `#${r}${r}${g}${g}${b}${b}`.toUpperCase()
   }
 

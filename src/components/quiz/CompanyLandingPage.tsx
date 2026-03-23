@@ -115,8 +115,8 @@ function AccessCodeGate({ accessCode, slug, accentColor, bgColor, displayName, l
               {displayName}
             </p>
           )}
-          <div className="flex justify-center mb-4">
-            <LockIcon className="w-8 h-8" style={{ color: theme.fgSubtle }} />
+          <div className="flex justify-center mb-4" style={{ color: theme.fgSubtle }}>
+            <LockIcon className="w-8 h-8" />
           </div>
           <h1 className="text-2xl font-bold mb-2" style={{ color: theme.fg }}>Access required</h1>
           <p className="text-sm" style={{ color: theme.fgMuted }}>Enter the access code to start the assessment</p>
@@ -422,7 +422,7 @@ export function CompanyLandingPage({
                     className="flex items-center gap-3 rounded-xl px-4 py-3"
                     style={{ background: theme.cardBg, border: `1px solid ${theme.cardBorder}` }}
                   >
-                    <d.Icon className="w-5 h-5 flex-shrink-0" style={{ color: theme.fgMuted } as React.CSSProperties} />
+                    <span className="flex-shrink-0" style={{ color: theme.fgMuted }}><d.Icon className="w-5 h-5" /></span>
                     <span className="text-sm font-medium" style={{ color: theme.fgMuted }}>{d.label}</span>
                   </motion.div>
                 ))}
