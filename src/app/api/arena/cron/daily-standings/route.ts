@@ -77,46 +77,49 @@ export async function GET(req: NextRequest) {
       const leaderboardRows = top5.map((entry, i) => {
         const isMe = myEntry && entry === myEntry
         const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`
-        return `<tr style="background:${isMe ? '#fff7ed' : 'transparent'}">
+        const rowBg = isMe ? 'rgba(193,68,14,0.12)' : i % 2 === 0 ? 'rgba(255,255,255,0.02)' : 'transparent'
+        const nameColor = isMe ? '#FF6B1A' : '#CBD5E1'
+        const scoreColor = i === 0 ? '#F5A820' : isMe ? '#FF6B1A' : '#94A3B8'
+        return `<tr style="background:${rowBg}">
           <td style="padding:8px 12px;font-size:14px">${medal}</td>
-          <td style="padding:8px 12px;font-size:14px;font-weight:${isMe ? '700' : '400'};color:${isMe ? '#E8611A' : '#374151'}">${entry.display_name}${isMe ? ' (you)' : ''}</td>
-          <td style="padding:8px 12px;font-size:14px;font-weight:700;text-align:right;color:#354E5E">${entry.best_score}</td>
+          <td style="padding:8px 12px;font-size:14px;font-weight:${isMe ? '700' : '400'};color:${nameColor}">${entry.display_name}${isMe ? ' ◀ you' : ''}</td>
+          <td style="padding:8px 12px;font-size:14px;font-weight:700;text-align:right;color:${scoreColor}">${entry.best_score}</td>
         </tr>`
       }).join('')
 
       const rankDisplay = myRank
-        ? `<div style="display:flex;gap:12px;margin-bottom:20px">
-            <div style="flex:1;background:#f0f4f8;border-radius:10px;padding:14px 16px;text-align:center">
-              <p style="margin:0 0 3px;color:#9ca3af;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-weight:600">Your rank</p>
-              <p style="margin:0;color:#354E5E;font-size:26px;font-weight:800">#${myRank}<span style="font-size:14px;color:#9ca3af"> / ${totalPlayers}</span></p>
+        ? `<div style="display:flex;gap:10px;margin-bottom:20px">
+            <div style="flex:1;background:#0D2035;border:1px solid rgba(0,229,255,0.2);padding:12px 14px;text-align:center">
+              <p style="margin:0 0 3px;color:#4B7A9E;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-weight:600">Rank</p>
+              <p style="margin:0;color:#CBD5E1;font-size:24px;font-weight:800">#${myRank}<span style="font-size:13px;color:#4B7A9E"> / ${totalPlayers}</span></p>
             </div>
-            <div style="flex:1;background:#f0f4f8;border-radius:10px;padding:14px 16px;text-align:center">
-              <p style="margin:0 0 3px;color:#9ca3af;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-weight:600">Best score</p>
-              <p style="margin:0;color:#354E5E;font-size:26px;font-weight:800">${myEntry!.best_score}<span style="font-size:14px;color:#9ca3af"> pts</span></p>
+            <div style="flex:1;background:#0D2035;border:1px solid rgba(0,229,255,0.2);padding:12px 14px;text-align:center">
+              <p style="margin:0 0 3px;color:#4B7A9E;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-weight:600">Best score</p>
+              <p style="margin:0;color:#F5A820;font-size:24px;font-weight:800">${myEntry!.best_score}<span style="font-size:13px;color:#4B7A9E"> pts</span></p>
             </div>
-            <div style="flex:1;background:${attemptsLeft > 0 ? '#fff7ed' : '#f0fdf4'};border-radius:10px;padding:14px 16px;text-align:center">
-              <p style="margin:0 0 3px;color:#9ca3af;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-weight:600">Attempts left</p>
-              <p style="margin:0;color:${attemptsLeft > 0 ? '#E8611A' : '#16a34a'};font-size:26px;font-weight:800">${attemptsLeft}</p>
+            <div style="flex:1;background:#0D2035;border:1px solid ${attemptsLeft > 0 ? 'rgba(193,68,14,0.4)' : 'rgba(74,222,128,0.25)'};padding:12px 14px;text-align:center">
+              <p style="margin:0 0 3px;color:#4B7A9E;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-weight:600">Left</p>
+              <p style="margin:0;color:${attemptsLeft > 0 ? '#FF6B1A' : '#4ADE80'};font-size:24px;font-weight:800">${attemptsLeft}</p>
             </div>
           </div>`
-        : `<p style="margin:0 0 20px;color:#374151;font-size:15px">You haven't played yet — jump in and set your score!</p>`
+        : `<p style="margin:0 0 20px;color:#94A3B8;font-size:15px">You haven&rsquo;t played yet &mdash; jump in and set your score!</p>`
 
       const bodyHtml = `
-        <p style="margin:0 0 20px;color:#374151;font-size:15px;line-height:1.6">
-          Here&rsquo;s your daily update for <strong style="color:#354E5E">${eventName}</strong>.
+        <p style="margin:0 0 20px;color:#CBD5E1;font-size:15px;line-height:1.6">
+          Here&rsquo;s your daily update for <strong style="color:#ffffff">${eventName}</strong>.
         </p>
         ${rankDisplay}
-        <div style="border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;margin-bottom:20px">
-          <div style="background:#f8f9fa;padding:10px 12px;border-bottom:1px solid #e5e7eb">
-            <p style="margin:0;color:#6b7280;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;font-weight:600">Top ${top5.length}</p>
+        <div style="border:1px solid rgba(0,229,255,0.15);overflow:hidden;margin-bottom:20px">
+          <div style="background:rgba(0,229,255,0.06);padding:10px 12px;border-bottom:1px solid rgba(0,229,255,0.12)">
+            <p style="margin:0;color:#4B9EBF;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;font-weight:600">TOP ${top5.length}</p>
           </div>
           <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
             ${leaderboardRows}
           </table>
         </div>
         ${attemptsLeft > 0
-          ? `<p style="margin:0;color:#6b7280;font-size:13px">You have <strong>${attemptsLeft} attempt${attemptsLeft !== 1 ? 's' : ''}</strong> remaining. Your best score counts.</p>`
-          : `<p style="margin:0;color:#6b7280;font-size:13px">You&rsquo;ve used all 5 attempts. Your best score is locked in!</p>`
+          ? `<p style="margin:0;color:#94A3B8;font-size:13px">You have <strong style="color:#FF6B1A">${attemptsLeft} attempt${attemptsLeft !== 1 ? 's' : ''}</strong> remaining. Your best score counts.</p>`
+          : `<p style="margin:0;color:#94A3B8;font-size:13px">You&rsquo;ve used all 5 attempts. Your best score is locked in!</p>`
         }
       `
 

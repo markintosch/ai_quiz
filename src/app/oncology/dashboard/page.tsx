@@ -1,16 +1,17 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import {
-  MARKETS, DIMENSIONS, DUMMY_SCORES, SALES_DATA, QUARTERS, QUARTER_KEYS,
+  MARKETS, DIMENSIONS, DUMMY_SCORES, SALES_DATA, FORECAST_DATA, QUARTERS, QUARTER_KEYS,
   ROLES, GTM_RULES, PLAYBOOK_ARCHETYPES, DEFAULT_GTM,
-  scoreColour, overallScore, yoyGrowth, getPlaybook,
+  scoreColour, overallScore, yoyGrowth, getPlaybook, totalVariancePct, qVariancePct,
   type DimScores, type GTMState, type QuarterKey,
 } from '@/products/oncology/data'
 import RadarChart from '@/components/oncology/RadarChart'
 
 type Tab = 'overview' | 'assessment' | 'sales' | 'priorities' | 'gtm'
+type SalesMap = Record<string, Record<QuarterKey, number>>
 
 // ── Heatmap (shared) ───────────────────────────────────────────────────────
 function Heatmap({ selectedMarket, onSelect }: { selectedMarket: string; onSelect: (id: string) => void }) {
@@ -74,13 +75,27 @@ function Heatmap({ selectedMarket, onSelect }: { selectedMarket: string; onSelec
 export default function OncologyDashboard() {
   const [tab, setTab] = useState<Tab>('overview')
   const [selectedMarket, setSelectedMarket] = useState('uk')
-  const [salesData, setSalesData] = useState<Record<string, Record<QuarterKey, number>>>(
-    () => JSON.parse(JSON.stringify(SALES_DATA)) // deep copy so edits don't mutate module
+  const [salesData, setSalesData] = useState<SalesMap>(
+    () => JSON.parse(JSON.stringify(SALES_DATA)) // fallback until API loads
   )
+  const [salesLoading, setSalesLoading] = useState(true)
   const [gtmState, setGtmState] = useState<Record<string, GTMState>>(
     () => Object.fromEntries(MARKETS.map(m => [m.id, { ...DEFAULT_GTM }]))
   )
   const [userScores, setUserScores] = useState<Record<string, DimScores>>({})
+
+  // Load sales data from Supabase
+  useEffect(() => {
+    fetch('/api/oncology/sales')
+      .then(r => r.json())
+      .then((data: SalesMap) => {
+        if (data && typeof data === 'object' && !('error' in data)) {
+          setSalesData(data)
+        }
+      })
+      .catch(() => { /* keep fallback */ })
+      .finally(() => setSalesLoading(false))
+  }, [])
 
   // Load user assessment scores from localStorage
   useEffect(() => {
@@ -282,75 +297,7 @@ export default function OncologyDashboard() {
 
         {/* ── TAB 3: Sales Performance ──────────────────────────────────── */}
         {tab === 'sales' && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-black" style={{ color: '#1F2970' }}>
-                Quarterly Revenue — EUR thousands
-              </h2>
-              <p className="text-xs text-gray-400">Click any cell to edit</p>
-            </div>
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-x-auto">
-              <table className="w-full border-collapse text-sm" style={{ minWidth: 700 }}>
-                <thead>
-                  <tr style={{ background: '#1F2970' }}>
-                    <th className="text-left text-white/80 font-medium py-3 px-4 text-xs tracking-wider">MARKET</th>
-                    {QUARTERS.map(q => (
-                      <th key={q} className="text-right text-white/80 font-medium py-3 px-3 text-xs tracking-wider">{q}</th>
-                    ))}
-                    <th className="text-right text-white/80 font-medium py-3 px-4 text-xs tracking-wider">YoY</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {MARKETS.map((m, mi) => {
-                    const growth = yoyGrowth(m.id)
-                    return (
-                      <tr key={m.id} className="border-b border-gray-100" style={{ background: mi % 2 === 0 ? '#fff' : '#F9FAFB' }}>
-                        <td className="py-2.5 px-4 font-medium text-gray-800 whitespace-nowrap">
-                          {m.flag} {m.name}
-                        </td>
-                        {QUARTER_KEYS.map(qk => {
-                          const val = salesData[m.id]?.[qk] ?? 0
-                          return (
-                            <td key={qk} className="py-1 px-1 text-right">
-                              <span
-                                contentEditable
-                                suppressContentEditableWarning
-                                className="inline-block min-w-[52px] px-2 py-1.5 rounded text-xs font-mono text-gray-700 hover:bg-blue-50 focus:bg-blue-50 focus:outline-none focus:ring-1 focus:ring-blue-300 cursor-text"
-                                onBlur={e => {
-                                  const newVal = parseInt(e.currentTarget.textContent ?? '', 10)
-                                  if (!isNaN(newVal) && newVal >= 0) {
-                                    setSalesData(prev => ({
-                                      ...prev,
-                                      [m.id]: { ...prev[m.id], [qk]: newVal },
-                                    }))
-                                  } else {
-                                    e.currentTarget.textContent = String(val)
-                                  }
-                                }}
-                              >
-                                {val}
-                              </span>
-                            </td>
-                          )
-                        })}
-                        <td className="py-2.5 px-4 text-right">
-                          <span
-                            className="text-xs font-bold px-2 py-0.5 rounded"
-                            style={{
-                              background: growth >= 10 ? '#D1FAE5' : growth >= 0 ? '#FEF3C7' : '#FEE2E2',
-                              color: growth >= 10 ? '#065F46' : growth >= 0 ? '#92400E' : '#991B1B',
-                            }}
-                          >
-                            +{growth}%
-                          </span>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <SalesTab salesData={salesData} setSalesData={setSalesData} loading={salesLoading} />
         )}
 
         {/* ── TAB 4: Action Priorities ──────────────────────────────────── */}
@@ -414,6 +361,280 @@ export default function OncologyDashboard() {
 
       </div>
     </div>
+  )
+}
+
+// ── Sales Tab ──────────────────────────────────────────────────────────────
+function SalesTab({
+  salesData,
+  setSalesData,
+  loading,
+}: {
+  salesData: SalesMap
+  setSalesData: React.Dispatch<React.SetStateAction<SalesMap>>
+  loading: boolean
+}) {
+  const [expandedMarket, setExpandedMarket] = useState<string | null>(null)
+  const [saving, setSaving] = useState<string | null>(null) // "marketId:quarter" key while saving
+
+  async function saveCell(marketId: string, quarter: string, revenue: number) {
+    const key = `${marketId}:${quarter}`
+    setSaving(key)
+    try {
+      await fetch('/api/oncology/sales', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ market_id: marketId, quarter, revenue }),
+      })
+    } finally {
+      setSaving(null)
+    }
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <h2 className="text-lg font-black" style={{ color: '#1F2970' }}>
+          Quarterly Revenue — EUR thousands
+          {loading && <span className="ml-2 text-xs font-normal text-gray-400">Loading…</span>}
+        </h2>
+        <div className="flex items-center gap-4 text-xs text-gray-400">
+          <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm inline-block" style={{ background: 'rgba(16,185,129,0.15)' }} /> Above plan</span>
+          <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm inline-block" style={{ background: 'rgba(239,68,68,0.12)' }} /> Below plan</span>
+          <span>Click market name to see chart · Click cell to edit</span>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-x-auto">
+        <table className="w-full border-collapse text-sm" style={{ minWidth: 800 }}>
+          <thead>
+            <tr style={{ background: '#1F2970' }}>
+              <th className="text-left text-white/80 font-medium py-3 px-4 text-xs tracking-wider">MARKET</th>
+              {QUARTERS.map(q => (
+                <th key={q} className="text-right text-white/80 font-medium py-3 px-3 text-xs tracking-wider">{q}</th>
+              ))}
+              <th className="text-right text-white/80 font-medium py-3 px-3 text-xs tracking-wider">YoY</th>
+              <th className="text-right text-white/80 font-medium py-3 px-4 text-xs tracking-wider">vs Plan</th>
+            </tr>
+          </thead>
+          <tbody>
+            {MARKETS.map((m, mi) => {
+              const growth = yoyGrowth(m.id)
+              const variance = totalVariancePct(m.id)
+              const isExpanded = expandedMarket === m.id
+              const rowBg = mi % 2 === 0 ? '#fff' : '#F9FAFB'
+
+              // Quarter-over-quarter trend per quarter
+              const qTrend = (qk: QuarterKey): 'up' | 'down' | 'flat' => {
+                const idx = QUARTER_KEYS.indexOf(qk)
+                if (idx === 0) return 'flat'
+                const prev = salesData[m.id]?.[QUARTER_KEYS[idx - 1]] ?? 0
+                const curr = salesData[m.id]?.[qk] ?? 0
+                return curr > prev ? 'up' : curr < prev ? 'down' : 'flat'
+              }
+
+              return (
+                <React.Fragment key={m.id}>
+                  <tr
+                    className="border-b border-gray-100"
+                    style={{ background: isExpanded ? 'rgba(31,41,112,0.04)' : rowBg }}
+                  >
+                    <td className="py-2.5 px-4 font-medium whitespace-nowrap">
+                      <button
+                        onClick={() => setExpandedMarket(isExpanded ? null : m.id)}
+                        className="flex items-center gap-1 font-semibold text-left transition-colors hover:opacity-70"
+                        style={{ color: '#1F2970' }}
+                      >
+                        <span className="text-gray-400 text-xs mr-0.5">{isExpanded ? '▼' : '▶'}</span>
+                        {m.flag} {m.name}
+                      </button>
+                    </td>
+                    {QUARTER_KEYS.map(qk => {
+                      const val = salesData[m.id]?.[qk] ?? 0
+                      const vPct = qVariancePct(m.id, qk)
+                      const trend = qTrend(qk)
+                      const cellBg = vPct > 0 ? 'rgba(16,185,129,0.12)' : vPct < 0 ? 'rgba(239,68,68,0.10)' : 'transparent'
+                      const trendIcon = trend === 'up' ? '↑' : trend === 'down' ? '↓' : ''
+                      const trendColor = trend === 'up' ? '#10B981' : trend === 'down' ? '#EF4444' : '#9CA3AF'
+                      const cellKey = `${m.id}:${qk}`
+                      const isSaving = saving === cellKey
+                      return (
+                        <td key={qk} className="py-1 px-1 text-right" style={{ background: cellBg }}>
+                          <div className="flex items-center justify-end gap-0.5">
+                            {trendIcon && (
+                              <span className="text-xs font-bold" style={{ color: trendColor }}>{trendIcon}</span>
+                            )}
+                            <span
+                              contentEditable
+                              suppressContentEditableWarning
+                              className="inline-block min-w-[44px] px-1.5 py-1 rounded text-xs font-mono text-gray-700 hover:bg-white/60 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-300 cursor-text"
+                              style={{ opacity: isSaving ? 0.5 : 1 }}
+                              onBlur={e => {
+                                const newVal = parseInt(e.currentTarget.textContent ?? '', 10)
+                                if (!isNaN(newVal) && newVal >= 0) {
+                                  setSalesData(prev => ({
+                                    ...prev,
+                                    [m.id]: { ...prev[m.id], [qk]: newVal },
+                                  }))
+                                  saveCell(m.id, qk, newVal)
+                                } else {
+                                  e.currentTarget.textContent = String(val)
+                                }
+                              }}
+                            >
+                              {val}
+                            </span>
+                          </div>
+                          {vPct !== 0 && (
+                            <div className="text-center" style={{ fontSize: 9, color: vPct > 0 ? '#059669' : '#DC2626', lineHeight: 1.2 }}>
+                              {vPct > 0 ? '+' : ''}{vPct}%
+                            </div>
+                          )}
+                        </td>
+                      )
+                    })}
+                    <td className="py-2.5 px-3 text-right">
+                      <span
+                        className="text-xs font-bold px-2 py-0.5 rounded"
+                        style={{
+                          background: growth >= 10 ? '#D1FAE5' : growth >= 0 ? '#FEF3C7' : '#FEE2E2',
+                          color: growth >= 10 ? '#065F46' : growth >= 0 ? '#92400E' : '#991B1B',
+                        }}
+                      >
+                        {growth >= 0 ? '+' : ''}{growth}%
+                      </span>
+                    </td>
+                    <td className="py-2.5 px-4 text-right">
+                      <span
+                        className="text-xs font-bold px-2 py-0.5 rounded"
+                        style={{
+                          background: variance > 0 ? '#D1FAE5' : variance < 0 ? '#FEE2E2' : '#F3F4F6',
+                          color: variance > 0 ? '#065F46' : variance < 0 ? '#991B1B' : '#6B7280',
+                        }}
+                      >
+                        {variance > 0 ? '+' : ''}{variance}%
+                      </span>
+                    </td>
+                  </tr>
+
+                  {/* Expanded chart row */}
+                  {isExpanded && (
+                    <tr className="border-b border-gray-200">
+                      <td colSpan={QUARTER_KEYS.length + 3} className="px-6 py-5" style={{ background: 'rgba(31,41,112,0.03)' }}>
+                        <p className="text-xs font-semibold mb-3" style={{ color: '#1F2970' }}>
+                          {m.flag} {m.name} — Actuals vs Forecast
+                        </p>
+                        <RevenueChart marketId={m.id} salesData={salesData} />
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+// ── Inline revenue chart ────────────────────────────────────────────────────
+function RevenueChart({
+  marketId,
+  salesData,
+}: {
+  marketId: string
+  salesData: SalesMap
+}) {
+  const W = 680; const H = 160; const padL = 44; const padR = 12; const padT = 12; const padB = 32
+
+  const actuals  = QUARTER_KEYS.map(qk => salesData[marketId]?.[qk] ?? 0)
+  const forecast = QUARTER_KEYS.map(qk => FORECAST_DATA[marketId]?.[qk] ?? 0)
+  const allVals  = [...actuals, ...forecast]
+  const maxVal   = Math.max(...allVals) * 1.1
+  const minVal   = Math.min(...allVals) * 0.88
+
+  const chartW = W - padL - padR
+  const chartH = H - padT - padB
+
+  const xPos = (i: number) => padL + (i / (QUARTER_KEYS.length - 1)) * chartW
+  const yPos = (v: number) => padT + chartH - ((v - minVal) / (maxVal - minVal)) * chartH
+
+  // Bar width
+  const barW = (chartW / QUARTER_KEYS.length) * 0.55
+  const barXCenter = (i: number) => padL + (i + 0.5) * (chartW / QUARTER_KEYS.length)
+
+  // Forecast polyline
+  const fcLine = forecast.map((v, i) => `${barXCenter(i)},${yPos(v)}`).join(' ')
+
+  // Grid lines (3 levels)
+  const gridVals = [minVal, (minVal + maxVal) / 2, maxVal].map(v => Math.round(v))
+
+  return (
+    <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ overflow: 'visible', maxWidth: W }}>
+      {/* Grid lines */}
+      {gridVals.map(v => (
+        <g key={v}>
+          <line
+            x1={padL} y1={yPos(v)} x2={W - padR} y2={yPos(v)}
+            stroke="rgba(31,41,112,0.08)" strokeWidth="1" strokeDasharray="3,3"
+          />
+          <text x={padL - 4} y={yPos(v)} textAnchor="end" dominantBaseline="middle" fontSize={8} fill="#9CA3AF">
+            {v}
+          </text>
+        </g>
+      ))}
+
+      {/* Actual bars */}
+      {actuals.map((v, i) => {
+        const fc = forecast[i]
+        const above = v >= fc
+        return (
+          <rect
+            key={i}
+            x={barXCenter(i) - barW / 2}
+            y={yPos(v)}
+            width={barW}
+            height={Math.max(1, yPos(minVal) - yPos(v))}
+            fill={above ? 'rgba(16,185,129,0.6)' : 'rgba(239,68,68,0.5)'}
+            rx={2}
+          />
+        )
+      })}
+
+      {/* Forecast line */}
+      <polyline
+        points={fcLine}
+        fill="none"
+        stroke="#1F2970"
+        strokeWidth="1.5"
+        strokeDasharray="5,3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+
+      {/* Forecast dots */}
+      {forecast.map((v, i) => (
+        <circle key={i} cx={barXCenter(i)} cy={yPos(v)} r={3} fill="#1F2970" stroke="white" strokeWidth="1.5" />
+      ))}
+
+      {/* X labels */}
+      {QUARTERS.map((q, i) => (
+        <text key={i} x={barXCenter(i)} y={H - padB + 14} textAnchor="middle" fontSize={8} fill="#6B7280">
+          {q}
+        </text>
+      ))}
+
+      {/* Legend */}
+      <g transform={`translate(${padL}, ${H - padB + 26})`}>
+        <rect x={0} y={-4} width={10} height={8} fill="rgba(16,185,129,0.6)" rx={1} />
+        <text x={13} y={0} dominantBaseline="middle" fontSize={8} fill="#6B7280">Actual (above plan)</text>
+        <rect x={110} y={-4} width={10} height={8} fill="rgba(239,68,68,0.5)" rx={1} />
+        <text x={123} y={0} dominantBaseline="middle" fontSize={8} fill="#6B7280">Actual (below plan)</text>
+        <line x1={230} y1={0} x2={244} y2={0} stroke="#1F2970" strokeWidth="1.5" strokeDasharray="4,2" />
+        <text x={247} y={0} dominantBaseline="middle" fontSize={8} fill="#6B7280">Forecast</text>
+      </g>
+    </svg>
   )
 }
 

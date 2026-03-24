@@ -328,6 +328,36 @@ export const SALES_DATA: Record<string, Record<QuarterKey, number>> = {
   no: { q1_24: 380, q2_24: 405, q3_24: 430, q4_24: 460,  q1_25: 495,  q2_25: 530,  q3_25: 565,  q4_25: 605  },
 }
 
+// ── Forecast / prognosis data (annual plan, EUR thousands) ────────────────
+// Some markets overperform (UK, Nordics), some underperform (Italy, Spain, France)
+export const FORECAST_DATA: Record<string, Record<QuarterKey, number>> = {
+  de: { q1_24: 870, q2_24: 900, q3_24: 935, q4_24: 985,  q1_25: 1030, q2_25: 1075, q3_25: 1115, q4_25: 1175 },
+  fr: { q1_24: 640, q2_24: 660, q3_24: 685, q4_24: 720,  q1_25: 750,  q2_25: 775,  q3_25: 810,  q4_25: 850  },
+  uk: { q1_24: 980, q2_24: 1020,q3_24: 1075,q4_24: 1140, q1_25: 1195, q2_25: 1260, q3_25: 1325, q4_25: 1405 },
+  nl: { q1_24: 320, q2_24: 335, q3_24: 352, q4_24: 370,  q1_25: 385,  q2_25: 405,  q3_25: 425,  q4_25: 450  },
+  es: { q1_24: 300, q2_24: 318, q3_24: 330, q4_24: 348,  q1_25: 365,  q2_25: 385,  q3_25: 410,  q4_25: 435  },
+  it: { q1_24: 280, q2_24: 295, q3_24: 312, q4_24: 330,  q1_25: 348,  q2_25: 368,  q3_25: 390,  q4_25: 415  },
+  ch: { q1_24: 470, q2_24: 490, q3_24: 512, q4_24: 538,  q1_25: 562,  q2_25: 588,  q3_25: 614,  q4_25: 643  },
+  be: { q1_24: 180, q2_24: 188, q3_24: 196, q4_24: 206,  q1_25: 215,  q2_25: 225,  q3_25: 235,  q4_25: 247  },
+  at: { q1_24: 200, q2_24: 210, q3_24: 220, q4_24: 232,  q1_25: 244,  q2_25: 256,  q3_25: 268,  q4_25: 282  },
+  no: { q1_24: 355, q2_24: 378, q3_24: 402, q4_24: 428,  q1_25: 455,  q2_25: 485,  q3_25: 515,  q4_25: 548  },
+}
+
+export function totalVariancePct(marketId: string): number {
+  const a = SALES_DATA[marketId]; const f = FORECAST_DATA[marketId]
+  if (!a || !f) return 0
+  const actTotal = Object.values(a).reduce((s, v) => s + v, 0)
+  const fcTotal  = Object.values(f).reduce((s, v) => s + v, 0)
+  return Math.round(((actTotal - fcTotal) / fcTotal) * 100)
+}
+
+export function qVariancePct(marketId: string, qk: QuarterKey): number {
+  const act = SALES_DATA[marketId]?.[qk] ?? 0
+  const fc  = FORECAST_DATA[marketId]?.[qk] ?? 0
+  if (!fc) return 0
+  return Math.round(((act - fc) / fc) * 100)
+}
+
 export function yoyGrowth(marketId: string): number {
   const d = SALES_DATA[marketId]
   if (!d) return 0
