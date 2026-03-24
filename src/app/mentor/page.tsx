@@ -105,7 +105,7 @@ const T = {
     aboutTitle: 'Ik heb het gezien. In meerdere sectoren. Dat patroon herken ik snel.',
     aboutBody1: 'Ik heb geen carrière opgebouwd als AI-trainer. Ik heb AI gebouwd — voor organisaties in gezondheidszorg, duurzaamheid en klantbeleving, sectoren waar het ingewikkeld is en fouten tellen. Dat geeft me een andere blik dan de meeste coaches.',
     aboutBody2: 'Ik zie patronen die jij zelf misschien niet ziet. Ik weet hoe vergelijkbare teams het aanpakten, wat werkte en wat niet. En ik weet hoe je van "wij moeten iets met AI" naar een concrete, werkende toepassing gaat — zonder dat je team er onder bezwijkt.',
-    aboutCredentials: ['Bouwt AI-toepassingen voor complexe, gereguleerde sectoren', 'Werkt in Nederlands, Engels en Frans', 'Actief voor Fortune 500 en snelgroeiende scale-ups'],
+    aboutCredentials: ['Bouwt AI-toepassingen voor complexe, gereguleerde sectoren', 'Werkt in Nederlands, Engels en Frans', 'Ervaring in gezondheidszorg, finance, FMCG, duurzaamheid, CX en meer'],
 
     spotsLabel:  'Beschikbaarheid',
     spotsTitle:  'Vijf plekken per cohort.',
@@ -191,7 +191,7 @@ const T = {
     aboutTitle: 'I\'ve seen it. Across multiple sectors. I recognise the pattern fast.',
     aboutBody1: 'I haven\'t built a career as an AI trainer. I\'ve built AI — for organisations in healthcare, sustainability and customer experience, sectors where it\'s complicated and mistakes count. That gives me a different view than most coaches.',
     aboutBody2: 'I see patterns you might not see yourself. I know how comparable teams approached it, what worked and what didn\'t. And I know how you get from "we need to do something with AI" to a concrete, working application — without your team buckling under it.',
-    aboutCredentials: ['Builds AI applications for complex, regulated sectors', 'Works in Dutch, English and French', 'Active for Fortune 500 and fast-growing scale-ups'],
+    aboutCredentials: ['Builds AI applications for complex, regulated sectors', 'Works in Dutch, English and French', 'Experience across healthcare, finance, FMCG, sustainability, CX and more'],
 
     spotsLabel:  'Availability',
     spotsTitle:  'Five spots per cohort.',
