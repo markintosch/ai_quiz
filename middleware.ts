@@ -36,6 +36,11 @@ export function middleware(req: NextRequest) {
   // ── Dashboard routes: locale-free, token-gated at page level ─────────────
   if (pathname.startsWith('/dashboard')) return NextResponse.next()
 
+  // ── Standalone product pages: self-contained with own language toggle ─────
+  if (pathname.startsWith('/cx'))        return NextResponse.next()
+  if (pathname.startsWith('/oncology'))  return NextResponse.next()
+  if (pathname.startsWith('/madaster'))  return NextResponse.next()
+
   // ── Public routes: locale routing via next-intl ───────────────────────────
   // Note: product_key is resolved from the host header directly in server
   // components and API routes via getProductKeyFromHost() in src/products/index.ts
