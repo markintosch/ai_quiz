@@ -36,7 +36,7 @@ const T = {
     navRole:    'AI Transition Mentor',
     navCta:     'Plan gesprek →',
     heroBadge:  'AI Transition Mentoring · Max. 5 deelnemers per cohort',
-    heroH1a:    'Ik help directeuren hun organisatie',
+    heroH1a:    'Ik help leidinggevenden hun organisatie',
     heroH1b:    'door de AI-transitie leiden.',
     heroBody:   'Niet met trainingen en theorie. Met een werkende AI-toepassing in jouw eigen bedrijf, en het strategisch inzicht om je team te sturen.',
     heroCta1:   'Plan een intakegesprek →',
@@ -44,7 +44,7 @@ const T = {
     heroTrust:  '3 maanden · Max. 5 deelnemers · Intake vereist',
 
     probLabel:  'De realiteit',
-    probTitle:  'Waarom AI-trajecten bij directeuren stranden',
+    probTitle:  'Waarom AI-trajecten in de boardroom stranden',
     probItems: [
       { icon: '📤', title: 'Delegeren zonder richting',   body: 'AI wordt weggezet bij IT of marketing, terwijl strategische keuzes — wat bouwen we, voor wie, waarom — bij de top horen.' },
       { icon: '🛠️', title: 'Tools kopen voor het probleem duidelijk is', body: 'Abonnementen op Copilot, ChatGPT Teams, Notion AI. Maar wat lost het op? Voor wie? Het antwoord blijft vaag.' },
@@ -64,7 +64,7 @@ const T = {
     areasTitle: 'Zes gebieden. Één organisatie. Jouw situatie.',
     areasBody:  'We werken samen langs dezelfde 6 dimensies die ik gebruik om AI-volwassenheid in organisaties te meten — nu gericht op jouw specifieke context.',
     areas: [
-      { icon: '🧭', title: 'Strategie & Visie',        body: 'Waar zit AI in jouw businessmodel? Wat is de rol van de directeur? We leggen een helder fundament.' },
+      { icon: '🧭', title: 'Strategie & Visie',        body: 'Waar zit AI in jouw businessmodel? Wat is jouw rol als leidinggevende? We leggen een helder fundament.' },
       { icon: '🛡️', title: 'Governance & Risico',      body: 'Welke besluiten neem jij zelf, wat delegeer je, en hoe voorkom je dat AI-risico\'s jou verrassen?' },
       { icon: '⚡', title: 'Huidige toepassingen',      body: 'Wat gebruikt je team al? Wat werkt, wat niet? We maken de onzichtbare AI-activiteit zichtbaar.' },
       { icon: '🗄️', title: 'Data & Infrastructuur',    body: 'Je hoeft geen techneut te zijn. Maar je moet weten welke vragen je moet stellen over jouw data.' },
@@ -96,15 +96,15 @@ const T = {
     proofTitle:  'Ik bouw tools voor echte organisaties.',
     proofBody:   'Geen powerpoints. Geen generiek advies. Dit zijn toepassingen die ik gebouwd heb voor complexe sectoren — dezelfde aanpak breng ik mee naar jouw mentortraject.',
     proofItems: [
-      { icon: '💜', color: '#6B2D8B', title: 'CLL Clinical Practice Optimiser', client: 'Gezondheidszorg · AbbVie', body: 'Zelfevaluatie voor hematologen op 6 klinische dimensies. Gebouwd voor gebruik door MSLs in bestaande klantkontacten.' },
-      { icon: '♻️', color: '#398684', title: 'Circular Readiness Assessment',    client: 'Vastgoed · Madaster',     body: 'Circulaire rijpheid meten op 6 dimensies. CSRD-gereed, direct inzetbaar voor vastgoedbeheerders en projectontwikkelaars.' },
-      { icon: '⭐', color: '#1D4ED8', title: 'CX Maturity Assessment',           client: 'Customer Experience',     body: 'Klantgerichtheid meten van productgericht tot klantgedreven. Met sectorspecifieke benchmarks en uitvoerbare aanbevelingen.' },
+      { icon: '💜', color: '#6B2D8B', title: 'CLL Clinical Practice Optimiser', client: 'Gezondheidszorg',           body: 'Zelfevaluatie voor medisch specialisten op 6 klinische dimensies. Zelfstandig inzetbaar, direct bruikbaar in het veld.' },
+      { icon: '♻️', color: '#398684', title: 'Circular Readiness Assessment',    client: 'Vastgoed & Duurzaamheid',  body: 'Circulaire rijpheid meten op 6 dimensies. CSRD-gereed, direct inzetbaar voor vastgoedbeheerders en projectontwikkelaars.' },
+      { icon: '⭐', color: '#1D4ED8', title: 'CX Maturity Assessment',           client: 'Customer Experience',      body: 'Klantgerichtheid meten van productgericht tot klantgedreven. Met sectorspecifieke benchmarks en uitvoerbare aanbevelingen.' },
     ],
 
     aboutLabel: 'Over Mark',
     aboutTitle: 'Ik ben practitioner. Geen trainer.',
     aboutBody1: 'Ik bouw AI-tools voor organisaties in complexe sectoren: gezondheidszorg, duurzaamheid, klantbeleving. Niet als concept — als werkende software die mensen dagelijks gebruiken.',
-    aboutBody2: 'Ik mentor directeuren omdat ik zie dat de grootste blokkade niet technisch is. Het is het ontbreken van strategische richting van bovenaf. Dat is precies waar ik het meeste waarde toevoeg.',
+    aboutBody2: 'Ik begeleid senior managers en management teams omdat ik zie dat de grootste blokkade niet technisch is. Het is het ontbreken van strategische richting van bovenaf. Dat is precies waar ik het meeste waarde toevoeg.',
     aboutCredentials: ['Bouwt AI-toepassingen voor Fortune 500 en scale-ups', 'Werkt in Nederlands, Engels en Frans', 'Actief in gezondheidszorg, duurzaamheid en CX'],
 
     spotsLabel:  'Beschikbaarheid',
@@ -122,7 +122,7 @@ const T = {
     navRole:    'AI Transition Mentor',
     navCta:     'Book a call →',
     heroBadge:  'AI Transition Mentoring · Max. 5 participants per cohort',
-    heroH1a:    'I help executives lead their organisation',
+    heroH1a:    'I help senior leaders and management teams',
     heroH1b:    'through the AI transition.',
     heroBody:   'Not with training and theory. With a working AI application in your own business, and the strategic clarity to direct your team.',
     heroCta1:   'Book an intake call →',
@@ -130,7 +130,7 @@ const T = {
     heroTrust:  '3 months · Max. 5 participants · Intake required',
 
     probLabel:  'The reality',
-    probTitle:  'Why AI initiatives stall at C-level',
+    probTitle:  'Why AI initiatives stall in the boardroom',
     probItems: [
       { icon: '📤', title: 'Delegating without direction',   body: 'AI gets handed to IT or marketing, while strategic choices — what to build, for whom, why — belong at the top.' },
       { icon: '🛠️', title: 'Buying tools before the problem is clear', body: 'Subscriptions to Copilot, ChatGPT Teams, Notion AI. But what does it solve? For whom? The answer stays vague.' },
@@ -150,7 +150,7 @@ const T = {
     areasTitle: 'Six areas. One organisation. Your situation.',
     areasBody:  'We work together across the same 6 dimensions I use to measure AI maturity in organisations — focused entirely on your specific context.',
     areas: [
-      { icon: '🧭', title: 'Strategy & Vision',        body: 'Where does AI sit in your business model? What is the executive\'s role? We build a clear foundation.' },
+      { icon: '🧭', title: 'Strategy & Vision',        body: 'Where does AI sit in your business model? What is your role as a leader? We build a clear foundation.' },
       { icon: '🛡️', title: 'Governance & Risk',        body: 'Which decisions do you own, what do you delegate, and how do you avoid being surprised by AI risks?' },
       { icon: '⚡', title: 'Current Usage',             body: 'What is your team already using? What works, what doesn\'t? We make invisible AI activity visible.' },
       { icon: '🗄️', title: 'Data & Infrastructure',    body: 'You don\'t need to be technical. But you need to know which questions to ask about your data.' },
@@ -182,15 +182,15 @@ const T = {
     proofTitle:  'I build tools for real organisations.',
     proofBody:   'No PowerPoints. No generic advice. These are applications I\'ve built for complex sectors — the same approach I bring to your mentorship.',
     proofItems: [
-      { icon: '💜', color: '#6B2D8B', title: 'CLL Clinical Practice Optimiser', client: 'Healthcare · AbbVie', body: 'Self-assessment for haematologists across 6 clinical dimensions. Built for use by MSLs in existing client visits.' },
-      { icon: '♻️', color: '#398684', title: 'Circular Readiness Assessment',    client: 'Real estate · Madaster', body: 'Circular maturity across 6 dimensions. CSRD-ready, immediately deployable for asset managers and developers.' },
-      { icon: '⭐', color: '#1D4ED8', title: 'CX Maturity Assessment',           client: 'Customer Experience',    body: 'Measuring customer-centricity from product-focused to customer-driven. With sector benchmarks and actionable recommendations.' },
+      { icon: '💜', color: '#6B2D8B', title: 'CLL Clinical Practice Optimiser', client: 'Healthcare',                  body: 'Self-assessment for medical specialists across 6 clinical dimensions. Standalone, immediately deployable in the field.' },
+      { icon: '♻️', color: '#398684', title: 'Circular Readiness Assessment',    client: 'Real estate & Sustainability', body: 'Circular maturity across 6 dimensions. CSRD-ready, immediately deployable for asset managers and developers.' },
+      { icon: '⭐', color: '#1D4ED8', title: 'CX Maturity Assessment',           client: 'Customer Experience',          body: 'Measuring customer-centricity from product-focused to customer-driven. With sector benchmarks and actionable recommendations.' },
     ],
 
     aboutLabel: 'About Mark',
     aboutTitle: 'I\'m a practitioner. Not a trainer.',
     aboutBody1: 'I build AI tools for organisations in complex sectors: healthcare, sustainability, customer experience. Not as concepts — as working software people use every day.',
-    aboutBody2: 'I mentor executives because I see that the biggest blocker is not technical. It\'s the absence of strategic direction from the top. That\'s exactly where I add the most value.',
+    aboutBody2: 'I work with senior managers and management teams because I see that the biggest blocker is not technical. It\'s the absence of strategic direction from the top. That\'s exactly where I add the most value.',
     aboutCredentials: ['Builds AI applications for Fortune 500 and scale-ups', 'Works in Dutch, English and French', 'Active in healthcare, sustainability and CX'],
 
     spotsLabel:  'Availability',
