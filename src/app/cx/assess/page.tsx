@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import {
-  DIMENSIONS, QUESTIONS, ROLES,
+  getCxContent,
   scoreColour, overallScore,
   type CxDimScores,
 } from '@/products/cx/data'
@@ -20,17 +21,80 @@ const PINK_LIGHT = '#FDF0F3'
 
 type Step = 'select' | 'assess' | 'results'
 
-export default function CxAssessPage() {
-  const [step, setStep]         = useState<Step>('select')
-  const [roleId, setRoleId]     = useState('')
-  const [answers, setAnswers]   = useState<Record<string, number>>({})
+// ── Translations ──────────────────────────────────────────────────────────────
+const T = {
+  en: {
+    stepBadge:       (n: number) => `Step ${n} of 3`,
+    selectTitle:     'What is your role?',
+    selectBody:      'Different roles see different facets of CX maturity. Your context shapes the picture.',
+    selectCta:       'Start the 24 questions →',
+    dimOf:           (a: number, b: number) => `Dimension ${a} of ${b}`,
+    scaleLabels:     ['Not at all', 'Somewhat', 'Often', 'Fully'],
+    prevBtn:         '← Previous',
+    nextBtn:         'Next dimension →',
+    remainingBtn:    (n: number) => `${n} question${n !== 1 ? 's' : ''} remaining`,
+    seeResultsBtn:   'See my results →',
+    resultsLabel:    'Your Results',
+    resultsTitle:    'Your CX Maturity Picture',
+    assessedAs:      'Assessed as:',
+    radarLabel:      'CX Maturity Radar',
+    overallLabel:    'Overall score',
+    gapsTitle:       'Your 3 biggest opportunities',
+    strengthsTitle:  'Where you\'re already strong',
+    ctaTitle:        'Want to turn this into action?',
+    ctaBody:         'These results are a starting point — not a verdict. Book a no-obligation conversation with Marije Gast to explore what the gaps mean for your organisation.',
+    ctaBtn:          'Book a conversation with Marije →',
+    retakeBtn:       'Retake assessment',
+    ctaCaption:      'No sales pitch. Just a useful conversation.',
+    backLink:        '← Back to overview',
+    subTitle:        'CX Maturity Assessment',
+  },
+  nl: {
+    stepBadge:       (n: number) => `Stap ${n} van 3`,
+    selectTitle:     'Wat is jouw rol?',
+    selectBody:      'Verschillende rollen zien verschillende facetten van CX-volwassenheid. Jouw context bepaalt het beeld.',
+    selectCta:       'Start de 24 vragen →',
+    dimOf:           (a: number, b: number) => `Dimensie ${a} van ${b}`,
+    scaleLabels:     ['Helemaal niet', 'Soms', 'Vaak', 'Volledig'],
+    prevBtn:         '← Vorige',
+    nextBtn:         'Volgende dimensie →',
+    remainingBtn:    (n: number) => `Nog ${n} vra${n !== 1 ? 'gen' : 'ag'}`,
+    seeResultsBtn:   'Bekijk mijn resultaten →',
+    resultsLabel:    'Jouw Resultaten',
+    resultsTitle:    'Jouw CX Volwassenheidsprofiel',
+    assessedAs:      'Beoordeeld als:',
+    radarLabel:      'CX Volwassenheidsradar',
+    overallLabel:    'Totaalscore',
+    gapsTitle:       'Jouw 3 grootste kansen',
+    strengthsTitle:  'Waar je al sterk in bent',
+    ctaTitle:        'Wil je dit omzetten in actie?',
+    ctaBody:         'Deze resultaten zijn een startpunt — geen eindoordeel. Plan een vrijblijvend gesprek met Marije Gast om te verkennen wat de verbeterpunten betekenen voor jouw organisatie.',
+    ctaBtn:          'Plan een gesprek met Marije →',
+    retakeBtn:       'Assessment opnieuw doen',
+    ctaCaption:      'Geen verkooppraatje. Gewoon een nuttig gesprek.',
+    backLink:        '← Terug naar overzicht',
+    subTitle:        'CX Volwassenheidsassessment',
+  },
+}
+
+// ── Inner component (reads search params) ────────────────────────────────────
+function CxAssessInner() {
+  const searchParams = useSearchParams()
+  const lang = (searchParams.get('lang') === 'nl' ? 'nl' : 'en') as 'en' | 'nl'
+  const t = T[lang]
+  const { DIMENSIONS, QUESTIONS, ROLES } = getCxContent(lang)
+  const backHref = lang === 'nl' ? '/cx?lang=nl' : '/cx'
+
+  const [step, setStep]           = useState<Step>('select')
+  const [roleId, setRoleId]       = useState('')
+  const [answers, setAnswers]     = useState<Record<string, number>>({})
   const [activeDim, setActiveDim] = useState(0)
 
   // ── Step 1: role selection ───────────────────────────────────────────────
   if (step === 'select') {
     return (
       <div style={{ minHeight: '100vh', background: '#FAFBFD', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-        <AssessHeader />
+        <AssessHeader backHref={backHref} backLabel={t.backLink} subTitle={t.subTitle} />
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 64px)', padding: '48px 24px' }}>
           <div style={{ width: '100%', maxWidth: 520 }}>
 
@@ -39,14 +103,14 @@ export default function CxAssessPage() {
               textTransform: 'uppercase', color: BLUE, background: BLUE_LIGHT,
               padding: '3px 12px', borderRadius: 100, marginBottom: 20,
             }}>
-              Step 1 of 3
+              {t.stepBadge(1)}
             </span>
 
             <h1 style={{ fontSize: 28, fontWeight: 900, color: DARK, marginBottom: 8, lineHeight: 1.2 }}>
-              What is your role?
+              {t.selectTitle}
             </h1>
             <p style={{ fontSize: 15, color: BODY, lineHeight: 1.65, marginBottom: 32 }}>
-              Different roles see different facets of CX maturity. Your context shapes the picture.
+              {t.selectBody}
             </p>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 32 }}>
@@ -80,7 +144,7 @@ export default function CxAssessPage() {
                 transition: 'all 0.15s',
               }}
             >
-              Start the 24 questions →
+              {t.selectCta}
             </button>
           </div>
         </div>
@@ -99,7 +163,7 @@ export default function CxAssessPage() {
 
     return (
       <div style={{ minHeight: '100vh', background: '#FAFBFD', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-        <AssessHeader />
+        <AssessHeader backHref={backHref} backLabel={t.backLink} subTitle={t.subTitle} />
 
         {/* Progress bar */}
         <div style={{ height: 3, background: '#EEF2F7' }}>
@@ -145,7 +209,7 @@ export default function CxAssessPage() {
               background: isPink ? PINK_LIGHT : BLUE_LIGHT,
               padding: '3px 12px', borderRadius: 100, marginBottom: 10,
             }}>
-              Dimension {activeDim + 1} of {DIMENSIONS.length}
+              {t.dimOf(activeDim + 1, DIMENSIONS.length)}
             </span>
             <h2 style={{ fontSize: 24, fontWeight: 900, color: DARK, marginBottom: 4 }}>
               {dim.icon} {dim.name}
@@ -199,10 +263,9 @@ export default function CxAssessPage() {
                   </div>
 
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: '#CBD5E1', marginTop: 6 }}>
-                    <span>Not at all</span>
-                    <span>Somewhat</span>
-                    <span>Often</span>
-                    <span>Fully</span>
+                    {t.scaleLabels.map(label => (
+                      <span key={label}>{label}</span>
+                    ))}
                   </div>
                 </div>
               )
@@ -220,7 +283,7 @@ export default function CxAssessPage() {
                   fontWeight: 600, fontSize: 14, color: BODY, cursor: 'pointer',
                 }}
               >
-                ← Previous
+                {t.prevBtn}
               </button>
             )}
             {activeDim < DIMENSIONS.length - 1 ? (
@@ -235,7 +298,7 @@ export default function CxAssessPage() {
                   cursor: dimAnswered ? 'pointer' : 'not-allowed', transition: 'all 0.15s',
                 }}
               >
-                Next dimension →
+                {t.nextBtn}
               </button>
             ) : (
               <button
@@ -253,8 +316,8 @@ export default function CxAssessPage() {
                 }}
               >
                 {totalAnswered < QUESTIONS.length
-                  ? `${QUESTIONS.length - totalAnswered} questions remaining`
-                  : 'See my results →'}
+                  ? t.remainingBtn(QUESTIONS.length - totalAnswered)
+                  : t.seeResultsBtn}
               </button>
             )}
           </div>
@@ -274,7 +337,14 @@ export default function CxAssessPage() {
   const avg = overallScore(dimScores)
   const overallCol = scoreColour(avg)
   const role = ROLES.find(r => r.id === roleId)!
-  const mailtoHref = `mailto:marije@marijegast.nl?subject=CX%20Maturity%20Assessment%20%E2%80%94%20I%27d%20like%20to%20talk&body=Hi%20Marije%2C%0A%0AI%20just%20completed%20the%20CX%20Maturity%20Assessment%20and%20scored%20${avg.toFixed(1)}%20(${encodeURIComponent(overallCol.label)}).%0A%0AI%27d%20love%20to%20discuss%20what%20this%20means%20for%20my%20organisation.%0A%0AKind%20regards%2C`
+  const scoreLabel = lang === 'nl' ? overallCol.labelNl : overallCol.label
+  const mailtoSubject = lang === 'nl'
+    ? 'CX%20Volwassenheidsassessment%20%E2%80%94%20Ik%20wil%20graag%20praten'
+    : 'CX%20Maturity%20Assessment%20%E2%80%94%20I%27d%20like%20to%20talk'
+  const mailtoBody = lang === 'nl'
+    ? `Hoi%20Marije%2C%0A%0AIk%20heb%20zojuist%20het%20CX%20Volwassenheidsassessment%20ingevuld%20en%20scoorde%20${avg.toFixed(1)}%20(${encodeURIComponent(scoreLabel)}).%0A%0AIk%20wil%20graag%20bespreken%20wat%20dit%20betekent%20voor%20mijn%20organisatie.%0A%0AMet%20vriendelijke%20groet%2C`
+    : `Hi%20Marije%2C%0A%0AI%20just%20completed%20the%20CX%20Maturity%20Assessment%20and%20scored%20${avg.toFixed(1)}%20(${encodeURIComponent(scoreLabel)}).%0A%0AI%27d%20love%20to%20discuss%20what%20this%20means%20for%20my%20organisation.%0A%0AKind%20regards%2C`
+  const mailtoHref = `mailto:marije@marijegast.nl?subject=${mailtoSubject}&body=${mailtoBody}`
 
   const gaps = DIMENSIONS
     .map(d => ({ dim: d, score: dimScores[d.id] ?? 1 }))
@@ -288,7 +358,7 @@ export default function CxAssessPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#FAFBFD', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-      <AssessHeader />
+      <AssessHeader backHref={backHref} backLabel={t.backLink} subTitle={t.subTitle} />
 
       <div style={{ maxWidth: 900, margin: '0 auto', padding: '40px 24px 80px' }}>
 
@@ -299,13 +369,13 @@ export default function CxAssessPage() {
             textTransform: 'uppercase', color: PINK, background: PINK_LIGHT,
             padding: '3px 12px', borderRadius: 100, marginBottom: 16,
           }}>
-            Your Results
+            {t.resultsLabel}
           </span>
           <h1 style={{ fontSize: 32, fontWeight: 900, color: DARK, marginBottom: 8, lineHeight: 1.2 }}>
-            Your CX Maturity Picture
+            {t.resultsTitle}
           </h1>
           <p style={{ fontSize: 15, color: BODY }}>
-            Assessed as: <strong>{role.label}</strong>
+            {t.assessedAs} <strong>{role.label}</strong>
           </p>
         </div>
 
@@ -318,7 +388,7 @@ export default function CxAssessPage() {
             border: '1px solid #EEF2F7', boxShadow: '0 2px 16px rgba(0,0,0,0.04)',
             display: 'flex', flexDirection: 'column', alignItems: 'center',
           }}>
-            <p style={{ fontSize: 13, fontWeight: 600, color: MUTED, marginBottom: 16 }}>CX Maturity Radar</p>
+            <p style={{ fontSize: 13, fontWeight: 600, color: MUTED, marginBottom: 16 }}>{t.radarLabel}</p>
             <CxRadarChart scores={dimScores} size={260} primaryColor={overallCol.bg} />
           </div>
 
@@ -342,8 +412,8 @@ export default function CxAssessPage() {
                 {avg.toFixed(1)}
               </div>
               <div>
-                <p style={{ fontSize: 12, color: MUTED, marginBottom: 2 }}>Overall score</p>
-                <p style={{ fontSize: 18, fontWeight: 900, color: overallCol.bg }}>{overallCol.label}</p>
+                <p style={{ fontSize: 12, color: MUTED, marginBottom: 2 }}>{t.overallLabel}</p>
+                <p style={{ fontSize: 18, fontWeight: 900, color: overallCol.bg }}>{scoreLabel}</p>
               </div>
             </div>
 
@@ -352,6 +422,7 @@ export default function CxAssessPage() {
               {DIMENSIONS.map(d => {
                 const s = dimScores[d.id] ?? 1
                 const col = scoreColour(s)
+                const dimLabel = lang === 'nl' ? col.labelNl : col.label
                 const bar = ((s - 1) / 3) * 100
                 return (
                   <div key={d.id}>
@@ -360,7 +431,7 @@ export default function CxAssessPage() {
                         {d.icon} {d.name}
                       </span>
                       <span style={{ fontSize: 12, fontWeight: 800, color: col.bg }}>
-                        {s.toFixed(1)} · {col.label}
+                        {s.toFixed(1)} · {dimLabel}
                       </span>
                     </div>
                     <div style={{ height: 8, background: '#F1F5F9', borderRadius: 100, overflow: 'hidden' }}>
@@ -383,11 +454,12 @@ export default function CxAssessPage() {
           marginBottom: 24,
         }}>
           <h2 style={{ fontSize: 18, fontWeight: 900, color: DARK, marginBottom: 20 }}>
-            Your 3 biggest opportunities
+            {t.gapsTitle}
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
             {gaps.map(({ dim, score }, i) => {
               const col = scoreColour(score)
+              const gapLabel = lang === 'nl' ? col.labelNl : col.label
               return (
                 <div
                   key={dim.id}
@@ -412,7 +484,7 @@ export default function CxAssessPage() {
                     {dim.description}
                   </p>
                   <p style={{ fontSize: 22, fontWeight: 900, color: col.bg }}>{score.toFixed(1)}</p>
-                  <p style={{ fontSize: 11, color: col.bg, fontWeight: 600 }}>{col.label}</p>
+                  <p style={{ fontSize: 11, color: col.bg, fontWeight: 600 }}>{gapLabel}</p>
                 </div>
               )
             })}
@@ -434,7 +506,7 @@ export default function CxAssessPage() {
             </div>
           </div>
           <div style={{ flex: 1 }}>
-            <p style={{ fontSize: 14, fontWeight: 800, color: DARK, marginBottom: 8 }}>Where you&apos;re already strong</p>
+            <p style={{ fontSize: 14, fontWeight: 800, color: DARK, marginBottom: 8 }}>{t.strengthsTitle}</p>
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
               {strengths.map(({ dim, score }) => {
                 const col = scoreColour(score)
@@ -464,20 +536,17 @@ export default function CxAssessPage() {
           textAlign: 'center',
         }}>
           <div style={{
-            width: 56, height: 56, borderRadius: '50%',
-            background: `linear-gradient(135deg, ${BLUE_LIGHT}, ${PINK_LIGHT})`,
+            width: 64, height: 64, borderRadius: '50%', overflow: 'hidden',
             border: `3px solid ${BLUE}44`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 18, fontWeight: 800, color: BLUE,
             margin: '0 auto 20px',
           }}>
-            MG
+            <img src="/marije-gast.png" alt="Marije Gast" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
           <h2 style={{ fontSize: 24, fontWeight: 900, color: DARK, marginBottom: 10, lineHeight: 1.3 }}>
-            Want to turn this into action?
+            {t.ctaTitle}
           </h2>
           <p style={{ fontSize: 15, color: BODY, lineHeight: 1.7, maxWidth: 440, margin: '0 auto 28px' }}>
-            These results are a starting point — not a verdict. Book a no-obligation conversation with Marije Gast to explore what the gaps mean for your organisation.
+            {t.ctaBody}
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <a
@@ -489,7 +558,7 @@ export default function CxAssessPage() {
                 padding: '14px 32px', borderRadius: 100, textDecoration: 'none',
               }}
             >
-              Book a conversation with Marije →
+              {t.ctaBtn}
             </a>
             <button
               onClick={() => { setStep('select'); setAnswers({}); setActiveDim(0); setRoleId('') }}
@@ -499,11 +568,11 @@ export default function CxAssessPage() {
                 fontWeight: 600, fontSize: 14, color: BLUE, cursor: 'pointer',
               }}
             >
-              Retake assessment
+              {t.retakeBtn}
             </button>
           </div>
           <p style={{ fontSize: 12, color: MUTED, marginTop: 16 }}>
-            No sales pitch. Just a useful conversation.
+            {t.ctaCaption}
           </p>
         </div>
 
@@ -512,7 +581,8 @@ export default function CxAssessPage() {
   )
 }
 
-function AssessHeader() {
+// ── Shared header ─────────────────────────────────────────────────────────────
+function AssessHeader({ backHref, backLabel, subTitle }: { backHref: string; backLabel: string; subTitle: string }) {
   return (
     <nav style={{
       background: '#fff', borderBottom: '1px solid #EEF2F7',
@@ -522,28 +592,38 @@ function AssessHeader() {
         maxWidth: 900, margin: '0 auto', width: '100%',
         padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
-        <Link href="/cx" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+        <Link href={backHref} style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
           <div style={{
-            width: 32, height: 32, borderRadius: '50%',
-            background: `linear-gradient(135deg, ${BLUE_LIGHT}, ${PINK_LIGHT})`,
-            border: `2px solid ${BLUE}22`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 13, fontWeight: 800, color: BLUE,
+            width: 32, height: 32, borderRadius: '50%', overflow: 'hidden',
+            border: `2px solid ${PINK}33`,
           }}>
-            MG
+            <img src="/marije-gast.png" alt="Marije Gast" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
           <div>
             <p style={{ fontSize: 13, fontWeight: 700, color: DARK, lineHeight: 1.2 }}>Marije Gast</p>
-            <p style={{ fontSize: 11, color: MUTED, lineHeight: 1.2 }}>CX Maturity Assessment</p>
+            <p style={{ fontSize: 11, color: MUTED, lineHeight: 1.2 }}>{subTitle}</p>
           </div>
         </Link>
         <Link
-          href="/cx"
+          href={backHref}
           style={{ fontSize: 13, color: MUTED, textDecoration: 'none', fontWeight: 500 }}
         >
-          ← Back to overview
+          {backLabel}
         </Link>
       </div>
     </nav>
+  )
+}
+
+// ── Page export with Suspense boundary ────────────────────────────────────────
+export default function CxAssessPage() {
+  return (
+    <Suspense fallback={
+      <div style={{ minHeight: '100vh', background: '#FAFBFD', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ width: 32, height: 32, borderRadius: '50%', border: `3px solid ${BLUE}`, borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }} />
+      </div>
+    }>
+      <CxAssessInner />
+    </Suspense>
   )
 }
