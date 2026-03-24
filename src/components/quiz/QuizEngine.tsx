@@ -115,6 +115,13 @@ export function QuizEngine({
     setError(null)
     setPhase('submitting')
 
+    // ── Read mentor attribution from sessionStorage (set by /mentor page) ──
+    let attribution: { ref: string; utm_source: string; utm_medium: string; utm_campaign: string } | null = null
+    try {
+      const raw = typeof window !== 'undefined' ? sessionStorage.getItem('mentor_attribution') : null
+      if (raw) attribution = JSON.parse(raw)
+    } catch { /* ignore */ }
+
     try {
       const payload: SubmitQuizPayload = {
         version,
@@ -125,6 +132,12 @@ export function QuizEngine({
         waveId,
         locale,
         productKey,
+        ...(attribution ? {
+          refSource:   attribution.ref,
+          utmSource:   attribution.utm_source   || undefined,
+          utmMedium:   attribution.utm_medium   || undefined,
+          utmCampaign: attribution.utm_campaign || undefined,
+        } : {}),
       }
 
       const res = await fetch('/api/submit', {

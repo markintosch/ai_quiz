@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, type Variants } from 'framer-motion'
 
 // ── Brand tokens ──────────────────────────────────────────────────────────────
@@ -208,6 +208,17 @@ const T = {
 export default function MentorPage() {
   const [lang, setLang] = useState<'nl'|'en'>('nl')
   const t = T[lang]
+
+  // ── Store UTM attribution in sessionStorage so the quiz can pick it up ──
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    sessionStorage.setItem('mentor_attribution', JSON.stringify({
+      ref:          'mentor',
+      utm_source:   params.get('utm_source')   ?? '',
+      utm_medium:   params.get('utm_medium')   ?? '',
+      utm_campaign: params.get('utm_campaign') ?? '',
+    }))
+  }, [])
 
   return (
     <div style={{ minHeight: '100vh', background: WHITE, color: INK, fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>

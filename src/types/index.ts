@@ -112,6 +112,11 @@ export interface SubmitQuizPayload {
   locale?: string
   /** Product key for multi-product routing — defaults to 'ai_maturity' */
   productKey?: string
+  /** Attribution — set when respondent comes from a tracked source (e.g. mentor page) */
+  refSource?:    string   // e.g. 'mentor'
+  utmSource?:    string   // e.g. 'linkedin'
+  utmMedium?:    string   // e.g. 'social'
+  utmCampaign?:  string   // e.g. 'mentor_q2_2026'
 }
 
 export interface SubmitQuizResponse {

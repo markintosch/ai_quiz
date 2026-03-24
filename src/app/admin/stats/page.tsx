@@ -17,6 +17,8 @@ interface RecentResponse {
   overallScore: number; maturity_level: string; created_at: string
 }
 
+interface MentorSource { source: string; count: number }
+
 interface StatsData {
   totalRespondents: number
   totalResponses: number
@@ -30,6 +32,8 @@ interface StatsData {
   industryBreakdown: BreakdownItem[]
   companySizeBreakdown: BreakdownItem[]
   recentResponses: RecentResponse[]
+  mentorTotal: number
+  mentorSourceBreakdown: MentorSource[]
 }
 
 // ── Colour palette ────────────────────────────────────────────────────────────
@@ -310,6 +314,54 @@ export default function StatsPage() {
             )}
           </ChartCard>
         </div>
+      </div>
+
+      {/* ── Mentor Funnel ── */}
+      <div>
+        <SectionTitle>Mentor funnel — markdekock.com/mentor</SectionTitle>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+          <div className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm">
+            <p className="text-xs font-medium text-gray-600 uppercase tracking-wider">Assessments via mentor page</p>
+            <p className="text-3xl font-bold mt-1" style={{ color: ACCENT }}>{data.mentorTotal}</p>
+            <p className="text-xs text-gray-500 mt-1">Total completions with ref=mentor</p>
+          </div>
+          {data.mentorSourceBreakdown.slice(0, 2).map((s) => (
+            <div key={s.source} className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm">
+              <p className="text-xs font-medium text-gray-600 uppercase tracking-wider">{s.source}</p>
+              <p className="text-3xl font-bold mt-1" style={{ color: TEAL }}>{s.count}</p>
+              <p className="text-xs text-gray-500 mt-1">utm_source</p>
+            </div>
+          ))}
+        </div>
+        {data.mentorSourceBreakdown.length > 0 && (
+          <div className="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 border-b border-gray-100">
+                <tr>
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Source (utm_source)</th>
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Completions</th>
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Share</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.mentorSourceBreakdown.map((s) => (
+                  <tr key={s.source} className="border-b border-gray-50 hover:bg-gray-50">
+                    <td className="px-5 py-3 font-medium text-gray-800">{s.source}</td>
+                    <td className="px-5 py-3 text-gray-600">{s.count}</td>
+                    <td className="px-5 py-3 text-gray-500">
+                      {data.mentorTotal > 0 ? `${Math.round((s.count / data.mentorTotal) * 100)}%` : '—'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {data.mentorSourceBreakdown.length === 0 && (
+          <div className="bg-white border border-gray-100 rounded-xl p-8 shadow-sm text-center text-sm text-gray-400">
+            No mentor page referrals yet. Share markdekock.com/mentor with UTM links to see data here.
+          </div>
+        )}
       </div>
 
       {/* Recent responses */}

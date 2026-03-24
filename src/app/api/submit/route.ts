@@ -24,7 +24,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Too many submissions. Please wait a few minutes.' }, { status: 429 })
   }
 
-  const { version, answers, lead, companySlug, cohortId, waveId, locale = 'en', productKey = 'ai_maturity' } = body
+  const { version, answers, lead, companySlug, cohortId, waveId, locale = 'en', productKey = 'ai_maturity',
+          refSource, utmSource, utmMedium, utmCampaign } = body
 
   // ── Basic validation ──────────────────────────────────────
   if (!version || !answers || !lead) {
@@ -139,6 +140,10 @@ export async function POST(req: NextRequest) {
         shadow_ai_severity:    quizScore.shadowAI.severity ?? null,
         recommendation_payload: recommendations as unknown as import('@/types/supabase').Json,
         product_key:           productConfig.key,
+        ref_source:            refSource   ?? null,
+        utm_source:            utmSource   ?? null,
+        utm_medium:            utmMedium   ?? null,
+        utm_campaign:          utmCampaign ?? null,
       })
       .select('id')
       .single()

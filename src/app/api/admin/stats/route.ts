@@ -154,6 +154,24 @@ export async function GET() {
     .map(([name, count]) => ({ name, count }))
     .sort((a, b) => b.count - a.count)
 
+  // ── Mentor funnel ─────────────────────────────────────────────────────────
+  const { data: mentorResponses } = await supabase
+    .from('responses')
+    .select('id, utm_source, utm_medium, utm_campaign, created_at, maturity_level')
+    .eq('ref_source', 'mentor') as unknown as {
+      data: { id: string; utm_source: string | null; utm_medium: string | null; utm_campaign: string | null; created_at: string; maturity_level: string }[] | null
+    }
+
+  const mentorTotal = mentorResponses?.length ?? 0
+  const mentorBySource: Record<string, number> = {}
+  for (const r of mentorResponses ?? []) {
+    const src = r.utm_source ?? 'direct'
+    mentorBySource[src] = (mentorBySource[src] ?? 0) + 1
+  }
+  const mentorSourceBreakdown = Object.entries(mentorBySource)
+    .map(([source, count]) => ({ source, count }))
+    .sort((a, b) => b.count - a.count)
+
   // Last 10 responses + respondent info
   const last10 = (allResponses ?? []).slice(-10).reverse()
   const respondentIds = Array.from(new Set(last10.map((r) => r.respondent_id)))
@@ -192,6 +210,8 @@ export async function GET() {
     industryBreakdown,
     companySizeBreakdown,
     recentResponses,
+    mentorTotal,
+    mentorSourceBreakdown,
   })
 }
 
