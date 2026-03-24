@@ -41,6 +41,7 @@ export function middleware(req: NextRequest) {
   if (pathname.startsWith('/oncology'))  return NextResponse.next()
   if (pathname.startsWith('/madaster'))  return NextResponse.next()
   if (pathname.startsWith('/abbvie'))    return NextResponse.next()
+  if (pathname.startsWith('/mentor'))    return NextResponse.next()
 
   // ── Public routes: locale routing via next-intl ───────────────────────────
   // Note: product_key is resolved from the host header directly in server
