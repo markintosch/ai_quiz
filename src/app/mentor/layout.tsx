@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'AI Transition Mentor | Mark de Kock',
+  title: 'Strategisch mentor voor AI & executie | Mark de Kock',
   description:
-    'I help C-level leaders at SMEs lead their organisation through the AI transition — not with training and theory, but with a working AI use case in your own business and the strategic insight to direct your team.',
+    'Van AI-ambitie naar iets wat écht werkt in jouw organisatie. Persoonlijke begeleiding voor senior leiders die AI willen vertalen naar richting, keuzes en concrete voortgang.',
   robots: { index: true, follow: true },
   openGraph: {
-    title: 'AI Transition Mentor | Mark de Kock',
-    description: 'From AI curiosity to AI output. 3-month mentorship for C-level SME leaders. Max 5 per cohort.',
+    title: 'Van AI-ambitie naar iets wat écht werkt | Mark de Kock',
+    description: 'Persoonlijke begeleiding voor senior leiders. Geen training, geen consultancy — strategische mentoring op het punt waar ambitie concreet moet worden. Max. 5 mensen tegelijk.',
     url: 'https://markdekock.com/mentor',
     siteName: 'Mark de Kock',
     type: 'website',
