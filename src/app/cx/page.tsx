@@ -1,0 +1,349 @@
+'use client'
+
+import Link from 'next/link'
+import { motion, type Variants } from 'framer-motion'
+import { DIMENSIONS } from '@/products/cx/data'
+import CxRadarChart from '@/components/cx/RadarChart'
+
+// ── Brand tokens ─────────────────────────────────────────────────────────────
+const BLUE       = '#4B9FD6'
+const PINK       = '#D4607A'
+const DARK       = '#1E293B'
+const BODY       = '#475569'
+const MUTED      = '#94A3B8'
+const BLUE_LIGHT = '#EBF5FB'
+const PINK_LIGHT = '#FDF0F3'
+
+// ── Animation helpers ─────────────────────────────────────────────────────────
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 24 },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.55, ease: 'easeOut' } },
+}
+const stagger = {
+  hidden: {},
+  show:   { transition: { staggerChildren: 0.12 } },
+}
+
+// Sample scores for the radar preview
+const SAMPLE_SCORES = {
+  insight: 2.5,
+  journey: 3.0,
+  alignment: 1.8,
+  measurement: 2.2,
+  prioritisation: 1.5,
+  culture: 2.8,
+}
+
+export default function CxLandingPage() {
+  return (
+    <div style={{ minHeight: '100vh', background: '#fff', color: DARK, fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
+
+      {/* ── Nav ── */}
+      <nav style={{ background: '#fff', borderBottom: '1px solid #EEF2F7', position: 'sticky', top: 0, zIndex: 50 }}>
+        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div style={{
+              width: 36, height: 36, borderRadius: '50%', overflow: 'hidden',
+              border: `2px solid ${PINK}33`,
+              background: PINK_LIGHT,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              flexShrink: 0,
+            }}>
+              <img src="/marije-gast.png" alt="Marije Gast" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </div>
+            <div>
+              <p style={{ fontSize: 13, fontWeight: 700, color: DARK, lineHeight: 1.2 }}>Marije Gast</p>
+              <p style={{ fontSize: 11, color: MUTED, lineHeight: 1.2 }}>CX Expert</p>
+            </div>
+          </div>
+          <Link
+            href="/cx/assess"
+            style={{
+              background: PINK, color: '#fff', fontSize: 13, fontWeight: 700,
+              padding: '8px 20px', borderRadius: 100, textDecoration: 'none',
+            }}
+          >
+            Start assessment →
+          </Link>
+        </div>
+      </nav>
+
+      {/* ── Hero ── */}
+      <section style={{ background: '#fff', paddingTop: 80, paddingBottom: 88 }}>
+        <div className="max-w-3xl mx-auto px-6 text-center">
+          <motion.div variants={stagger} initial="hidden" animate="show">
+
+            <motion.div variants={fadeUp}>
+              <span style={{
+                display: 'inline-block', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em',
+                textTransform: 'uppercase', color: BLUE, background: BLUE_LIGHT,
+                padding: '4px 14px', borderRadius: 100, marginBottom: 24,
+              }}>
+                CX Maturity Assessment
+              </span>
+            </motion.div>
+
+            <motion.h1
+              variants={fadeUp}
+              style={{ fontSize: 'clamp(32px, 5vw, 54px)', fontWeight: 900, lineHeight: 1.15, marginBottom: 20, color: DARK }}
+            >
+              How customer-centric is{' '}
+              <span style={{ color: PINK }}>your organisation</span>
+              {' '}— really?
+            </motion.h1>
+
+            <motion.p
+              variants={fadeUp}
+              style={{ fontSize: 18, color: BODY, lineHeight: 1.7, maxWidth: 560, margin: '0 auto 36px' }}
+            >
+              In 15 minutes, discover where you genuinely stand across 6 dimensions of CX maturity — and where the biggest opportunities are hiding.
+            </motion.p>
+
+            <motion.div variants={fadeUp}>
+              <Link
+                href="/cx/assess"
+                style={{
+                  display: 'inline-block',
+                  background: `linear-gradient(135deg, ${PINK}, #E8607A)`,
+                  color: '#fff', fontWeight: 700, fontSize: 16,
+                  padding: '16px 40px', borderRadius: 100, textDecoration: 'none',
+                  boxShadow: '0 12px 32px rgba(212,96,122,0.3)',
+                }}
+              >
+                Start the assessment — it&apos;s free →
+              </Link>
+            </motion.div>
+
+            <motion.p variants={fadeUp} style={{ fontSize: 13, color: MUTED, marginTop: 16 }}>
+              24 questions · 6 dimensions · ~15 minutes · No registration required
+            </motion.p>
+
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── Wave divider ── */}
+      <div style={{ background: '#fff' }}>
+        <svg viewBox="0 0 1440 40" fill="none" style={{ display: 'block' }}>
+          <path d="M0 0 Q360 40 720 20 Q1080 0 1440 30 L1440 40 L0 40Z" fill="#FAFBFD" />
+        </svg>
+      </div>
+
+      {/* ── How it works ── */}
+      <section style={{ padding: '72px 24px', background: '#FAFBFD' }}>
+        <div className="max-w-4xl mx-auto">
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
+            <motion.p variants={fadeUp} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: PINK, marginBottom: 10 }}>
+              How it works
+            </motion.p>
+            <motion.h2 variants={fadeUp} style={{ textAlign: 'center', fontSize: 28, fontWeight: 800, marginBottom: 48, color: DARK }}>
+              Three steps to clarity
+            </motion.h2>
+            <div className="grid sm:grid-cols-3 gap-6">
+              {[
+                { n: '01', title: 'Select your role', body: 'Tell us where you sit in the organisation. Different roles see different things — that\'s the point.' },
+                { n: '02', title: 'Answer 24 questions', body: 'Rate your organisation honestly across 6 CX dimensions. No right or wrong — just where you are today.' },
+                { n: '03', title: 'See your results', body: 'Get a radar chart, dimension scores, and your top 3 priority gaps — plus a starting point for a conversation.' },
+              ].map((s, i) => (
+                <motion.div key={s.n} variants={fadeUp} style={{ background: '#fff', borderRadius: 20, padding: '28px 24px', border: '1px solid #EEF2F7', boxShadow: '0 2px 16px rgba(0,0,0,0.04)' }}>
+                  <div style={{ width: 36, height: 36, borderRadius: 10, background: i === 1 ? PINK_LIGHT : BLUE_LIGHT, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800, color: i === 1 ? PINK : BLUE, marginBottom: 16 }}>
+                    {s.n}
+                  </div>
+                  <p style={{ fontSize: 15, fontWeight: 700, marginBottom: 8, color: DARK }}>{s.title}</p>
+                  <p style={{ fontSize: 14, color: BODY, lineHeight: 1.65 }}>{s.body}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── Results preview ── */}
+      <section style={{ background: '#fff', padding: '72px 24px' }}>
+        <div className="max-w-4xl mx-auto">
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
+            <motion.p variants={fadeUp} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: BLUE, marginBottom: 10 }}>
+              What you get
+            </motion.p>
+            <motion.h2 variants={fadeUp} style={{ textAlign: 'center', fontSize: 28, fontWeight: 800, marginBottom: 12, color: DARK }}>
+              Your personal CX radar
+            </motion.h2>
+            <motion.p variants={fadeUp} style={{ textAlign: 'center', fontSize: 15, color: BODY, marginBottom: 40, maxWidth: 480, margin: '0 auto 40px' }}>
+              See exactly where you stand on each dimension — and where to focus first.
+            </motion.p>
+            <motion.div variants={fadeUp} style={{ maxWidth: 340, margin: '0 auto', background: '#FAFBFD', borderRadius: 24, padding: '28px 24px', border: '1px solid #EEF2F7', boxShadow: '0 4px 24px rgba(0,0,0,0.06)', textAlign: 'center' }}>
+              <p style={{ fontSize: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, marginBottom: 12 }}>Example result</p>
+              <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 72, height: 72, borderRadius: '50%', background: 'rgba(212,96,122,0.08)', border: `4px solid ${PINK}33`, marginBottom: 8 }}>
+                <span style={{ fontSize: 24, fontWeight: 900, color: PINK }}>2.3</span>
+              </div>
+              <p style={{ fontSize: 16, fontWeight: 800, color: DARK, marginBottom: 16 }}>Inside-Out</p>
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <CxRadarChart scores={SAMPLE_SCORES} size={220} primaryColor={PINK} />
+              </div>
+              <p style={{ fontSize: 11, color: MUTED, marginTop: 12, fontStyle: 'italic' }}>Sample — your results reflect your actual organisation</p>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── 6 Dimensions ── */}
+      <section style={{ background: '#FAFBFD', padding: '72px 24px' }}>
+        <div className="max-w-4xl mx-auto">
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
+            <motion.p variants={fadeUp} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: PINK, marginBottom: 10 }}>
+              The 6 dimensions
+            </motion.p>
+            <motion.h2 variants={fadeUp} style={{ textAlign: 'center', fontSize: 28, fontWeight: 800, marginBottom: 12, color: DARK }}>
+              Where does customer-centricity live?
+            </motion.h2>
+            <motion.p variants={fadeUp} style={{ textAlign: 'center', fontSize: 15, color: BODY, marginBottom: 40, maxWidth: 480, margin: '0 auto 40px' }}>
+              Each dimension reveals a different facet of CX maturity — together they form your full picture.
+            </motion.p>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {DIMENSIONS.map((d, i) => {
+                const isPink = i % 2 === 1
+                return (
+                  <motion.div
+                    key={d.id}
+                    variants={fadeUp}
+                    style={{
+                      borderRadius: 18, padding: '24px 22px',
+                      background: isPink ? PINK_LIGHT : BLUE_LIGHT,
+                      border: `1px solid ${isPink ? PINK : BLUE}22`,
+                    }}
+                  >
+                    <div style={{ fontSize: 28, marginBottom: 12 }}>{d.icon}</div>
+                    <p style={{ fontSize: 14, fontWeight: 800, color: isPink ? PINK : BLUE, marginBottom: 6 }}>{d.name}</p>
+                    <p style={{ fontSize: 13, color: BODY, lineHeight: 1.6 }}>{d.description}</p>
+                  </motion.div>
+                )
+              })}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── Marije — built by ── */}
+      <section style={{ background: '#fff', padding: '80px 24px' }}>
+        <div className="max-w-3xl mx-auto">
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
+            <motion.p variants={fadeUp} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: BLUE, marginBottom: 10 }}>
+              Your guide
+            </motion.p>
+            <motion.h2 variants={fadeUp} style={{ textAlign: 'center', fontSize: 28, fontWeight: 800, marginBottom: 40, color: DARK }}>
+              Built by a CX practitioner
+            </motion.h2>
+
+            <motion.div
+              variants={fadeUp}
+              style={{ background: '#FAFBFD', borderRadius: 28, padding: '40px', border: '1px solid #EEF2F7', boxShadow: '0 4px 24px rgba(0,0,0,0.05)' }}
+            >
+              <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
+                {/* Photo */}
+                <div style={{ flexShrink: 0 }}>
+                  <div style={{
+                    width: 140, height: 140, borderRadius: '50%', overflow: 'hidden',
+                    border: `4px solid ${PINK}33`,
+                    boxShadow: `0 8px 32px rgba(212,96,122,0.15)`,
+                  }}>
+                    <img
+                      src="/marije-gast.png"
+                      alt="Marije Gast"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </div>
+                </div>
+
+                {/* Bio */}
+                <div style={{ flex: 1 }}>
+                  <h3 style={{ fontSize: 22, fontWeight: 900, color: DARK, marginBottom: 4 }}>Marije Gast</h3>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: PINK, marginBottom: 16 }}>
+                    CX Expert · 20+ years experience · Freelance consultant
+                  </p>
+                  <blockquote style={{ fontSize: 16, fontWeight: 600, color: DARK, lineHeight: 1.65, borderLeft: `3px solid ${PINK}`, paddingLeft: 16, marginBottom: 16 }}>
+                    &ldquo;In markets where products and services are barely distinguishable anymore, customer experience is the differentiator.&rdquo;
+                  </blockquote>
+                  <p style={{ fontSize: 14, color: BODY, lineHeight: 1.7 }}>
+                    After two decades helping organisations put customers at the heart of their strategy, Marije distilled her diagnostic framework into this assessment — a fast, honest mirror for where you really stand. She helps directors and teams make customer insight visible, actionable, and strategically prioritised.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── Score legend ── */}
+      <section style={{ background: '#FAFBFD', padding: '64px 24px' }}>
+        <div className="max-w-3xl mx-auto">
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
+            <motion.h2 variants={fadeUp} style={{ textAlign: 'center', fontSize: 22, fontWeight: 800, marginBottom: 32, color: DARK }}>
+              Four levels of CX maturity
+            </motion.h2>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {[
+                { label: 'Customer-Led',   score: '3.5 – 4.0', desc: 'CX is embedded in strategy, culture and daily operations. You\'re building a sustainable advantage.', bg: '#E6F9F8', border: '#0EA5A0', text: '#0EA5A0' },
+                { label: 'Customer-Aware', score: '2.5 – 3.4', desc: 'You understand the importance of CX and have good practices in place — now sharpen execution.', bg: BLUE_LIGHT, border: BLUE, text: BLUE },
+                { label: 'Inside-Out',     score: '1.5 – 2.4', desc: 'CX intentions are there, but internal processes and structures pull focus away from the customer.', bg: '#FEF3C7', border: '#D97706', text: '#D97706' },
+                { label: 'Product-First',  score: '1.0 – 1.5', desc: 'The organisation is primarily focused on products or internal goals. There\'s real opportunity here.', bg: PINK_LIGHT, border: PINK, text: PINK },
+              ].map(l => (
+                <motion.div key={l.label} variants={fadeUp} style={{ borderRadius: 14, padding: '20px', background: l.bg, border: `1px solid ${l.border}33` }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+                    <p style={{ fontSize: 14, fontWeight: 800, color: l.text }}>{l.label}</p>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: l.text, background: '#fff', padding: '2px 10px', borderRadius: 100 }}>{l.score}</span>
+                  </div>
+                  <p style={{ fontSize: 13, color: BODY, lineHeight: 1.6 }}>{l.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── Final CTA ── */}
+      <section style={{ padding: '88px 24px', background: '#fff' }}>
+        <div className="max-w-xl mx-auto text-center">
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
+            <motion.h2 variants={fadeUp} style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 900, color: DARK, marginBottom: 16, lineHeight: 1.2 }}>
+              Ready to find out where you stand?
+            </motion.h2>
+            <motion.p variants={fadeUp} style={{ fontSize: 16, color: BODY, marginBottom: 32, lineHeight: 1.7 }}>
+              The assessment takes about 15 minutes. Your results are instant, honest, and the beginning of something useful.
+            </motion.p>
+            <motion.div variants={fadeUp}>
+              <Link
+                href="/cx/assess"
+                style={{
+                  display: 'inline-block',
+                  background: `linear-gradient(135deg, ${PINK}, #E8607A)`,
+                  color: '#fff', fontWeight: 700, fontSize: 16,
+                  padding: '16px 40px', borderRadius: 100, textDecoration: 'none',
+                  boxShadow: '0 12px 32px rgba(212,96,122,0.3)',
+                }}
+              >
+                Start the assessment →
+              </Link>
+            </motion.div>
+            <motion.p variants={fadeUp} style={{ fontSize: 13, color: MUTED, marginTop: 16 }}>
+              Free · No registration required · Results immediately
+            </motion.p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── Footer ── */}
+      <footer style={{ borderTop: '1px solid #EEF2F7', background: '#fff', padding: '28px 24px' }}>
+        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div style={{ width: 28, height: 28, borderRadius: '50%', overflow: 'hidden', border: `1.5px solid ${PINK}33` }}>
+              <img src="/marije-gast.png" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </div>
+            <span style={{ fontSize: 13, color: MUTED }}>Marije Gast — CX Expert</span>
+          </div>
+          <p style={{ fontSize: 12, color: MUTED }}>CX Maturity Assessment · {new Date().getFullYear()}</p>
+        </div>
+      </footer>
+
+    </div>
+  )
+}
