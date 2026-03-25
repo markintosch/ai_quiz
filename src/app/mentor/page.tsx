@@ -34,6 +34,7 @@ const T = {
   nl: {
     navName:    'Mark de Kock',
     navRole:    'Strategisch mentor voor AI & executie',
+    navPartner: 'Partner · Kirk & Blackbeard',
     navCta:     'Plan gesprek →',
     heroBadge:  'Persoonlijke begeleiding · Max. 5 leiders tegelijk',
     heroH1a:    'Van AI-ambitie naar',
@@ -125,6 +126,7 @@ const T = {
     aboutBody1: 'Ik ben van nature een bruggenbouwer tussen denken en doen. In mijn loopbaan heb ik veel gewerkt op het snijvlak van strategie, groei, klantgerichtheid, teams en verandering. AI is daar voor mij geen los onderwerp bovenop, maar een nieuwe realiteit die leiders vraagt om betere keuzes, meer scherpte en meer vertaalvermogen.',
     aboutBody2: 'Wat ik meebreng is tweeledig: hands-on ervaring met AI in de praktijk én jarenlange ervaring met organisaties, positionering, teams, executie en veranderdynamiek. Die combinatie is precies waarom senior leiders mij weten te vinden.',
     aboutCredentials: [
+      'Partner bij Kirk & Blackbeard',
       'Senior ervaring in strategie, groei, klantbeleving en executie',
       'Hands-on ontwikkeling en toepassing van AI in meerdere sectoren',
       'Werkt in Nederlands en Engels',
@@ -144,6 +146,7 @@ const T = {
   en: {
     navName:    'Mark de Kock',
     navRole:    'Strategic mentor for AI & execution',
+    navPartner: 'Partner · Kirk & Blackbeard',
     navCta:     'Book a call →',
     heroBadge:  'Personal mentorship · Max. 5 leaders at a time',
     heroH1a:    'From AI ambition to',
@@ -235,6 +238,7 @@ const T = {
     aboutBody1: 'I\'m naturally a bridge-builder between thinking and doing. I\'ve spent a lot of my career at the intersection of strategy, growth, customer experience, teams and change. For me, AI isn\'t a separate topic layered on top. It\'s a new reality that asks leaders to make better decisions, think with more clarity, and translate ambition into something real.',
     aboutBody2: 'What I bring is twofold: hands-on experience building and applying AI in practice, and years of experience with organisations, positioning, teams, execution and change dynamics. That combination is why senior leaders come to me.',
     aboutCredentials: [
+      'Partner at Kirk & Blackbeard',
       'Senior experience in strategy, growth, customer experience and execution',
       'Hands-on development and application of AI across multiple sectors',
       'Works in Dutch and English',
@@ -286,6 +290,7 @@ export default function MentorPage() {
             <div>
               <p style={{ fontSize: 13, fontWeight: 800, color: INK, lineHeight: 1.2 }}>{t.navName}</p>
               <p style={{ fontSize: 11, color: MUTED, lineHeight: 1.2 }}>{t.navRole}</p>
+              <p style={{ fontSize: 10, color: WARM, fontWeight: 600, lineHeight: 1.2 }}>{t.navPartner}</p>
             </div>
           </div>
 
