@@ -50,13 +50,11 @@ export function middleware(req: NextRequest) {
   const isMark   = hostname.includes('markdekock.com') ||
                    xfwdHost.includes('markdekock.com') ||
                    hostHdr.includes('markdekock.com')
-  // DEBUG: expose headers so we can see what Vercel sends (remove after diagnosis)
-  if (pathname === '/' && !isMark) {
-    const res = NextResponse.next()
-    res.headers.set('x-dbg-hostname', hostname)
-    res.headers.set('x-dbg-xfwd', xfwdHost || 'none')
-    res.headers.set('x-dbg-host', hostHdr || 'none')
-    return res
+  // DEBUG: return JSON at /?debug=1 to expose what Vercel passes (remove after)
+  if (pathname === '/' && req.nextUrl.searchParams.get('debug') === '1') {
+    return new NextResponse(JSON.stringify({ hostname, xfwdHost, hostHdr, isMark, url: req.url }), {
+      headers: { 'content-type': 'application/json' },
+    })
   }
   if (isMark && pathname === '/') {
     const url = req.nextUrl.clone()
