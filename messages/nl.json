@@ -5,18 +5,18 @@
   },
   "landing": {
     "hero": {
-      "badge": "Gratis · 5 minuten · Direct resultaat",
-      "heading1": "Je concurrenten gebruiken AI al.",
-      "heading2": "Waar sta jij eigenlijk?",
-      "sub": "Onze 5-minuten-diagnose meet je AI-volwassenheid op 6 kritieke dimensies — en vertelt je precies wat je als eerste moet aanpakken.",
-      "authors": "Ontwikkeld door Mark de Kock & Frank Meeuwsen — AI-transformatiespecialisten met ruim 30 jaar gecombineerde digitale ervaring.",
+      "badge": "Gratis · 5 minuten · Direct inzicht",
+      "heading1": "Waar staat jouw organisatie",
+      "heading2": "op AI?",
+      "sub": "Een 5-minuten diagnose die meet hoe AI begrepen, gebruikt en geprioriteerd wordt in jouw organisatie — en laat zien wat er als eerste aandacht verdient.",
+      "authors": "Gebouwd door Mark de Kock — strategisch mentor voor leiders die AI-ambitie willen vertalen naar echte voortgang.",
       "ctaMain": "Start de gratis 5-minuten-scan →",
       "ctaSub": "12 vragen · gratis · geen registratie vooraf vereist",
       "ctaFullPre": "Wil je het complete beeld?",
       "ctaFull": "Doe de uitgebreide assessment met 26 vragen →"
     },
     "trust": [
-      "Gebruikt door leiderschapsteams door heel Europa",
+      "Gebruikt door leiderschapsteams in heel Europa",
       "Gemiddelde score: 47/100 — hoe scoor jij?",
       "Resultaat in 5 minuten, gratis",
       "Geen verkooppraatje — gewoon jouw score"
@@ -51,12 +51,12 @@
       "sampleCaption": "Voorbeelduitvoer — jouw eigen profiel zal afwijken"
     },
     "practitioners": {
-      "label": "Gebouwd door beoefenaars",
-      "heading": "Geen theorie. Geen bureau-gebabbel.",
-      "sub": "Deze assessment is gebouwd door twee mensen die dit werk elke dag doen — geen onderzoeksteam of softwarehuis.",
+      "label": "Wie staat er achter deze scan",
+      "heading": "Gebouwd door iemand die het werk doet.",
+      "sub": "Geen onderzoeksteam, geen bureau. Deze scan is ontwikkeld door Mark de Kock — als intake voor zijn AI mentor begeleiding en als zelfstandig diagnostisch instrument.",
       "mark": {
-        "role": "AI Transformation Lead · Kirk & Blackbeard",
-        "bio": "Werkt met leiderschapsteams door heel Europa aan het ontwerpen en implementeren van praktische AI-strategieën — van bestuurlijke afstemming tot teamadoptie."
+        "role": "Strategisch mentor voor AI & executie",
+        "bio": "Mark helpt senior leiders bij het vertalen van AI-ambitie naar concrete keuzes, prioriteiten en voortgang. Deze scan is de eerste stap — voor wie zelfstandig wil starten én voor wie begeleiding zoekt."
       },
       "frank": {
         "role": "AI-trainer & Consultant · 30 jaar digitale ervaring",

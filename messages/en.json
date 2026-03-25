@@ -5,11 +5,11 @@
   },
   "landing": {
     "hero": {
-      "badge": "Free · 5 minutes · Instant results",
-      "heading1": "Your competitors are already using AI.",
-      "heading2": "Where do you actually stand?",
-      "sub": "Our 5-minute diagnostic benchmarks your AI maturity across 6 critical dimensions — and tells you exactly what to prioritise next.",
-      "authors": "Developed by Mark de Kock & Frank Meeuwsen — AI transformation specialists with 30+ years of combined digital experience.",
+      "badge": "Free · 5 minutes · Instant insight",
+      "heading1": "Where does your organisation",
+      "heading2": "stand on AI?",
+      "sub": "A 5-minute diagnostic that measures how AI is understood, used and prioritised in your organisation — and shows you what deserves attention first.",
+      "authors": "Built by Mark de Kock — strategic mentor for leaders turning AI ambition into real progress.",
       "ctaMain": "Start the 5-minute AI scan →",
       "ctaSub": "12 questions · free · no sign-up required upfront",
       "ctaFullPre": "Want the complete picture?",
@@ -51,12 +51,12 @@
       "sampleCaption": "Sample output — your actual profile will differ"
     },
     "practitioners": {
-      "label": "Built by practitioners",
-      "heading": "No theory. No agency fluff.",
-      "sub": "This assessment was built by two people who do this work every day — not a research team or a software house.",
+      "label": "Who built this scan",
+      "heading": "Built by someone who does the work.",
+      "sub": "No research team, no agency. This scan was built by Mark de Kock — as an intake for his AI mentorship and as a standalone diagnostic.",
       "mark": {
-        "role": "AI Transformation Lead · Kirk & Blackbeard",
-        "bio": "Works with leadership teams across Europe to design and implement practical AI strategies — from board alignment to team adoption."
+        "role": "Strategic mentor for AI & execution",
+        "bio": "Mark helps senior leaders translate AI ambition into concrete choices, priorities and progress. This scan is the first step — for those who want to start independently and for those seeking guidance."
       },
       "frank": {
         "role": "AI Trainer & Consultant · 30 years digital experience",

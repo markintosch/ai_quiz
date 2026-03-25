@@ -91,21 +91,25 @@ export default function LandingPageClient({ productName, productShortName, dimen
   }, [])
 
   return (
-    <div className="min-h-screen bg-brand text-white">
+    <div className="min-h-screen text-white" style={{ background: '#0F172A' }}>
 
       {/* ── Nav ── */}
       <nav className="border-b border-white/10 px-6 py-4">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <div>
-            <p className="text-brand-accent text-xs font-bold tracking-widest uppercase">Brand PWRD Media</p>
-            <p className="text-white text-sm font-semibold leading-tight">{productName}</p>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-black text-sm text-white" style={{ background: '#1D4ED8' }}>M</div>
+            <div>
+              <p className="text-white text-sm font-semibold leading-tight">{productName}</p>
+              <a href="/mentor" className="text-xs transition-colors" style={{ color: '#D97706' }}>markdekock.com/mentor →</a>
+            </div>
           </div>
           <div className="flex items-center gap-4">
             <LanguageSwitcher />
             <Link
               href="/a"
               onClick={() => trackEvent('nav_cta_clicked')}
-              className="px-5 py-2 bg-brand-accent hover:bg-orange-700 text-white text-sm font-semibold rounded-lg transition-colors"
+              className="px-5 py-2 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors"
+              style={{ background: '#1D4ED8' }}
             >
               {t('hero.ctaMain')}
             </Link>
@@ -118,7 +122,7 @@ export default function LandingPageClient({ productName, productShortName, dimen
         <motion.div variants={stagger} initial="hidden" animate="show">
 
           <motion.div variants={fadeUp}>
-            <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-brand-accent text-xs font-semibold tracking-widest uppercase mb-6 border border-white/10">
+            <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-xs font-semibold tracking-widest uppercase mb-6 border border-white/10" style={{ color: '#D97706' }}>
               {t('hero.badge')}
             </span>
           </motion.div>
@@ -128,7 +132,7 @@ export default function LandingPageClient({ productName, productShortName, dimen
             className="text-5xl md:text-6xl font-black leading-tight mb-6 tracking-tight"
           >
             {t('hero.heading1')}{' '}
-            <span className="text-brand-accent">{t('hero.heading2')}</span>
+            <span style={{ color: '#D97706' }}>{t('hero.heading2')}</span>
           </motion.h1>
 
           <motion.p
@@ -150,7 +154,8 @@ export default function LandingPageClient({ productName, productShortName, dimen
             <Link
               href="/a"
               onClick={() => trackEvent('hero_cta_short_clicked')}
-              className="inline-flex flex-col items-center px-10 py-5 bg-brand-accent hover:bg-orange-700 text-white font-bold rounded-2xl transition-colors shadow-xl shadow-orange-900/30"
+              className="inline-flex flex-col items-center px-10 py-5 text-white font-bold rounded-2xl transition-colors shadow-xl hover:bg-blue-700"
+              style={{ background: '#1D4ED8', boxShadow: '0 20px 40px rgba(29,78,216,0.3)' }}
             >
               <span className="text-xl">{t('hero.ctaMain')}</span>
               <span className="text-xs font-normal text-white/70 mt-1">{t('hero.ctaSub')}</span>
@@ -197,7 +202,7 @@ export default function LandingPageClient({ productName, productShortName, dimen
             whileInView="show"
             viewport={{ once: true, margin: '-80px' }}
           >
-            <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-widest text-brand-accent mb-2 text-center">
+            <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-widest mb-2 text-center" style={{ color: '#D97706' }}>
               {t('howItWorks.label')}
             </motion.p>
             <motion.h2 variants={fadeUp} className="text-3xl font-bold text-center mb-12">
@@ -211,7 +216,7 @@ export default function LandingPageClient({ productName, productShortName, dimen
                   variants={fadeUp}
                   className="bg-white/5 border border-white/10 rounded-2xl p-6"
                 >
-                  <p className="text-4xl font-black text-brand-accent/30 mb-3">{s.n}</p>
+                  <p className="text-4xl font-black text-amber-500/30 mb-3">{s.n}</p>
                   <h3 className="text-lg font-bold text-white mb-2">{s.title}</h3>
                   <p className="text-gray-400 text-sm leading-relaxed">{s.desc}</p>
                 </motion.div>
@@ -229,7 +234,7 @@ export default function LandingPageClient({ productName, productShortName, dimen
           whileInView="show"
           viewport={{ once: true, margin: '-80px' }}
         >
-          <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-widest text-brand-accent mb-2 text-center">
+          <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-widest mb-2 text-center" style={{ color: '#D97706' }}>
             {t('preview.label')}
           </motion.p>
           <motion.h2 variants={fadeUp} className="text-3xl font-bold text-center mb-3">
@@ -275,7 +280,7 @@ export default function LandingPageClient({ productName, productShortName, dimen
           whileInView="show"
           viewport={{ once: true, margin: '-80px' }}
         >
-          <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-widest text-brand-accent mb-2 text-center">
+          <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-widest mb-2 text-center" style={{ color: '#D97706' }}>
             {t('dimensions.label')}
           </motion.p>
           <motion.h2 variants={fadeUp} className="text-3xl font-bold text-center mb-3">
@@ -299,7 +304,7 @@ export default function LandingPageClient({ productName, productShortName, dimen
       </section>
 
       {/* ── Built by ── */}
-      <section className="border-t border-white/10 bg-white/5">
+      <section className="border-t border-white/10" style={{ background: '#1E3A5F' }}>
         <div className="max-w-5xl mx-auto px-6 py-20">
           <motion.div
             variants={stagger}
@@ -307,7 +312,7 @@ export default function LandingPageClient({ productName, productShortName, dimen
             whileInView="show"
             viewport={{ once: true, margin: '-80px' }}
           >
-            <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-widest text-brand-accent mb-2 text-center">
+            <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-widest mb-2 text-center" style={{ color: '#D97706' }}>
               {t('practitioners.label')}
             </motion.p>
             <motion.h2 variants={fadeUp} className="text-3xl font-bold text-center mb-3">
@@ -317,11 +322,9 @@ export default function LandingPageClient({ productName, productShortName, dimen
               {t('practitioners.sub')}
             </motion.p>
 
-            <motion.div variants={stagger} className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-
-              {/* Mark */}
-              <motion.div variants={fadeUp} className="bg-brand-light border border-white/15 rounded-2xl p-7 flex flex-col items-center text-center">
-                <div className="w-24 h-24 rounded-full overflow-hidden mb-4 ring-2 ring-brand-accent/60 bg-brand flex items-center justify-center flex-shrink-0">
+            <motion.div variants={stagger} className="max-w-lg mx-auto">
+              <motion.div variants={fadeUp} className="rounded-2xl p-7 flex flex-col items-center text-center border border-white/15" style={{ background: 'rgba(30,58,95,0.6)' }}>
+                <div className="w-24 h-24 rounded-full overflow-hidden mb-4 bg-[#1E3A5F] flex items-center justify-center flex-shrink-0 ring-2 ring-blue-500/40">
                   <img
                     src="/mark-de-kock.jpg"
                     alt="Mark de Kock"
@@ -329,39 +332,23 @@ export default function LandingPageClient({ productName, productShortName, dimen
                     onError={(e) => {
                       const tgt = e.currentTarget
                       tgt.style.display = 'none'
-                      if (tgt.parentElement) tgt.parentElement.innerHTML = '<span style="color:white;font-weight:700;font-size:1.25rem">MdK</span>'
+                      if (tgt.parentElement) tgt.parentElement.innerHTML = '<span style="color:white;font-weight:700;font-size:1.25rem">M</span>'
                     }}
                   />
                 </div>
                 <h3 className="text-white font-bold text-lg mb-0.5">Mark de Kock</h3>
-                <p className="text-brand-accent text-xs font-semibold mb-4">{t('practitioners.mark.role')}</p>
+                <p className="text-xs font-semibold mb-4" style={{ color: '#D97706' }}>{t('practitioners.mark.role')}</p>
                 <p className="text-gray-300 text-sm leading-relaxed">
                   {t('practitioners.mark.bio')}
                 </p>
+                <a
+                  href="/mentor"
+                  className="mt-5 text-sm font-semibold transition-colors hover:underline"
+                  style={{ color: '#D97706' }}
+                >
+                  Over de AI Mentor begeleiding →
+                </a>
               </motion.div>
-
-              {/* Frank */}
-              <motion.div variants={fadeUp} className="bg-brand-light border border-white/15 rounded-2xl p-7 flex flex-col items-center text-center">
-                <div className="w-24 h-24 rounded-full overflow-hidden mb-4 ring-2 ring-brand-accent/60 bg-brand flex items-center justify-center flex-shrink-0">
-                  <img
-                    src="/frank-meeuwsen.jpg"
-                    alt="Frank Meeuwsen"
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      const tgt = e.currentTarget
-                      tgt.style.display = 'none'
-                      if (tgt.parentElement) tgt.parentElement.innerHTML = '<span style="color:white;font-weight:700;font-size:1.25rem">FM</span>'
-                    }}
-                  />
-                </div>
-                <h3 className="text-white font-bold text-lg mb-0.5">Frank Meeuwsen</h3>
-                <p className="text-brand-accent text-xs font-semibold mb-4">{t('practitioners.frank.role')}</p>
-                <p className="text-white text-sm leading-relaxed italic mb-2">
-                  {t('practitioners.frank.quote')}
-                </p>
-                <p className="text-gray-400 text-xs">{t('practitioners.frank.translation')}</p>
-              </motion.div>
-
             </motion.div>
           </motion.div>
         </div>
@@ -385,7 +372,8 @@ export default function LandingPageClient({ productName, productShortName, dimen
             <Link
               href="/a"
               onClick={() => trackEvent('final_cta_short_clicked')}
-              className="inline-flex flex-col items-center px-12 py-5 bg-brand-accent hover:bg-orange-700 text-white font-bold rounded-2xl transition-colors shadow-xl shadow-orange-900/30"
+              className="inline-flex flex-col items-center px-12 py-5 text-white font-bold rounded-2xl transition-colors shadow-xl hover:bg-blue-700"
+              style={{ background: '#1D4ED8', boxShadow: '0 20px 40px rgba(29,78,216,0.3)' }}
             >
               <span className="text-xl">{t('finalCta.button')}</span>
               <span className="text-xs font-normal text-white/70 mt-1">{t('finalCta.buttonSub')}</span>
@@ -409,10 +397,10 @@ export default function LandingPageClient({ productName, productShortName, dimen
       {/* ── Footer ── */}
       <footer className="border-t border-white/10 px-6 py-8">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-500">
-          <p>© {new Date().getFullYear()} Brand PWRD Media. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Mark de Kock · <a href="/mentor" className="hover:text-gray-300 transition-colors">markdekock.com/mentor</a></p>
           <div className="flex gap-6">
             <Link href="/privacy" className="hover:text-gray-300 transition-colors">{t('footer.privacy')}</Link>
-            <a href="mailto:mark@brandpwrdmedia.com" className="hover:text-gray-300 transition-colors">{t('footer.contact')}</a>
+            <a href="mailto:mark@dekock.com" className="hover:text-gray-300 transition-colors">{t('footer.contact')}</a>
           </div>
         </div>
       </footer>
