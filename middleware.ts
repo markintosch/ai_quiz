@@ -50,9 +50,9 @@ export function middleware(req: NextRequest) {
   const isMark   = hostname.includes('markdekock.com') ||
                    xfwdHost.includes('markdekock.com') ||
                    hostHdr.includes('markdekock.com')
-  // DEBUG: return JSON at /?debug=1 to expose what Vercel passes (remove after)
-  if (pathname === '/' && req.nextUrl.searchParams.get('debug') === '1') {
-    return new NextResponse(JSON.stringify({ hostname, xfwdHost, hostHdr, isMark, url: req.url }), {
+  // TEMP DEBUG: always dump headers at root (remove immediately after diagnosis)
+  if (pathname === '/') {
+    return new NextResponse(JSON.stringify({ hostname, xfwdHost, hostHdr, isMark, url: req.url, search: req.nextUrl.search }), {
       headers: { 'content-type': 'application/json' },
     })
   }
