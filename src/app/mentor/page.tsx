@@ -45,7 +45,7 @@ const T = {
     heroTrust:  'Persoonlijk traject · 3 maanden · Intake vereist',
 
     probLabel:  'Wat ik vaak zie',
-    probTitle:  'Niet de ambitie is het probleem. De vertaling is het probleem.',
+    probTitle:  'De ambitie is niet het probleem. Het pad ernaar toe wel.',
     probItems: [
       { icon: '🎯', title: 'De richting is er, maar de eerste echte keuze niet', body: 'Veel leiders voelen goed aan dat AI relevant is. Maar tussen "we moeten hier iets mee" en "dit is wat we nu gaan doen" zit een lastige laag van keuzes, prioriteiten, risico\'s en eigenaarschap. Juist daar blijft het vaak hangen.' },
       { icon: '🔀', title: 'Er gebeurt van alles, maar niets komt samen', body: 'Teams experimenteren. Er worden tools getest. Iemand gebruikt AI slim, een ander start een pilot. Maar zonder gezamenlijke richting en duidelijke keuzes ontstaat versnippering. Er is activiteit, maar nog geen voortgang.' },
@@ -157,7 +157,7 @@ const T = {
     heroTrust:  'Personal mentorship · 3 months · Intake required',
 
     probLabel:  'What I often see',
-    probTitle:  'The ambition isn\'t the problem. The translation is.',
+    probTitle:  'The ambition isn\'t the problem. Finding the path forward is.',
     probItems: [
       { icon: '🎯', title: 'The direction exists, but the first real choice doesn\'t', body: 'Most leaders sense that AI is relevant. But between "we need to do something with this" and "this is what we\'re doing now" sits a difficult layer of choices, priorities, risks and ownership. That\'s where things tend to get stuck.' },
       { icon: '🔀', title: 'A lot is happening, but nothing is connecting', body: 'Teams are experimenting. Tools are being tested. Someone uses AI cleverly, another starts a pilot. But without shared direction and clear choices, things fragment. There\'s activity, but not yet progress.' },
