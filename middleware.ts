@@ -43,11 +43,11 @@ export function middleware(req: NextRequest) {
   if (pathname.startsWith('/abbvie'))    return NextResponse.next()
   if (pathname.startsWith('/mentor'))    return NextResponse.next()
 
-  // ── markdekock.com root → mentor page ────────────────────────────────────
+  // ── markdekock.com root → mentor page (rewrite: URL stays as markdekock.com) ─
   const host = req.headers.get('host') ?? ''
   if ((host === 'markdekock.com' || host === 'www.markdekock.com') &&
       (pathname === '/' || pathname === '')) {
-    return NextResponse.redirect(new URL('/mentor', req.url))
+    return NextResponse.rewrite(new URL('/mentor', req.url))
   }
 
   // ── Public routes: locale routing via next-intl ───────────────────────────
