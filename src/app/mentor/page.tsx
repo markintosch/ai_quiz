@@ -39,38 +39,38 @@ const T = {
     heroBadge:  'Persoonlijke begeleiding · Max. 5 trajecten tegelijk',
     heroH1a:    'Van AI-ambitie naar',
     heroH1b:    'iets wat écht werkt in jouw organisatie.',
-    heroBody:   'AI is voor de meeste organisaties geen inspiratievraag meer. De echte vraag is: wat betekent dit voor ons, waar beginnen we, en hoe maken we het concreet zonder te verdwalen in pilots, tools of abstracte plannen? Ik help leidinggevenden en managementteams bij precies dat punt. Niet als trainer, maar als iemand die beweegt tussen strategie, verandering en uitvoering.',
+    heroBody:   'De meeste leidinggevenden die ik spreek missen geen informatie over AI. Ze missen iemand die helpt beslissen. Niet als trainer, maar als iemand die beweegt tussen strategie en wat er in de praktijk van terechtkomt.',
     heroCta1:   'Plan een intakegesprek →',
     heroCta2:   'Doe eerst de gratis AI-scan',
     heroTrust:  'Persoonlijk traject · 3 maanden · Intake vereist',
 
-    probLabel:  'Wat ik vaak zie',
+    probLabel:  'Wat ik zie',
     probTitle:  'De ambitie is niet het probleem. Het pad ernaar toe wel.',
     probItems: [
-      { icon: '🎯', title: 'De richting is er, maar de eerste echte keuze niet', body: 'Veel leiders voelen goed aan dat AI relevant is. Maar tussen "we moeten hier iets mee" en "dit is wat we nu gaan doen" zit een lastige laag van keuzes, prioriteiten, risico\'s en eigenaarschap. Juist daar blijft het vaak hangen.' },
-      { icon: '🔀', title: 'Er gebeurt van alles, maar niets komt samen', body: 'Teams experimenteren. Er worden tools getest. Iemand gebruikt AI slim, een ander start een pilot. Maar zonder gezamenlijke richting en duidelijke keuzes ontstaat versnippering. Er is activiteit, maar nog geen voortgang.' },
-      { icon: '⏸️', title: 'Na de inspiratie volgt geen structuur', body: 'De keynote, de strategiesessie of het rapport zet iets in beweging. Maar daarna moet iemand de stap maken van inzicht naar ritme, prioriteit en concrete toepassing. Als die rol ontbreekt, valt een goed voornemen terug in de drukte van alledag.' },
+      { icon: '🎯', title: 'De richting ontbreekt niet. Het houvast wel.', body: 'Teams grijpen naar tools onder druk. Het voelt als beweging. Maar een tool is geen antwoord op een vraag die nog niet gesteld is.' },
+      { icon: '📋', title: 'Strategische keuzes landen niet in de organisatie.', body: 'Marketing, sales en operations werken door op hun eigen agenda. De AI-beslissing is nooit vertaald naar de doelen waar ze op sturen. Er is geen gedeeld kader om op te sturen.' },
+      { icon: '💼', title: 'De CEO heeft al genoeg op zijn bord.', body: 'Van merk tot sales tot install base. Een heldere AI-strategie klinkt logisch, maar voelt als risico bovenop alles wat al speelt. Wat ontbreekt is iemand die je kunt vertrouwen om dit geordend te houden.' },
     ],
 
     whyLabel:  'Waarom ik',
     whyTitle:  'Twintig jaar op het snijvlak van strategie en uitvoering. AI is het nieuwste vraagstuk. Niet het eerste.',
-    whyP1:     'Mijn achtergrond ligt niet in een lab of alleen in technologie. Ik heb jarenlang gewerkt op het snijvlak van strategie, commerciële groei, klantbeleving, teams en executie. Juist daardoor kijk ik anders naar AI dan veel specialisten. Niet als doel op zich, maar als iets dat moet landen in een organisatie: bij mensen, processen en verantwoordelijkheden.',
-    whyP2:     'In de afgelopen periode heb ik AI-oplossingen ontwikkeld en toegepast in verschillende contexten: van zorg en duurzaamheid tot finance, customer experience en FMCG. Dat hands-on werk neem ik mee. Maar net zo belangrijk: ik weet hoe organisaties bewegen, waar weerstand ontstaat, en waarom goede plannen stranden tussen directie en uitvoering.',
-    whyP3:     'Daar zit mijn rol. Ik help je niet om "meer over AI te weten". Ik help je om betere keuzes te maken, richting te geven, en in beweging te komen op een manier die past bij jouw organisatie.',
+    whyP1:     'Dat geeft een ander perspectief dan een AI-specialist. Ik weet hoe beslissingen vastlopen. Waar de weerstand echt zit. Waarom goede plannen stranden in de ruimte tussen directie en uitvoering.',
+    whyP2:     'In die periode heb ik AI-oplossingen gebouwd en ingevoerd in zorg, finance, FMCG en duurzaamheid. Steeds op dezelfde plek: tussen de ambitie en wat er daadwerkelijk van terechtkomt.',
+    whyP3:     'Mijn rol zit in dat midden. Tussen de strategische keuze aan de top en de teams die ermee aan de slag moeten. Dat gat is groter dan de meeste directies denken.',
 
     forLabel:   'Voor wie',
     forTitle:   'Dit is voor leidinggevenden en managementteams die serieus werk willen maken van AI, zonder zich te verliezen in de hype.',
     forItems: [
       { icon: '🧭', text: 'Je weet dat AI impact gaat hebben op jouw organisatie, maar de vertaling naar richting en prioriteit ontbreekt nog.' },
       { icon: '❓', text: 'Je wil de juiste vragen kunnen stellen, zonder zelf specialist of techneut te hoeven worden.' },
-      { icon: '🤝', text: 'Je zoekt geen training of dikke advieslaag, maar persoonlijke begeleiding bij echte keuzes.' },
+      { icon: '🤝', text: 'Je zoekt persoonlijke begeleiding bij echte keuzes, geen training of dikke advieslaag.' },
       { icon: '💬', text: 'Je wil geloofwaardig leidinggeven op dit onderwerp: richting team, directie, board of aandeelhouders.' },
-      { icon: '📈', text: 'Je wil niet eindigen met losse experimenten, maar met iets dat daadwerkelijk werkt en intern verder kan groeien.' },
+      { icon: '📈', text: 'Je wil eindigen met iets dat werkt en intern verder kan groeien.' },
     ],
 
     areasLabel: 'Waar we aan werken',
-    areasTitle: 'Geen generiek AI-verhaal. Jouw organisatie, jouw context, jouw keuzes.',
-    areasBody:  'Ik gebruik een vaste denkrichting, maar geen template. We kijken samen naar de thema\'s die ertoe doen in jouw situatie: strategisch, organisatorisch en praktisch.',
+    areasTitle: 'Geen template. Jouw situatie als vertrekpunt.',
+    areasBody:  'Ik gebruik een vaste denkrichting, geen template. De thema\'s die we aanpakken hangen af van wat er in jouw situatie speelt.',
     areas: [
       { icon: '🧭', title: 'Richting en prioriteit',                       body: 'Waar raakt AI jouw businessmodel, je dienstverlening of je manier van werken? Wat vraagt nu aandacht, en wat juist nog niet?' },
       { icon: '👔', title: 'Leiderschap en besluitvorming',                 body: 'Welke rol moet jij als leider pakken? Welke keuzes kun je delegeren, en welke juist niet? Hoe houd je regie zonder alles zelf te hoeven weten?' },
@@ -81,7 +81,7 @@ const T = {
     ],
 
     programLabel: 'Hoe het werkt',
-    programTitle: 'Drie maanden. Persoonlijk, praktisch en gericht op echte voortgang.',
+    programTitle: 'Drie maanden. Persoonlijk en gericht op iets dat daadwerkelijk werkt.',
     programMonths: [
       {
         n: '01', title: 'Scherp krijgen wat er speelt',
@@ -102,7 +102,7 @@ const T = {
 
     proofLabel:  'Ervaring uit de praktijk',
     proofTitle:  'Ik werk op de grens van ambitie en haalbaarheid. Daar ontstaat de echte waarde.',
-    proofBody:   'In verschillende opdrachten en sectoren heb ik steeds dezelfde vertaalslag moeten maken: wat wil een organisatie bereiken, wat is realistisch, en hoe maak je de eerste stap zó dat mensen mee kunnen?',
+    proofBody:   'In opdrachten en sectoren maak ik steeds dezelfde vertaalslag. Van wat een organisatie wil naar de eerste stap die mensen daadwerkelijk kunnen zetten.',
     proofItems: [
       { icon: '💜', color: '#6B2D8B', sector: 'Gezondheidszorg',             body: 'Van strategische ambitie rond kennisdeling en best practice naar een toepassing die professionals zelf gebruiken in hun dagelijkse werk.' },
       { icon: '♻️', color: '#398684', sector: 'Vastgoed & Duurzaamheid',     body: 'Van externe druk en CSRD-verplichtingen naar een praktisch model waarmee directie en operatie naar dezelfde werkelijkheid kijken.' },
@@ -123,8 +123,8 @@ const T = {
 
     aboutLabel: 'Over mij',
     aboutTitle: 'Ik help leidinggevenden en managementteams richting geven op het punt waar strategie concreet moet worden.',
-    aboutBody1: 'Ik ben van nature een bruggenbouwer tussen denken en doen. In mijn loopbaan heb ik veel gewerkt op het snijvlak van strategie, groei, klantgerichtheid, teams en verandering. AI is daar voor mij geen los onderwerp bovenop, maar een nieuwe realiteit die leiders vraagt om betere keuzes, meer scherpte en meer vertaalvermogen.',
-    aboutBody2: 'Wat ik meebreng is tweeledig: hands-on ervaring met AI in de praktijk én jarenlange ervaring met organisaties, positionering, teams, executie en veranderdynamiek. Die combinatie is precies waarom senior leiders mij weten te vinden.',
+    aboutBody1: 'In mijn loopbaan heb ik veel gewerkt op het snijvlak van strategie, groei en uitvoering. AI is voor mij geen los onderwerp bovenop, maar de nieuwste realiteit op een vertrouwd snijvlak: hoe zorg je dat goede ideeën ook landen?',
+    aboutBody2: 'Wat ik meebreng: hands-on ervaring met AI in de praktijk én jarenlange ervaring met organisaties die moeten bewegen maar vastlopen. Ik weet wanneer een plan haalbaar is. En wanneer het mooi klinkt maar nooit landt.',
     aboutCredentials: [
       'Partner bij Kirk & Blackbeard',
       'Senior ervaring in strategie, groei, klantbeleving en executie',
@@ -137,7 +137,7 @@ const T = {
 
     spotsLabel:  'Beschikbaarheid',
     spotsTitle:  'Ik begeleid maximaal vijf trajecten tegelijk.',
-    spotsBody:   'Omdat dit alleen werkt als ik echt kan meedenken in jouw situatie. Geen standaard format, geen groep. Wel persoonlijke begeleiding, scherpe vragen en concrete voortgang.',
+    spotsBody:   'Omdat dit alleen werkt als ik echt kan meedenken in jouw situatie. Geen standaard format. Persoonlijke begeleiding met een concreet resultaat.',
     spotsCta1:   'Plan een intakegesprek →',
     spotsCta2:   'Doe eerst de gratis AI-scan',
     spotsTrust:  'Gratis intake · Geen verplichting · We bekijken samen of er een match is',
@@ -153,38 +153,38 @@ const T = {
     heroBadge:  'Personal mentorship · Max. 5 engagements at a time',
     heroH1a:    'From AI ambition to',
     heroH1b:    'something that actually works in your organisation.',
-    heroBody:   'For most organisations, AI is no longer an inspiration question. The real question is: what does this mean for us, where do we start, and how do we make it concrete without getting lost in pilots, tools or abstract plans? That\'s exactly where I come in. Not as a trainer, but as someone who moves between strategy, change and execution.',
+    heroBody:   'Most leaders I speak with don\'t lack information about AI. They lack someone to help them decide. Not as a trainer, but as someone who moves between strategy and what actually gets delivered.',
     heroCta1:   'Book an intake call →',
     heroCta2:   'Take the free AI scan first',
     heroTrust:  'Personal mentorship · 3 months · Intake required',
 
-    probLabel:  'What I often see',
+    probLabel:  'What I see',
     probTitle:  'The ambition isn\'t the problem. Finding the path forward is.',
     probItems: [
-      { icon: '🎯', title: 'The direction exists, but the first real choice doesn\'t', body: 'Most leaders sense that AI is relevant. But between "we need to do something with this" and "this is what we\'re doing now" sits a difficult layer of choices, priorities, risks and ownership. That\'s where things tend to get stuck.' },
-      { icon: '🔀', title: 'A lot is happening, but nothing is connecting', body: 'Teams are experimenting. Tools are being tested. Someone uses AI cleverly, another starts a pilot. But without shared direction and clear choices, things fragment. There\'s activity, but not yet progress.' },
-      { icon: '⏸️', title: 'After the inspiration, there\'s no structure', body: 'The keynote, the strategy session, the external report sets something in motion. But then someone needs to make the step from insight to rhythm, priority and concrete application. When that role is missing, good intentions fall back into the noise of everyday business.' },
+      { icon: '🎯', title: 'Direction isn\'t the problem. Grip is.', body: 'Teams reach for tools under pressure. It feels like action. But a tool is no answer to a question that hasn\'t been asked yet.' },
+      { icon: '📋', title: 'Strategic choices don\'t land in the organisation.', body: 'Marketing, sales and operations keep moving on their own agendas. The AI decision was never translated into goals they actually work towards. There\'s no shared framework to steer on.' },
+      { icon: '💼', title: 'The CEO already has enough on their plate.', body: 'From brand to sales to install base. A clear AI strategy sounds logical, but feels like one more risk on top of everything else. What\'s missing is someone to trust with keeping this organised.' },
     ],
 
     whyLabel:  'Why me',
     whyTitle:  'Twenty years at the intersection of strategy and execution. AI is the newest challenge. Not the first.',
-    whyP1:     'My background isn\'t in a lab or purely in technology. I\'ve spent years working at the intersection of strategy, commercial growth, customer experience, teams and execution. That\'s exactly why I look at AI differently to many specialists: not as an end in itself, but as something that has to land in an organisation, with real people, processes and accountabilities.',
-    whyP2:     'In recent years I\'ve built and applied AI in different contexts: from healthcare and sustainability to finance, customer experience and FMCG. I bring that hands-on work with me. But just as important: I understand how organisations move, where resistance emerges, and why good plans get stuck between leadership and delivery.',
-    whyP3:     'That\'s where my role sits. I don\'t help you "know more about AI". I help you make better decisions, give direction, and move forward in a way that actually fits your organisation.',
+    whyP1:     'That gives a different perspective than an AI specialist. I know how decisions stall. Where the real resistance sits. Why good plans get stranded in the space between leadership and execution.',
+    whyP2:     'In that time I\'ve built and applied AI in healthcare, finance, FMCG and sustainability. Always at the same point: between the ambition and what actually comes of it.',
+    whyP3:     'My role is in that middle. Between the strategic decision at the top and the teams who need to act on it. That gap is larger than most leadership teams expect.',
 
     forLabel:   'Who this is for',
     forTitle:   'This is for senior managers and management teams who want to make AI work — without getting lost in the hype.',
     forItems: [
       { icon: '🧭', text: 'You know AI is going to impact your organisation, but the translation to direction and priority is still missing.' },
       { icon: '❓', text: 'You want to be able to ask the right questions, without having to become a technical expert yourself.' },
-      { icon: '🤝', text: 'You\'re not looking for a training or a thick advisory layer. You want personal guidance on real choices.' },
+      { icon: '🤝', text: 'You want personal guidance on real choices, not a training or a thick advisory layer.' },
       { icon: '💬', text: 'You want to lead credibly on this topic: with your team, your board, your clients and your shareholders.' },
-      { icon: '📈', text: 'You don\'t want to end up with scattered experiments, but with something that actually works and can grow.' },
+      { icon: '📈', text: 'You want to end up with something that actually works and can grow internally.' },
     ],
 
     areasLabel: 'What we work on',
-    areasTitle: 'No generic AI story. Your organisation, your context, your choices.',
-    areasBody:  'I use a consistent way of thinking, but not a template. Together we look at the themes that matter in your situation: strategic, organisational and practical.',
+    areasTitle: 'No template. Your situation as the starting point.',
+    areasBody:  'I use a consistent framework, not a template. The themes we work on depend on what is actually happening in your situation.',
     areas: [
       { icon: '🧭', title: 'Direction and priority',                         body: 'Where does AI touch your business model, your services or your way of working? What needs attention now, and what can wait?' },
       { icon: '👔', title: 'Leadership and decision-making',                 body: 'What role do you need to take as a leader? What can you delegate, and what must you own? How do you stay in control without needing to know everything?' },
@@ -195,7 +195,7 @@ const T = {
     ],
 
     programLabel: 'How it works',
-    programTitle: 'Three months. Personal, practical and focused on real progress.',
+    programTitle: 'Three months. Personal and focused on something that actually works.',
     programMonths: [
       {
         n: '01', title: 'Getting clarity on what\'s at stake',
@@ -216,7 +216,7 @@ const T = {
 
     proofLabel:  'Experience from practice',
     proofTitle:  'I work at the boundary between ambition and feasibility. That\'s where real value emerges.',
-    proofBody:   'Across different projects and sectors I\'ve had to make the same translation: what does this organisation want to achieve, what\'s realistic, and how do you make the first step in a way that brings people along?',
+    proofBody:   'Across projects and sectors I make the same translation. From what an organisation wants to the first step people can actually take.',
     proofItems: [
       { icon: '💜', color: '#6B2D8B', sector: 'Healthcare',                  body: 'From strategic ambition around knowledge-sharing and best practice to an application that professionals use themselves in their daily work.' },
       { icon: '♻️', color: '#398684', sector: 'Real estate & Sustainability', body: 'From external pressure and CSRD obligations to a practical model that gives leadership and operations the same picture of reality.' },
@@ -237,8 +237,8 @@ const T = {
 
     aboutLabel: 'About me',
     aboutTitle: 'I help senior managers and management teams give direction at the point where strategy needs to become concrete.',
-    aboutBody1: 'I\'m naturally a bridge-builder between thinking and doing. I\'ve spent a lot of my career at the intersection of strategy, growth, customer experience, teams and change. For me, AI isn\'t a separate topic layered on top. It\'s a new reality that asks leaders to make better decisions, think with more clarity, and translate ambition into something real.',
-    aboutBody2: 'What I bring is twofold: hands-on experience building and applying AI in practice, and years of experience with organisations, positioning, teams, execution and change dynamics. That combination is why senior leaders come to me.',
+    aboutBody1: 'I\'ve spent a lot of my career at the intersection of strategy, growth and execution. For me, AI isn\'t a separate topic layered on top. It\'s the latest challenge on a familiar question: how do you make sure good ideas actually land?',
+    aboutBody2: 'What I bring: hands-on experience building and applying AI in practice, and years of experience with organisations that need to move but keep getting stuck. I know the difference between a plan that sounds right and one that will actually hold.',
     aboutCredentials: [
       'Partner at Kirk & Blackbeard',
       'Senior experience in strategy, growth, customer experience and execution',
@@ -251,7 +251,7 @@ const T = {
 
     spotsLabel:  'Availability',
     spotsTitle:  'I work with a maximum of five engagements at a time.',
-    spotsBody:   'Because this only works if I can genuinely think along in your situation. No standard format, no group. Personal guidance, sharp questions and concrete progress.',
+    spotsBody:   'Because this only works if I can genuinely think along in your situation. No standard format. Personal guidance with a concrete result.',
     spotsCta1:   'Book an intake call →',
     spotsCta2:   'Take the free AI scan first',
     spotsTrust:  'Free intake · No obligations · We\'ll see if there\'s a fit',
