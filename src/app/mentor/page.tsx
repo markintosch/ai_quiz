@@ -38,7 +38,7 @@ const T = {
     heroBadge:  'Persoonlijke begeleiding · Max. 5 leiders tegelijk',
     heroH1a:    'Van AI-ambitie naar',
     heroH1b:    'iets wat écht werkt in jouw organisatie.',
-    heroBody:   'AI is voor de meeste organisaties geen inspiratievraag meer. De echte vraag is: wat betekent dit voor ons, waar beginnen we, en hoe maken we het concreet zonder te verdwalen in pilots, tools of abstracte plannen? Ik help leiders bij precies dat punt — niet als trainer, maar als iemand die beweegt tussen strategie, verandering en uitvoering.',
+    heroBody:   'AI is voor de meeste organisaties geen inspiratievraag meer. De echte vraag is: wat betekent dit voor ons, waar beginnen we, en hoe maken we het concreet zonder te verdwalen in pilots, tools of abstracte plannen? Ik help leiders bij precies dat punt. Niet als trainer, maar als iemand die beweegt tussen strategie, verandering en uitvoering.',
     heroCta1:   'Plan een intakegesprek →',
     heroCta2:   'Doe eerst de gratis AI-scan',
     heroTrust:  'Persoonlijk traject · 3 maanden · Intake vereist',
@@ -53,8 +53,8 @@ const T = {
 
     whyLabel:  'Waarom ik',
     whyTitle:  'Ik kom niet alleen uit AI. Ik kom uit strategie, verandering en uitvoering.',
-    whyP1:     'Mijn achtergrond ligt niet in een lab of alleen in technologie. Ik heb jarenlang gewerkt op het snijvlak van strategie, commerciële groei, klantbeleving, teams en executie. Juist daardoor kijk ik anders naar AI dan veel specialisten. Niet als doel op zich, maar als iets dat moet landen in een organisatie — bij mensen, processen en verantwoordelijkheden.',
-    whyP2:     'In de afgelopen periode heb ik AI-oplossingen ontwikkeld en toegepast in verschillende contexten — van zorg en duurzaamheid tot finance, customer experience en FMCG. Dat hands-on werk neem ik mee. Maar net zo belangrijk: ik weet hoe organisaties bewegen, waar weerstand ontstaat, en waarom goede plannen stranden tussen directie en uitvoering.',
+    whyP1:     'Mijn achtergrond ligt niet in een lab of alleen in technologie. Ik heb jarenlang gewerkt op het snijvlak van strategie, commerciële groei, klantbeleving, teams en executie. Juist daardoor kijk ik anders naar AI dan veel specialisten. Niet als doel op zich, maar als iets dat moet landen in een organisatie: bij mensen, processen en verantwoordelijkheden.',
+    whyP2:     'In de afgelopen periode heb ik AI-oplossingen ontwikkeld en toegepast in verschillende contexten: van zorg en duurzaamheid tot finance, customer experience en FMCG. Dat hands-on werk neem ik mee. Maar net zo belangrijk: ik weet hoe organisaties bewegen, waar weerstand ontstaat, en waarom goede plannen stranden tussen directie en uitvoering.',
     whyP3:     'Daar zit mijn rol. Ik help je niet om "meer over AI te weten". Ik help je om betere keuzes te maken, richting te geven, en in beweging te komen op een manier die past bij jouw organisatie.',
 
     forLabel:   'Voor wie',
@@ -63,13 +63,13 @@ const T = {
       { icon: '🧭', text: 'Je weet dat AI impact gaat hebben op jouw organisatie, maar de vertaling naar richting en prioriteit ontbreekt nog.' },
       { icon: '❓', text: 'Je wil de juiste vragen kunnen stellen, zonder zelf specialist of techneut te hoeven worden.' },
       { icon: '🤝', text: 'Je zoekt geen training of dikke advieslaag, maar persoonlijke begeleiding bij echte keuzes.' },
-      { icon: '💬', text: 'Je wil geloofwaardig leidinggeven op dit onderwerp — richting team, directie, board of aandeelhouders.' },
+      { icon: '💬', text: 'Je wil geloofwaardig leidinggeven op dit onderwerp: richting team, directie, board of aandeelhouders.' },
       { icon: '📈', text: 'Je wil niet eindigen met losse experimenten, maar met iets dat daadwerkelijk werkt en intern verder kan groeien.' },
     ],
 
     areasLabel: 'Waar we aan werken',
     areasTitle: 'Geen generiek AI-verhaal. Jouw organisatie, jouw context, jouw keuzes.',
-    areasBody:  'Ik gebruik een vaste denkrichting, maar geen template. We kijken samen naar de thema\'s die ertoe doen in jouw situatie — strategisch, organisatorisch en praktisch.',
+    areasBody:  'Ik gebruik een vaste denkrichting, maar geen template. We kijken samen naar de thema\'s die ertoe doen in jouw situatie: strategisch, organisatorisch en praktisch.',
     areas: [
       { icon: '🧭', title: 'Richting en prioriteit',                       body: 'Waar raakt AI jouw businessmodel, je dienstverlening of je manier van werken? Wat vraagt nu aandacht, en wat juist nog niet?' },
       { icon: '👔', title: 'Leiderschap en besluitvorming',                 body: 'Welke rol moet jij als leider pakken? Welke keuzes kun je delegeren, en welke juist niet? Hoe houd je regie zonder alles zelf te hoeven weten?' },
@@ -109,6 +109,17 @@ const T = {
       { icon: '🏦', color: '#374151', sector: 'Finance & gereguleerde context', body: 'Van voorzichtigheid en compliance-zorgen naar een werkbare manier om AI toch verantwoord te verkennen en toe te passen.' },
     ],
 
+    collabLabel: 'Samenwerking',
+    collabTitle: 'Een netwerk van mensen die ik vertrouw en ken.',
+    collabBody:  'Ik werk vanuit een brede kring van specialisten. Strategen, technologen, trainers en uitvoerders die ik op het juiste moment inbreng. Geen vast team. Wel mensen met wie ik inhoudelijk op één lijn zit.',
+    collabNote:  'Hieronder een paar voorbeelden van mensen met wie ik samenwerk.',
+    collabPeople: [
+      { initials: 'WB',   name: 'Wouter Bloik',     role: 'Marketing en commerciële groei',       bio: 'Wouter combineert merkstrategie met commerciële uitvoering. Met zijn Growth Flywheel aanpak brengt hij mensen, processen en platforms op één lijn zodat marketinginspanningen daadwerkelijk door de organisatie heen werken. Brede ervaring in FMCG en retailomgevingen.' },
+      { initials: 'BvdB', name: 'Ben van der Burg',  role: 'Technologie en digitale strategie',    bio: 'Podcast-host van De Technoloog en BNR Digitaal, spreker en tech-expert. Ben vertaalt technologische complexiteit naar strategisch inzicht voor leiders die de juiste vragen willen stellen zonder techneut te worden.' },
+      { initials: 'FM',   name: 'Frank Meeuwsen',    role: 'AI-trainer en consultant',              bio: '30 jaar digitale ervaring. Frank helpt professionals en teams om AI praktisch te integreren in hun dagelijkse werk. Zonder hype, zonder jargon. Scherp op toepassing, eerlijk over wat wel en niet werkt.' },
+      { initials: 'SH',   name: 'Sandra Hofstede',   role: 'Strategisch leiderschap en integratie', bio: '20 jaar ervaring in governance, M&A-integratie en turnaround. Sandra stapt in als er beweging nodig is. Bij fusies, schaalvraagstukken of organisaties die vastlopen. Ze herstelt eigenaarschap en brengt structuur waar de druk het hoogst is.' },
+    ],
+
     aboutLabel: 'Over mij',
     aboutTitle: 'Ik help leiders richting geven op het punt waar strategie concreet moet worden.',
     aboutBody1: 'Ik ben van nature een bruggenbouwer tussen denken en doen. In mijn loopbaan heb ik veel gewerkt op het snijvlak van strategie, groei, klantgerichtheid, teams en verandering. AI is daar voor mij geen los onderwerp bovenop, maar een nieuwe realiteit die leiders vraagt om betere keuzes, meer scherpte en meer vertaalvermogen.',
@@ -137,7 +148,7 @@ const T = {
     heroBadge:  'Personal mentorship · Max. 5 leaders at a time',
     heroH1a:    'From AI ambition to',
     heroH1b:    'something that actually works in your organisation.',
-    heroBody:   'For most organisations, AI is no longer an inspiration question. The real question is: what does this mean for us, where do we start, and how do we make it concrete without getting lost in pilots, tools or abstract plans? That\'s exactly where I come in — not as a trainer, but as someone who moves between strategy, change and execution.',
+    heroBody:   'For most organisations, AI is no longer an inspiration question. The real question is: what does this mean for us, where do we start, and how do we make it concrete without getting lost in pilots, tools or abstract plans? That\'s exactly where I come in. Not as a trainer, but as someone who moves between strategy, change and execution.',
     heroCta1:   'Book an intake call →',
     heroCta2:   'Take the free AI scan first',
     heroTrust:  'Personal mentorship · 3 months · Intake required',
@@ -152,30 +163,30 @@ const T = {
 
     whyLabel:  'Why me',
     whyTitle:  'I don\'t just come from AI. I come from strategy, change and execution.',
-    whyP1:     'My background isn\'t in a lab or purely in technology. I\'ve spent years working at the intersection of strategy, commercial growth, customer experience, teams and execution. That\'s exactly why I look at AI differently to many specialists — not as an end in itself, but as something that has to land in an organisation, with real people, processes and accountabilities.',
-    whyP2:     'In recent years I\'ve built and applied AI in different contexts — from healthcare and sustainability to finance, customer experience and FMCG. I bring that hands-on work with me. But just as important: I understand how organisations move, where resistance emerges, and why good plans get stuck between leadership and delivery.',
+    whyP1:     'My background isn\'t in a lab or purely in technology. I\'ve spent years working at the intersection of strategy, commercial growth, customer experience, teams and execution. That\'s exactly why I look at AI differently to many specialists: not as an end in itself, but as something that has to land in an organisation, with real people, processes and accountabilities.',
+    whyP2:     'In recent years I\'ve built and applied AI in different contexts: from healthcare and sustainability to finance, customer experience and FMCG. I bring that hands-on work with me. But just as important: I understand how organisations move, where resistance emerges, and why good plans get stuck between leadership and delivery.',
     whyP3:     'That\'s where my role sits. I don\'t help you "know more about AI". I help you make better decisions, give direction, and move forward in a way that actually fits your organisation.',
 
     forLabel:   'Who this is for',
-    forTitle:   'This is for leaders who want to make AI work — without getting lost in the hype.',
+    forTitle:   'This is for leaders who want to make AI work. Without getting lost in the hype.',
     forItems: [
       { icon: '🧭', text: 'You know AI is going to impact your organisation, but the translation to direction and priority is still missing.' },
       { icon: '❓', text: 'You want to be able to ask the right questions, without having to become a technical expert yourself.' },
-      { icon: '🤝', text: 'You\'re not looking for a training or a thick advisory layer — you want personal guidance on real choices.' },
-      { icon: '💬', text: 'You want to lead credibly on this topic — with your team, your board, your clients and your shareholders.' },
+      { icon: '🤝', text: 'You\'re not looking for a training or a thick advisory layer. You want personal guidance on real choices.' },
+      { icon: '💬', text: 'You want to lead credibly on this topic: with your team, your board, your clients and your shareholders.' },
       { icon: '📈', text: 'You don\'t want to end up with scattered experiments, but with something that actually works and can grow.' },
     ],
 
     areasLabel: 'What we work on',
     areasTitle: 'No generic AI story. Your organisation, your context, your choices.',
-    areasBody:  'I use a consistent way of thinking, but not a template. Together we look at the themes that matter in your situation — strategic, organisational and practical.',
+    areasBody:  'I use a consistent way of thinking, but not a template. Together we look at the themes that matter in your situation: strategic, organisational and practical.',
     areas: [
-      { icon: '🧭', title: 'Direction and priority',                         body: 'Where does AI touch your business model, your services or your way of working? What needs attention now — and what can wait?' },
+      { icon: '🧭', title: 'Direction and priority',                         body: 'Where does AI touch your business model, your services or your way of working? What needs attention now, and what can wait?' },
       { icon: '👔', title: 'Leadership and decision-making',                 body: 'What role do you need to take as a leader? What can you delegate, and what must you own? How do you stay in control without needing to know everything?' },
       { icon: '🛡️', title: 'Risk, governance and accountability',            body: 'How do you handle data, reputation, compliance and internal frameworks without letting caution bring everything to a standstill?' },
       { icon: '⚡', title: 'What\'s already happening in your organisation', body: 'What AI initiatives, experiments or shadow practices are already underway? What\'s actually working, what\'s noise, and where is there energy to build on?' },
       { icon: '🧑‍💻', title: 'People, culture and adoption',                 body: 'Who leads this internally? How do you bring people along without creating more change pressure? What does your team need to learn safely and practically?' },
-      { icon: '🎯', title: 'The first use case that matters',                body: 'We don\'t pick the most spectacular application — we pick the one that\'s credible, achievable and valuable enough to create real momentum.' },
+      { icon: '🎯', title: 'The first use case that matters',                body: 'We don\'t pick the most spectacular application. We pick the one that\'s credible, achievable and valuable enough to create real momentum.' },
     ],
 
     programLabel: 'How it works',
@@ -188,12 +199,12 @@ const T = {
       },
       {
         n: '02', title: 'From insight to application',
-        body: 'We translate that focus into a first concrete step. That could be a working use case, a decision framework, a leadership approach — or a combination. Something that goes beyond conversation.',
+        body: 'We translate that focus into a first concrete step. That could be a working use case, a decision framework, a leadership approach or a combination. Something that goes beyond conversation.',
         tag: 'Step 2',
       },
       {
         n: '03', title: 'Embedding and looking ahead',
-        body: 'We make sure something doesn\'t just start — it sticks: in language, direction, ownership and follow-through. So you can keep building after three months.',
+        body: 'We make sure something doesn\'t just start. It sticks: in language, direction, ownership and follow-through. So you can keep building after three months.',
         tag: 'Step 3',
       },
     ],
@@ -208,9 +219,20 @@ const T = {
       { icon: '🏦', color: '#374151', sector: 'Finance & regulated sectors',  body: 'From caution and compliance concerns to a workable way to explore and apply AI responsibly.' },
     ],
 
+    collabLabel: 'Collaboration',
+    collabTitle: 'A network of people I trust and know.',
+    collabBody:  'I work from a broad circle of specialists. Strategists, technologists, trainers and practitioners I bring in at the right moment. No fixed team. People I am genuinely aligned with.',
+    collabNote:  'A few examples of people I work with.',
+    collabPeople: [
+      { initials: 'WB',   name: 'Wouter Bloik',     role: 'Marketing and commercial growth',       bio: 'Wouter combines brand strategy with commercial execution. His Growth Flywheel approach aligns people, processes and platforms so that marketing efforts actually work through the organisation. Broad experience in FMCG and retail environments.' },
+      { initials: 'BvdB', name: 'Ben van der Burg',  role: 'Technology and digital strategy',       bio: 'Podcast host of De Technoloog and BNR Digitaal, speaker and tech expert. Ben translates technological complexity into clear strategic insight for leaders who want to ask the right questions without becoming technical experts.' },
+      { initials: 'FM',   name: 'Frank Meeuwsen',    role: 'AI trainer and consultant',             bio: '30 years of digital experience. Frank helps professionals and teams integrate AI practically into their daily work. No hype, no jargon. Sharp on application, honest about what works and what does not.' },
+      { initials: 'SH',   name: 'Sandra Hofstede',   role: 'Strategic leadership and integration',  bio: '20 years of experience in governance, M&A integration and turnaround. Sandra steps in when movement is needed. In mergers, scaling challenges or organisations that have stalled. She restores ownership and brings structure under pressure.' },
+    ],
+
     aboutLabel: 'About me',
     aboutTitle: 'I help leaders give direction at the point where strategy needs to become concrete.',
-    aboutBody1: 'I\'m naturally a bridge-builder between thinking and doing. I\'ve spent a lot of my career at the intersection of strategy, growth, customer experience, teams and change. For me, AI isn\'t a separate topic layered on top — it\'s a new reality that asks leaders to make better decisions, think with more clarity, and translate ambition into something real.',
+    aboutBody1: 'I\'m naturally a bridge-builder between thinking and doing. I\'ve spent a lot of my career at the intersection of strategy, growth, customer experience, teams and change. For me, AI isn\'t a separate topic layered on top. It\'s a new reality that asks leaders to make better decisions, think with more clarity, and translate ambition into something real.',
     aboutBody2: 'What I bring is twofold: hands-on experience building and applying AI in practice, and years of experience with organisations, positioning, teams, execution and change dynamics. That combination is why senior leaders come to me.',
     aboutCredentials: [
       'Senior experience in strategy, growth, customer experience and execution',
@@ -574,6 +596,60 @@ export default function MentorPage() {
                 </motion.div>
               ))}
             </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── Collaboration ── */}
+      <section style={{ background: INK, padding: '80px 24px' }}>
+        <div className="max-w-5xl mx-auto">
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
+            <motion.p variants={fadeUp} style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: WARM, marginBottom: 16 }}>
+              {t.collabLabel}
+            </motion.p>
+            <motion.h2 variants={fadeUp} style={{ fontSize: 32, fontWeight: 800, color: WHITE, marginBottom: 16, lineHeight: 1.25, maxWidth: 560 }}>
+              {t.collabTitle}
+            </motion.h2>
+            <motion.p variants={fadeUp} style={{ fontSize: 16, color: MUTED, maxWidth: 580, lineHeight: 1.7, marginBottom: 8 }}>
+              {t.collabBody}
+            </motion.p>
+            <motion.p variants={fadeUp} style={{ fontSize: 14, color: '#475569', maxWidth: 580, lineHeight: 1.6, marginBottom: 48, fontStyle: 'italic' }}>
+              {t.collabNote}
+            </motion.p>
+
+            <motion.div variants={stagger} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: 20 }}>
+              {t.collabPeople.map((person) => (
+                <motion.div
+                  key={person.name}
+                  variants={fadeUp}
+                  style={{
+                    background: 'rgba(30,58,95,0.45)',
+                    border: '1px solid rgba(255,255,255,0.07)',
+                    borderRadius: 18,
+                    padding: '28px 26px',
+                    display: 'flex',
+                    gap: 18,
+                    alignItems: 'flex-start',
+                  }}
+                >
+                  <div style={{
+                    width: 50, height: 50, borderRadius: '50%',
+                    background: NAVY,
+                    border: '2px solid rgba(29,78,216,0.35)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    flexShrink: 0,
+                    fontSize: 12, fontWeight: 800, color: WHITE, letterSpacing: '-0.01em',
+                  }}>
+                    {person.initials}
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: 15, fontWeight: 700, color: WHITE, marginBottom: 3 }}>{person.name}</p>
+                    <p style={{ fontSize: 10, fontWeight: 700, color: WARM, textTransform: 'uppercase', letterSpacing: '0.09em', marginBottom: 10 }}>{person.role}</p>
+                    <p style={{ fontSize: 13.5, color: MUTED, lineHeight: 1.65 }}>{person.bio}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
           </motion.div>
         </div>
       </section>
