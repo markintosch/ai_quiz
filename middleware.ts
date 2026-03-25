@@ -43,6 +43,13 @@ export function middleware(req: NextRequest) {
   if (pathname.startsWith('/abbvie'))    return NextResponse.next()
   if (pathname.startsWith('/mentor'))    return NextResponse.next()
 
+  // ── markdekock.com root → mentor page ────────────────────────────────────
+  const host = req.headers.get('host') ?? ''
+  if ((host === 'markdekock.com' || host === 'www.markdekock.com') &&
+      (pathname === '/' || pathname === '')) {
+    return NextResponse.redirect(new URL('/mentor', req.url))
+  }
+
   // ── Public routes: locale routing via next-intl ───────────────────────────
   // Note: product_key is resolved from the host header directly in server
   // components and API routes via getProductKeyFromHost() in src/products/index.ts
