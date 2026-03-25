@@ -39,7 +39,7 @@ const T = {
     heroBadge:  'Persoonlijke begeleiding · Max. 5 leiders tegelijk',
     heroH1a:    'Van AI-ambitie naar',
     heroH1b:    'iets wat écht werkt in jouw organisatie.',
-    heroBody:   'AI is voor de meeste organisaties geen inspiratievraag meer. De echte vraag is: wat betekent dit voor ons, waar beginnen we, en hoe maken we het concreet zonder te verdwalen in pilots, tools of abstracte plannen? Ik help leiders bij precies dat punt. Niet als trainer, maar als iemand die beweegt tussen strategie, verandering en uitvoering.',
+    heroBody:   'AI is voor de meeste organisaties geen inspiratievraag meer. De echte vraag is: wat betekent dit voor ons, waar beginnen we, en hoe maken we het concreet zonder te verdwalen in pilots, tools of abstracte plannen? Ik help leidinggevenden en managementteams bij precies dat punt. Niet als trainer, maar als iemand die beweegt tussen strategie, verandering en uitvoering.',
     heroCta1:   'Plan een intakegesprek →',
     heroCta2:   'Doe eerst de gratis AI-scan',
     heroTrust:  'Persoonlijk traject · 3 maanden · Intake vereist',
@@ -59,7 +59,7 @@ const T = {
     whyP3:     'Daar zit mijn rol. Ik help je niet om "meer over AI te weten". Ik help je om betere keuzes te maken, richting te geven, en in beweging te komen op een manier die past bij jouw organisatie.',
 
     forLabel:   'Voor wie',
-    forTitle:   'Dit is voor leiders die serieus werk willen maken van AI, zonder zichzelf te verliezen in de hype.',
+    forTitle:   'Dit is voor leidinggevenden en managementteams die serieus werk willen maken van AI, zonder zich te verliezen in de hype.',
     forItems: [
       { icon: '🧭', text: 'Je weet dat AI impact gaat hebben op jouw organisatie, maar de vertaling naar richting en prioriteit ontbreekt nog.' },
       { icon: '❓', text: 'Je wil de juiste vragen kunnen stellen, zonder zelf specialist of techneut te hoeven worden.' },
@@ -122,7 +122,7 @@ const T = {
     ],
 
     aboutLabel: 'Over mij',
-    aboutTitle: 'Ik help leiders richting geven op het punt waar strategie concreet moet worden.',
+    aboutTitle: 'Ik help leidinggevenden en managementteams richting geven op het punt waar strategie concreet moet worden.',
     aboutBody1: 'Ik ben van nature een bruggenbouwer tussen denken en doen. In mijn loopbaan heb ik veel gewerkt op het snijvlak van strategie, groei, klantgerichtheid, teams en verandering. AI is daar voor mij geen los onderwerp bovenop, maar een nieuwe realiteit die leiders vraagt om betere keuzes, meer scherpte en meer vertaalvermogen.',
     aboutBody2: 'Wat ik meebreng is tweeledig: hands-on ervaring met AI in de praktijk én jarenlange ervaring met organisaties, positionering, teams, executie en veranderdynamiek. Die combinatie is precies waarom senior leiders mij weten te vinden.',
     aboutCredentials: [
@@ -171,7 +171,7 @@ const T = {
     whyP3:     'That\'s where my role sits. I don\'t help you "know more about AI". I help you make better decisions, give direction, and move forward in a way that actually fits your organisation.',
 
     forLabel:   'Who this is for',
-    forTitle:   'This is for leaders who want to make AI work. Without getting lost in the hype.',
+    forTitle:   'This is for senior managers and management teams who want to make AI work — without getting lost in the hype.',
     forItems: [
       { icon: '🧭', text: 'You know AI is going to impact your organisation, but the translation to direction and priority is still missing.' },
       { icon: '❓', text: 'You want to be able to ask the right questions, without having to become a technical expert yourself.' },
@@ -234,7 +234,7 @@ const T = {
     ],
 
     aboutLabel: 'About me',
-    aboutTitle: 'I help leaders give direction at the point where strategy needs to become concrete.',
+    aboutTitle: 'I help senior managers and management teams give direction at the point where strategy needs to become concrete.',
     aboutBody1: 'I\'m naturally a bridge-builder between thinking and doing. I\'ve spent a lot of my career at the intersection of strategy, growth, customer experience, teams and change. For me, AI isn\'t a separate topic layered on top. It\'s a new reality that asks leaders to make better decisions, think with more clarity, and translate ambition into something real.',
     aboutBody2: 'What I bring is twofold: hands-on experience building and applying AI in practice, and years of experience with organisations, positioning, teams, execution and change dynamics. That combination is why senior leaders come to me.',
     aboutCredentials: [
