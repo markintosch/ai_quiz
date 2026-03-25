@@ -43,24 +43,8 @@ export function middleware(req: NextRequest) {
   if (pathname.startsWith('/abbvie'))    return NextResponse.next()
   if (pathname.startsWith('/mentor'))    return NextResponse.next()
 
-  // ── markdekock.com root → mentor page (rewrite: URL stays as markdekock.com) ─
-  const hostname  = req.nextUrl.hostname
-  const xfwdHost = req.headers.get('x-forwarded-host') ?? ''
-  const hostHdr  = req.headers.get('host') ?? ''
-  const isMark   = hostname.includes('markdekock.com') ||
-                   xfwdHost.includes('markdekock.com') ||
-                   hostHdr.includes('markdekock.com')
-  // TEMP DEBUG: always dump headers at root (remove immediately after diagnosis)
-  if (pathname === '/') {
-    return new NextResponse(JSON.stringify({ hostname, xfwdHost, hostHdr, isMark, url: req.url, search: req.nextUrl.search }), {
-      headers: { 'content-type': 'application/json' },
-    })
-  }
-  if (isMark && pathname === '/') {
-    const url = req.nextUrl.clone()
-    url.pathname = '/mentor'
-    return NextResponse.rewrite(url)
-  }
+  // ── markdekock.com root: handled in src/app/page.tsx via server-side headers() ─
+  // (middleware hostname detection proved unreliable on Vercel for this domain)
 
   // ── Public routes: locale routing via next-intl ───────────────────────────
   // Note: product_key is resolved from the host header directly in server
