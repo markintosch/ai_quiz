@@ -47,7 +47,9 @@ export function middleware(req: NextRequest) {
   const host = req.headers.get('host') ?? ''
   if ((host === 'markdekock.com' || host === 'www.markdekock.com') &&
       (pathname === '/' || pathname === '')) {
-    return NextResponse.rewrite(new URL('/mentor', req.url))
+    const url = req.nextUrl.clone()
+    url.pathname = '/mentor'
+    return NextResponse.rewrite(url)
   }
 
   // ── Public routes: locale routing via next-intl ───────────────────────────
