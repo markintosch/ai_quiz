@@ -356,7 +356,7 @@ export default function MentorPage() {
                 {t.heroCta1}
               </a>
               <a
-                href="/"
+                href={lang === 'nl' ? '/nl' : '/en'}
                 style={{
                   display: 'inline-block',
                   background: 'transparent',
@@ -645,7 +645,7 @@ export default function MentorPage() {
                 {t.spotsCta1}
               </a>
               <a
-                href="/"
+                href={lang === 'nl' ? '/nl' : '/en'}
                 style={{
                   display: 'inline-block',
                   background: 'transparent',
