@@ -44,9 +44,9 @@ export function middleware(req: NextRequest) {
   if (pathname.startsWith('/mentor'))    return NextResponse.next()
 
   // ── markdekock.com root → mentor page (rewrite: URL stays as markdekock.com) ─
-  const host = req.headers.get('host') ?? ''
-  if ((host === 'markdekock.com' || host === 'www.markdekock.com') &&
-      (pathname === '/' || pathname === '')) {
+  const hostname = req.nextUrl.hostname
+  if ((hostname === 'markdekock.com' || hostname === 'www.markdekock.com') &&
+      pathname === '/') {
     const url = req.nextUrl.clone()
     url.pathname = '/mentor'
     return NextResponse.rewrite(url)
