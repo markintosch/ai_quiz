@@ -53,7 +53,7 @@ const T = {
     ],
 
     whyLabel:  'Waarom ik',
-    whyTitle:  'Ik kom niet alleen uit AI. Ik kom uit strategie, verandering en uitvoering.',
+    whyTitle:  'Twintig jaar op het snijvlak van strategie en uitvoering. AI is het nieuwste vraagstuk. Niet het eerste.',
     whyP1:     'Mijn achtergrond ligt niet in een lab of alleen in technologie. Ik heb jarenlang gewerkt op het snijvlak van strategie, commerciële groei, klantbeleving, teams en executie. Juist daardoor kijk ik anders naar AI dan veel specialisten. Niet als doel op zich, maar als iets dat moet landen in een organisatie: bij mensen, processen en verantwoordelijkheden.',
     whyP2:     'In de afgelopen periode heb ik AI-oplossingen ontwikkeld en toegepast in verschillende contexten: van zorg en duurzaamheid tot finance, customer experience en FMCG. Dat hands-on werk neem ik mee. Maar net zo belangrijk: ik weet hoe organisaties bewegen, waar weerstand ontstaat, en waarom goede plannen stranden tussen directie en uitvoering.',
     whyP3:     'Daar zit mijn rol. Ik help je niet om "meer over AI te weten". Ik help je om betere keuzes te maken, richting te geven, en in beweging te komen op een manier die past bij jouw organisatie.',
@@ -167,7 +167,7 @@ const T = {
     ],
 
     whyLabel:  'Why me',
-    whyTitle:  'I don\'t just come from AI. I come from strategy, change and execution.',
+    whyTitle:  'Twenty years at the intersection of strategy and execution. AI is the newest challenge. Not the first.',
     whyP1:     'My background isn\'t in a lab or purely in technology. I\'ve spent years working at the intersection of strategy, commercial growth, customer experience, teams and execution. That\'s exactly why I look at AI differently to many specialists: not as an end in itself, but as something that has to land in an organisation, with real people, processes and accountabilities.',
     whyP2:     'In recent years I\'ve built and applied AI in different contexts: from healthcare and sustainability to finance, customer experience and FMCG. I bring that hands-on work with me. But just as important: I understand how organisations move, where resistance emerges, and why good plans get stuck between leadership and delivery.',
     whyP3:     'That\'s where my role sits. I don\'t help you "know more about AI". I help you make better decisions, give direction, and move forward in a way that actually fits your organisation.',
