@@ -133,8 +133,10 @@ const T = {
       'Ervaring in zorg, finance, FMCG, duurzaamheid, CX en meer',
     ],
 
+    programCta:  'Bekijk de trajectopties →',
+
     spotsLabel:  'Beschikbaarheid',
-    spotsTitle:  'Ik begeleid maximaal vijf leiders tegelijk.',
+    spotsTitle:  'Ik begeleid maximaal vijf trajecten tegelijk.',
     spotsBody:   'Omdat dit alleen werkt als ik echt kan meedenken in jouw situatie. Geen standaard format, geen groep. Wel persoonlijke begeleiding, scherpe vragen en concrete voortgang.',
     spotsCta1:   'Plan een intakegesprek →',
     spotsCta2:   'Doe eerst de gratis AI-scan',
@@ -245,8 +247,10 @@ const T = {
       'Experience across healthcare, finance, FMCG, sustainability, CX and more',
     ],
 
+    programCta:  'See engagement options →',
+
     spotsLabel:  'Availability',
-    spotsTitle:  'I work with a maximum of five leaders at a time.',
+    spotsTitle:  'I work with a maximum of five engagements at a time.',
     spotsBody:   'Because this only works if I can genuinely think along in your situation. No standard format, no group. Personal guidance, sharp questions and concrete progress.',
     spotsCta1:   'Book an intake call →',
     spotsCta2:   'Take the free AI scan first',
@@ -566,6 +570,22 @@ export default function MentorPage() {
                 </motion.div>
               ))}
             </div>
+            <motion.div variants={fadeUp} style={{ textAlign: 'center', marginTop: 40 }}>
+              <a
+                href="/mentor/aanpak"
+                style={{
+                  display: 'inline-block',
+                  fontSize: 14, fontWeight: 700,
+                  color: WARM,
+                  padding: '10px 28px', borderRadius: 100,
+                  border: `1px solid ${WARM}55`,
+                  textDecoration: 'none',
+                  background: `${WARM}12`,
+                }}
+              >
+                {t.programCta}
+              </a>
+            </motion.div>
           </motion.div>
         </div>
       </section>
