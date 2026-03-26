@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslations, useLocale } from 'next-intl'
 import { QuizEngine } from './QuizEngine'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+import { getProductConfig } from '@/products'
 
 // ── Dimension icons ───────────────────────────────────────────
 function CompassIcon({ className }: { className?: string }) {
@@ -495,6 +496,7 @@ export function CompanyLandingPage({
               productKey={productKey}
               productName={productName}
               leadCaptureMode={leadCaptureMode}
+              questions={productKey ? getProductConfig(productKey).questions : undefined}
               cohortId={cohortId ?? undefined}
               waveId={waveId ?? undefined}
             />
