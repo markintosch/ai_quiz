@@ -28,6 +28,30 @@ interface ResultsData {
   confidenceLabel: string
 }
 
+// ── Verdict computation ────────────────────────────────────────────────────────
+function computeVerdict(
+  dims: PulseDimension[],
+  scores: Record<string, number>,
+  averages: Record<string, number>
+): string {
+  if (Object.keys(averages).length === 0) return 'Jouw oordeel is geregistreerd.'
+  let maxAbsDiff = 0
+  let maxDim: PulseDimension | null = null
+  let maxDiff = 0
+  for (const d of dims) {
+    const diff = (scores[d.slug] ?? 3) - (averages[d.slug] ?? 3)
+    if (Math.abs(diff) > maxAbsDiff) {
+      maxAbsDiff = Math.abs(diff)
+      maxDim = d
+      maxDiff = diff
+    }
+  }
+  if (!maxDim || maxAbsDiff < 0.3) return 'Jouw oordeel zit dicht bij het collectieve gemiddelde.'
+  if (maxDiff > 0) return `Je bent kritischer dan gemiddeld op ${maxDim.label.toLowerCase()}.`
+  return `Je bent positiever dan gemiddeld op ${maxDim.label.toLowerCase()}.`
+}
+
+// ── Nav ───────────────────────────────────────────────────────────────────────
 function PulseNav() {
   return (
     <nav
@@ -36,21 +60,27 @@ function PulseNav() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '0 24px',
+        padding: '0 32px',
         height: '56px',
+        position: 'sticky',
+        top: 0,
+        zIndex: 100,
       }}
     >
       <Link
         href="/pulse"
-        style={{ color: WHITE, fontWeight: 700, fontSize: '16px', letterSpacing: '0.02em', textDecoration: 'none' }}
+        style={{ color: WHITE, fontWeight: 700, fontSize: '15px', letterSpacing: '0.06em', textTransform: 'uppercase', textDecoration: 'none' }}
       >
-        DE MACHINE PULSE
+        De Machine Pulse
       </Link>
-      <span style={{ color: MID_GREY, fontSize: '12px' }}>Een initiatief van 3voor12</span>
+      <span style={{ color: MID_GREY, fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+        3voor12 · VPRO
+      </span>
     </nav>
   )
 }
 
+// ── Entity assessment ─────────────────────────────────────────────────────────
 function EntityAssessmentContent() {
   const params = useParams()
   const themeSlug = params.theme as string
@@ -75,10 +105,11 @@ function EntityAssessmentContent() {
   const [emailSubmitting, setEmailSubmitting] = useState(false)
   const [emailSubmitted, setEmailSubmitted] = useState(false)
 
+  const ff = "'Inter', system-ui, sans-serif"
+
   useEffect(() => {
     async function load() {
       try {
-        // Get themes list
         const themesRes = await fetch('/api/pulse/themes')
         if (!themesRes.ok) throw new Error('Kan thema niet laden.')
         const themesJson = (await themesRes.json()) as { themes: PulseTheme[] }
@@ -86,7 +117,6 @@ function EntityAssessmentContent() {
         if (!foundTheme) throw new Error('Thema niet gevonden.')
         setTheme(foundTheme)
 
-        // Get entities + dimensions (public routes — no auth required)
         const [entRes, dimRes] = await Promise.all([
           fetch(`/api/pulse/entities?themeId=${foundTheme.id}`),
           fetch(`/api/pulse/dimensions?themeId=${foundTheme.id}`),
@@ -101,7 +131,6 @@ function EntityAssessmentContent() {
         setOtherEntities(entJson.entities.filter((e) => e.slug !== entitySlug))
         setDimensions(dimJson.dimensions ?? [])
 
-        // Init scores
         const initScores: Record<string, number | null> = {}
         for (const d of (dimJson.dimensions ?? [])) {
           initScores[d.slug] = null
@@ -148,7 +177,6 @@ function EntityAssessmentContent() {
         return
       }
 
-      // Fetch collective averages
       const avgRes = await fetch(
         `/api/pulse/results?themeId=${encodeURIComponent(theme.id)}&entityId=${encodeURIComponent(entity.id)}`,
       )
@@ -208,11 +236,12 @@ function EntityAssessmentContent() {
     validScores[d.slug] = (scores[d.slug] as number) ?? 3
   }
 
+  // ── Loading / error ─────────────────────────────────────────────────────────
   if (loading) {
     return (
-      <div style={{ fontFamily: "'Inter', system-ui, sans-serif", minHeight: '100vh', background: WHITE }}>
+      <div style={{ fontFamily: ff, minHeight: '100vh', background: WHITE }}>
         <PulseNav />
-        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '80px 24px', textAlign: 'center' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '80px 24px' }}>
           <p style={{ color: MID_GREY }}>Laden...</p>
         </div>
       </div>
@@ -221,9 +250,9 @@ function EntityAssessmentContent() {
 
   if (loadError || !entity || !theme) {
     return (
-      <div style={{ fontFamily: "'Inter', system-ui, sans-serif", minHeight: '100vh', background: WHITE }}>
+      <div style={{ fontFamily: ff, minHeight: '100vh', background: WHITE }}>
         <PulseNav />
-        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '80px 24px', textAlign: 'center' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '80px 24px' }}>
           <p style={{ color: '#c0392b' }}>{loadError || 'Niet gevonden.'}</p>
           <Link href={`/pulse/${themeSlug}`} style={{ color: OLIVE, textDecoration: 'underline', marginTop: '16px', display: 'inline-block' }}>
             ← Terug
@@ -236,42 +265,98 @@ function EntityAssessmentContent() {
   // ── Step: Confirm ────────────────────────────────────────────────────────────
   if (step === 'confirm') {
     return (
-      <div style={{ fontFamily: "'Inter', system-ui, sans-serif", minHeight: '100vh', background: WHITE }}>
+      <div style={{ fontFamily: ff, minHeight: '100vh', background: WHITE }}>
         <PulseNav />
-        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '60px 24px' }}>
-          <p style={{ color: SUBTLE, fontSize: '13px', marginBottom: '24px' }}>
-            <Link href={`/pulse/${themeSlug}`} style={{ color: OLIVE, textDecoration: 'none' }}>
-              ← {theme.title}
-            </Link>
-          </p>
+        <div style={{ maxWidth: '760px', margin: '0 auto', padding: '60px 24px' }}>
 
-          <h1 style={{ fontWeight: 700, fontSize: '28px', lineHeight: '1.2', color: NEAR_BLACK, marginBottom: '8px' }}>
-            Jij beoordeelt:
-          </h1>
-          <h2 style={{ fontWeight: 700, fontSize: '36px', color: NEAR_BLACK, marginBottom: '16px', margin: '0 0 16px' }}>
+          {/* Back link */}
+          <Link
+            href={`/pulse/${themeSlug}`}
+            style={{
+              display: 'inline-block',
+              color: SUBTLE,
+              fontSize: '11px',
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em',
+              textDecoration: 'none',
+              marginBottom: '40px',
+            }}
+          >
+            ← {theme.title}
+          </Link>
+
+          {/* Entity type badge */}
+          <div style={{ marginBottom: '20px' }}>
+            <span style={{
+              background: YELLOW,
+              color: BLACK,
+              fontSize: '9px',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em',
+              padding: '4px 10px',
+            }}>
+              {entity.entity_type}
+            </span>
+          </div>
+
+          {/* Big entity label */}
+          <h1 style={{
+            fontWeight: 700,
+            fontSize: 'clamp(32px, 5vw, 56px)',
+            lineHeight: 1.05,
+            color: NEAR_BLACK,
+            margin: '0 0 12px',
+            letterSpacing: '-0.01em',
+          }}>
             {entity.label}
-          </h2>
+          </h1>
+
           {entity.subtitle && (
-            <p style={{ color: SUBTLE, fontSize: '16px', marginBottom: '24px' }}>{entity.subtitle}</p>
+            <p style={{ color: SUBTLE, fontSize: '16px', margin: '0 0 20px', lineHeight: 1.5 }}>
+              {entity.subtitle}
+            </p>
           )}
+
           {entity.description_short && (
-            <p style={{ color: NEAR_BLACK, fontSize: '15px', lineHeight: '1.6', marginBottom: '32px', maxWidth: '560px' }}>
+            <p style={{ color: NEAR_BLACK, fontSize: '16px', lineHeight: 1.65, margin: '0 0 32px', maxWidth: '560px' }}>
               {entity.description_short}
             </p>
           )}
 
-          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginBottom: '40px' }}>
-            {entity.location_text && (
-              <span style={{ color: MID_GREY, fontSize: '13px' }}>📍 {entity.location_text}</span>
-            )}
-            {entity.edition_label && (
-              <span style={{ color: MID_GREY, fontSize: '13px' }}>🗓 {entity.edition_label}</span>
-            )}
-          </div>
+          {/* Meta row */}
+          {(entity.location_text || entity.edition_label) && (
+            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', marginBottom: '40px' }}>
+              {entity.location_text && (
+                <span style={{ color: MID_GREY, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  📍 {entity.location_text}
+                </span>
+              )}
+              {entity.edition_label && (
+                <span style={{ color: MID_GREY, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  🗓 {entity.edition_label}
+                </span>
+              )}
+            </div>
+          )}
 
+          {/* CTA */}
           <button
             onClick={() => setStep('questions')}
-            style={{ background: YELLOW, color: NEAR_BLACK, border: `1px solid ${YELLOW}`, borderRadius: 0, padding: '14px 32px', fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 700, fontSize: '16px', cursor: 'pointer' }}
+            style={{
+              background: YELLOW,
+              color: NEAR_BLACK,
+              border: 'none',
+              padding: '15px 36px',
+              fontFamily: ff,
+              fontWeight: 700,
+              fontSize: '16px',
+              cursor: 'pointer',
+              letterSpacing: '0.01em',
+              display: 'block',
+              width: '100%',
+              textAlign: 'center',
+            }}
           >
             Begin beoordeling →
           </button>
@@ -287,22 +372,22 @@ function EntityAssessmentContent() {
     const progressPct = total > 0 ? Math.round((answeredCount / total) * 100) : 0
 
     return (
-      <div style={{ fontFamily: "'Inter', system-ui, sans-serif", minHeight: '100vh', background: WHITE }}>
+      <div style={{ fontFamily: ff, minHeight: '100vh', background: WHITE }}>
         <PulseNav />
         <div style={{ maxWidth: '800px', margin: '0 auto', padding: '60px 24px' }}>
           {/* Progress bar */}
           <div style={{ marginBottom: '40px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', color: SUBTLE, fontWeight: 600 }}>
+              <span style={{ fontSize: '12px', color: SUBTLE, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                 {answeredCount} van {total} beantwoord
               </span>
-              <span style={{ fontSize: '16px', fontWeight: 700, color: NEAR_BLACK }}>
+              <span style={{ fontSize: '15px', fontWeight: 700, color: NEAR_BLACK }}>
                 {entity.label}
               </span>
             </div>
-            <div style={{ height: '4px', background: LIGHT_GREY, width: '100%' }}>
+            <div style={{ height: '3px', background: LIGHT_GREY, width: '100%' }}>
               <div
-                style={{ height: '4px', background: YELLOW, width: `${progressPct}%`, transition: 'width 0.3s ease' }}
+                style={{ height: '3px', background: YELLOW, width: `${progressPct}%`, transition: 'width 0.3s ease' }}
               />
             </div>
           </div>
@@ -330,13 +415,13 @@ function EntityAssessmentContent() {
             style={{
               background: allAnswered && !submitting ? YELLOW : LIGHT_GREY,
               color: allAnswered && !submitting ? NEAR_BLACK : MID_GREY,
-              border: `1px solid ${allAnswered && !submitting ? YELLOW : '#e2e2e2'}`,
-              borderRadius: 0,
+              border: 'none',
               padding: '14px 32px',
-              fontFamily: "'Inter', system-ui, sans-serif",
+              fontFamily: ff,
               fontWeight: 700,
               fontSize: '16px',
               cursor: allAnswered && !submitting ? 'pointer' : 'not-allowed',
+              letterSpacing: '0.01em',
             }}
           >
             {submitting ? 'Even geduld...' : 'Bekijk mijn score →'}
@@ -349,125 +434,190 @@ function EntityAssessmentContent() {
   // ── Step: Results ────────────────────────────────────────────────────────────
   if (step === 'results' && results) {
     const formattedNum = results.respondentNum.toLocaleString('nl-NL')
-    const formattedOthers = Math.max(0, results.totalResponses - 1).toLocaleString('nl-NL')
+    const verdict = computeVerdict(dimensions, validScores, results.averages)
 
     return (
-      <div style={{ fontFamily: "'Inter', system-ui, sans-serif", minHeight: '100vh', background: WHITE }}>
+      <div style={{ fontFamily: ff, minHeight: '100vh', background: WHITE }}>
         <PulseNav />
 
-        {/* Participant banner */}
-        <div style={{ background: BLACK, padding: '48px 24px', textAlign: 'center' }}>
-          <p style={{ color: MID_GREY, fontSize: '11px', fontWeight: 400, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 8px' }}>
+        {/* ── TOP REVEAL — black section ────────────────────────────────── */}
+        <div style={{ background: BLACK, padding: '64px 24px', textAlign: 'center' }}>
+          <p style={{
+            color: MID_GREY,
+            fontSize: '10px',
+            fontWeight: 600,
+            textTransform: 'uppercase',
+            letterSpacing: '0.12em',
+            margin: '0 0 12px',
+          }}>
             DEELNEMER
           </p>
-          <p style={{ color: YELLOW, fontSize: '56px', fontWeight: 700, lineHeight: '1', margin: '0 0 8px', fontVariantNumeric: 'tabular-nums' }}>
+          <p style={{
+            color: YELLOW,
+            fontSize: 'clamp(56px, 8vw, 96px)',
+            fontWeight: 700,
+            lineHeight: 1,
+            margin: '0 0 16px',
+            fontVariantNumeric: 'tabular-nums',
+          }}>
             #{formattedNum}
           </p>
-          <p style={{ color: MID_GREY, fontSize: '14px', margin: '0 0 16px' }}>
-            van {formattedOthers} andere beoordelaars
-          </p>
-          <span
-            style={{
+
+          {/* Response status badge */}
+          <div style={{ marginBottom: '28px' }}>
+            <span style={{
               background: 'transparent',
               border: '1px solid #424242',
               color: MID_GREY,
-              fontSize: '11px',
+              fontSize: '10px',
+              fontWeight: 600,
               padding: '4px 12px',
               textTransform: 'uppercase',
-              letterSpacing: '0.06em',
-            }}
-          >
-            {results.confidenceLabel}
-          </span>
+              letterSpacing: '0.08em',
+            }}>
+              {results.confidenceLabel}
+            </span>
+          </div>
+
+          {/* Verdict line */}
+          <p style={{
+            color: WHITE,
+            fontSize: 'clamp(18px, 2.5vw, 28px)',
+            fontWeight: 500,
+            lineHeight: 1.4,
+            maxWidth: '560px',
+            margin: '0 auto',
+          }}>
+            {verdict}
+          </p>
         </div>
 
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '60px 24px' }}>
-          {/* Subject header */}
-          <h2 style={{ fontWeight: 700, fontSize: '28px', lineHeight: '1.2', color: NEAR_BLACK, marginBottom: '8px' }}>
+        <div style={{ maxWidth: '960px', margin: '0 auto', padding: '60px 24px' }}>
+
+          {/* ── Entity header ────────────────────────────────────────────── */}
+          <h2 style={{ fontWeight: 700, fontSize: '28px', lineHeight: 1.2, color: NEAR_BLACK, margin: '0 0 4px' }}>
             {entity.label}
           </h2>
-          <p style={{ color: SUBTLE, fontSize: '15px', marginBottom: '48px' }}>
+          <p style={{ color: SUBTLE, fontSize: '15px', margin: '0 0 48px' }}>
             Jouw beoordeling vs. gemiddelde van alle deelnemers
           </p>
 
-          {/* Dual radar */}
-          <div
-            style={{
-              background: BLACK,
-              padding: '40px 24px',
-              display: 'flex',
-              justifyContent: 'center',
-              marginBottom: '48px',
-            }}
-          >
+          {/* ── Radar chart ──────────────────────────────────────────────── */}
+          <div style={{
+            background: BLACK,
+            padding: '48px 24px 36px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '24px',
+            marginBottom: '48px',
+          }}>
             <RadarDual
               yours={validScores}
               collective={results.averages}
               dimensions={dimensions.map((d) => ({ slug: d.slug, label: d.label, anchorLow: d.anchor_low, anchorHigh: d.anchor_high }))}
-              size={340}
+              size={400}
             />
-          </div>
-
-          {/* Dimension breakdown table */}
-          <div style={{ marginBottom: '48px' }}>
-            <h3 style={{ fontWeight: 700, fontSize: '18px', color: NEAR_BLACK, marginBottom: '16px' }}>
-              Per dimensie
-            </h3>
-            <div style={{ border: '1px solid #e2e2e2' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 80px 80px 160px', padding: '10px 16px', background: LIGHT_GREY, borderBottom: '1px solid #e2e2e2' }}>
-                {['Dimensie', 'Jij', 'Gem.', 'Vergelijking'].map((h) => (
-                  <span key={h} style={{ fontSize: '11px', fontWeight: 600, color: SUBTLE, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                    {h}
-                  </span>
-                ))}
-              </div>
-              {dimensions.map((dim, i) => {
-                const myScore = validScores[dim.slug] ?? 3
-                const avgScore = results.averages[dim.slug] ?? 0
-                const diff = myScore - avgScore
-
-                let comparison = ''
-                if (avgScore > 0) {
-                  const pct = Math.abs(diff / avgScore) * 100
-                  if (pct > 10) {
-                    comparison = diff > 0
-                      ? `Jij bent ${pct.toFixed(0)}% strenger`
-                      : `Jij bent ${pct.toFixed(0)}% milder`
-                  } else {
-                    comparison = 'Vergelijkbaar met gemiddelde'
-                  }
-                }
-
-                const diffColor = diff > 0.5 ? OLIVE : diff < -0.5 ? '#c0392b' : SUBTLE
-
-                return (
-                  <div
-                    key={dim.slug}
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 80px 80px 160px',
-                      padding: '12px 16px',
-                      borderBottom: i < dimensions.length - 1 ? '1px solid #e2e2e2' : 'none',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <span style={{ fontWeight: 600, fontSize: '14px', color: NEAR_BLACK }}>{dim.label}</span>
-                    <span style={{ fontSize: '20px', fontWeight: 700, color: YELLOW, fontVariantNumeric: 'tabular-nums' }}>
-                      {myScore}
-                    </span>
-                    <span style={{ fontSize: '14px', color: MID_GREY }}>
-                      {avgScore > 0 ? avgScore.toFixed(1) : '—'}
-                    </span>
-                    <span style={{ fontSize: '12px', color: diffColor }}>{comparison}</span>
-                  </div>
-                )
-              })}
+            {/* Legend */}
+            <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
+              <span style={{ color: YELLOW, fontSize: '13px', fontWeight: 600 }}>— Jij</span>
+              <span style={{ color: '#cccccc', fontSize: '13px', fontWeight: 600 }}>— Collectief</span>
             </div>
           </div>
 
-          {/* Countdown */}
+          {/* ── Dimension breakdown — editorial rows ─────────────────────── */}
+          <div style={{ marginBottom: '56px', borderTop: '1px solid #e2e2e2' }}>
+            {dimensions.map((dim) => {
+              const myScore = validScores[dim.slug] ?? 3
+              const avgScore = results.averages[dim.slug] ?? 0
+
+              let comparisonText = ''
+              if (avgScore > 0) {
+                const diff = myScore - avgScore
+                const pct = Math.abs(diff / avgScore) * 100
+                if (pct > 10) {
+                  comparisonText = diff > 0
+                    ? `Jij bent ${pct.toFixed(0)}% strenger`
+                    : `Jij bent ${pct.toFixed(0)}% milder`
+                } else {
+                  comparisonText = 'Vergelijkbaar met gemiddelde'
+                }
+              }
+
+              return (
+                <div
+                  key={dim.slug}
+                  style={{ padding: '20px 0', borderBottom: '1px solid #e2e2e2' }}
+                >
+                  {/* Label */}
+                  <p style={{
+                    color: SUBTLE,
+                    fontSize: '11px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em',
+                    margin: '0 0 8px',
+                    fontWeight: 600,
+                  }}>
+                    {dim.label}
+                  </p>
+
+                  {/* Score comparison */}
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '16px', marginBottom: '12px' }}>
+                    <span style={{
+                      color: YELLOW,
+                      fontSize: '40px',
+                      fontWeight: 700,
+                      lineHeight: 1,
+                      fontVariantNumeric: 'tabular-nums',
+                    }}>
+                      {myScore}
+                    </span>
+                    {avgScore > 0 && (
+                      <span style={{ color: '#aaaaaa', fontSize: '16px' }}>
+                        vs. collectief {avgScore.toFixed(1)}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Progress bar */}
+                  <div style={{ height: '3px', background: '#e2e2e2', position: 'relative', marginBottom: '8px' }}>
+                    {/* Your fill */}
+                    <div style={{
+                      position: 'absolute',
+                      left: 0,
+                      top: 0,
+                      height: '3px',
+                      background: YELLOW,
+                      width: `${(myScore / 5) * 100}%`,
+                      transition: 'width 0.4s ease',
+                    }} />
+                    {/* Collective marker */}
+                    {avgScore > 0 && (
+                      <div style={{
+                        position: 'absolute',
+                        top: '-3px',
+                        width: '2px',
+                        height: '9px',
+                        background: '#aaaaaa',
+                        left: `${(avgScore / 5) * 100}%`,
+                      }} />
+                    )}
+                  </div>
+
+                  {/* Comparison sentence */}
+                  {comparisonText && (
+                    <p style={{ color: SUBTLE, fontSize: '13px', margin: 0 }}>
+                      {comparisonText}
+                    </p>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+
+          {/* ── Countdown ────────────────────────────────────────────────── */}
           {theme.closes_at && (
-            <div style={{ background: BLACK, padding: '40px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px', marginBottom: '48px' }}>
+            <div style={{ background: BLACK, padding: '40px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px', marginBottom: '56px' }}>
               <Countdown targetDate={new Date(theme.closes_at)} label="Meting sluit over" />
               <p style={{ color: '#aaaaaa', fontSize: '13px', margin: 0, letterSpacing: '0.02em' }}>
                 Definitieve uitslag:{' '}
@@ -478,8 +628,8 @@ function EntityAssessmentContent() {
             </div>
           )}
 
-          {/* Share block */}
-          <div style={{ marginBottom: '48px' }}>
+          {/* ── Share block ───────────────────────────────────────────────── */}
+          <div style={{ marginBottom: '56px' }}>
             <ShareBlock
               respondentNum={results.respondentNum}
               total={results.totalResponses}
@@ -489,33 +639,68 @@ function EntityAssessmentContent() {
             />
           </div>
 
-          {/* Email capture */}
+          {/* ── Email signup — typographic, not widget ────────────────────── */}
           {!emailSubmitted ? (
-            <div style={{ background: LIGHT_GREY, padding: '32px', borderLeft: `4px solid ${YELLOW}`, marginBottom: '48px' }}>
-              <h3 style={{ fontWeight: 700, fontSize: '18px', color: NEAR_BLACK, margin: '0 0 8px' }}>
-                Ontvang de definitieve uitslag per e-mail
+            <div style={{ borderLeft: `3px solid ${YELLOW}`, paddingLeft: '24px', marginBottom: '56px' }}>
+              <h3 style={{ fontWeight: 700, fontSize: '20px', color: NEAR_BLACK, margin: '0 0 8px' }}>
+                Ontvang de uitslag.
               </h3>
-              <p style={{ color: SUBTLE, fontSize: '14px', marginBottom: '20px' }}>
+              <p style={{ color: SUBTLE, fontSize: '14px', margin: '0 0 20px', lineHeight: 1.6 }}>
                 We sturen je de eindresultaten zodra de meting sluit.
               </p>
-              <form onSubmit={(e) => void handleEmailCapture(e)} style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'flex-start' }}>
+              <form
+                onSubmit={(e) => void handleEmailCapture(e)}
+                style={{ display: 'flex', gap: '0', flexWrap: 'wrap', alignItems: 'stretch', maxWidth: '480px' }}
+              >
                 <input
                   type="email"
                   placeholder="jouw@email.nl"
                   value={resultEmail}
                   onChange={(e) => setResultEmail(e.target.value)}
                   required
-                  style={{ padding: '10px 12px', border: '1px solid #424242', borderRadius: 0, fontSize: '15px', fontFamily: "'Inter', system-ui, sans-serif", outline: 'none', minWidth: '240px', flex: 1 }}
+                  style={{
+                    padding: '11px 14px',
+                    border: '1px solid #424242',
+                    borderRight: 'none',
+                    borderRadius: 0,
+                    fontSize: '15px',
+                    fontFamily: ff,
+                    outline: 'none',
+                    flex: 1,
+                    minWidth: '180px',
+                    background: LIGHT_GREY,
+                  }}
                 />
                 <button
                   type="submit"
                   disabled={emailSubmitting}
-                  style={{ background: YELLOW, color: NEAR_BLACK, border: `1px solid ${YELLOW}`, borderRadius: 0, padding: '10px 24px', fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 700, fontSize: '15px', cursor: emailSubmitting ? 'not-allowed' : 'pointer', flexShrink: 0 }}
+                  style={{
+                    background: YELLOW,
+                    color: NEAR_BLACK,
+                    border: 'none',
+                    padding: '11px 20px',
+                    fontFamily: ff,
+                    fontWeight: 700,
+                    fontSize: '14px',
+                    cursor: emailSubmitting ? 'not-allowed' : 'pointer',
+                    flexShrink: 0,
+                    letterSpacing: '0.01em',
+                  }}
                 >
                   {emailSubmitting ? '...' : 'Aanmelden →'}
                 </button>
               </form>
-              <label style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', cursor: 'pointer', fontSize: '13px', color: SUBTLE, lineHeight: '1.5', marginTop: '12px' }}>
+              <label style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '8px',
+                cursor: 'pointer',
+                fontSize: '13px',
+                color: SUBTLE,
+                lineHeight: 1.5,
+                marginTop: '12px',
+                maxWidth: '480px',
+              }}>
                 <input
                   type="checkbox"
                   checked={resultEmailConsent}
@@ -526,14 +711,14 @@ function EntityAssessmentContent() {
               </label>
             </div>
           ) : (
-            <div style={{ background: LIGHT_GREY, padding: '24px', borderLeft: `4px solid ${YELLOW}`, marginBottom: '48px' }}>
-              <p style={{ fontWeight: 700, color: NEAR_BLACK, margin: 0 }}>
+            <div style={{ borderLeft: `3px solid ${YELLOW}`, paddingLeft: '24px', marginBottom: '56px' }}>
+              <p style={{ fontWeight: 700, color: NEAR_BLACK, margin: 0, fontSize: '16px' }}>
                 Aangemeld. We sturen je de uitslag zodra die beschikbaar is.
               </p>
             </div>
           )}
 
-          {/* Other festivals CTA */}
+          {/* ── Other festivals ───────────────────────────────────────────── */}
           {otherEntities.length > 0 && (
             <div style={{ marginBottom: '48px' }}>
               <h3 style={{ fontWeight: 700, fontSize: '20px', color: NEAR_BLACK, margin: '0 0 6px' }}>
@@ -560,7 +745,7 @@ function EntityAssessmentContent() {
                         background: LIGHT_GREY,
                         padding: '20px',
                         borderBottom: '2px solid transparent',
-                        transition: 'border-color 0.15s',
+                        transition: 'border-color 0.12s',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
@@ -575,7 +760,7 @@ function EntityAssessmentContent() {
                           <p style={{ fontSize: '12px', color: MID_GREY, margin: 0 }}>{other.location_text}</p>
                         )}
                       </div>
-                      <span style={{ color: OLIVE, fontSize: '18px', flexShrink: 0 }}>→</span>
+                      <span style={{ color: NEAR_BLACK, fontSize: '18px', flexShrink: 0, fontWeight: 700 }}>→</span>
                     </div>
                   </Link>
                 ))}
@@ -583,7 +768,17 @@ function EntityAssessmentContent() {
             </div>
           )}
 
-          <Link href={`/pulse/${themeSlug}`} style={{ color: OLIVE, fontSize: '14px', textDecoration: 'underline', fontFamily: "'Inter', system-ui, sans-serif" }}>
+          <Link
+            href={`/pulse/${themeSlug}`}
+            style={{
+              color: SUBTLE,
+              fontSize: '12px',
+              textDecoration: 'none',
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em',
+              fontFamily: ff,
+            }}
+          >
             ← Terug naar {theme.title}
           </Link>
         </div>

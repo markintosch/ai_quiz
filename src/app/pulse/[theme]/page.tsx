@@ -20,63 +20,48 @@ const MID_GREY = '#828282'
 
 // ── Shared CSS ────────────────────────────────────────────────────────────────
 const SHARED_CSS = `
+  * { box-sizing: border-box; }
   .p-nav-inner {
     max-width: 1440px; margin: 0 auto; width: 100%;
     display: flex; align-items: center; justify-content: space-between;
-    padding: 0 32px;
-  }
-  .p-hero {
-    background: #000; width: 100%; padding: 64px 0;
+    padding: 0 32px; gap: 16px;
   }
   .p-hero-inner {
-    max-width: 1440px; margin: 0 auto; padding: 0 40px;
-    display: flex; flex-direction: column; gap: 32px;
+    max-width: 1440px; margin: 0 auto;
+    padding: 80px 40px;
+    display: flex; flex-direction: column; gap: 48px;
   }
   .p-hero-text { flex: 1; }
-  .p-hero-text h1 {
-    font-size: clamp(28px, 3.5vw, 56px);
-    font-weight: 700; color: #fff; line-height: 1.15;
-    margin: 0 0 16px;
-  }
-  .p-hero-text p {
-    color: #828282; font-size: 18px; line-height: 1.6; margin: 0;
-  }
-  .p-hero-aside {
-    display: flex; flex-direction: column; gap: 16px;
-  }
+  .p-hero-aside { display: flex; flex-direction: column; gap: 20px; }
   .p-section {
     max-width: 1440px; margin: 0 auto; padding: 72px 40px;
   }
   .p-section-header {
-    display: flex; flex-direction: column; gap: 8px;
-    margin-bottom: 48px;
-  }
-  .p-section-header h2 {
-    font-size: clamp(22px, 2.5vw, 36px); font-weight: 700;
-    color: #121212; line-height: 1.2; margin: 0;
-  }
-  .p-section-header p {
-    color: #616162; font-size: 16px; line-height: 1.6; margin: 0;
+    display: flex; flex-direction: column; gap: 12px;
+    margin-bottom: 40px;
   }
   .p-entity-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: 1fr;
     gap: 2px;
   }
-  .p-form { display: flex; flex-direction: column; gap: 20px; }
+  .p-form { display: flex; flex-direction: column; gap: 20px; max-width: 100%; }
+  @media (min-width: 640px) {
+    .p-entity-grid { grid-template-columns: repeat(2, 1fr); }
+  }
   @media (min-width: 900px) {
     .p-hero-inner {
-      flex-direction: row; align-items: center;
+      flex-direction: row; align-items: flex-start;
       justify-content: space-between; gap: 64px;
     }
-    .p-hero-aside { align-items: flex-end; flex-shrink: 0; min-width: 240px; }
+    .p-hero-text { max-width: 58%; }
+    .p-hero-aside { align-items: flex-end; flex-shrink: 0; min-width: 260px; }
     .p-section-header { flex-direction: row; align-items: baseline; justify-content: space-between; }
-    .p-section-header p { max-width: 560px; }
-    .p-entity-grid { grid-template-columns: repeat(3, 1fr); }
     .p-form { max-width: 480px; }
   }
-  @media (min-width: 1200px) {
+  @media (min-width: 1024px) {
     .p-entity-grid { grid-template-columns: repeat(4, 1fr); }
+    .p-entity-grid > *:first-child { grid-column: span 2; grid-row: span 2; }
   }
 `
 
@@ -101,8 +86,6 @@ function ThemePage() {
   const [suggestSubmitting, setSuggestSubmitting] = useState(false)
   const [suggestSubmitted, setSuggestSubmitted] = useState(false)
   const [suggestError, setSuggestError] = useState('')
-
-  const [phaseRefresh, setPhaseRefresh] = useState(0)
 
   useEffect(() => {
     async function load() {
@@ -174,7 +157,7 @@ function ThemePage() {
       <div style={{ fontFamily: ff, minHeight: '100vh', background: WHITE }}>
         <style>{SHARED_CSS}</style>
         <Nav />
-        <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '80px 40px', textAlign: 'center' }}>
+        <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '80px 40px' }}>
           <p style={{ color: MID_GREY }}>Laden...</p>
         </div>
       </div>
@@ -186,10 +169,10 @@ function ThemePage() {
       <div style={{ fontFamily: ff, minHeight: '100vh', background: WHITE }}>
         <style>{SHARED_CSS}</style>
         <Nav />
-        <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '80px 40px', textAlign: 'center' }}>
+        <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '80px 40px' }}>
           <p style={{ color: '#c0392b' }}>{error || 'Thema niet gevonden.'}</p>
           <Link href="/pulse" style={{ color: OLIVE, textDecoration: 'underline', marginTop: '16px', display: 'inline-block' }}>
-            ← Terug naar overzicht
+            ← Alle metingen
           </Link>
         </div>
       </div>
@@ -202,58 +185,118 @@ function ThemePage() {
   return (
     <div style={{ fontFamily: ff, minHeight: '100vh', background: WHITE, color: NEAR_BLACK }}>
       <style>{SHARED_CSS}</style>
-      <Nav themeTitle={theme.title} />
+      <Nav themeTitle={theme.title} themeSlug={themeSlug} />
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
-      <div className="p-hero">
+      <div style={{ background: BLACK, width: '100%' }}>
         <div className="p-hero-inner">
 
           {/* Left: title + description */}
           <div className="p-hero-text">
-            <p style={{ color: OLIVE, fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.12em', margin: '0 0 16px' }}>
+            <p style={{
+              color: OLIVE,
+              fontSize: '11px',
+              fontWeight: 600,
+              textTransform: 'uppercase',
+              letterSpacing: '0.12em',
+              margin: '0 0 20px',
+            }}>
               DE MACHINE · PULSE
             </p>
-            <h1>{theme.title}</h1>
-            {theme.description && <p>{theme.description}</p>}
+            <h1 style={{
+              fontSize: 'clamp(36px, 5vw, 72px)',
+              fontWeight: 700,
+              color: WHITE,
+              lineHeight: 1.05,
+              margin: '0 0 20px',
+              letterSpacing: '-0.01em',
+            }}>
+              {theme.title}
+            </h1>
+            {theme.description && (
+              <p style={{
+                color: '#aaaaaa',
+                fontSize: '17px',
+                lineHeight: 1.65,
+                margin: 0,
+                maxWidth: '520px',
+              }}>
+                {theme.description}
+              </p>
+            )}
+            <div style={{ marginTop: '32px' }}>
+              <Link
+                href="/pulse"
+                style={{
+                  color: MID_GREY,
+                  fontSize: '12px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  textDecoration: 'none',
+                }}
+              >
+                ← Alle metingen
+              </Link>
+            </div>
           </div>
 
-          {/* Right: countdown or phase label */}
+          {/* Right: countdown or stats */}
           <div className="p-hero-aside">
             {phase === 'presub' && theme.presub_close_at && (
               <Countdown
                 targetDate={new Date(theme.presub_close_at)}
                 label="Suggesties sluiten over"
-                onExpired={() => setPhaseRefresh((p) => p + 1)}
+                onExpired={() => { /* page will re-render naturally */ }}
               />
             )}
             {phase === 'active' && theme.closes_at && (
               <Countdown
                 targetDate={new Date(theme.closes_at)}
                 label="Meting sluit over"
-                onExpired={() => setPhaseRefresh((p) => p + 1)}
+                onExpired={() => { /* page will re-render naturally */ }}
               />
             )}
             {phase === 'active' && entities.length > 0 && (
               <div style={{ textAlign: 'right' }}>
-                <p style={{ color: MID_GREY, fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 4px' }}>Festivals</p>
-                <p style={{ color: YELLOW, fontSize: '48px', fontWeight: 700, lineHeight: 1, margin: '0 0 4px' }}>{entities.length}</p>
-                <p style={{ color: MID_GREY, fontSize: '12px', margin: 0 }}>{dimensions.length} beoordelingsdimensies</p>
+                <p style={{ color: MID_GREY, fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 6px' }}>
+                  Festivals
+                </p>
+                <p style={{ color: YELLOW, fontSize: '56px', fontWeight: 700, lineHeight: 1, margin: '0 0 4px', fontVariantNumeric: 'tabular-nums' }}>
+                  {entities.length}
+                </p>
+                <p style={{ color: MID_GREY, fontSize: '12px', margin: 0 }}>
+                  {dimensions.length} beoordelingsdimensies
+                </p>
               </div>
             )}
-            {(phase === 'teaser' || (!theme.closes_at && phase !== 'presub')) && (
-              <span
-                style={{
-                  background: MID_GREY,
-                  color: BLACK,
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
-                  padding: '6px 14px',
-                  display: 'inline-block',
-                }}
-              >
+            {phase === 'teaser' && (
+              <span style={{
+                background: 'transparent',
+                border: `1px solid ${MID_GREY}`,
+                color: MID_GREY,
+                fontSize: '11px',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+                padding: '6px 14px',
+                display: 'inline-block',
+              }}>
                 Binnenkort
+              </span>
+            )}
+            {phase === 'closed' && (
+              <span style={{
+                background: 'transparent',
+                border: `1px solid ${SUBTLE}`,
+                color: SUBTLE,
+                fontSize: '11px',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+                padding: '6px 14px',
+                display: 'inline-block',
+              }}>
+                Meting gesloten
               </span>
             )}
           </div>
@@ -276,17 +319,23 @@ function ThemePage() {
       {phase === 'presub' && (
         <div className="p-section">
           <div className="p-section-header">
-            <h2>Welk festival wil jij in deze meting?</h2>
-            {theme.editorial_intro && <p>{theme.editorial_intro}</p>}
+            <h2 style={{ fontSize: 'clamp(24px, 3vw, 40px)', fontWeight: 700, color: NEAR_BLACK, margin: 0, lineHeight: 1.15 }}>
+              Welk festival wil jij in deze meting?
+            </h2>
+            {theme.editorial_intro && (
+              <p style={{ color: SUBTLE, fontSize: '17px', lineHeight: 1.65, margin: 0, maxWidth: '640px' }}>
+                {theme.editorial_intro}
+              </p>
+            )}
           </div>
 
           {suggestSubmitted ? (
-            <div style={{ background: LIGHT_GREY, padding: '32px', borderLeft: `4px solid ${YELLOW}`, maxWidth: '560px' }}>
+            <div style={{ borderLeft: `3px solid ${YELLOW}`, paddingLeft: '24px', maxWidth: '520px' }}>
               <p style={{ fontWeight: 700, fontSize: '18px', color: NEAR_BLACK, margin: '0 0 8px' }}>Bedankt.</p>
               <p style={{ color: SUBTLE, margin: 0, fontSize: '15px' }}>We laten je weten wanneer de meting opengaat.</p>
             </div>
           ) : (
-            <form onSubmit={handleSuggest} className="p-form">
+            <form onSubmit={(e) => void handleSuggest(e)} className="p-form">
               <Field label="Naam festival of event">
                 <input
                   type="text" placeholder="Naam..." value={suggestion}
@@ -308,10 +357,25 @@ function ThemePage() {
                   style={inputStyle}
                 />
               </Field>
-              {suggestError && <p style={{ color: '#c0392b', fontSize: '14px', margin: 0 }}>{suggestError}</p>}
+              {suggestError && (
+                <p style={{ color: '#c0392b', fontSize: '14px', margin: 0 }}>{suggestError}</p>
+              )}
               <button
-                type="submit" disabled={suggestSubmitting}
-                style={{ background: YELLOW, color: NEAR_BLACK, border: 'none', padding: '13px 28px', fontFamily: ff, fontWeight: 700, fontSize: '15px', cursor: suggestSubmitting ? 'not-allowed' : 'pointer', opacity: suggestSubmitting ? 0.7 : 1, alignSelf: 'flex-start' }}
+                type="submit"
+                disabled={suggestSubmitting}
+                style={{
+                  background: YELLOW,
+                  color: NEAR_BLACK,
+                  border: 'none',
+                  padding: '13px 28px',
+                  fontFamily: ff,
+                  fontWeight: 700,
+                  fontSize: '15px',
+                  cursor: suggestSubmitting ? 'not-allowed' : 'pointer',
+                  opacity: suggestSubmitting ? 0.7 : 1,
+                  alignSelf: 'flex-start',
+                  letterSpacing: '0.01em',
+                }}
               >
                 {suggestSubmitting ? 'Even geduld...' : 'Suggestie insturen →'}
               </button>
@@ -324,22 +388,24 @@ function ThemePage() {
       {phase === 'active' && (
         <div className="p-section">
           <div className="p-section-header">
-            <h2>Kies een festival om te beoordelen</h2>
-            <p>
-              Selecteer een festival en beoordeel het op {dimensions.length} dimensies.
-              Vergelijk jouw oordeel met dat van andere luisteraars.
-            </p>
+            <h2 style={{ fontSize: 'clamp(24px, 3vw, 40px)', fontWeight: 700, color: NEAR_BLACK, margin: 0, lineHeight: 1.15 }}>
+              Kies een festival
+            </h2>
+            <span style={{ color: MID_GREY, fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.06em', flexShrink: 0 }}>
+              {entities.length} festivals · {dimensions.length} dimensies
+            </span>
           </div>
 
           {entities.length === 0 ? (
             <p style={{ color: MID_GREY }}>Nog geen festivals beschikbaar.</p>
           ) : (
             <div className="p-entity-grid">
-              {entities.map((entity) => (
+              {entities.map((entity, i) => (
                 <EntityCard
                   key={entity.id}
                   entity={entity}
                   href={`/pulse/${themeSlug}/${entity.slug}`}
+                  featured={i === 0}
                 />
               ))}
             </div>
@@ -351,17 +417,22 @@ function ThemePage() {
       {phase === 'closed' && (
         <div className="p-section">
           <div className="p-section-header">
-            <h2>De meting is gesloten.</h2>
-            <p>Bedankt voor je deelname. Bekijk hieronder de definitieve uitslag.</p>
+            <h2 style={{ fontSize: 'clamp(24px, 3vw, 40px)', fontWeight: 700, color: NEAR_BLACK, margin: 0, lineHeight: 1.15 }}>
+              De meting is gesloten.
+            </h2>
+            <span style={{ color: MID_GREY, fontSize: '13px', flexShrink: 0 }}>
+              Bekijk hieronder de definitieve uitslag.
+            </span>
           </div>
 
           {entities.length > 0 && (
             <div className="p-entity-grid">
-              {entities.map((entity) => (
+              {entities.map((entity, i) => (
                 <EntityCard
                   key={entity.id}
                   entity={entity}
                   href={`/pulse/${themeSlug}/${entity.slug}`}
+                  featured={i === 0}
                 />
               ))}
             </div>
@@ -377,32 +448,32 @@ function ThemePage() {
       )}
 
       {/* ── Footer ───────────────────────────────────────────────────────── */}
-      <footer style={{ background: BLACK, padding: '32px 40px', marginTop: '40px' }}>
+      <footer style={{ background: BLACK, padding: '40px 40px', marginTop: '40px' }}>
         <div style={{ maxWidth: '1440px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
-          <span style={{ color: WHITE, fontWeight: 700, fontSize: '14px', letterSpacing: '0.02em' }}>DE MACHINE PULSE</span>
+          <span style={{ color: WHITE, fontWeight: 700, fontSize: '14px', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+            DE MACHINE PULSE
+          </span>
           <span style={{ color: MID_GREY, fontSize: '13px' }}>Mogelijk gemaakt door VPRO 3voor12</span>
         </div>
       </footer>
-
-      <span style={{ display: 'none' }}>{phaseRefresh}</span>
     </div>
   )
 }
 
 // ── Sub-components ─────────────────────────────────────────────────────────
-function Nav({ themeTitle }: { themeTitle?: string }) {
+function Nav({ themeTitle, themeSlug }: { themeTitle?: string; themeSlug?: string }) {
   return (
-    <nav style={{ background: BLACK, height: '56px', display: 'flex', alignItems: 'center' }}>
+    <nav style={{ background: BLACK, height: '56px', display: 'flex', alignItems: 'center', position: 'sticky', top: 0, zIndex: 100 }}>
       <div className="p-nav-inner">
         <Link
           href="/pulse"
-          style={{ color: WHITE, fontWeight: 700, fontSize: '15px', letterSpacing: '0.02em', textDecoration: 'none' }}
+          style={{ color: WHITE, fontWeight: 700, fontSize: '15px', letterSpacing: '0.06em', textTransform: 'uppercase', textDecoration: 'none', flexShrink: 0 }}
         >
-          DE MACHINE PULSE
+          De Machine Pulse
         </Link>
-        {themeTitle && (
+        {themeTitle && themeSlug && (
           <span style={{ color: MID_GREY, fontSize: '12px', maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            {themeTitle}
+            ← {themeTitle}
           </span>
         )}
       </div>
@@ -411,9 +482,10 @@ function Nav({ themeTitle }: { themeTitle?: string }) {
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  const ff = "'Inter', system-ui, sans-serif"
   return (
     <div>
-      <label style={{ display: 'block', fontWeight: 600, fontSize: '13px', color: NEAR_BLACK, marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+      <label style={{ display: 'block', fontWeight: 600, fontSize: '11px', color: SUBTLE, marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: ff }}>
         {label}
       </label>
       {children}
@@ -422,10 +494,15 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '11px 14px',
-  border: '1px solid #424242', borderRadius: 0,
-  fontSize: '15px', fontFamily: "'Inter', system-ui, sans-serif",
-  outline: 'none', boxSizing: 'border-box', background: WHITE,
+  width: '100%',
+  padding: '12px 14px',
+  border: '1px solid #424242',
+  borderRadius: 0,
+  fontSize: '15px',
+  fontFamily: "'Inter', system-ui, sans-serif",
+  outline: 'none',
+  boxSizing: 'border-box',
+  background: LIGHT_GREY,
 }
 
 // ── Page export ────────────────────────────────────────────────────────────
