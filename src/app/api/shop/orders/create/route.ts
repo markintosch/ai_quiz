@@ -8,7 +8,9 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyClient = SupabaseClient<any>
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.markdekock.com'
+// Always use markdekock.com for shop redirects — the app runs on multiple
+// domains (aiquiz.brandpwrdmedia.com etc.) but the shop lives on markdekock.com
+const SHOP_BASE_URL = 'https://www.markdekock.com'
 
 interface ShopProduct {
   id: string
@@ -82,8 +84,8 @@ export async function POST(req: NextRequest) {
     const payment = await mollie.payments.create({
       amount: { currency: 'EUR', value: (amountCents / 100).toFixed(2) },
       description: product.title,
-      redirectUrl: `${baseUrl}/shop/success/${order.id}`,
-      webhookUrl: `${baseUrl}/api/shop/webhook`,
+      redirectUrl: `${SHOP_BASE_URL}/shop/success/${order.id}`,
+      webhookUrl: `${SHOP_BASE_URL}/api/shop/webhook`,
       metadata: { orderId: order.id },
     })
 
