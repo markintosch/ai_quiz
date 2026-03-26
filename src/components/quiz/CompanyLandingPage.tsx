@@ -214,6 +214,8 @@ interface CompanyLandingPageProps {
   formPosition?: 'pre' | 'post'
   /** Whether to show all fields or just name + email in the lead form */
   leadCaptureMode?: 'full' | 'minimal'
+  /** Optional URL to link the company logo/name back to (e.g. '/manda') */
+  backUrl?: string | null
 }
 
 export function CompanyLandingPage({
@@ -236,6 +238,7 @@ export function CompanyLandingPage({
   productSubject,
   formPosition = 'pre',
   leadCaptureMode = 'full',
+  backUrl,
 }: CompanyLandingPageProps) {
   const theme = buildTheme(bgColor)
   const [started, setStarted] = useState(false)
@@ -346,7 +349,16 @@ export function CompanyLandingPage({
             <div className="max-w-3xl mx-auto flex items-center justify-between">
               {/* Logo — always shown; in external mode also shows "Brought to you by" label */}
               <div>
-                {logoUrl ? (
+                {backUrl ? (
+                  <a href={backUrl} style={{ textDecoration: 'none', display: 'inline-block' }}>
+                    {logoUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={logoUrl} alt={displayName} className="h-8 object-contain" />
+                    ) : (
+                      <p className="text-xs font-bold uppercase tracking-widest" style={{ color: accentColor }}>{displayName}</p>
+                    )}
+                  </a>
+                ) : logoUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={logoUrl} alt={displayName} className="h-8 object-contain" />
                 ) : (

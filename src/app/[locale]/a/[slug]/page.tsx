@@ -56,7 +56,7 @@ export default async function FullQuizPage({ params }: PageProps) {
 
   const { data: company, error: companyError } = await supabase
     .from('companies')
-    .select('id, name, slug, logo_url, brand_color, secondary_color, bg_color, assessment_mode, welcome_message, excluded_question_codes, access_code, form_position, lead_capture_mode, quiz_products!product_id(key)')
+    .select('id, name, slug, logo_url, brand_color, secondary_color, bg_color, assessment_mode, welcome_message, excluded_question_codes, access_code, form_position, lead_capture_mode, website_url, quiz_products!product_id(key)')
     .eq('slug', slug)
     .eq('active', true)
     .single() as unknown as {
@@ -74,6 +74,7 @@ export default async function FullQuizPage({ params }: PageProps) {
         access_code: string | null
         form_position: 'pre' | 'post' | null
         lead_capture_mode: 'full' | 'minimal' | null
+        website_url: string | null
         quiz_products: { key: string } | null
       } | null
       error: { message: string; code: string } | null
@@ -140,6 +141,7 @@ export default async function FullQuizPage({ params }: PageProps) {
       productName={productConfig.name}
       formPosition={formPosition}
       leadCaptureMode={leadCaptureMode}
+      backUrl={company.website_url ?? null}
     />
   )
 }
