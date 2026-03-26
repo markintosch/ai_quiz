@@ -4,6 +4,9 @@ import { isAuthorised } from '@/lib/admin/auth'
 
 export const dynamic = 'force-dynamic'
 
+const ALLOWED_LOCALES     = new Set(['en', 'nl', 'fr'])
+const ALLOWED_PRODUCT_KEYS = new Set(['ai_maturity'])
+
 // GET /api/admin/content?locale=en&product_key=ai_maturity
 // Returns the stored content blob for the given locale + product (or {} if none)
 export async function GET(req: NextRequest) {
@@ -11,8 +14,15 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
   }
 
-  const locale = req.nextUrl.searchParams.get('locale') ?? 'en'
+  const locale     = req.nextUrl.searchParams.get('locale') ?? 'en'
   const productKey = req.nextUrl.searchParams.get('product_key') ?? 'ai_maturity'
+
+  if (!ALLOWED_LOCALES.has(locale)) {
+    return NextResponse.json({ error: 'Invalid locale' }, { status: 400 })
+  }
+  if (!ALLOWED_PRODUCT_KEYS.has(productKey)) {
+    return NextResponse.json({ error: 'Invalid product_key' }, { status: 400 })
+  }
   const supabase = createServiceClient()
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -44,6 +54,13 @@ export async function PUT(req: NextRequest) {
   }
 
   const productKey = body.product_key ?? 'ai_maturity'
+
+  if (!ALLOWED_LOCALES.has(body.locale)) {
+    return NextResponse.json({ error: 'Invalid locale' }, { status: 400 })
+  }
+  if (!ALLOWED_PRODUCT_KEYS.has(productKey)) {
+    return NextResponse.json({ error: 'Invalid product_key' }, { status: 400 })
+  }
   const supabase = createServiceClient()
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

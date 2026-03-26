@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
+import { isAuthorised } from '@/lib/admin/auth'
 
 // GET /api/oncology/sales
 // Returns { [marketId]: { [quarter]: revenue } }
 export async function GET() {
+  if (!(await isAuthorised())) {
+    return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  }
   const supabase = createServiceClient()
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -30,6 +34,10 @@ export async function GET() {
 // PUT /api/oncology/sales
 // Body: { market_id: string, quarter: string, revenue: number }
 export async function PUT(req: Request) {
+  if (!(await isAuthorised())) {
+    return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  }
+
   const body = await req.json() as { market_id: string; quarter: string; revenue: number }
 
   if (!body.market_id || !body.quarter || typeof body.revenue !== 'number') {
