@@ -447,7 +447,7 @@ export default function MandaLandingPage() {
 
           <a
             id="assessment"
-            href="/en/a/public"
+            href="https://manda.brandpwrdmedia.nl/en/a/public"
             style={{
               display: 'inline-block',
               background: HDK.gold,
@@ -506,7 +506,7 @@ export default function MandaLandingPage() {
                 </div>
                 <p style={{ color: HDK.muted, fontSize: '0.9rem', lineHeight: 1.55, margin: 0, flex: 1 }}>{a.value}</p>
                 <a
-                  href="/en/a/public"
+                  href="https://manda.brandpwrdmedia.nl/en/a/public"
                   style={{
                     display: 'inline-block',
                     borderTop: `1px solid ${HDK.border}`,
@@ -631,7 +631,7 @@ export default function MandaLandingPage() {
 
           <div style={{ textAlign: 'center', marginTop: '3rem' }}>
             <a
-              href="/en/a/public"
+              href="https://manda.brandpwrdmedia.nl/en/a/public"
               style={{
                 display: 'inline-block',
                 background: HDK.gold,
@@ -835,7 +835,7 @@ export default function MandaLandingPage() {
           </p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <a
-              href="/en/a/public"
+              href="https://manda.brandpwrdmedia.nl/en/a/public"
               style={{
                 display: 'inline-block',
                 background: HDK.gold,
