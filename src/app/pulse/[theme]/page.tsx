@@ -88,10 +88,10 @@ function ThemePageContent() {
           return
         }
 
-        // Load entities and dimensions for this theme
+        // Load entities and dimensions for this theme (public routes)
         const [entRes, dimRes] = await Promise.all([
-          fetch(`/api/admin/pulse/entities?themeId=${theme.id}`),
-          fetch(`/api/admin/pulse/themes/${theme.id}`),
+          fetch(`/api/pulse/entities?themeId=${theme.id}`),
+          fetch(`/api/pulse/dimensions?themeId=${theme.id}`),
         ])
 
         const entJson = entRes.ok ? (await entRes.json() as { entities: PulseEntity[] }) : { entities: [] }
@@ -99,7 +99,7 @@ function ThemePageContent() {
 
         setData({
           theme,
-          entities: entJson.entities.filter((e) => e.ingest_status === 'live'),
+          entities: entJson.entities,
           dimensions: dimJson.dimensions ?? [],
         })
       } catch (e) {
