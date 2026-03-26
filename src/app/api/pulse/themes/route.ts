@@ -19,12 +19,7 @@ export async function GET() {
 
   if (error) {
     console.error('[pulse/themes] DB error:', error)
-    return NextResponse.json({ error: 'Er ging iets mis.', debug: error }, { status: 500 })
-  }
-
-  // Temporary debug
-  if (!themes || themes.length === 0) {
-    return NextResponse.json({ themes: [], debug: 'query ok but 0 rows', url: process.env.NEXT_PUBLIC_SUPABASE_URL?.slice(0, 30) })
+    return NextResponse.json({ error: 'Er ging iets mis.' }, { status: 500 })
   }
 
   // Get entity counts per theme

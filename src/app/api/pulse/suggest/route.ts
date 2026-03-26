@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { rateLimit, getClientIp } from '@/lib/rateLimit'
-import { createServiceClient } from '@/lib/supabase/server'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 
 export const dynamic = 'force-dynamic'
 
@@ -33,7 +33,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Naam mag maximaal 100 tekens bevatten.' }, { status: 400 })
   }
 
-  const supabase = createServiceClient()
+  const supabase = createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
   const { error } = await supabase.from('pulse_suggestions_v2').insert({
     theme_id: themeId.trim(),
     suggested_label: suggestedLabel.trim(),

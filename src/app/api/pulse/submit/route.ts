@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
 import { rateLimit, getClientIp } from '@/lib/rateLimit'
-import { createServiceClient } from '@/lib/supabase/server'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import type { Json } from '@/types/supabase'
 
 export const dynamic = 'force-dynamic'
@@ -51,7 +51,10 @@ export async function POST(req: NextRequest) {
 
   const ipHash = crypto.createHash('sha256').update(ip).digest('hex')
 
-  const supabase = createServiceClient()
+  const supabase = createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
 
   // Check for existing response (soft revision)
   const { data: existing } = await supabase
