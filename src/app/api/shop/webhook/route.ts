@@ -11,7 +11,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 type AnyClient = SupabaseClient<any>
 
 const resend = new Resend(process.env.RESEND_API_KEY)
-const FROM = 'Mark de Kock <mark@markdekock.com>'
+const FROM = 'Mark de Kock <results@brandpwrdmedia.com>'
 
 interface ShopOrder {
   id: string
@@ -71,7 +71,7 @@ function deliveryEmailHtml({
               Join via: <a href="${deliveryUrl}" style="color:${ACCENT};text-decoration:none;font-weight:600;">${deliveryUrl}</a>
             </p>` : ''}
             <p style="margin:0 0 32px;font-size:14px;color:#6b7280;line-height:1.6;">
-              Vragen? Stuur een mail naar <a href="mailto:mark@markdekock.com" style="color:${ACCENT};text-decoration:none;">mark@markdekock.com</a>
+              Vragen? Stuur een mail naar <a href="mailto:mark@brandpwrdmedia.com" style="color:${ACCENT};text-decoration:none;">mark@brandpwrdmedia.com</a>
             </p>
             <p style="margin:0;font-size:15px;color:#1a1a1a;">Mark de Kock<br>
             <a href="https://www.markdekock.com" style="color:${ACCENT};text-decoration:none;font-size:13px;">markdekock.com</a></p>
