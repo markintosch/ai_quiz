@@ -168,7 +168,10 @@ function CheckoutForm({ product, isEmbed = false, embedRef }: CheckoutFormProps)
             htmlFor="terms"
             style={{ fontSize: '13px', color: '#374151', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', cursor: 'pointer', lineHeight: 1.5 }}
           >
-            Ik ga akkoord met de algemene voorwaarden
+            Ik ga akkoord met de{' '}
+            <a href="/voorwaarden" target="_blank" rel="noopener noreferrer" style={{ color: '#E8611A' }}>
+              algemene voorwaarden
+            </a>
           </label>
         </div>
 
