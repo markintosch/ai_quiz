@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useState, use } from 'react'
+import { useEffect, useState } from 'react'
+import { useParams } from 'next/navigation'
 
 const BRAND = '#354E5E'
 const ACCENT = '#E8611A'
@@ -127,8 +128,9 @@ function FailedView({ slug }: { slug?: string }) {
   )
 }
 
-export default function SuccessPage({ params }: { params: Promise<{ orderId: string }> }) {
-  const { orderId } = use(params)
+export default function SuccessPage() {
+  const params = useParams()
+  const orderId = params.orderId as string
   const [order, setOrder] = useState<OrderData | null>(null)
   const [attempts, setAttempts] = useState(0)
   const maxAttempts = 10

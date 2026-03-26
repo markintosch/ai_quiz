@@ -178,7 +178,7 @@ export async function POST(req: NextRequest) {
           // Send notification to Mark
           await resend.emails.send({
             from: FROM,
-            to: 'mark@markdekock.com',
+            to: 'mark@brandpwrdmedia.com',
             subject: `Nieuwe aanmelding: ${product.title}`,
             html: notificationEmailHtml({
               customerName: order.customer_name,

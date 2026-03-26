@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useState, use } from 'react'
+import { useEffect, useState } from 'react'
+import { useParams } from 'next/navigation'
 
 const BRAND = '#354E5E'
 const ACCENT = '#E8611A'
@@ -201,8 +202,9 @@ function CheckoutForm({ product, isEmbed = false, embedRef }: CheckoutFormProps)
   )
 }
 
-export default function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = use(params)
+export default function ProductPage() {
+  const params = useParams()
+  const slug = params.slug as string
   const [product, setProduct] = useState<ShopProduct | null>(null)
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
