@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import { QuizEngine } from './QuizEngine'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 
@@ -249,6 +249,7 @@ export function CompanyLandingPage({
   }, [slug])
 
   const t = useTranslations('company')
+  const locale = useLocale()
 
   // Display name: replace underscores with spaces for readability
   const displayName = name.replace(/_/g, ' ')
@@ -262,14 +263,26 @@ export function CompanyLandingPage({
 
   const isExternal = assessmentMode === 'external'
 
+  // ── Locale-aware product subject phrases ────────────────────
+  const productHeading2 = productSubject
+    ? locale === 'nl' ? `staat op ${productSubject}?`
+    : locale === 'fr' ? `se situe sur ${productSubject} ?`
+    : `stand on ${productSubject}?`
+    : null
+
+  const productCta = productSubject
+    ? locale === 'nl' ? `Ontdek jouw ${productSubject} →`
+    : locale === 'fr' ? `Découvrez votre ${productSubject} →`
+    : `Discover your ${productSubject} →`
+    : null
+
   // ── CTA label ───────────────────────────────────────────────
   const ctaLabel = isExternal
-    ? (productSubject ? `Discover your ${productSubject} maturity →` : t('ctaExternal'))
+    ? (productCta ?? t('ctaExternal'))
     : displayName ? t('cta', { name: displayName }) : t('ctaFallback')
 
   // ── Heading ─────────────────────────────────────────────────
-  // heading2: "stand on Cloud Readiness?" when productSubject provided, else translation default
-  const heading2 = productSubject ? `stand on ${productSubject}?` : t('heading2')
+  const heading2 = productHeading2 ?? t('heading2')
 
   const headingMiddle = isExternal ? (
     // External: "See where your organisation stands on AI"
