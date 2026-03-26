@@ -5,12 +5,12 @@ import { motion, type Variants } from 'framer-motion'
 
 // ── Brand tokens ──────────────────────────────────────────────────────────────
 const INK        = '#0F172A'
-const NAVY       = '#1E3A5F'   // eslint-disable-line @typescript-eslint/no-unused-vars
 const WHITE      = '#FFFFFF'
 const LIGHT      = '#F8FAFC'
-const ACCENT     = '#1D4ED8'
-const WARM       = '#D97706'
-const WARM_LIGHT = '#FEF3C7'
+const BRAND      = '#354E5E'   // dark teal — primary brand
+const ACCENT     = '#E8611A'   // orange-red — brand-accent
+const GOLD       = '#F5A820'   // amber — brand-gold
+const WARM_LIGHT = '#FEF9EE'   // soft warm bg for outcome blocks
 const BODY       = '#374151'
 const MUTED      = '#94A3B8'
 const BORDER     = '#E2E8F0'
@@ -43,7 +43,7 @@ const T = {
     tiers: [
       {
         badge:    'Instap',
-        name:     'Oriëntatie',
+        name:     'Verkenning',
         tagline:  'Weten waar je staat, voordat je een stap zet.',
         duration: '3-4 weken · 2 sessies',
         outcome:  'Je verlaat dit traject met een eerlijk richtingadvies.',
@@ -60,10 +60,10 @@ const T = {
       },
       {
         badge:    'Meest gekozen',
-        name:     'Traject',
+        name:     'Begeleiding',
         tagline:  'Van beeld naar eerste echte voortgang.',
         duration: '3 maanden · Maandelijkse sessies + ad-hoc contact',
-        outcome:  'Je verlaat dit traject met iets dat werkt en intern verder kan.',
+        outcome:  'Je verlaat de begeleiding met iets dat werkt en intern verder kan.',
         items: [
           'Scherp krijgen: situatie, prioriteit en eigenaarschap',
           'Eerste werkende use case of besluitvormingskader',
@@ -78,12 +78,12 @@ const T = {
       },
       {
         badge:    'Uitgebreid',
-        name:     'Strategisch partnerschap',
+        name:     'Partnerschap',
         tagline:  'AI als vast onderdeel van hoe de organisatie werkt.',
         duration: '6-12 maanden · Doorlopend',
         outcome:  'Je verlaat dit traject met een organisatie die AI begrijpt, toepast en verder kan bouwen.',
         items: [
-          'Alles uit het Traject',
+          'Alles uit de Begeleiding',
           'Begeleiding bij boardpresentaties en governance',
           'Team- en managementsessies',
           'Inzet van het Kirk & Blackbeard netwerk waar relevant',
@@ -97,7 +97,7 @@ const T = {
     ],
 
     tableTitle: 'Wat zit er in elk traject?',
-    tableHeaders: ['', 'Oriëntatie', 'Traject', 'Partnerschap'],
+    tableHeaders: ['', 'Verkenning', 'Begeleiding', 'Partnerschap'],
     tableRows: [
       { feature: 'AI-scan + situatieanalyse',         cols: [true,  true,  true]  },
       { feature: '1-op-1 begeleiding',                cols: [true,  true,  true]  },
@@ -116,7 +116,7 @@ const T = {
       },
       {
         q: 'Werkt dit ook voor een managementteam in plaats van één persoon?',
-        a: 'Ja. Het Traject en het Partnerschap kunnen ook teamgericht worden ingericht. We bespreken tijdens de intake hoe dat het best werkt.',
+        a: 'Ja. De Begeleiding en het Partnerschap kunnen ook teamgericht worden ingericht. We bespreken tijdens de intake hoe dat het best werkt.',
       },
       {
         q: 'Wat als ik al een AI-strategie heb?',
@@ -124,11 +124,11 @@ const T = {
       },
       {
         q: 'Hoe intensief is het contact?',
-        a: 'Dat verschilt per traject. Het Oriëntatie-traject is compact. Het Traject heeft maandelijkse sessies plus tussentijds contact als er iets is. Het Partnerschap is doorlopender van aard.',
+        a: 'Dat verschilt per vorm. De Verkenning is compact. De Begeleiding heeft maandelijkse sessies plus tussentijds contact als er iets is. Het Partnerschap is doorlopender van aard.',
       },
       {
         q: 'Hoe snel kan ik starten?',
-        a: 'Afhankelijk van beschikbaarheid. Ik begeleid maximaal vijf trajecten tegelijk, dus er kan een korte wachttijd zijn. De intake kan altijd snel worden ingepland.',
+        a: 'Afhankelijk van beschikbaarheid. Ik werk met een klein aantal trajecten tegelijk — dat is ook waarom het werkt. De intake kan altijd snel worden ingepland.',
       },
     ],
 
@@ -153,7 +153,7 @@ const T = {
     tiers: [
       {
         badge:    'Entry',
-        name:     'Orientation',
+        name:     'Exploration',
         tagline:  'Know where you stand before you take a step.',
         duration: '3-4 weeks · 2 sessions',
         outcome:  'You leave this engagement with an honest directional recommendation.',
@@ -170,7 +170,7 @@ const T = {
       },
       {
         badge:    'Most chosen',
-        name:     'Mentorship',
+        name:     'Guidance',
         tagline:  'From picture to first real progress.',
         duration: '3 months · Monthly sessions + ad-hoc contact',
         outcome:  'You leave this engagement with something that works and can be continued internally.',
@@ -188,12 +188,12 @@ const T = {
       },
       {
         badge:    'Extended',
-        name:     'Strategic partnership',
+        name:     'Partnership',
         tagline:  'AI as a permanent part of how the organisation works.',
         duration: '6-12 months · Ongoing',
         outcome:  'You leave this engagement with an organisation that understands AI, applies it, and can continue building.',
         items: [
-          'Everything from the Mentorship engagement',
+          'Everything from the Guidance engagement',
           'Support with board presentations and governance',
           'Team and management sessions',
           'Access to the Kirk & Blackbeard network where relevant',
@@ -207,7 +207,7 @@ const T = {
     ],
 
     tableTitle: 'What is included in each engagement?',
-    tableHeaders: ['', 'Orientation', 'Mentorship', 'Partnership'],
+    tableHeaders: ['', 'Exploration', 'Guidance', 'Partnership'],
     tableRows: [
       { feature: 'AI scan + situation analysis',         cols: [true,  true,  true]  },
       { feature: '1-on-1 guidance',                      cols: [true,  true,  true]  },
@@ -226,7 +226,7 @@ const T = {
       },
       {
         q: 'Does this work for a management team rather than one person?',
-        a: 'Yes. The Mentorship and Strategic Partnership can also be set up with a team focus. We discuss during the intake what works best.',
+        a: 'Yes. The Guidance and Partnership can also be set up with a team focus. We discuss during the intake what works best.',
       },
       {
         q: 'What if I already have an AI strategy?',
@@ -234,7 +234,7 @@ const T = {
       },
       {
         q: 'How intensive is the contact?',
-        a: 'That depends on the engagement. The Orientation is compact. The Mentorship has monthly sessions plus ad-hoc contact when needed. The Partnership is more continuous by nature.',
+        a: 'That depends on the engagement. The Exploration is compact. The Guidance has monthly sessions plus ad-hoc contact when needed. The Partnership is more continuous by nature.',
       },
       {
         q: 'How quickly can I start?',
@@ -306,7 +306,7 @@ export default function AanpakPage() {
             <div>
               <p style={{ fontSize: 13, fontWeight: 800, color: INK, lineHeight: 1.2 }}>{t.navName}</p>
               <p style={{ fontSize: 11, color: MUTED, lineHeight: 1.2 }}>{t.navRole}</p>
-              <p style={{ fontSize: 10, color: WARM, fontWeight: 600, lineHeight: 1.2 }}>{t.navPartner}</p>
+              <p style={{ fontSize: 10, color: ACCENT, fontWeight: 600, lineHeight: 1.2 }}>{t.navPartner}</p>
             </div>
           </a>
 
@@ -335,8 +335,8 @@ export default function AanpakPage() {
               target="_blank"
               rel="noopener noreferrer"
               style={{
-                background: WARM, color: WHITE, fontSize: 13, fontWeight: 700,
-                padding: '8px 20px', borderRadius: 100, textDecoration: 'none',
+                background: ACCENT, color: WHITE, fontSize: 13, fontWeight: 700,
+                padding: '8px 20px', borderRadius: 4, textDecoration: 'none',
                 whiteSpace: 'nowrap',
               }}
             >
@@ -352,7 +352,7 @@ export default function AanpakPage() {
           <motion.div variants={stagger} initial="hidden" animate="show">
             <motion.p variants={fadeUp} style={{
               fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase',
-              color: WARM, marginBottom: 20,
+              color: GOLD, marginBottom: 20,
             }}>
               {t.heroLabel}
             </motion.p>
@@ -390,41 +390,37 @@ export default function AanpakPage() {
                   whileInView="show"
                   viewport={{ once: true, margin: '-60px' }}
                   style={{
-                    background: isElevated ? INK : WHITE,
-                    border: isElevated ? 'none' : `1px solid ${BORDER}`,
-                    borderRadius: 20,
+                    background: isElevated ? BRAND : WHITE,
+                    border: isElevated ? `2px solid ${BRAND}` : `1px solid ${BORDER}`,
+                    borderRadius: 6,
                     padding: isElevated ? '40px 32px' : '32px 28px',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 0,
-                    boxShadow: isElevated
-                      ? '0 24px 64px rgba(15,23,42,0.35)'
-                      : '0 2px 12px rgba(15,23,42,0.06)',
+                    boxShadow: 'none',
                     position: 'relative',
-                    transform: isElevated ? 'translateY(-8px)' : 'none',
+                    transform: isElevated ? 'translateY(-6px)' : 'none',
                   }}
                 >
-                  {/* Badge */}
+                  {/* Tier label + name — combined identity block */}
                   <div style={{ marginBottom: 20 }}>
-                    <span style={{
-                      display: 'inline-block',
-                      fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
-                      color: isElevated ? WARM : ACCENT,
-                      background: isElevated ? 'rgba(217,119,6,0.15)' : 'rgba(29,78,216,0.08)',
-                      padding: '5px 14px', borderRadius: 100,
+                    <p style={{
+                      fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase',
+                      color: isElevated ? GOLD : ACCENT,
+                      marginBottom: 6,
                     }}>
                       {tier.badge}
-                    </span>
+                    </p>
+                    <h2 style={{
+                      fontSize: isElevated ? 28 : 24, fontWeight: 900,
+                      color: isElevated ? WHITE : INK,
+                      lineHeight: 1.1, margin: 0,
+                      borderBottom: isElevated ? `2px solid ${GOLD}` : `2px solid ${ACCENT}`,
+                      paddingBottom: 10,
+                    }}>
+                      {tier.name}
+                    </h2>
                   </div>
-
-                  {/* Name + tagline */}
-                  <h2 style={{
-                    fontSize: isElevated ? 26 : 22, fontWeight: 800,
-                    color: isElevated ? WHITE : INK,
-                    marginBottom: 8, lineHeight: 1.2,
-                  }}>
-                    {tier.name}
-                  </h2>
                   <p style={{
                     fontSize: 14, color: isElevated ? MUTED : BODY,
                     marginBottom: 16, lineHeight: 1.5,
@@ -443,8 +439,9 @@ export default function AanpakPage() {
 
                   {/* Outcome */}
                   <div style={{
-                    background: isElevated ? 'rgba(255,255,255,0.06)' : WARM_LIGHT,
-                    borderRadius: 10, padding: '14px 16px', marginBottom: 24,
+                    background: isElevated ? 'rgba(255,255,255,0.07)' : WARM_LIGHT,
+                    borderRadius: 4, padding: '14px 16px', marginBottom: 24,
+                    borderLeft: isElevated ? `3px solid ${GOLD}` : `3px solid ${ACCENT}`,
                   }}>
                     <p style={{
                       fontSize: 14, fontWeight: 700,
@@ -461,11 +458,11 @@ export default function AanpakPage() {
                       <div key={j} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
                         <div style={{
                           width: 18, height: 18, borderRadius: '50%', flexShrink: 0, marginTop: 2,
-                          background: isElevated ? 'rgba(217,119,6,0.20)' : 'rgba(29,78,216,0.10)',
+                          background: isElevated ? 'rgba(245,168,32,0.18)' : 'rgba(232,97,26,0.10)',
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                         }}>
                           <svg width="9" height="7" viewBox="0 0 9 7" fill="none">
-                            <path d="M1 3.5L3.5 6L8 1" stroke={isElevated ? WARM : ACCENT} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            <path d="M1 3.5L3.5 6L8 1" stroke={isElevated ? GOLD : ACCENT} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         </div>
                         <p style={{ fontSize: 14, color: isElevated ? 'rgba(255,255,255,0.75)' : BODY, lineHeight: 1.5 }}>
@@ -482,11 +479,13 @@ export default function AanpakPage() {
                     rel="noopener noreferrer"
                     style={{
                       display: 'block', textAlign: 'center', textDecoration: 'none',
-                      padding: '14px 24px', borderRadius: 100,
+                      padding: '14px 24px', borderRadius: 4,
                       fontSize: 15, fontWeight: 700,
-                      background: isElevated ? WARM : ACCENT,
+                      background: isElevated
+                        ? `linear-gradient(135deg, ${GOLD}, ${ACCENT})`
+                        : BRAND,
                       color: WHITE,
-                      boxShadow: isElevated ? `0 8px 24px ${WARM}44` : `0 4px 16px ${ACCENT}33`,
+                      boxShadow: 'none',
                       marginBottom: 12,
                     }}
                   >
@@ -569,7 +568,7 @@ export default function AanpakPage() {
                           {has ? (
                             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style={{ display: 'inline-block' }}>
                               <circle cx="9" cy="9" r="8" fill={WARM_LIGHT} />
-                              <path d="M5.5 9L8 11.5L12.5 6.5" stroke={WARM} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                              <path d="M5.5 9L8 11.5L12.5 6.5" stroke={ACCENT} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                           ) : (
                             <span style={{ color: '#CBD5E1', fontSize: 16, fontWeight: 300 }}>—</span>
@@ -627,9 +626,10 @@ export default function AanpakPage() {
                 rel="noopener noreferrer"
                 style={{
                   display: 'inline-block',
-                  background: WARM, color: WHITE, fontWeight: 700, fontSize: 16,
-                  padding: '16px 40px', borderRadius: 100, textDecoration: 'none',
-                  boxShadow: `0 12px 32px ${WARM}55`,
+                  background: `linear-gradient(135deg, ${GOLD}, ${ACCENT})`,
+                  color: WHITE, fontWeight: 700, fontSize: 16,
+                  padding: '16px 40px', borderRadius: 4, textDecoration: 'none',
+                  boxShadow: 'none',
                 }}
               >
                 {t.bottomCta}

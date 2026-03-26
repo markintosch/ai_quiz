@@ -144,6 +144,7 @@ const T = {
 
     footerCopy:  'Strategisch mentor voor AI & executie',
     footerSub:   'markdekock.com',
+    footerWerk:  'Wat ik maak →',
   },
   en: {
     navName:    'Mark de Kock',
@@ -258,6 +259,7 @@ const T = {
 
     footerCopy:  'Strategic mentor for AI & execution',
     footerSub:   'markdekock.com',
+    footerWerk:  'What I build →',
   },
 }
 
@@ -318,6 +320,18 @@ export default function MentorPage() {
                 </button>
               ))}
             </div>
+            <a
+              href="/werk"
+              style={{
+                fontSize: 13, fontWeight: 600, color: BODY, textDecoration: 'none',
+                whiteSpace: 'nowrap',
+                borderBottom: '1px solid transparent',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.borderBottomColor = WARM)}
+              onMouseLeave={e => (e.currentTarget.style.borderBottomColor = 'transparent')}
+            >
+              {lang === 'nl' ? 'Voorbeeldprojecten' : 'Example projects'}
+            </a>
             <a
               href={CALENDLY_INTAKE}
               target="_blank"
@@ -772,7 +786,10 @@ export default function MentorPage() {
             <div style={{ width: 24, height: 24, borderRadius: 6, background: INK, border: '1px solid #1E293B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: WHITE, fontFamily: 'serif' }}>M</div>
             <span style={{ fontSize: 13, color: '#475569' }}>{t.navName} — {t.footerCopy}</span>
           </div>
-          <p style={{ fontSize: 12, color: '#334155' }}>{t.footerSub} · {new Date().getFullYear()}</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+            <a href="/werk" style={{ fontSize: 12, color: '#64748B', textDecoration: 'none' }}>{t.footerWerk}</a>
+            <p style={{ fontSize: 12, color: '#334155', margin: 0 }}>{t.footerSub} · {new Date().getFullYear()}</p>
+          </div>
         </div>
       </footer>
 
