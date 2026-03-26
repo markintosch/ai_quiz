@@ -3,25 +3,25 @@ export const metadata = {
   description: 'Algemene voorwaarden voor digitale producten van markdekock.com',
 }
 
-const BRAND = '#354E5E'
-const NEAR_BLACK = '#1a1a1a'
-const SUBTLE = '#6b7280'
-const ACCENT = '#E8611A'
+const INK    = '#0F172A'
+const ACCENT = '#1D4ED8'
+const BODY   = '#374151'
+const MUTED  = '#94A3B8'
+const BORDER = '#E2E8F0'
+const ff     = "-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif"
 
 export default function VoorwaardenPage() {
-  const ff = '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
-
   const h2Style: React.CSSProperties = {
     fontSize: '18px',
     fontWeight: 700,
-    color: BRAND,
+    color: INK,
     margin: '40px 0 12px',
     fontFamily: ff,
   }
 
   const pStyle: React.CSSProperties = {
     fontSize: '15px',
-    color: '#374151',
+    color: BODY,
     lineHeight: 1.75,
     margin: '0 0 14px',
     fontFamily: ff,
@@ -29,7 +29,7 @@ export default function VoorwaardenPage() {
 
   const liStyle: React.CSSProperties = {
     fontSize: '15px',
-    color: '#374151',
+    color: BODY,
     lineHeight: 1.75,
     marginBottom: '6px',
     fontFamily: ff,
@@ -37,26 +37,45 @@ export default function VoorwaardenPage() {
 
   return (
     <main style={{ background: '#ffffff', minHeight: '100vh' }}>
-      {/* Nav */}
-      <nav style={{ background: NEAR_BLACK, padding: '16px 24px' }}>
+      {/* Nav — match mentor/shop nav style */}
+      <nav
+        style={{
+          background: INK,
+          padding: '0 clamp(24px, 5vw, 80px)',
+          height: '56px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          borderBottom: '1px solid rgba(255,255,255,0.08)',
+          fontFamily: ff,
+        }}
+      >
+        {/* Left: brand */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <span style={{ color: '#FFFFFF', fontWeight: 700, fontSize: '15px' }}>Mark de Kock</span>
+          <span style={{ color: MUTED, fontSize: '13px' }}>/</span>
+          <span style={{ color: MUTED, fontSize: '13px' }}>Voorwaarden</span>
+        </div>
+
+        {/* Right: back link */}
         <a
-          href="/"
-          style={{ color: '#ffffff', textDecoration: 'none', fontSize: '14px', fontFamily: ff, opacity: 0.8 }}
+          href="https://www.markdekock.com"
+          style={{ color: MUTED, textDecoration: 'none', fontSize: '13px' }}
         >
           ← markdekock.com
         </a>
       </nav>
 
       {/* Header */}
-      <div style={{ background: BRAND, padding: 'clamp(40px, 6vw, 72px) clamp(24px, 6vw, 80px)' }}>
+      <div style={{ background: INK, padding: 'clamp(40px, 6vw, 72px) clamp(24px, 6vw, 80px)' }}>
         <div style={{ maxWidth: '760px', margin: '0 auto' }}>
-          <p style={{ margin: '0 0 12px', fontSize: '11px', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)', fontFamily: ff }}>
+          <p style={{ margin: '0 0 12px', fontSize: '11px', letterSpacing: '0.1em', textTransform: 'uppercase', color: MUTED, fontFamily: ff }}>
             MARKDEKOCK.COM
           </p>
           <h1 style={{ margin: 0, fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 700, color: '#ffffff', fontFamily: ff, lineHeight: 1.15 }}>
             Algemene Voorwaarden
           </h1>
-          <p style={{ margin: '16px 0 0', fontSize: '15px', color: 'rgba(255,255,255,0.7)', fontFamily: ff }}>
+          <p style={{ margin: '16px 0 0', fontSize: '15px', color: MUTED, fontFamily: ff }}>
             Versie 1.0 · Ingangsdatum: 1 april 2025
           </p>
         </div>
@@ -166,8 +185,8 @@ export default function VoorwaardenPage() {
           Voor lopende overeenkomsten gelden de voorwaarden die golden op het moment van aankoop.
         </p>
 
-        <div style={{ marginTop: '48px', paddingTop: '32px', borderTop: '1px solid #e5e7eb' }}>
-          <p style={{ ...pStyle, fontSize: '13px', color: SUBTLE }}>
+        <div style={{ marginTop: '48px', paddingTop: '32px', borderTop: `1px solid ${BORDER}` }}>
+          <p style={{ ...pStyle, fontSize: '13px', color: MUTED }}>
             Vragen over deze voorwaarden?{' '}
             <a href="mailto:mark@brandpwrdmedia.com" style={{ color: ACCENT }}>mark@brandpwrdmedia.com</a>
           </p>

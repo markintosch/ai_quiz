@@ -3,10 +3,13 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 
-const BRAND = '#354E5E'
-const ACCENT = '#E8611A'
-const NEAR_BLACK = '#1a1a1a'
-const SUBTLE = '#6b7280'
+const INK    = '#0F172A'
+const ACCENT = '#1D4ED8'
+const BODY   = '#374151'
+const MUTED  = '#94A3B8'
+const BORDER = '#E2E8F0'
+const LIGHT  = '#F8FAFC'
+const ff     = "-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif"
 
 type OrderStatus = 'pending' | 'paid' | 'failed' | 'expired' | 'canceled'
 
@@ -28,13 +31,7 @@ function PendingView() {
 
   return (
     <div style={{ textAlign: 'center', padding: '60px 24px' }}>
-      <p
-        style={{
-          fontSize: '20px',
-          color: SUBTLE,
-          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-        }}
-      >
+      <p style={{ fontSize: '20px', color: MUTED, fontFamily: ff }}>
         Betaling wordt verwerkt{dots}
       </p>
     </div>
@@ -44,18 +41,19 @@ function PendingView() {
 function PaidView({ productTitle, customerName }: { productTitle: string; customerName: string }) {
   return (
     <div style={{ textAlign: 'center', padding: '60px 24px', maxWidth: '540px', margin: '0 auto' }}>
+      {/* Checkmark circle — ACCENT blue, not green */}
       <div
         style={{
           width: '80px',
           height: '80px',
           borderRadius: '50%',
-          background: '#dcfce7',
+          border: `2px solid ${ACCENT}`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           margin: '0 auto 32px',
           fontSize: '36px',
-          color: '#16a34a',
+          color: ACCENT,
         }}
       >
         ✓
@@ -65,36 +63,38 @@ function PaidView({ productTitle, customerName }: { productTitle: string; custom
           margin: '0 0 16px',
           fontSize: 'clamp(24px, 4vw, 36px)',
           fontWeight: 700,
-          color: NEAR_BLACK,
-          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+          color: INK,
+          fontFamily: ff,
         }}
       >
         Betaling geslaagd!
       </h1>
       <p
         style={{
-          margin: '0 0 12px',
+          margin: '0 0 32px',
           fontSize: '17px',
-          color: SUBTLE,
-          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+          color: BODY,
+          fontFamily: ff,
           lineHeight: 1.6,
         }}
       >
         Check je inbox — de bevestiging is onderweg.
       </p>
+      {/* Info card */}
       <div
         style={{
-          background: '#f9fafb',
-          border: '1px solid #e5e7eb',
+          background: '#ffffff',
+          border: `1px solid ${BORDER}`,
+          borderTop: `3px solid ${ACCENT}`,
           padding: '20px 24px',
-          margin: '32px 0',
           textAlign: 'left',
+          fontFamily: ff,
         }}
       >
-        <p style={{ margin: '0 0 6px', fontSize: '13px', color: SUBTLE, fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>Product</p>
-        <p style={{ margin: '0 0 12px', fontSize: '15px', fontWeight: 600, color: BRAND, fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>{productTitle}</p>
-        <p style={{ margin: '0 0 6px', fontSize: '13px', color: SUBTLE, fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>Naam</p>
-        <p style={{ margin: 0, fontSize: '15px', color: NEAR_BLACK, fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>{customerName}</p>
+        <p style={{ margin: '0 0 4px', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em', color: MUTED }}>Product</p>
+        <p style={{ margin: '0 0 16px', fontSize: '15px', fontWeight: 600, color: INK }}>{productTitle}</p>
+        <p style={{ margin: '0 0 4px', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em', color: MUTED }}>Naam</p>
+        <p style={{ margin: 0, fontSize: '15px', color: BODY }}>{customerName}</p>
       </div>
     </div>
   )
@@ -102,8 +102,8 @@ function PaidView({ productTitle, customerName }: { productTitle: string; custom
 
 function FailedView({ slug }: { slug?: string }) {
   return (
-    <div style={{ textAlign: 'center', padding: '60px 24px' }}>
-      <p style={{ fontSize: '20px', color: '#dc2626', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', marginBottom: '24px' }}>
+    <div style={{ textAlign: 'center', padding: '60px 24px', fontFamily: ff }}>
+      <p style={{ fontSize: '20px', color: '#dc2626', marginBottom: '24px' }}>
         Betaling mislukt. Probeer opnieuw.
       </p>
       {slug && (
@@ -117,8 +117,7 @@ function FailedView({ slug }: { slug?: string }) {
             textDecoration: 'none',
             fontWeight: 600,
             fontSize: '14px',
-            borderRadius: '4px',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+            borderRadius: '2px',
           }}
         >
           ← Terug naar het product
@@ -159,8 +158,24 @@ export default function SuccessPage() {
   }, [orderId])
 
   return (
-    <main style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', minHeight: '60vh' }}>
-      <div style={{ maxWidth: '640px', margin: '0 auto', padding: 'clamp(40px, 6vw, 80px) clamp(20px, 4vw, 40px)' }}>
+    <main
+      style={{
+        fontFamily: ff,
+        minHeight: '100vh',
+        background: LIGHT,
+      }}
+    >
+      {/* Back link at top */}
+      <div style={{ padding: '24px clamp(24px, 5vw, 80px)' }}>
+        <a
+          href="https://www.markdekock.com"
+          style={{ fontSize: '13px', color: MUTED, textDecoration: 'none' }}
+        >
+          ← markdekock.com
+        </a>
+      </div>
+
+      <div style={{ maxWidth: '640px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 80px) clamp(60px, 8vw, 96px)' }}>
         {!order || order.status === 'pending' ? (
           <PendingView />
         ) : order.status === 'paid' ? (
@@ -168,20 +183,6 @@ export default function SuccessPage() {
         ) : (
           <FailedView />
         )}
-
-        <div style={{ textAlign: 'center', marginTop: '40px' }}>
-          <a
-            href="/"
-            style={{
-              fontSize: '14px',
-              color: SUBTLE,
-              textDecoration: 'none',
-              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-            }}
-          >
-            ← Terug naar markdekock.com
-          </a>
-        </div>
       </div>
     </main>
   )

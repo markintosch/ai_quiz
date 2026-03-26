@@ -2,12 +2,17 @@
 
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
+import Link from 'next/link'
 
-const BRAND = '#354E5E'
-const ACCENT = '#E8611A'
-const NEAR_BLACK = '#1a1a1a'
-const SUBTLE = '#6b7280'
-const LIGHT_BG = '#f9fafb'
+const INK    = '#0F172A'
+const NAVY   = '#1E3A5F'
+const ACCENT = '#1D4ED8'
+const WARM   = '#D97706'
+const BODY   = '#374151'
+const MUTED  = '#94A3B8'
+const BORDER = '#E2E8F0'
+const LIGHT  = '#F8FAFC'
+const ff     = "-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif"
 
 interface ShopProduct {
   id: string
@@ -84,31 +89,33 @@ function CheckoutForm({ product, isEmbed = false, embedRef }: CheckoutFormProps)
     display: 'block',
     width: '100%',
     padding: '12px 14px',
-    border: '1px solid #d1d5db',
-    borderRadius: '4px',
+    border: `1px solid ${BORDER}`,
     fontSize: '15px',
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-    color: NEAR_BLACK,
+    fontFamily: ff,
+    color: INK,
     background: '#ffffff',
     boxSizing: 'border-box',
     outline: 'none',
+    borderRadius: '2px',
   }
 
   const labelStyle: React.CSSProperties = {
     display: 'block',
     fontSize: '13px',
     fontWeight: 600,
-    color: '#374151',
+    color: BODY,
     marginBottom: '6px',
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    fontFamily: ff,
   }
 
   return (
     <div
       style={{
-        background: '#ffffff',
-        border: '1px solid #e5e7eb',
+        background: LIGHT,
+        border: `1px solid ${BORDER}`,
+        borderTop: `3px solid ${ACCENT}`,
         padding: '32px',
+        fontFamily: ff,
       }}
     >
       <h3
@@ -116,15 +123,16 @@ function CheckoutForm({ product, isEmbed = false, embedRef }: CheckoutFormProps)
           margin: '0 0 8px',
           fontSize: '18px',
           fontWeight: 700,
-          color: NEAR_BLACK,
-          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+          color: INK,
         }}
       >
         Aanmelden
       </h3>
-      <p style={{ margin: '0 0 24px', fontSize: '22px', fontWeight: 700, color: BRAND, fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-        {formatPrice(product.price_cents)}
-        <span style={{ fontSize: '12px', fontWeight: 400, color: SUBTLE, marginLeft: '6px' }}>incl. BTW</span>
+      <p style={{ margin: '0 0 24px' }}>
+        <span style={{ fontSize: '24px', fontWeight: 700, color: ACCENT }}>
+          {formatPrice(product.price_cents)}
+        </span>
+        <span style={{ fontSize: '12px', color: MUTED, marginLeft: '6px' }}>incl. BTW</span>
       </p>
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -138,7 +146,7 @@ function CheckoutForm({ product, isEmbed = false, embedRef }: CheckoutFormProps)
             required
             placeholder="Jouw volledige naam"
             style={inputStyle}
-            onFocus={e => { (e.target as HTMLInputElement).style.outline = `2px solid ${BRAND}`; (e.target as HTMLInputElement).style.outlineOffset = '1px' }}
+            onFocus={e => { (e.target as HTMLInputElement).style.outline = `2px solid ${ACCENT}`; (e.target as HTMLInputElement).style.outlineOffset = '1px' }}
             onBlur={e => { (e.target as HTMLInputElement).style.outline = 'none' }}
           />
         </div>
@@ -152,7 +160,7 @@ function CheckoutForm({ product, isEmbed = false, embedRef }: CheckoutFormProps)
             required
             placeholder="jouw@email.nl"
             style={inputStyle}
-            onFocus={e => { (e.target as HTMLInputElement).style.outline = `2px solid ${BRAND}`; (e.target as HTMLInputElement).style.outlineOffset = '1px' }}
+            onFocus={e => { (e.target as HTMLInputElement).style.outline = `2px solid ${ACCENT}`; (e.target as HTMLInputElement).style.outlineOffset = '1px' }}
             onBlur={e => { (e.target as HTMLInputElement).style.outline = 'none' }}
           />
         </div>
@@ -162,21 +170,21 @@ function CheckoutForm({ product, isEmbed = false, embedRef }: CheckoutFormProps)
             type="checkbox"
             checked={terms}
             onChange={e => setTerms(e.target.checked)}
-            style={{ marginTop: '2px', accentColor: BRAND, width: '16px', height: '16px', flexShrink: 0 }}
+            style={{ marginTop: '2px', accentColor: ACCENT, width: '16px', height: '16px', flexShrink: 0 }}
           />
           <label
             htmlFor="terms"
-            style={{ fontSize: '13px', color: '#374151', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', cursor: 'pointer', lineHeight: 1.5 }}
+            style={{ fontSize: '13px', color: BODY, fontFamily: ff, cursor: 'pointer', lineHeight: 1.5 }}
           >
             Ik ga akkoord met de{' '}
-            <a href="/voorwaarden" target="_blank" rel="noopener noreferrer" style={{ color: '#E8611A' }}>
+            <a href="/voorwaarden" target="_blank" rel="noopener noreferrer" style={{ color: ACCENT, textDecoration: 'underline' }}>
               algemene voorwaarden
             </a>
           </label>
         </div>
 
         {error && (
-          <p style={{ margin: 0, fontSize: '13px', color: '#dc2626', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
+          <p style={{ margin: 0, fontSize: '13px', color: '#dc2626', fontFamily: ff }}>
             {error}
           </p>
         )}
@@ -186,17 +194,19 @@ function CheckoutForm({ product, isEmbed = false, embedRef }: CheckoutFormProps)
           disabled={loading}
           style={{
             width: '100%',
-            padding: '16px',
+            padding: '14px',
             background: loading ? '#9ca3af' : ACCENT,
             color: '#ffffff',
             border: 'none',
-            borderRadius: '4px',
+            borderRadius: '2px',
             fontSize: '15px',
             fontWeight: 700,
             cursor: loading ? 'not-allowed' : 'pointer',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+            fontFamily: ff,
             transition: 'background 0.15s ease',
           }}
+          onMouseEnter={e => { if (!loading) (e.currentTarget as HTMLButtonElement).style.background = NAVY }}
+          onMouseLeave={e => { if (!loading) (e.currentTarget as HTMLButtonElement).style.background = ACCENT }}
         >
           {loading ? 'Bezig met doorsturen...' : 'Betaal nu via Mollie →'}
         </button>
@@ -226,7 +236,7 @@ export default function ProductPage() {
 
   if (loading) {
     return (
-      <main style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', padding: '60px 24px', textAlign: 'center', color: SUBTLE }}>
+      <main style={{ fontFamily: ff, padding: '60px 24px', textAlign: 'center', color: MUTED }}>
         Laden...
       </main>
     )
@@ -234,91 +244,165 @@ export default function ProductPage() {
 
   if (notFound || !product) {
     return (
-      <main style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', padding: '60px 24px', textAlign: 'center' }}>
-        <h1 style={{ color: NEAR_BLACK }}>Product niet gevonden</h1>
-        <a href="/shop" style={{ color: ACCENT }}>← Terug naar alle producten</a>
+      <main style={{ fontFamily: ff, padding: '60px 24px', textAlign: 'center' }}>
+        <h1 style={{ color: INK }}>Product niet gevonden</h1>
+        <Link href="/shop" style={{ color: ACCENT }}>← Terug naar alle producten</Link>
       </main>
     )
   }
 
   return (
-    <main style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-      {/* Top section — white */}
-      <section style={{ background: '#ffffff', padding: 'clamp(32px, 5vw, 64px) clamp(20px, 5vw, 80px) 0' }}>
+    <main style={{ fontFamily: ff }}>
+      {/* Hero — INK background */}
+      <section style={{ background: INK, padding: 'clamp(64px, 8vw, 96px) clamp(24px, 5vw, 80px)' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <a
+          {/* Back link */}
+          <Link
             href="/shop"
-            style={{ display: 'inline-block', marginBottom: '24px', fontSize: '14px', color: SUBTLE, textDecoration: 'none' }}
+            style={{
+              display: 'inline-block',
+              marginBottom: '32px',
+              fontSize: '13px',
+              color: MUTED,
+              textDecoration: 'none',
+              transition: 'color 0.15s',
+            }}
+            onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = '#FFFFFF' }}
+            onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = MUTED }}
           >
             ← Alle producten
-          </a>
+          </Link>
 
-          {/* 2-column layout on desktop */}
+          {/* Type badge */}
+          <div>
+            <span
+              style={{
+                display: 'inline-block',
+                background: 'rgba(29,78,216,0.15)',
+                color: ACCENT,
+                fontSize: '11px',
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                padding: '4px 12px',
+              }}
+            >
+              {product.type}
+            </span>
+          </div>
+
+          {/* Title */}
+          <h1
+            style={{
+              margin: '16px 0 12px',
+              fontSize: 'clamp(28px, 4vw, 48px)',
+              fontWeight: 700,
+              color: '#FFFFFF',
+              lineHeight: 1.15,
+              maxWidth: '640px',
+            }}
+          >
+            {product.title}
+          </h1>
+
+          {/* Tagline */}
+          {product.tagline && (
+            <p style={{ margin: '0 0 28px', fontSize: '18px', color: MUTED, lineHeight: 1.5, maxWidth: '540px' }}>
+              {product.tagline}
+            </p>
+          )}
+
+          {/* Price row */}
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', marginTop: '28px' }}>
+            <span style={{ fontSize: '36px', fontWeight: 700, color: '#FFFFFF' }}>
+              {formatPrice(product.price_cents)}
+            </span>
+            <span style={{ fontSize: '13px', color: MUTED }}>
+              incl. {formatVat(product.vat_rate)} BTW
+            </span>
+          </div>
+
+          {/* Format pills */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '16px' }}>
+            {['📅 Live webinar', '⏱ 2 uur', '💻 Google Meet'].map(pill => (
+              <span
+                key={pill}
+                style={{
+                  background: 'rgba(255,255,255,0.07)',
+                  color: 'rgba(255,255,255,0.7)',
+                  fontSize: '13px',
+                  padding: '6px 14px',
+                }}
+              >
+                {pill}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Content + form — white bg */}
+      <section style={{ background: '#ffffff' }}>
+        <div
+          style={{ maxWidth: '1100px', margin: '0 auto' }}
+          className="shop-product-outer"
+        >
           <div
+            className="shop-product-grid"
             style={{
               display: 'grid',
               gridTemplateColumns: 'minmax(0, 1fr) 380px',
-              gap: '48px',
+              gap: '0',
               alignItems: 'start',
             }}
-            className="shop-product-grid"
           >
-            {/* Left: product info */}
-            <div>
-              <span
-                style={{
-                  display: 'inline-block',
-                  padding: '3px 10px',
-                  border: `1px solid ${BRAND}`,
-                  color: BRAND,
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase' as const,
-                  marginBottom: '20px',
-                }}
-              >
-                {product.type}
-              </span>
-
-              <h1
-                style={{
-                  margin: '0 0 16px',
-                  fontSize: 'clamp(28px, 4vw, 48px)',
-                  fontWeight: 700,
-                  color: NEAR_BLACK,
-                  lineHeight: 1.15,
-                }}
-              >
-                {product.title}
-              </h1>
-
-              {product.tagline && (
-                <p style={{ margin: '0 0 24px', fontSize: '20px', color: SUBTLE, lineHeight: 1.4 }}>
-                  {product.tagline}
-                </p>
+            {/* Left: content */}
+            <div style={{ padding: 'clamp(48px, 6vw, 72px) clamp(24px, 5vw, 80px)' }}>
+              {product.description && (
+                <div style={{ marginBottom: '48px' }}>
+                  <p style={{ margin: '0 0 6px', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.1em', color: WARM, fontWeight: 700 }}>
+                    WAT JE KRIJGT
+                  </p>
+                  <h2 style={{ margin: '0 0 16px', fontSize: '20px', fontWeight: 700, color: INK }}>Inhoud & leerdoelen</h2>
+                  <p style={{ margin: 0, fontSize: '16px', color: BODY, lineHeight: 1.75 }}>{product.description}</p>
+                </div>
               )}
 
-              {/* Price block */}
-              <div style={{ marginBottom: '24px' }}>
-                <span style={{ fontSize: '36px', fontWeight: 700, color: BRAND }}>
-                  {formatPrice(product.price_cents)}
-                </span>
-                <span style={{ display: 'block', fontSize: '12px', color: SUBTLE, marginTop: '4px' }}>
-                  incl. {formatVat(product.vat_rate)} BTW
-                </span>
+              {product.delivery_notes && (
+                <div style={{ marginBottom: '48px' }}>
+                  <p style={{ margin: '0 0 6px', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.1em', color: WARM, fontWeight: 700 }}>
+                    LEVERING
+                  </p>
+                  <h2 style={{ margin: '0 0 16px', fontSize: '20px', fontWeight: 700, color: INK }}>Hoe ontvang je dit?</h2>
+                  <p style={{ margin: 0, fontSize: '16px', color: BODY, lineHeight: 1.75 }}>{product.delivery_notes}</p>
+                </div>
+              )}
+
+              <div style={{ marginBottom: '48px' }}>
+                <p style={{ margin: '0 0 6px', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.1em', color: WARM, fontWeight: 700 }}>
+                  VOOR WIE?
+                </p>
+                <h2 style={{ margin: '0 0 16px', fontSize: '20px', fontWeight: 700, color: INK }}>Geschikt voor</h2>
+                <p style={{ margin: 0, fontSize: '16px', color: BODY, lineHeight: 1.75 }}>
+                  Voor ondernemers, freelancers en marketeers die willen begrijpen hoe AI-tools zoals Claude concreet ingezet
+                  kunnen worden om een website te bouwen — zonder dat je hoeft te kunnen programmeren.
+                </p>
               </div>
 
-              {/* Format info */}
-              <p style={{ margin: '0 0 8px', fontSize: '15px', color: '#374151' }}>
-                📅 Live webinar &nbsp;·&nbsp; ⏱ 2 uur &nbsp;·&nbsp; 💻 Google Meet
-              </p>
+              {/* Mobile form */}
+              <div className="shop-form-mobile">
+                <CheckoutForm product={product} />
+              </div>
             </div>
 
-            {/* Right: sticky form — desktop only visible here */}
+            {/* Right: sticky form — desktop only */}
             <div
-              style={{ position: 'sticky' as const, top: '24px' }}
               className="shop-form-sticky"
+              style={{
+                position: 'sticky',
+                top: '24px',
+                padding: 'clamp(48px, 6vw, 72px) clamp(24px, 4vw, 48px) clamp(48px, 6vw, 72px) 0',
+              }}
             >
               <CheckoutForm product={product} />
             </div>
@@ -326,40 +410,8 @@ export default function ProductPage() {
         </div>
       </section>
 
-      {/* Middle section — light bg */}
-      <section style={{ background: LIGHT_BG, padding: 'clamp(32px, 5vw, 64px) clamp(20px, 5vw, 80px)' }}>
-        <div style={{ maxWidth: '680px', margin: '0 auto' }}>
-          {product.description && (
-            <div style={{ marginBottom: '40px' }}>
-              <h2 style={{ margin: '0 0 16px', fontSize: '20px', fontWeight: 700, color: NEAR_BLACK }}>Wat je krijgt</h2>
-              <p style={{ margin: 0, fontSize: '16px', color: '#374151', lineHeight: 1.7 }}>{product.description}</p>
-            </div>
-          )}
-
-          {product.delivery_notes && (
-            <div style={{ marginBottom: '40px' }}>
-              <h2 style={{ margin: '0 0 16px', fontSize: '20px', fontWeight: 700, color: NEAR_BLACK }}>Levering</h2>
-              <p style={{ margin: 0, fontSize: '16px', color: '#374151', lineHeight: 1.7 }}>{product.delivery_notes}</p>
-            </div>
-          )}
-
-          <div style={{ marginBottom: '40px' }}>
-            <h2 style={{ margin: '0 0 16px', fontSize: '20px', fontWeight: 700, color: NEAR_BLACK }}>Voor wie?</h2>
-            <p style={{ margin: 0, fontSize: '16px', color: '#374151', lineHeight: 1.7 }}>
-              Voor ondernemers, freelancers en marketeers die willen begrijpen hoe AI-tools zoals Claude concreet ingezet
-              kunnen worden om een website te bouwen — zonder dat je hoeft te kunnen programmeren.
-            </p>
-          </div>
-
-          {/* Mobile form — shown below middle section */}
-          <div className="shop-form-mobile">
-            <CheckoutForm product={product} />
-          </div>
-        </div>
-      </section>
-
       <style>{`
-        @media (max-width: 768px) {
+        @media (max-width: 899px) {
           .shop-product-grid {
             grid-template-columns: 1fr !important;
           }
@@ -370,7 +422,7 @@ export default function ProductPage() {
             display: block;
           }
         }
-        @media (min-width: 769px) {
+        @media (min-width: 900px) {
           .shop-form-mobile {
             display: none;
           }
