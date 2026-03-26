@@ -614,9 +614,17 @@ export default function MentorPage() {
             <motion.h2 variants={fadeUp} style={{ textAlign: 'center', fontSize: 'clamp(22px, 3vw, 32px)', fontWeight: 800, marginBottom: 12, color: INK }}>
               {t.proofTitle}
             </motion.h2>
-            <motion.p variants={fadeUp} style={{ textAlign: 'center', fontSize: 15, color: BODY, maxWidth: 480, margin: '0 auto 44px', lineHeight: 1.65 }}>
+            <motion.p variants={fadeUp} style={{ textAlign: 'center', fontSize: 15, color: BODY, maxWidth: 480, margin: '0 auto 20px', lineHeight: 1.65 }}>
               {t.proofBody}
             </motion.p>
+            <motion.div variants={fadeUp} style={{ textAlign: 'center', marginBottom: 44 }}>
+              <a href="/werk" style={{
+                fontSize: 13, fontWeight: 600, color: ACCENT, textDecoration: 'none',
+                borderBottom: `1px solid ${ACCENT}`, paddingBottom: 2,
+              }}>
+                {lang === 'nl' ? 'Bekijk voorbeeldprojecten →' : 'View example projects →'}
+              </a>
+            </motion.div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {t.proofItems.map((p, i) => (
                 <motion.div key={i} variants={fadeUp} style={{
