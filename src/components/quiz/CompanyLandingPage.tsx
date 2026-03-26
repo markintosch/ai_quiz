@@ -266,9 +266,9 @@ export function CompanyLandingPage({
 
   // ── Locale-aware product subject phrases ────────────────────
   const productHeading2 = productSubject
-    ? locale === 'nl' ? `in de ${productSubject} assessment`
-    : locale === 'fr' ? `dans le ${productSubject} assessment`
-    : `in the ${productSubject} assessment`
+    ? locale === 'nl' ? `in de ${productSubject}?`
+    : locale === 'fr' ? `dans le ${productSubject} ?`
+    : `in the ${productSubject}?`
     : null
 
   const productCta = productSubject
