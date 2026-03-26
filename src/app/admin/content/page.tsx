@@ -325,9 +325,9 @@ const EN_COMPANY: CompanyContent = {
 
 const NL_COMPANY: CompanyContent = {
   badge: 'AI-volwassenheidsassessment',
-  heading1: 'Zie waar',
-  heading2: 'staat op het gebied van AI — en wat als eerste moet worden aangepakt',
-  headingFallback: 'Zie waar jouw organisatie staat op het gebied van AI — en wat als eerste moet worden aangepakt',
+  heading1: 'Waar staat',
+  heading2: 'op het gebied van AI — en wat als eerste moet worden aangepakt',
+  headingFallback: 'Waar staat jouw organisatie op het gebied van AI — en wat als eerste moet worden aangepakt',
   defaultWelcome: 'Deze 10-minuten-assessment brengt in kaart hoe AI wordt begrepen, gebruikt en geprioriteerd binnen {name} — en maakt de belangrijkste gaps en kansen zichtbaar. De resultaten vormen de basis voor een teamworkshop, zodat het leiderschap beschikt over een gezamenlijk vertrekpunt voor besluitvorming.',
   meta: '{count} vragen · 10 minuten · Vertrouwelijke antwoorden · Teamworkshop inbegrepen',
   cta: 'Start de {name} Assessment →',
