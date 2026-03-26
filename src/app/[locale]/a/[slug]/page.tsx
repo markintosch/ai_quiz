@@ -56,7 +56,7 @@ export default async function FullQuizPage({ params }: PageProps) {
 
   const { data: company, error: companyError } = await supabase
     .from('companies')
-    .select('id, name, slug, logo_url, brand_color, secondary_color, bg_color, assessment_mode, welcome_message, excluded_question_codes, access_code, quiz_products!product_id(key)')
+    .select('id, name, slug, logo_url, brand_color, secondary_color, bg_color, assessment_mode, welcome_message, excluded_question_codes, access_code, form_position, lead_capture_mode, quiz_products!product_id(key)')
     .eq('slug', slug)
     .eq('active', true)
     .single() as unknown as {
@@ -72,6 +72,8 @@ export default async function FullQuizPage({ params }: PageProps) {
         welcome_message: string | null
         excluded_question_codes: string[] | null
         access_code: string | null
+        form_position: 'pre' | 'post' | null
+        lead_capture_mode: 'full' | 'minimal' | null
         quiz_products: { key: string } | null
       } | null
       error: { message: string; code: string } | null
@@ -113,7 +115,9 @@ export default async function FullQuizPage({ params }: PageProps) {
   const questionCount = productConfig.questions.filter((q) => !excludedCodes.includes(q.code)).length
   const dimensionLabels = productConfig.dimensions.map(d => d.label)
   // "Cloud Readiness Assessment" → "Cloud Readiness", "AI Maturity Assessment" → "AI Maturity"
-  const productSubject = productConfig.name.replace(/ Assessment$/, '').replace(/ Quiz$/, '')
+  const productSubject = productConfig.name.replace(/ Assessment$/, '').replace(/ Check$/, '').replace(/ Quiz$/, '')
+  const formPosition = (company.form_position ?? 'pre') as 'pre' | 'post'
+  const leadCaptureMode = (company.lead_capture_mode ?? 'full') as 'full' | 'minimal'
 
   return (
     <CompanyLandingPage
@@ -133,6 +137,9 @@ export default async function FullQuizPage({ params }: PageProps) {
       waveId={waveId}
       dimensionLabels={dimensionLabels}
       productSubject={productSubject}
+      productName={productConfig.name}
+      formPosition={formPosition}
+      leadCaptureMode={leadCaptureMode}
     />
   )
 }

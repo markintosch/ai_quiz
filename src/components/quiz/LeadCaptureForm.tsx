@@ -11,11 +11,18 @@ interface LeadCaptureFormProps {
   initialValues?: Partial<LeadFormData>
   onSubmit: (data: LeadFormData) => void | Promise<void>
   loading?: boolean
+  /** 'full' = all fields (default); 'minimal' = name + email only */
+  mode?: 'full' | 'minimal'
+  /** Company name — replaces "Brand PWRD Media" in GDPR text when provided */
+  companyName?: string
 }
 
-export function LeadCaptureForm({ variant, initialValues, onSubmit, loading = false }: LeadCaptureFormProps) {
+export function LeadCaptureForm({ variant, initialValues, onSubmit, loading = false, mode = 'full', companyName }: LeadCaptureFormProps) {
   const t = useTranslations('quiz.lead')
   const industries = t.raw('industries') as string[]
+  const isMinimal = mode === 'minimal'
+  // Brand name shown in GDPR text: use company name if provided, otherwise fall back to translation default
+  const brandName = companyName ?? t('brand')
 
   const [form, setForm] = useState<LeadFormData>({
     name:             initialValues?.name             ?? '',
@@ -41,8 +48,8 @@ export function LeadCaptureForm({ variant, initialValues, onSubmit, loading = fa
     if (!form.email.trim())       next.email       = t('errors.emailRequired')
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
                                   next.email       = t('errors.emailInvalid')
-    if (!form.jobTitle.trim())    next.jobTitle    = t('errors.jobTitleRequired')
-    if (!form.companyName.trim()) next.companyName = t('errors.companyRequired')
+    if (!isMinimal && !form.jobTitle.trim())    next.jobTitle    = t('errors.jobTitleRequired')
+    if (!isMinimal && !form.companyName.trim()) next.companyName = t('errors.companyRequired')
     if (!form.gdprConsent)        next.gdprConsent = t('errors.gdprRequired')
     setErrors(next)
     return Object.keys(next).length === 0
@@ -66,29 +73,33 @@ export function LeadCaptureForm({ variant, initialValues, onSubmit, loading = fa
           placeholder={t('emailPh')} className={inputCls(!!errors.email)} autoComplete="email" />
       </Field>
 
-      <Field label={t('jobTitle')} error={errors.jobTitle} required>
-        <input type="text" value={form.jobTitle} onChange={e => set('jobTitle', e.target.value)}
-          placeholder={t('jobTitlePh')} className={inputCls(!!errors.jobTitle)} />
-      </Field>
+      {!isMinimal && (
+        <>
+          <Field label={t('jobTitle')} error={errors.jobTitle} required>
+            <input type="text" value={form.jobTitle} onChange={e => set('jobTitle', e.target.value)}
+              placeholder={t('jobTitlePh')} className={inputCls(!!errors.jobTitle)} />
+          </Field>
 
-      <Field label={t('company')} error={errors.companyName} required>
-        <input type="text" value={form.companyName} onChange={e => set('companyName', e.target.value)}
-          placeholder={t('companyPh')} className={inputCls(!!errors.companyName)} />
-      </Field>
+          <Field label={t('company')} error={errors.companyName} required>
+            <input type="text" value={form.companyName} onChange={e => set('companyName', e.target.value)}
+              placeholder={t('companyPh')} className={inputCls(!!errors.companyName)} />
+          </Field>
 
-      <Field label={t('industry')} error={errors.industry}>
-        <select value={form.industry ?? ''} onChange={e => set('industry', e.target.value)} className={inputCls(false)}>
-          <option value="">{t('industrySel')}</option>
-          {industries.map(i => <option key={i} value={i}>{i}</option>)}
-        </select>
-      </Field>
+          <Field label={t('industry')} error={errors.industry}>
+            <select value={form.industry ?? ''} onChange={e => set('industry', e.target.value)} className={inputCls(false)}>
+              <option value="">{t('industrySel')}</option>
+              {industries.map(i => <option key={i} value={i}>{i}</option>)}
+            </select>
+          </Field>
 
-      <Field label={t('companySize')} error={errors.companySize}>
-        <select value={form.companySize ?? ''} onChange={e => set('companySize', e.target.value)} className={inputCls(false)}>
-          <option value="">{t('industrySel')}</option>
-          {COMPANY_SIZES.map(s => <option key={s} value={s}>{s}{t('companySizeSuffix')}</option>)}
-        </select>
-      </Field>
+          <Field label={t('companySize')} error={errors.companySize}>
+            <select value={form.companySize ?? ''} onChange={e => set('companySize', e.target.value)} className={inputCls(false)}>
+              <option value="">{t('industrySel')}</option>
+              {COMPANY_SIZES.map(s => <option key={s} value={s}>{s}{t('companySizeSuffix')}</option>)}
+            </select>
+          </Field>
+        </>
+      )}
 
       {/* ── GDPR — two separate consents ── */}
       <div className="space-y-3 border border-gray-100 rounded-xl p-4 bg-gray-50">
@@ -102,6 +113,7 @@ export function LeadCaptureForm({ variant, initialValues, onSubmit, loading = fa
               className="mt-0.5 w-4 h-4 rounded border-gray-300 accent-brand-accent flex-shrink-0" />
             <span className="text-sm text-gray-700 leading-relaxed">
               {t.rich('gdprRequired', {
+                brand: brandName,
                 link: (chunks) => (
                   <a href="/privacy" className="underline text-brand-accent" target="_blank" rel="noreferrer">
                     {chunks}
@@ -121,7 +133,7 @@ export function LeadCaptureForm({ variant, initialValues, onSubmit, loading = fa
             onChange={e => set('marketingConsent', e.target.checked)}
             className="mt-0.5 w-4 h-4 rounded border-gray-300 accent-brand-accent flex-shrink-0" />
           <span className="text-sm text-gray-500 leading-relaxed">
-            {t('gdprOptional')}
+            {t.rich('gdprOptional', { brand: brandName })}
           </span>
         </label>
       </div>

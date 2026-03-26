@@ -197,6 +197,8 @@ interface CompanyLandingPageProps {
   questionCount: number
   /** Product key forwarded to QuizEngine for multi-product routing */
   productKey?: string
+  /** Full product name — e.g. "People Readiness Check" — used as the quiz header */
+  productName?: string
   /** Optional access code — if set, a gate is shown before the landing page */
   accessCode?: string | null
   /** Cohort ID for the currently open wave — auto-links submission */
@@ -207,6 +209,10 @@ interface CompanyLandingPageProps {
   dimensionLabels?: string[]
   /** Short product subject for heading: "AI Maturity", "Cloud Readiness", etc. */
   productSubject?: string
+  /** Whether lead capture form appears before or after questions */
+  formPosition?: 'pre' | 'post'
+  /** Whether to show all fields or just name + email in the lead form */
+  leadCaptureMode?: 'full' | 'minimal'
 }
 
 export function CompanyLandingPage({
@@ -221,11 +227,14 @@ export function CompanyLandingPage({
   excludedCodes,
   questionCount,
   productKey,
+  productName,
   accessCode,
   cohortId,
   waveId,
   dimensionLabels: dimensionLabelsProp,
   productSubject,
+  formPosition = 'pre',
+  leadCaptureMode = 'full',
 }: CompanyLandingPageProps) {
   const theme = buildTheme(bgColor)
   const [started, setStarted] = useState(false)
@@ -457,7 +466,7 @@ export function CompanyLandingPage({
               )}
               <div className="flex items-center gap-3">
                 <LanguageSwitcher variant="light" />
-                <p className="text-xs text-gray-600">{t('quizHeader')}</p>
+                <p className="text-xs text-gray-600">{productName ?? t('quizHeader')}</p>
               </div>
             </div>
           </div>
@@ -465,12 +474,14 @@ export function CompanyLandingPage({
           <div className="max-w-2xl mx-auto px-4 py-10">
             <QuizEngine
               version="full"
-              leadCapture="pre"
+              leadCapture={formPosition}
               companySlug={slug}
               companyName={name}
               excludedCodes={excludedCodes}
               accentColor={accentColor}
               productKey={productKey}
+              productName={productName}
+              leadCaptureMode={leadCaptureMode}
               cohortId={cohortId ?? undefined}
               waveId={waveId ?? undefined}
             />

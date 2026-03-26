@@ -23,6 +23,8 @@ interface QuizEngineProps {
   companySlug?: string
   /** Provided for Full quiz — pre-fetched company name for display */
   companyName?: string
+  /** Full product name — e.g. "People Readiness Check" — replaces hardcoded heading */
+  productName?: string
   /** Pre-filled lead data (company quiz — captured on landing page) */
   initialLead?: Partial<LeadFormData>
   /** Question codes to skip (full quiz only) */
@@ -37,6 +39,8 @@ interface QuizEngineProps {
   waveId?: string
   /** Override the default question set — when provided, used instead of LITE_QUESTIONS/QUESTIONS */
   questions?: Question[]
+  /** 'full' = all lead fields (default); 'minimal' = name + email only */
+  leadCaptureMode?: 'full' | 'minimal'
 }
 
 export function QuizEngine({
@@ -44,6 +48,7 @@ export function QuizEngine({
   leadCapture,
   companySlug,
   companyName,
+  productName,
   initialLead,
   excludedCodes = [],
   accentColor,
@@ -51,6 +56,7 @@ export function QuizEngine({
   cohortId,
   waveId,
   questions: questionsProp,
+  leadCaptureMode = 'full',
 }: QuizEngineProps) {
   const t = useTranslations('quiz.engine')
   const locale = useLocale()
@@ -186,7 +192,7 @@ export function QuizEngine({
             </p>
           )}
           <h1 className="text-3xl font-bold text-gray-900 mb-3">
-            AI Maturity Assessment
+            {productName ?? 'AI Maturity Assessment'}
           </h1>
           <p className="text-gray-500 text-base">
             Complete your details to begin the assessment.
@@ -201,6 +207,8 @@ export function QuizEngine({
           variant="pre"
           initialValues={preLead ?? initialLead}
           onSubmit={handlePreLeadSubmit}
+          mode={leadCaptureMode}
+          companyName={companyName}
         />
       </div>
     )
@@ -238,6 +246,8 @@ export function QuizEngine({
           variant="post"
           onSubmit={handleSubmit}
           loading={submitting}
+          mode={leadCaptureMode}
+          companyName={companyName}
         />
       </div>
     )

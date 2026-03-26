@@ -22,7 +22,7 @@ const CALENDLY_STRATEGY = process.env.NEXT_PUBLIC_REEF_CALENDLY_STRATEGY_URL
 
 export const HR_READINESS_CONFIG: QuizProductConfig = {
   key: 'hr_readiness',
-  name: 'HR Gereedheidscan',
+  name: 'People Readiness Check',
 
   questions: HR_QUESTIONS,
 
@@ -100,10 +100,16 @@ export const HR_READINESS_CONFIG: QuizProductConfig = {
 
   defaultCopy: {
     nl: {
-      badge:       'HR Gereedheidscan · REEF',
+      badge:       'People Readiness Check · REEF',
       scoreLabel:  'HR Volwassenheidsscore',
-      heroHeading: 'Hoe klaar is uw organisatie voor de HR-uitdagingen van morgen?',
-      heroCta:     'Start de scan →',
+      heroHeading: 'Hoe klaar zijn de mensen in uw organisatie?',
+      heroCta:     'Start de check →',
+    },
+    en: {
+      badge:       'People Readiness Check · REEF',
+      scoreLabel:  'People Readiness Score',
+      heroHeading: 'How ready are the people in your organisation?',
+      heroCta:     'Start the check →',
     },
   },
 }
