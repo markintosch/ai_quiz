@@ -86,7 +86,7 @@
     "headingExternalAccent": "your organisation",
     "defaultWelcome": "This 10-minute assessment reveals how AI is understood, used and prioritised across {name} — and surfaces the gaps and opportunities that matter most. Results feed directly into a team workshop, giving leadership a shared fact base for decision-making.",
     "defaultWelcomeExternal": "This 10-minute assessment reveals how AI is understood, used and prioritised across your organisation — and surfaces the gaps and opportunities that matter most. Use your results to identify priorities and plan your next steps.",
-    "meta": "{count} questions · 10 minutes · Confidential responses · Team workshop included",
+    "meta": "{count} questions · 10 minutes · Confidential responses",
     "cta": "Start the {name} Assessment →",
     "ctaFallback": "Start Assessment →",
     "ctaExternal": "Discover your AI maturity →",

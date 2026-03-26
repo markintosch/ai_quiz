@@ -86,7 +86,7 @@
     "headingExternalAccent": "votre organisation",
     "defaultWelcome": "Cette évaluation de 10 minutes révèle comment l'IA est comprise, utilisée et priorisée au sein de {name} — et met en évidence les lacunes et opportunités les plus importantes. Les résultats alimentent directement un atelier d'équipe, offrant à la direction une base factuelle commune pour la prise de décision.",
     "defaultWelcomeExternal": "Cette évaluation de 10 minutes révèle comment l'IA est comprise, utilisée et priorisée au sein de votre organisation — et met en évidence les lacunes et opportunités les plus importantes. Utilisez vos résultats pour identifier vos priorités et planifier vos prochaines étapes.",
-    "meta": "{count} questions · 10 minutes · Réponses confidentielles · Atelier d'équipe inclus",
+    "meta": "{count} questions · 10 minutes · Réponses confidentielles",
     "cta": "Démarrer l'évaluation {name} →",
     "ctaFallback": "Démarrer l'évaluation →",
     "ctaExternal": "Découvrez votre maturité IA →",
