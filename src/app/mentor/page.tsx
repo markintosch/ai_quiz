@@ -330,7 +330,7 @@ export default function MentorPage() {
               onMouseEnter={e => (e.currentTarget.style.borderBottomColor = WARM)}
               onMouseLeave={e => (e.currentTarget.style.borderBottomColor = 'transparent')}
             >
-              {lang === 'nl' ? 'Voorbeeldprojecten' : 'Example projects'}
+              {lang === 'nl' ? 'Projecten' : 'Projects'}
             </a>
             <a
               href={CALENDLY_INTAKE}
@@ -622,7 +622,7 @@ export default function MentorPage() {
                 fontSize: 13, fontWeight: 600, color: ACCENT, textDecoration: 'none',
                 borderBottom: `1px solid ${ACCENT}`, paddingBottom: 2,
               }}>
-                {lang === 'nl' ? 'Bekijk voorbeeldprojecten →' : 'View example projects →'}
+                {lang === 'nl' ? 'Bekijk projecten →' : 'View projects →'}
               </a>
             </motion.div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
