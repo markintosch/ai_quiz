@@ -58,6 +58,7 @@ function EntityAssessmentContent() {
 
   const [theme, setTheme] = useState<PulseTheme | null>(null)
   const [entity, setEntity] = useState<PulseEntity | null>(null)
+  const [otherEntities, setOtherEntities] = useState<PulseEntity[]>([])
   const [dimensions, setDimensions] = useState<PulseDimension[]>([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState('')
@@ -97,6 +98,7 @@ function EntityAssessmentContent() {
         const foundEntity = entJson.entities.find((e) => e.slug === entitySlug)
         if (!foundEntity) throw new Error('Festival niet gevonden.')
         setEntity(foundEntity)
+        setOtherEntities(entJson.entities.filter((e) => e.slug !== entitySlug))
         setDimensions(dimJson.dimensions ?? [])
 
         // Init scores
@@ -465,11 +467,13 @@ function EntityAssessmentContent() {
 
           {/* Countdown */}
           {theme.closes_at && (
-            <div style={{ background: BLACK, padding: '32px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', marginBottom: '48px' }}>
+            <div style={{ background: BLACK, padding: '40px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px', marginBottom: '48px' }}>
               <Countdown targetDate={new Date(theme.closes_at)} label="Meting sluit over" />
-              <p style={{ color: MID_GREY, fontSize: '13px', margin: 0 }}>
+              <p style={{ color: '#aaaaaa', fontSize: '13px', margin: 0, letterSpacing: '0.02em' }}>
                 Definitieve uitslag:{' '}
-                {new Date(theme.closes_at).toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' })}
+                <strong style={{ color: WHITE }}>
+                  {new Date(theme.closes_at).toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' })}
+                </strong>
               </p>
             </div>
           )}
@@ -526,6 +530,56 @@ function EntityAssessmentContent() {
               <p style={{ fontWeight: 700, color: NEAR_BLACK, margin: 0 }}>
                 Aangemeld. We sturen je de uitslag zodra die beschikbaar is.
               </p>
+            </div>
+          )}
+
+          {/* Other festivals CTA */}
+          {otherEntities.length > 0 && (
+            <div style={{ marginBottom: '48px' }}>
+              <h3 style={{ fontWeight: 700, fontSize: '20px', color: NEAR_BLACK, margin: '0 0 6px' }}>
+                Beoordeel ook de andere festivals
+              </h3>
+              <p style={{ color: SUBTLE, fontSize: '14px', margin: '0 0 24px' }}>
+                Elke beoordeling geeft een vollediger beeld van de festivalscene.
+              </p>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+                  gap: '2px',
+                }}
+              >
+                {otherEntities.map((other) => (
+                  <Link
+                    key={other.id}
+                    href={`/pulse/${themeSlug}/${other.slug}`}
+                    style={{ textDecoration: 'none', display: 'block' }}
+                  >
+                    <div
+                      style={{
+                        background: LIGHT_GREY,
+                        padding: '20px',
+                        borderBottom: '2px solid transparent',
+                        transition: 'border-color 0.15s',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: '12px',
+                      }}
+                      onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.borderBottomColor = YELLOW }}
+                      onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.borderBottomColor = 'transparent' }}
+                    >
+                      <div>
+                        <p style={{ fontWeight: 700, fontSize: '15px', color: NEAR_BLACK, margin: '0 0 2px' }}>{other.label}</p>
+                        {other.location_text && (
+                          <p style={{ fontSize: '12px', color: MID_GREY, margin: 0 }}>{other.location_text}</p>
+                        )}
+                      </div>
+                      <span style={{ color: OLIVE, fontSize: '18px', flexShrink: 0 }}>→</span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
             </div>
           )}
 

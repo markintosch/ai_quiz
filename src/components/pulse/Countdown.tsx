@@ -70,7 +70,20 @@ export default function Countdown({ targetDate, label, onExpired }: CountdownPro
   ]
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+      <p
+        style={{
+          color: '#cccccc',
+          fontSize: '11px',
+          fontFamily: "'Inter', system-ui, sans-serif",
+          fontWeight: 500,
+          textTransform: 'uppercase',
+          letterSpacing: '0.1em',
+          margin: 0,
+        }}
+      >
+        {label}
+      </p>
       <div
         style={{
           display: 'flex',
@@ -83,7 +96,6 @@ export default function Countdown({ targetDate, label, onExpired }: CountdownPro
           <div key={u.suffix} style={{ display: 'flex', alignItems: 'center' }}>
             <div
               style={{
-                background: '#000',
                 padding: '8px 16px',
                 display: 'flex',
                 flexDirection: 'column',
@@ -104,11 +116,12 @@ export default function Countdown({ targetDate, label, onExpired }: CountdownPro
               </span>
               <span
                 style={{
-                  color: '#828282',
+                  color: '#999999',
                   fontSize: '10px',
-                  fontWeight: 400,
-                  letterSpacing: '0.08em',
-                  marginTop: '4px',
+                  fontWeight: 500,
+                  letterSpacing: '0.1em',
+                  marginTop: '6px',
+                  textTransform: 'uppercase',
                 }}
               >
                 {u.suffix}
@@ -117,30 +130,20 @@ export default function Countdown({ targetDate, label, onExpired }: CountdownPro
             {i < units.length - 1 && (
               <span
                 style={{
-                  color: '#e3ef38',
-                  fontWeight: 700,
-                  fontSize: '24px',
-                  padding: '0 6px',
+                  color: '#444444',
+                  fontWeight: 400,
+                  fontSize: '28px',
+                  padding: '0 4px',
                   lineHeight: '1',
+                  marginBottom: '16px',
                 }}
               >
-                ·
+                :
               </span>
             )}
           </div>
         ))}
       </div>
-      <p
-        style={{
-          color: '#828282',
-          fontSize: '12px',
-          fontFamily: "'Inter', system-ui, sans-serif",
-          margin: 0,
-          letterSpacing: '0.04em',
-        }}
-      >
-        {label}
-      </p>
     </div>
   )
 }
