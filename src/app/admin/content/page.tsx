@@ -299,9 +299,9 @@ const FR_LANDING: LandingContent = {
 
 const EN_COMPANY: CompanyContent = {
   badge: 'AI Maturity Assessment',
-  heading1: 'See where',
-  heading2: 'stands on AI — and what to prioritise next',
-  headingFallback: 'See where your organisation stands on AI — and what to prioritise next',
+  heading1: 'Where does',
+  heading2: 'stand on AI — and what to prioritise next',
+  headingFallback: 'Where does your organisation stand on AI — and what to prioritise next',
   defaultWelcome: 'This 10-minute assessment reveals how AI is understood, used and prioritised across {name} — and surfaces the gaps and opportunities that matter most. Results feed directly into a team workshop, giving leadership a shared fact base for decision-making.',
   meta: '{count} questions · 10 minutes · Confidential responses · Team workshop included',
   cta: 'Start the {name} Assessment →',

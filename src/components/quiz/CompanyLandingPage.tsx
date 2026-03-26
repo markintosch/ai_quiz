@@ -268,7 +268,7 @@ export function CompanyLandingPage({
   const productHeading2 = productSubject
     ? locale === 'nl' ? `in de ${productSubject}?`
     : locale === 'fr' ? `dans le ${productSubject} ?`
-    : `in the ${productSubject}?`
+    : `stand in the ${productSubject}?`
     : null
 
   const productCta = productSubject
