@@ -1,12 +1,15 @@
 import { NextResponse } from 'next/server'
-import { createServiceClient } from '@/lib/supabase/server'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 
 export const dynamic = 'force-dynamic'
 
 // GET /api/pulse/themes
 // Returns all published themes with entity count. No auth required.
 export async function GET() {
-  const supabase = createServiceClient()
+  const supabase = createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
 
   const { data: themes, error } = await supabase
     .from('pulse_themes')
