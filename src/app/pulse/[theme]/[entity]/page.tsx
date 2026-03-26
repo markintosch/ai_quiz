@@ -85,10 +85,10 @@ function EntityAssessmentContent() {
         if (!foundTheme) throw new Error('Thema niet gevonden.')
         setTheme(foundTheme)
 
-        // Get entities + dimensions
+        // Get entities + dimensions (public routes — no auth required)
         const [entRes, dimRes] = await Promise.all([
-          fetch(`/api/admin/pulse/entities?themeId=${foundTheme.id}`),
-          fetch(`/api/admin/pulse/themes/${foundTheme.id}`),
+          fetch(`/api/pulse/entities?themeId=${foundTheme.id}`),
+          fetch(`/api/pulse/dimensions?themeId=${foundTheme.id}`),
         ])
 
         const entJson = entRes.ok ? (await entRes.json() as { entities: PulseEntity[] }) : { entities: [] }
