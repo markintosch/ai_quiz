@@ -5,6 +5,10 @@ export default function ShopLayout({ children }: { children: ReactNode }) {
 
   return (
     <div style={{ minHeight: '100vh', background: '#F8FAFC' }}>
+      <style>{`
+        .shop-back-link { color: #94A3B8; text-decoration: none; font-size: 13px; transition: color 0.15s; }
+        .shop-back-link:hover { color: #FFFFFF; }
+      `}</style>
       <nav
         style={{
           background: '#0F172A',
@@ -17,7 +21,6 @@ export default function ShopLayout({ children }: { children: ReactNode }) {
           fontFamily: ff,
         }}
       >
-        {/* Left: brand + section */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <span style={{ color: '#FFFFFF', fontWeight: 700, fontSize: '15px' }}>
             Mark de Kock
@@ -27,19 +30,7 @@ export default function ShopLayout({ children }: { children: ReactNode }) {
             Kennisproducten
           </span>
         </div>
-
-        {/* Right: back link */}
-        <a
-          href="https://www.markdekock.com"
-          style={{
-            color: '#94A3B8',
-            textDecoration: 'none',
-            fontSize: '13px',
-            transition: 'color 0.15s',
-          }}
-          onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = '#FFFFFF' }}
-          onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = '#94A3B8' }}
-        >
+        <a href="https://www.markdekock.com" className="shop-back-link">
           ← markdekock.com
         </a>
       </nav>
