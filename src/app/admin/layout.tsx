@@ -14,6 +14,7 @@ const NAV_LINKS = [
   { href: '/admin/products', label: 'Products' },
   { href: '/admin/interests', label: 'Interests' },
   { href: '/admin/arena', label: 'Arena' },
+  { href: '/admin/pulse', label: 'Pulse' },
 ]
 
 export default function AdminLayout({
