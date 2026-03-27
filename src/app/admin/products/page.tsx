@@ -37,6 +37,8 @@ export default async function ProductsPage() {
 
   // Cross-check which product keys have a TypeScript config registered
   const registeredKeys = new Set(getAllProducts().map((p) => p.key))
+  // Products that exist in code but use a non-standard config type (e.g. game engine)
+  const customTypeKeys = new Set(['cloud_arena'])
 
   return (
     <div>
@@ -98,6 +100,10 @@ export default async function ProductsPage() {
                     {registeredKeys.has(p.key) ? (
                       <span className="inline-flex items-center gap-1 text-xs text-green-700 bg-green-50 px-2 py-0.5 rounded font-medium">
                         ✓ Registered
+                      </span>
+                    ) : customTypeKeys.has(p.key) ? (
+                      <span className="inline-flex items-center gap-1 text-xs text-blue-700 bg-blue-50 px-2 py-0.5 rounded font-medium">
+                        ✦ Custom type
                       </span>
                     ) : (
                       <span className="inline-flex items-center gap-1 text-xs text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-medium">
