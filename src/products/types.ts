@@ -64,6 +64,12 @@ export interface ProductCopy {
   scoreLabel?: string
   heroHeading?: string
   heroCta?: string
+  /** Company landing page heading parts — override t() values */
+  heading1?: string
+  headingExternalAccent?: string
+  heading2?: string
+  ctaExternal?: string
+  meta?: string
 }
 
 // ── Product-specific signal detectors (e.g. Shadow AI) ───────────────────────

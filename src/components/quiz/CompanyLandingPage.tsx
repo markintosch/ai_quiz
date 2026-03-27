@@ -6,6 +6,7 @@ import { useTranslations, useLocale } from 'next-intl'
 import { QuizEngine } from './QuizEngine'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { getProductConfig } from '@/products'
+import type { ProductCopy } from '@/products/types'
 
 // ── Dimension icons ───────────────────────────────────────────
 function CompassIcon({ className }: { className?: string }) {
@@ -217,6 +218,8 @@ interface CompanyLandingPageProps {
   leadCaptureMode?: 'full' | 'minimal'
   /** Optional URL to link the company logo/name back to (e.g. '/manda') */
   backUrl?: string | null
+  /** Product-level default copy for this locale — overrides t() for heading/CTA/meta */
+  productDefaultCopy?: ProductCopy | null
 }
 
 export function CompanyLandingPage({
@@ -240,6 +243,7 @@ export function CompanyLandingPage({
   formPosition = 'pre',
   leadCaptureMode = 'full',
   backUrl,
+  productDefaultCopy,
 }: CompanyLandingPageProps) {
   const theme = buildTheme(bgColor)
   const [started, setStarted] = useState(false)
@@ -283,23 +287,25 @@ export function CompanyLandingPage({
 
   // ── CTA label ───────────────────────────────────────────────
   const ctaLabel = isExternal
-    ? (productCta ?? t('ctaExternal'))
+    ? (productDefaultCopy?.ctaExternal ?? productCta ?? t('ctaExternal'))
     : displayName ? t('cta', { name: displayName }) : t('ctaFallback')
 
   // ── Heading ─────────────────────────────────────────────────
-  const heading2 = productHeading2 ?? t('heading2')
+  const h1Text = productDefaultCopy?.heading1 ?? t('heading1')
+  const headingAccentText = productDefaultCopy?.headingExternalAccent ?? t('headingExternalAccent')
+  const heading2 = productDefaultCopy?.heading2 ?? productHeading2 ?? t('heading2')
 
   const headingMiddle = isExternal ? (
     // External: "See where your organisation stands on AI"
     <>
-      {t('heading1')}{' '}
-      <span style={{ color: accentColor }}>{t('headingExternalAccent')}</span>
+      {h1Text}{' '}
+      <span style={{ color: accentColor }}>{headingAccentText}</span>
       {' '}{heading2}
     </>
   ) : displayName ? (
     // Internal: "See where TrueFullstaq stands on AI"
     <>
-      {t('heading1')}{' '}
+      {h1Text}{' '}
       <span style={{ color: accentColor }}>{displayName}</span>
       {' '}{heading2}
     </>
@@ -309,10 +315,14 @@ export function CompanyLandingPage({
 
   // ── Badge text ──────────────────────────────────────────────
   const badgeText = isExternal
-    ? (productSubject ?? t('badge'))
+    ? (productDefaultCopy?.badge ?? productSubject ?? t('badge'))
     : displayName
       ? `${displayName} · ${productSubject ?? t('badge')}`
       : (productSubject ?? t('badge'))
+
+  // ── Meta line ───────────────────────────────────────────────
+  const rawMeta = productDefaultCopy?.meta ?? t('meta', { count: questionCount })
+  const metaLine = rawMeta.replace('{count}', String(questionCount))
 
   // ── Welcome / intro ─────────────────────────────────────────
   const introText = welcomeMessage
@@ -412,7 +422,7 @@ export function CompanyLandingPage({
                 className="text-sm font-semibold mb-8 tracking-wide"
                 style={{ color: accentColor }}
               >
-                {t('meta', { count: questionCount })}
+                {metaLine}
               </p>
 
               {/* 5. CTA button */}

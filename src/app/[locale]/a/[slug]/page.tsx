@@ -108,6 +108,7 @@ export default async function FullQuizPage({ params }: PageProps) {
 
   const productKey = company.quiz_products?.key ?? 'ai_maturity'
   const productConfig = getProductConfig(productKey)
+  const productDefaultCopy = productConfig.defaultCopy?.[locale as 'en' | 'nl' | 'fr'] ?? null
   const excludedCodes = company.excluded_question_codes ?? []
   const accentColor = company.brand_color ?? '#E8611A'
   const secondaryColor = company.secondary_color ?? '#F5A820'
@@ -144,6 +145,7 @@ export default async function FullQuizPage({ params }: PageProps) {
       formPosition={formPosition}
       leadCaptureMode={leadCaptureMode}
       backUrl={company.website_url ?? null}
+      productDefaultCopy={productDefaultCopy}
     />
   )
 }

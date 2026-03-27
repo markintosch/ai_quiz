@@ -104,16 +104,22 @@ export const UTRECHTZORG_CONFIG: QuizProductConfig = {
 
   defaultCopy: {
     nl: {
-      badge:       'Zorgmarkt Readiness · UtrechtZorg',
-      scoreLabel:  'Gereedheidsscore',
-      heroHeading: 'Hoe toekomstbestendig is uw zorgorganisatie?',
-      heroCta:     'Start de assessment →',
+      badge:                'Zorgmarkt Readiness · UtrechtZorg',
+      scoreLabel:           'Gereedheidsscore',
+      heading1:             'Zie waar',
+      headingExternalAccent:'uw organisatie',
+      heading2:             'staat in zorg en welzijn',
+      ctaExternal:          'Start de scan →',
+      meta:                 '{count} vragen · circa 10 minuten · Vertrouwelijk',
     },
     en: {
-      badge:       'Zorgmarkt Readiness · UtrechtZorg',
-      scoreLabel:  'Readiness Score',
-      heroHeading: 'How future-proof is your care organisation?',
-      heroCta:     'Start assessment →',
+      badge:                'Zorgmarkt Readiness · UtrechtZorg',
+      scoreLabel:           'Readiness Score',
+      heading1:             'See where',
+      headingExternalAccent:'your organisation',
+      heading2:             'stands in the Zorgmarkt',
+      ctaExternal:          'Start the scan →',
+      meta:                 '{count} questions · approx. 10 minutes · Confidential',
     },
   },
 }
