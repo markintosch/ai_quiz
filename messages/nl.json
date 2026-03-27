@@ -189,6 +189,8 @@
     "referral": {
       "heading": "Ken je iemand die dit ook zou moeten doen?",
       "sub": "Nodig een collega uit — duurt 10 seconden",
+      "companyHeading": "Nodig een collega uit om het assessment in te vullen",
+      "companySub": "Hoe meer collega's meedoen, hoe vollediger het beeld van jullie team wordt.",
       "show": "↓ Tonen",
       "hide": "↑ Verbergen",
       "theirName": "Hun naam",

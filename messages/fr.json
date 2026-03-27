@@ -189,6 +189,8 @@
     "referral": {
       "heading": "Connaissez-vous quelqu'un qui devrait faire ça ?",
       "sub": "Invitez un collègue — ça prend 10 secondes",
+      "companyHeading": "Invitez un collègue à compléter l'évaluation",
+      "companySub": "Plus vos collègues participent, plus le portrait de l'équipe sera complet.",
       "show": "↓ Afficher",
       "hide": "↑ Masquer",
       "theirName": "Son prénom",

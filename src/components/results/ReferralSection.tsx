@@ -78,12 +78,10 @@ export function ReferralSection({
         </div>
         <div>
           <h3 className="text-base font-bold text-gray-900">
-            {isCompany ? 'Invite a colleague to complete the assessment' : t('heading')}
+            {isCompany ? t('companyHeading') : t('heading')}
           </h3>
           <p className="text-sm text-gray-500 mt-0.5">
-            {isCompany
-              ? 'The more of your team that participate, the more complete the team picture becomes.'
-              : t('sub')}
+            {isCompany ? t('companySub') : t('sub')}
           </p>
         </div>
       </div>

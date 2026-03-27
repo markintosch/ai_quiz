@@ -189,6 +189,8 @@
     "referral": {
       "heading": "Know someone who should take this?",
       "sub": "Invite a colleague — takes 10 seconds",
+      "companyHeading": "Invite a colleague to complete the assessment",
+      "companySub": "The more of your team that participate, the more complete the team picture becomes.",
       "show": "↓ Show",
       "hide": "↑ Hide",
       "theirName": "Their name",
