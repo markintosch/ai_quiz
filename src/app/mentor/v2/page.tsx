@@ -40,16 +40,16 @@ const T = {
     heroH1a:    'Van AI-ambitie naar',
     heroH1b:    'heldere richting, intern draagvlak en een eerste use case die werkt.',
     heroBody:   'De meeste leidinggevenden die ik spreek missen geen informatie over AI. Ze missen iemand die helpt beslissen — en die beweegt tussen directie en wat er in de praktijk daadwerkelijk van terechtkomt.',
-    heroAuth:   '20 jaar strategie & executie · Partner Kirk & Blackbeard · AI gebouwd in zorg, finance, FMCG & duurzaamheid',
+    heroAuth:   '20 jaar innovatieve ideeën implementeren in organisaties · Partner Kirk & Blackbeard · AI-toepassingen ontwikkeld',
     heroCta1:   'Plan een intakegesprek →',
     heroCta2:   'Doe eerst de gratis AI-scan',
     heroCtaGuide: 'Al urgentie of herkenning? Plan direct. Wil je eerst een richtinggevend beeld? Doe de scan.',
 
     // ── Proof strip ──
     proofStripItems: [
-      { n: '20+',  label: 'jaar op snijvlak strategie & executie' },
-      { n: '5',    label: 'sectoren: zorg · finance · FMCG · duurzaamheid · CX' },
-      { n: '3 mnd', label: 'persoonlijk traject · board-backed resultaten' },
+      { n: '20+',  label: 'jaar innovatieve ideeën implementeren in organisaties' },
+      { n: '∞',    label: 'AI raakt elke sector — geen branche uitgezonderd' },
+      { n: '3 mnd', label: 'persoonlijk traject · van richting naar eerste stap' },
     ],
 
     // ── Problem ──
@@ -66,21 +66,21 @@ const T = {
     authTitle: 'Senior operator. Niet een adviseur die AI van buitenaf bekijkt.',
     authItems: [
       'Partner bij Kirk & Blackbeard',
-      '20 jaar ervaring in strategie, groei, klantbeleving en executie',
-      'Hands-on AI-toepassingen gebouwd in meerdere sectoren',
+      '20 jaar innovatieve ideeën en oplossingen geïmplementeerd in organisaties',
+      'AI-toepassingen ontwikkeld — en het organisatieproces om ze te laten landen',
       'Werkt in Nederlands en Engels',
     ],
-    authP1: 'Ik heb AI-oplossingen gebouwd én ingevoerd — in zorg, finance, FMCG en duurzaamheid. Steeds op dezelfde plek: tussen de strategische keuze en wat er daadwerkelijk van terechtkomt.',
-    authP2: 'Dat geeft een ander perspectief dan een AI-specialist. Ik weet hoe beslissingen vastlopen. Waar de weerstand echt zit. Waarom goede plannen stranden in de ruimte tussen directie en uitvoering. Dat is niet abstract — dat is twintig jaar patroonherkenning.',
+    authP1: 'Ik weet hoe je innovatieve ideeën in beweging krijgt in organisaties die dat niet vanzelf doen. Twintig jaar lang heb ik op het snijvlak gezeten van strategische keuze en wat er operationeel daadwerkelijk van terechtkomt.',
+    authP2: 'AI voegt daar een nieuwe laag aan toe — technisch, maar ook menselijk en bestuurlijk. Ik heb AI-toepassingen ontwikkeld en begrijp het proces om ze intern te laten landen. Dat is een ander perspectief dan een AI-specialist of een strategisch adviseur alleen. Ik weet waar het vastloopt. Waar de weerstand echt zit. Dat is niet abstract — dat is twintig jaar patroonherkenning.',
 
     // ── Mini proof ──
-    miniProofLabel: 'Uit de praktijk',
-    miniProofTitle: 'Concrete resultaten, niet strategische reflectie.',
+    miniProofLabel: 'Wat ik herken',
+    miniProofTitle: 'Patronen die ik ken — in elke sector, in elk type organisatie.',
     miniProofItems: [
-      { icon: '💜', sector: 'Gezondheidszorg', line: 'Van versnipperde AI-pilots naar één board-backed prioriteit — uitgewerkt tot werkende toepassing die professionals dagelijks gebruiken.' },
-      { icon: '♻️', sector: 'Vastgoed & duurzaamheid', line: 'CSRD-druk omgezet in een praktisch model waarmee directie én operatie naar dezelfde werkelijkheid kijken.' },
-      { icon: '⭐', sector: 'Customer Experience', line: 'Abstracte klantambitie vertaald naar een sturingsmodel. Van geen richting naar gedeeld prioriteitenkader in één kwartaal.' },
-      { icon: '🏦', sector: 'Finance & gereguleerde context', line: 'Eerste werkende AI-toepassing ontwikkeld en ingevoerd — ondanks compliance-complexiteit en interne terughoudendheid.' },
+      { icon: '🔀', sector: 'Van pilots naar prioriteit', line: 'Er lopen al initiatieven, maar er is geen eigenaar en geen gedeelde richting. Wat helpt: één beslissing over wat ertoe doet — en waarom dat nu klopt.' },
+      { icon: '📐', sector: 'Van druk naar werkbaar model', line: 'Externe druk — regulering, concurrentie, boardverwachtingen — vraagt om een antwoord. Wat ontbreekt is een kader dat zowel directie als uitvoering kunnen vasthouden.' },
+      { icon: '🧩', sector: 'Van ambitie naar eerste stap', line: 'De wil is er. Maar zonder concrete eerste stap blijft AI een agendapunt. Wat werkt: een use case die geloofwaardig, haalbaar en zichtbaar genoeg is om intern draagvlak te bouwen.' },
+      { icon: '🛡️', sector: 'Van terughoudendheid naar beweging', line: 'Weerstand zit zelden waar mensen denken. Risicobewustzijn, onduidelijkheid over rollen, gebrek aan vertrouwen in het proces. Dat is oplosbaar — als je weet waar het echt zit.' },
     ],
 
     // ── Areas ──
@@ -150,15 +150,15 @@ const T = {
     heroH1a:     'From AI ambition to',
     heroH1b:     'clear direction, internal ownership, and a first use case that actually works.',
     heroBody:    'Most leaders I speak with don\'t lack information about AI. They lack someone to help them decide — who moves between strategy and what actually gets delivered.',
-    heroAuth:    '20 years strategy & execution · Partner Kirk & Blackbeard · AI built across healthcare, finance, FMCG & sustainability',
+    heroAuth:    '20 years implementing innovative ideas in organisations · Partner Kirk & Blackbeard · AI applications developed',
     heroCta1:    'Book an intake call →',
     heroCta2:    'Take the free AI scan first',
     heroCtaGuide: 'Already have urgency? Book directly. Want a first directional picture? Take the scan.',
 
     proofStripItems: [
-      { n: '20+',   label: 'years at the intersection of strategy & execution' },
-      { n: '5',     label: 'sectors: healthcare · finance · FMCG · sustainability · CX' },
-      { n: '3 mo',  label: 'personal engagement · board-backed results' },
+      { n: '20+',   label: 'years implementing innovative ideas in organisations' },
+      { n: '∞',     label: 'AI is relevant to every sector — no exceptions' },
+      { n: '3 mo',  label: 'personal engagement · from direction to first real step' },
     ],
 
     probLabel: 'What I see',
@@ -173,20 +173,20 @@ const T = {
     authTitle: 'Senior operator. Not an advisor looking at AI from the outside.',
     authItems: [
       'Partner at Kirk & Blackbeard',
-      '20 years of experience in strategy, growth, customer experience and execution',
-      'Hands-on AI applications built and deployed across multiple sectors',
+      '20 years implementing innovative solutions in strategy, growth and execution',
+      'AI applications developed — and the organisational process to make them land',
       'Works in Dutch and English',
     ],
-    authP1: 'I\'ve built and applied AI in practice — in healthcare, finance, FMCG and sustainability. Always at the same point: between the strategic decision and what actually gets delivered.',
-    authP2: 'That gives a different perspective than an AI specialist. I know how decisions stall. Where the real resistance sits. Why good plans get stranded between leadership and execution. That\'s not abstract — that\'s twenty years of pattern recognition.',
+    authP1: 'I know how to get innovative ideas moving in organisations that don\'t do that naturally. For twenty years I\'ve worked at the intersection of strategic choice and what actually gets delivered operationally.',
+    authP2: 'AI adds a new layer to that — technical, but also human and organisational. I\'ve developed AI applications and understand the process to make them stick internally. That\'s a different perspective than an AI specialist or a strategic advisor alone. I know where it gets stuck. Where the resistance actually sits. That\'s not abstract — that\'s twenty years of pattern recognition.',
 
-    miniProofLabel: 'From practice',
-    miniProofTitle: 'Concrete outcomes, not strategic reflection.',
+    miniProofLabel: 'What I recognise',
+    miniProofTitle: 'Patterns I know — in every sector, in every type of organisation.',
     miniProofItems: [
-      { icon: '💜', sector: 'Healthcare', line: 'From scattered AI pilots to one board-backed priority — worked through to a live application that professionals use daily.' },
-      { icon: '♻️', sector: 'Real estate & sustainability', line: 'CSRD pressure translated into a practical model that gives leadership and operations the same picture of reality.' },
-      { icon: '⭐', sector: 'Customer Experience', line: 'Abstract customer ambition turned into a steering model. No direction to a shared priority framework in one quarter.' },
-      { icon: '🏦', sector: 'Finance & regulated sectors', line: 'First working AI application built and deployed — despite compliance complexity and internal reluctance.' },
+      { icon: '🔀', sector: 'From pilots to priority', line: 'There are already initiatives running, but no owner and no shared direction. What helps: one decision about what matters — and why that\'s the right call now.' },
+      { icon: '📐', sector: 'From pressure to a workable model', line: 'External pressure — regulation, competition, board expectations — demands a response. What\'s missing is a framework that both leadership and operations can hold on to.' },
+      { icon: '🧩', sector: 'From ambition to first step', line: 'The will is there. But without a concrete first step, AI stays an agenda item. What works: a use case that\'s credible, achievable and visible enough to build internal momentum.' },
+      { icon: '🛡️', sector: 'From hesitation to movement', line: 'Resistance is rarely where people think it is. Risk awareness, unclear roles, lack of trust in the process — all solvable, once you know where it actually sits.' },
     ],
 
     areasLabel: 'What we work on',
