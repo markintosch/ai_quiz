@@ -5,7 +5,14 @@ import { isAuthorised } from '@/lib/admin/auth'
 export const dynamic = 'force-dynamic'
 
 const ALLOWED_LOCALES     = new Set(['en', 'nl', 'fr'])
-const ALLOWED_PRODUCT_KEYS = new Set(['ai_maturity'])
+const ALLOWED_PRODUCT_KEYS = new Set([
+  'ai_maturity',
+  'cloud_readiness',
+  'cloud_arena',
+  'manda_readiness',
+  'hr_readiness',
+  'zorgmarkt_readiness',
+])
 
 // GET /api/admin/content?locale=en&product_key=ai_maturity
 // Returns the stored content blob for the given locale + product (or {} if none)
