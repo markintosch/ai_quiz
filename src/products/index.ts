@@ -10,13 +10,15 @@ import { AI_MATURITY_CONFIG } from './ai_maturity/config'
 import { CLOUD_READINESS_CONFIG } from './cloud_readiness/config'
 import { MANDA_CONFIG } from './manda/config'
 import { HR_READINESS_CONFIG } from './hr_readiness/config'
+import { UTRECHTZORG_CONFIG } from './utrechtzorg/config'
 import type { QuizProductConfig } from './types'
 
 const REGISTRY: Record<string, QuizProductConfig> = {
   ai_maturity:      AI_MATURITY_CONFIG,
   cloud_readiness:  CLOUD_READINESS_CONFIG,
   manda_readiness:  MANDA_CONFIG,
-  hr_readiness:     HR_READINESS_CONFIG,
+  hr_readiness:        HR_READINESS_CONFIG,
+  zorgmarkt_readiness: UTRECHTZORG_CONFIG,
   // digital_readiness: DIGITAL_READINESS_CONFIG,   ← add future products here
   // esg_maturity:      ESG_MATURITY_CONFIG,
 }
@@ -51,7 +53,9 @@ const SUBDOMAIN_MAP: Record<string, string> = {
   'arena':        'cloud_arena',    // arena.brandpwrdmedia.nl
   'manda':        'manda_readiness',// manda.brandpwrdmedia.nl (Hofstede & de Kock)
   'hdk':          'manda_readiness',// hdk.brandpwrdmedia.nl  (alias)
-  'reef':         'hr_readiness',  // reef.brandpwrdmedia.nl  (REEF HR Gereedheidscan)
+  'reef':         'hr_readiness',       // reef.brandpwrdmedia.nl  (REEF HR Gereedheidscan)
+  'utrechtzorg':  'zorgmarkt_readiness',// utrechtzorg.brandpwrdmedia.nl
+  'uz':           'zorgmarkt_readiness',// uz.brandpwrdmedia.nl (alias)
   // 'digital-readiness': 'digital_readiness',  ← add when product is launched
 }
 
