@@ -455,59 +455,8 @@ export default function MentorPage() {
         </div>
       </section>
 
-      {/* ── Why me ── */}
-      <section style={{ background: INK, padding: '88px 24px' }}>
-        <div className="max-w-2xl mx-auto">
-          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
-            <motion.p variants={fadeUp} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: WARM, marginBottom: 16 }}>
-              {t.whyLabel}
-            </motion.p>
-            <motion.h2 variants={fadeUp} style={{ textAlign: 'center', fontSize: 'clamp(22px, 3vw, 32px)', fontWeight: 800, marginBottom: 32, color: WHITE, lineHeight: 1.25 }}>
-              {t.whyTitle}
-            </motion.h2>
-            <motion.div variants={stagger} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-              {[t.whyP1, t.whyP2, t.whyP3].map((p, i) => (
-                <motion.p key={i} variants={fadeUp} style={{
-                  fontSize: 16, color: i === 2 ? WHITE : '#94A3B8',
-                  lineHeight: 1.75,
-                  fontWeight: i === 2 ? 500 : 400,
-                }}>
-                  {p}
-                </motion.p>
-              ))}
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── Who it's for ── */}
-      <section style={{ background: LIGHT, padding: '80px 24px' }}>
-        <div className="max-w-3xl mx-auto">
-          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
-            <motion.p variants={fadeUp} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: ACCENT, marginBottom: 10 }}>
-              {t.forLabel}
-            </motion.p>
-            <motion.h2 variants={fadeUp} style={{ textAlign: 'center', fontSize: 'clamp(20px, 3vw, 28px)', fontWeight: 800, marginBottom: 40, color: INK, lineHeight: 1.3 }}>
-              {t.forTitle}
-            </motion.h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              {t.forItems.map((item, i) => (
-                <motion.div key={i} variants={fadeUp} style={{
-                  background: WHITE, borderRadius: 16, padding: '20px 24px',
-                  border: `1px solid ${BORDER}`,
-                  display: 'flex', alignItems: 'flex-start', gap: 16,
-                }}>
-                  <span style={{ fontSize: 22, flexShrink: 0, marginTop: 2 }}>{item.icon}</span>
-                  <p style={{ fontSize: 15, color: BODY, lineHeight: 1.65 }}>{item.text}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
       {/* ── 6 Areas ── */}
-      <section style={{ background: WHITE, padding: '80px 24px' }}>
+      <section style={{ background: LIGHT, padding: '80px 24px' }}>
         <div className="max-w-4xl mx-auto">
           <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
             <motion.p variants={fadeUp} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: ACCENT, marginBottom: 10 }}>
@@ -528,7 +477,7 @@ export default function MentorPage() {
                     variants={fadeUp}
                     style={{
                       borderRadius: 18, padding: '24px 22px',
-                      background: isDark ? INK : LIGHT,
+                      background: isDark ? INK : WHITE,
                       border: `1px solid ${isDark ? '#ffffff11' : BORDER}`,
                     }}
                   >
@@ -600,6 +549,57 @@ export default function MentorPage() {
                 {t.programCta}
               </a>
             </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── Why me ── */}
+      <section style={{ background: INK, padding: '88px 24px' }}>
+        <div className="max-w-2xl mx-auto">
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
+            <motion.p variants={fadeUp} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: WARM, marginBottom: 16 }}>
+              {t.whyLabel}
+            </motion.p>
+            <motion.h2 variants={fadeUp} style={{ textAlign: 'center', fontSize: 'clamp(22px, 3vw, 32px)', fontWeight: 800, marginBottom: 32, color: WHITE, lineHeight: 1.25 }}>
+              {t.whyTitle}
+            </motion.h2>
+            <motion.div variants={stagger} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              {[t.whyP1, t.whyP2, t.whyP3].map((p, i) => (
+                <motion.p key={i} variants={fadeUp} style={{
+                  fontSize: 16, color: i === 2 ? WHITE : '#94A3B8',
+                  lineHeight: 1.75,
+                  fontWeight: i === 2 ? 500 : 400,
+                }}>
+                  {p}
+                </motion.p>
+              ))}
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── Who it's for ── */}
+      <section style={{ background: LIGHT, padding: '80px 24px' }}>
+        <div className="max-w-3xl mx-auto">
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
+            <motion.p variants={fadeUp} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: ACCENT, marginBottom: 10 }}>
+              {t.forLabel}
+            </motion.p>
+            <motion.h2 variants={fadeUp} style={{ textAlign: 'center', fontSize: 'clamp(20px, 3vw, 28px)', fontWeight: 800, marginBottom: 40, color: INK, lineHeight: 1.3 }}>
+              {t.forTitle}
+            </motion.h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {t.forItems.map((item, i) => (
+                <motion.div key={i} variants={fadeUp} style={{
+                  background: WHITE, borderRadius: 16, padding: '20px 24px',
+                  border: `1px solid ${BORDER}`,
+                  display: 'flex', alignItems: 'flex-start', gap: 16,
+                }}>
+                  <span style={{ fontSize: 22, flexShrink: 0, marginTop: 2 }}>{item.icon}</span>
+                  <p style={{ fontSize: 15, color: BODY, lineHeight: 1.65 }}>{item.text}</p>
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
         </div>
       </section>
