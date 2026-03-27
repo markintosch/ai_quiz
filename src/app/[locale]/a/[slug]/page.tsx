@@ -115,8 +115,10 @@ export default async function FullQuizPage({ params }: PageProps) {
   const assessmentMode = (company.assessment_mode === 'external' ? 'external' : 'internal') as 'internal' | 'external'
   const questionCount = productConfig.questions.filter((q) => !excludedCodes.includes(q.code)).length
   const dimensionLabels = productConfig.dimensions.map(d => d.label)
-  // "AI Maturity Assessment" → "AI Maturity", "People Readiness Check" → "People Readiness Check" (keep Check/Quiz)
-  const productSubject = productConfig.name.replace(/ Assessment$/, '').replace(/ Quiz$/, '')
+  // headingSubject: null → CMS controls heading2; undefined → auto-derive from name
+  const productSubject = productConfig.headingSubject !== undefined
+    ? productConfig.headingSubject   // explicit override (null = no subject)
+    : productConfig.name.replace(/ Assessment$/, '').replace(/ Quiz$/, '')
   const formPosition = (company.form_position ?? 'pre') as 'pre' | 'post'
   const leadCaptureMode = (company.lead_capture_mode ?? 'full') as 'full' | 'minimal'
 

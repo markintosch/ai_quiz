@@ -82,6 +82,13 @@ export interface QuizProductConfig {
   key: string
   /** Display name — e.g. 'AI Maturity Assessment' */
   name: string
+  /**
+   * Subject word used in the landing page heading pattern
+   * ("Waar staat X in de {headingSubject}?").
+   * Set to null to disable auto-derivation and let the CMS heading2 take over.
+   * Leave undefined to derive automatically from name (default behaviour).
+   */
+  headingSubject?: string | null
 
   /** Full question bank for this product */
   questions: Question[]

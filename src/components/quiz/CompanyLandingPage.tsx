@@ -208,8 +208,9 @@ interface CompanyLandingPageProps {
   waveId?: string | null
   /** Dimension labels from the product config — overrides translation defaults */
   dimensionLabels?: string[]
-  /** Short product subject for heading: "AI Maturity", "Cloud Readiness", etc. */
-  productSubject?: string
+  /** Short product subject for heading: "AI Maturity", "Cloud Readiness", etc.
+   *  Pass null to suppress auto-derived heading (CMS heading2 takes over). */
+  productSubject?: string | null
   /** Whether lead capture form appears before or after questions */
   formPosition?: 'pre' | 'post'
   /** Whether to show all fields or just name + email in the lead form */

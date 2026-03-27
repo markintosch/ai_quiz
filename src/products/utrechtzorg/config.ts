@@ -24,6 +24,7 @@ const CALENDLY_STRATEGY = process.env.NEXT_PUBLIC_UZ_CALENDLY_STRATEGY_URL
 export const UTRECHTZORG_CONFIG: QuizProductConfig = {
   key: 'zorgmarkt_readiness',
   name: 'Zorgmarkt Assessment',
+  headingSubject: null,   // heading2 comes from CMS, not auto-derived
 
   questions: ZORG_QUESTIONS,
 
