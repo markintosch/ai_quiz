@@ -23,7 +23,7 @@ const CALENDLY_STRATEGY = process.env.NEXT_PUBLIC_UZ_CALENDLY_STRATEGY_URL
 
 export const UTRECHTZORG_CONFIG: QuizProductConfig = {
   key: 'zorgmarkt_readiness',
-  name: 'Zorgmarkt Readiness Assessment',
+  name: 'Zorgmarkt Assessment',
 
   questions: ZORG_QUESTIONS,
 
