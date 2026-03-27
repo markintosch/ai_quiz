@@ -396,7 +396,7 @@ export default function MentorV2Page() {
       {/* ── The Problem ── */}
       <section style={{ background: WHITE, padding: '80px 24px' }}>
         <div className="max-w-4xl mx-auto">
-          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }}>
             <motion.p variants={fadeUp} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: WARM, marginBottom: 10 }}>
               {t.probLabel}
             </motion.p>
@@ -422,7 +422,7 @@ export default function MentorV2Page() {
       {/* ── Authority (Waarom ik — earlier, more direct) ── */}
       <section style={{ background: INK, padding: '80px 24px' }}>
         <div className="max-w-4xl mx-auto">
-          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 40 }} className="sm:grid-cols-2" >
               <motion.div variants={fadeUp}>
                 <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: WARM, marginBottom: 16 }}>
@@ -454,7 +454,7 @@ export default function MentorV2Page() {
       {/* ── Mini proof (moved earlier, more specific) ── */}
       <section style={{ background: LIGHT, padding: '80px 24px' }}>
         <div className="max-w-4xl mx-auto">
-          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }}>
             <motion.p variants={fadeUp} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: ACCENT, marginBottom: 10 }}>
               {t.miniProofLabel}
             </motion.p>
@@ -488,7 +488,7 @@ export default function MentorV2Page() {
       {/* ── 6 Areas ── */}
       <section style={{ background: WHITE, padding: '80px 24px' }}>
         <div className="max-w-4xl mx-auto">
-          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }}>
             <motion.p variants={fadeUp} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: ACCENT, marginBottom: 10 }}>
               {t.areasLabel}
             </motion.p>
@@ -521,7 +521,7 @@ export default function MentorV2Page() {
       {/* ── Program ── */}
       <section style={{ background: NAVY, padding: '88px 24px' }}>
         <div className="max-w-4xl mx-auto">
-          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }}>
             <motion.p variants={fadeUp} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: WARM, marginBottom: 10 }}>
               {t.programLabel}
             </motion.p>
@@ -572,7 +572,7 @@ export default function MentorV2Page() {
       {/* ── For who (tightened — 4 items instead of 5) ── */}
       <section style={{ background: LIGHT, padding: '80px 24px' }}>
         <div className="max-w-3xl mx-auto">
-          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }}>
             <motion.p variants={fadeUp} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: ACCENT, marginBottom: 10 }}>
               {t.forLabel}
             </motion.p>
@@ -597,7 +597,7 @@ export default function MentorV2Page() {
       {/* ── Network (compressed — not a second story) ── */}
       <section style={{ background: INK, padding: '64px 24px' }}>
         <div className="max-w-3xl mx-auto">
-          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }}>
             <motion.p variants={fadeUp} style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: WARM, marginBottom: 12 }}>
               {t.collabLabel}
             </motion.p>
@@ -636,7 +636,7 @@ export default function MentorV2Page() {
       {/* ── Spots + CTA (with choice guidance) ── */}
       <section style={{ background: LIGHT, padding: '100px 24px' }}>
         <div className="max-w-xl mx-auto text-center">
-          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }}>
             <motion.p variants={fadeUp} style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: WARM, marginBottom: 16 }}>
               {t.spotsLabel}
             </motion.p>
