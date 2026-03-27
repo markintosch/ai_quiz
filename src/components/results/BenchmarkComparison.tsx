@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useLocale } from 'next-intl'
 
 export interface BenchmarkData {
   market:  { avg: number; count: number }
@@ -19,9 +20,11 @@ interface BarRowProps {
   score: number
   yourScore: number
   index: number
+  vsYouLabel: string
+  yourScoreLabel: string
 }
 
-function BarRow({ label, sublabel, score, yourScore, index }: BarRowProps) {
+function BarRow({ label, sublabel, score, yourScore, index, vsYouLabel, yourScoreLabel }: BarRowProps) {
   const isAhead = yourScore > score
   const diff = Math.round(Math.abs(yourScore - score) * 10) / 10
 
@@ -46,7 +49,7 @@ function BarRow({ label, sublabel, score, yourScore, index }: BarRowProps) {
                 ? 'bg-gray-100 text-gray-500'
                 : 'bg-orange-100 text-orange-700'
           }`}>
-            {isAhead ? `+${diff}` : diff === 0 ? '=' : `-${diff}`} vs you
+            {isAhead ? `+${diff}` : diff === 0 ? '=' : `-${diff}`} {vsYouLabel}
           </span>
         </div>
       </div>
@@ -70,7 +73,7 @@ function BarRow({ label, sublabel, score, yourScore, index }: BarRowProps) {
 
       <div className="flex justify-between text-xs text-gray-500">
         <span>0</span>
-        <span className="text-brand-accent font-medium">You: {yourScore}</span>
+        <span className="text-brand-accent font-medium">{yourScoreLabel}{yourScore}</span>
         <span>100</span>
       </div>
     </motion.div>
@@ -78,26 +81,41 @@ function BarRow({ label, sublabel, score, yourScore, index }: BarRowProps) {
 }
 
 export function BenchmarkComparison({ yourScore, benchmark }: BenchmarkComparisonProps) {
+  const locale = useLocale()
+
+  const i18n = {
+    title:       locale === 'nl' ? 'Hoe scoort u vergeleken met anderen'   : locale === 'fr' ? 'Comment vous vous comparez'                : 'How you compare',
+    subtitle:    locale === 'nl' ? 'Uw score vergeleken met anderen die deze assessment hebben ingevuld.' : locale === 'fr' ? 'Votre score comparé aux autres participants.' : 'Your score benchmarked against others who took this assessment.',
+    marketAvg:   locale === 'nl' ? 'Marktgemiddelde'  : locale === 'fr' ? 'Moyenne du marché' : 'Market average',
+    respondents: locale === 'nl' ? 'deelnemers'       : locale === 'fr' ? 'participants'      : 'respondents',
+    cohortLabel: locale === 'nl' ? 'Uw cohort'        : locale === 'fr' ? 'Votre cohorte'     : 'Your cohort',
+    people:      locale === 'nl' ? 'deelnemers'       : locale === 'fr' ? 'participants'      : 'people',
+    sameRole:    locale === 'nl' ? 'Zelfde rol'       : locale === 'fr' ? 'Même rôle'         : 'Same role',
+    vsYou:       locale === 'nl' ? 'vs u'             : locale === 'fr' ? 'vs vous'           : 'vs you',
+    yourScore:   locale === 'nl' ? 'U: '              : locale === 'fr' ? 'Vous : '           : 'You: ',
+    lowSample:   locale === 'nl' ? 'De benchmark wordt betrouwbaarder naarmate meer organisaties de assessment invullen.' : locale === 'fr' ? 'Les benchmarks deviennent plus significatifs à mesure que plus de personnes complètent l\'évaluation.' : 'Benchmarks become more meaningful as more people complete the assessment.',
+  }
+
   const rows: { label: string; sublabel: string; score: number }[] = [
     {
-      label: 'Market average',
-      sublabel: `${benchmark.market.count.toLocaleString()} respondents`,
+      label: i18n.marketAvg,
+      sublabel: `${benchmark.market.count.toLocaleString()} ${i18n.respondents}`,
       score: benchmark.market.avg,
     },
   ]
 
   if (benchmark.cohort) {
     rows.push({
-      label: 'Your cohort',
-      sublabel: `${benchmark.cohort.name} · ${benchmark.cohort.count} people`,
+      label: i18n.cohortLabel,
+      sublabel: `${benchmark.cohort.name} · ${benchmark.cohort.count} ${i18n.people}`,
       score: benchmark.cohort.avg,
     })
   }
 
   if (benchmark.role) {
     rows.push({
-      label: 'Same role',
-      sublabel: `${benchmark.role.role} · ${benchmark.role.count} people`,
+      label: i18n.sameRole,
+      sublabel: `${benchmark.role.role} · ${benchmark.role.count} ${i18n.people}`,
       score: benchmark.role.avg,
     })
   }
@@ -114,10 +132,8 @@ export function BenchmarkComparison({ yourScore, benchmark }: BenchmarkCompariso
           📊
         </div>
         <div>
-          <h3 className="text-base font-bold text-gray-900">How you compare</h3>
-          <p className="text-sm text-gray-500 mt-0.5">
-            Your score benchmarked against others who took this assessment.
-          </p>
+          <h3 className="text-base font-bold text-gray-900">{i18n.title}</h3>
+          <p className="text-sm text-gray-500 mt-0.5">{i18n.subtitle}</p>
         </div>
       </div>
 
@@ -130,13 +146,15 @@ export function BenchmarkComparison({ yourScore, benchmark }: BenchmarkCompariso
             score={row.score}
             yourScore={yourScore}
             index={i}
+            vsYouLabel={i18n.vsYou}
+            yourScoreLabel={i18n.yourScore}
           />
         ))}
       </div>
 
       {benchmark.market.count < 10 && (
         <p className="text-xs text-gray-500 mt-4 border-t border-gray-50 pt-3">
-          Benchmarks become more meaningful as more people complete the assessment.
+          {i18n.lowSample}
         </p>
       )}
     </motion.div>

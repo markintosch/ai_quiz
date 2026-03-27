@@ -271,7 +271,7 @@ export function ScoreDashboard({
       {recommendations.length > 0 && (
         <motion.div variants={fadeUp}>
           <h3 className="text-base font-semibold text-gray-900 mb-3">
-            Recommendations for you
+            {locale === 'nl' ? 'Aanbevelingen voor u' : locale === 'fr' ? 'Recommandations pour vous' : 'Recommendations for you'}
           </h3>
           <div className="space-y-4">
             {recommendations.map((rec, i) => (
