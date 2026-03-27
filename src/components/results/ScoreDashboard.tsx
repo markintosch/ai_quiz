@@ -145,6 +145,18 @@ export function ScoreDashboard({
   const isCompany = quizVariant === 'company'
   const locale    = useLocale()
 
+  // Locale-aware confidentiality block
+  const confidentialityTitle = locale === 'nl'
+    ? 'Uw antwoorden zijn vertrouwelijk'
+    : locale === 'fr'
+    ? 'Vos réponses sont confidentielles'
+    : 'Your responses are confidential'
+  const confidentialityBody = locale === 'nl'
+    ? 'Individuele antwoorden worden nooit gedeeld met uw werkgever. Uw input draagt bij aan een geanonimiseerd teambeeld dat gezamenlijke prioriteiten zichtbaar maakt.'
+    : locale === 'fr'
+    ? 'Les réponses individuelles ne sont jamais partagées avec votre employeur. Votre contribution crée une image collective anonymisée qui révèle les priorités communes.'
+    : 'Individual answers are never shared with your employer. Your input contributes to an anonymised team picture that helps identify collective priorities.'
+
   // Resolve maturity colours — from product config when available, else hardcoded defaults
   const threshold = productUI?.maturityThresholds.find(t => t.level === score.maturityLevel)
   const config = threshold
@@ -226,11 +238,8 @@ export function ScoreDashboard({
           variants={fadeUp}
           className="bg-brand/5 border border-brand/20 rounded-2xl p-5"
         >
-          <p className="text-sm font-semibold text-brand mb-1">Your responses are confidential</p>
-          <p className="text-sm text-gray-600">
-            Individual answers are never shared with your employer. Your input contributes to
-            an anonymised team picture that helps identify collective priorities.
-          </p>
+          <p className="text-sm font-semibold text-brand mb-1">{confidentialityTitle}</p>
+          <p className="text-sm text-gray-600">{confidentialityBody}</p>
         </motion.div>
       )}
 
