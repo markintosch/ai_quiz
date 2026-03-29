@@ -154,51 +154,52 @@ export function generateStaticParams() {
 }
 
 // ── JSON-LD structured data ───────────────────────────────────────────────────
+import {
+  buildWebApplicationSchema,
+  buildWebSiteSchema,
+  buildOrganizationSchema,
+  serializeJsonLd,
+} from '@/lib/seo/structured-data'
+
+// Per-product author lists for richer schema
+const PRODUCT_AUTHORS: Record<string, Array<{ name: string; jobTitle?: string; url?: string; orgName?: string }>> = {
+  ai_maturity: [
+    { name: 'Mark de Kock',    jobTitle: 'Strategisch mentor AI & executie',  orgName: 'Kirk & Blackbeard' },
+    { name: 'Frank Meeuwsen',  jobTitle: 'AI Trainer & Consultant',           url: 'https://frankmeeuwsen.com' },
+  ],
+  cloud_readiness: [
+    { name: 'TrueFullstaq',    jobTitle: 'Cloud & Platform Engineering',      orgName: 'TrueFullstaq' },
+  ],
+  manda_readiness: [
+    { name: 'Mark de Kock',    jobTitle: 'Strategisch mentor AI & executie',  orgName: 'Kirk & Blackbeard' },
+    { name: 'Sandra Hofstede', jobTitle: 'Strategisch leiderschap',           orgName: 'Hofstede & de Kock' },
+  ],
+  hr_readiness: [
+    { name: 'REEF HR',         jobTitle: 'HR Strategie & Organisatie' },
+  ],
+  zorgmarkt_readiness: [
+    { name: 'UtrechtZorg',     jobTitle: 'Zorgmarkt Strategie',               orgName: 'UtrechtZorg' },
+  ],
+}
+
 function buildJsonLd(locale: string, productKey = 'ai_maturity') {
-  const meta = getLocaleMeta(productKey, locale)
-  return {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type':               'WebApplication',
-        '@id':                 `${BASE_URL}/#app`,
-        name:                  'AI Maturity Assessment',
-        url:                   BASE_URL,
-        description:           meta.description,
-        applicationCategory:   'BusinessApplication',
-        operatingSystem:       'Web',
-        offers: {
-          '@type':         'Offer',
-          price:           '0',
-          priceCurrency:   'EUR',
-          availability:    'https://schema.org/InStock',
-        },
-        author: [
-          {
-            '@type':    'Person',
-            name:       'Mark de Kock',
-            jobTitle:   'AI Transformation Lead',
-            worksFor: {
-              '@type': 'Organization',
-              name:    'Brand PWRD Media',
-            },
-          },
-          {
-            '@type':    'Person',
-            name:       'Frank Meeuwsen',
-            jobTitle:   'AI Trainer & Consultant',
-            url:        'https://frankmeeuwsen.com',
-          },
-        ],
-      },
-      {
-        '@type': 'Organization',
-        '@id':   `${BASE_URL}/#org`,
-        name:    'Brand PWRD Media',
-        url:     BASE_URL,
-      },
-    ],
-  }
+  const meta   = getLocaleMeta(productKey, locale)
+  const authors = PRODUCT_AUTHORS[productKey] ?? PRODUCT_AUTHORS['ai_maturity']
+  return serializeJsonLd([
+    buildWebSiteSchema(BASE_URL, meta.title.split('|')[1]?.trim() ?? 'Brand PWRD Media'),
+    buildWebApplicationSchema({
+      name:        meta.title.split('|')[0].trim(),
+      url:         BASE_URL,
+      description: meta.description,
+      authors,
+      orgName:     'Brand PWRD Media',
+      locale,
+    }),
+    buildOrganizationSchema({
+      name: 'Brand PWRD Media',
+      url:  BASE_URL,
+    }),
+  ])
 }
 
 // Recursively merges b into a (b wins on conflicts)
@@ -292,7 +293,7 @@ export default async function LocaleLayout({
     <NextIntlClientProvider locale={locale} messages={messages}>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildJsonLd(locale, productKey)) }}
+        dangerouslySetInnerHTML={{ __html: buildJsonLd(locale, productKey) }}
       />
       {children}
     </NextIntlClientProvider>
