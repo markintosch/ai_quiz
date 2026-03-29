@@ -62,7 +62,7 @@ const T = {
         badge:    'Meest gekozen',
         name:     'Begeleiding',
         tagline:  'Van beeld naar eerste echte voortgang.',
-        duration: '3 maanden · Maandelijkse sessies + ad-hoc contact',
+        duration: 'Maandelijkse sessies + ad-hoc contact',
         outcome:  'Je verlaat de begeleiding met iets dat werkt en intern verder kan.',
         items: [
           'Scherp krijgen: situatie, prioriteit en eigenaarschap',

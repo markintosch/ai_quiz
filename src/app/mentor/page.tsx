@@ -42,7 +42,7 @@ const T = {
     heroBody:   'De meeste leidinggevenden die ik spreek missen geen informatie over AI. Ze missen iemand die helpt beslissen. Niet als trainer, maar als iemand die beweegt tussen strategie en wat er in de praktijk van terechtkomt.',
     heroCta1:   'Plan een intakegesprek →',
     heroCta2:   'Doe eerst de gratis AI-scan',
-    heroTrust:  'Persoonlijk traject · 3 maanden · Intake vereist',
+    heroTrust:  'Persoonlijk · Beperkt beschikbaar · Gratis intake',
 
     probLabel:  'Wat ik zie',
     probTitle:  'De ambitie is niet het probleem. Het pad ernaar toe wel.',
@@ -81,7 +81,7 @@ const T = {
     ],
 
     programLabel: 'Hoe het werkt',
-    programTitle: 'Drie maanden. Persoonlijk en gericht op iets dat daadwerkelijk werkt.',
+    programTitle: 'In drie stappen. Persoonlijk en gericht op iets dat daadwerkelijk werkt.',
     programMonths: [
       {
         n: '01', title: 'Scherp krijgen wat er speelt',
@@ -95,7 +95,7 @@ const T = {
       },
       {
         n: '03', title: 'Verankeren en vooruitkijken',
-        body: 'We zorgen dat er niet alleen iets gestart is, maar ook iets blijft hangen: in taal, richting, eigenaarschap en vervolg. Zodat je na drie maanden verder kunt bouwen.',
+        body: 'We zorgen dat er niet alleen iets gestart is, maar ook iets blijft hangen: in taal, richting, eigenaarschap en vervolg. Zodat je daarna zelfstandig verder kunt bouwen.',
         tag: 'Stap 3',
       },
     ],
@@ -157,7 +157,7 @@ const T = {
     heroBody:   'Most leaders I speak with don\'t lack information about AI. They lack someone to help them decide. Not as a trainer, but as someone who moves between strategy and what actually gets delivered.',
     heroCta1:   'Book an intake call →',
     heroCta2:   'Take the free AI scan first',
-    heroTrust:  'Personal mentorship · 3 months · Intake required',
+    heroTrust:  'Personal · Limited availability · Free intake',
 
     probLabel:  'What I see',
     probTitle:  'The ambition isn\'t the problem. Finding the path forward is.',
@@ -196,7 +196,7 @@ const T = {
     ],
 
     programLabel: 'How it works',
-    programTitle: 'Three months. Personal and focused on something that actually works.',
+    programTitle: 'Three steps. Personal and focused on something that actually works.',
     programMonths: [
       {
         n: '01', title: 'Getting clarity on what\'s at stake',
@@ -210,7 +210,7 @@ const T = {
       },
       {
         n: '03', title: 'Embedding and looking ahead',
-        body: 'We make sure something doesn\'t just start. It sticks: in language, direction, ownership and follow-through. So you can keep building after three months.',
+        body: 'We make sure something doesn\'t just start. It sticks: in language, direction, ownership and follow-through. So you can keep building independently from there.',
         tag: 'Step 3',
       },
     ],

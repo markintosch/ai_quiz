@@ -73,14 +73,19 @@ const FAQ_ITEMS = [
       'Dan kijken we of die strategie werkt — of hij gedeeld wordt, of hij vertaald is naar keuzes die mensen daadwerkelijk maken. Een strategie op papier is iets anders dan beweging in een organisatie.',
   },
   {
-    question: 'Wat levert drie maanden op?',
+    question: 'Ik weet nog niet goed wat ik nodig heb. Heeft het al zin om contact op te nemen?',
     answer:
-      'Na drie maanden heb je één heldere prioriteit waar iedereen achter staat, een eerste concrete stap die werkt, en de taal om dit intern en extern goed te communiceren. Geen eindrapport — iets dat daadwerkelijk verder gaat. Uiteraard bekijken we samen of het standaard proces ook voor jouw specifieke uitdaging de beste keus is. Waar nodig passen we de aanpak aan.',
+      'Dat is precies het goede moment. De intake is er juist voor om dat samen helder te krijgen — wat er speelt, wat de echte blokkade is, en wat een zinvolle eerste stap zou zijn. Je committeert je aan niets. Als er geen match is, zeg ik dat gewoon.',
+  },
+  {
+    question: 'Moet ik meteen een volledig traject afnemen?',
+    answer:
+      'Nee. We beginnen altijd met een gratis intakegesprek om te kijken of er een match is. Daarna volgt een korte verkenningsfase — zodat we snel helder krijgen wat jouw situatie vraagt. Pas dan beslissen we samen wat logisch is. Sommige trajecten lopen over drie maanden. Andere bestaan uit een reeks gerichte gesprekken. De structuur past zich aan jouw situatie aan, niet andersom.',
   },
   {
     question: 'Wat kost een traject?',
     answer:
-      'Dat wordt pas echt helder na het intakegesprek — afhankelijk van omvang en context van de uitdaging. Ik zorg er altijd voor dat de stappen behapbaar zijn en voorzien van duidelijke deliverables per fase. Zo kun je te allen tijde beslissen om te stoppen als de realiteit van alle dag daarom vraagt. Je zult dan ook altijd de opgeleverde documenten, presentaties, data en agents bezitten. Het intakegesprek zelf is gratis en vrijblijvend.',
+      'Je betaalt per fase, niet voor een volledig traject vooraf. Dat wordt pas helder na het intakegesprek — afhankelijk van omvang en context. Ik zorg er altijd voor dat de stappen behapbaar zijn en voorzien van duidelijke deliverables per fase. Zo kun je te allen tijde beslissen om te stoppen als de realiteit van alle dag daarom vraagt. Je zult ook altijd de opgeleverde documenten, presentaties, data en agents bezitten. Het intakegesprek zelf is gratis en vrijblijvend.',
   },
   {
     question: 'Hoe snel kan ik starten?',
@@ -120,7 +125,7 @@ const jsonLd = serializeJsonLd([
   buildProfessionalServiceSchema({
     name:        'Strategisch mentorschap AI & executie | Mark de Kock',
     url:         'https://markdekock.com',
-    description: 'Driemanands persoonlijk traject voor senior leiders: van AI-ambitie naar heldere prioriteiten, intern draagvlak en een eerste use case die werkt.',
+    description: 'Persoonlijke begeleiding voor senior leiders: van AI-ambitie naar heldere prioriteiten, intern draagvlak en een eerste use case die werkt. Fase per fase, aangepast aan jouw situatie.',
     providerName: 'Mark de Kock',
     country:     'Netherlands',
     languages:   ['nl', 'en'],
