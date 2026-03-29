@@ -85,7 +85,7 @@ const jsonLd = serializeJsonLd([
     orgUrl:      'https://kirkandblackbeard.com',
     country:     'NL',
     knowsAbout:  ['AI strategie', 'Digitale transformatie', 'Verandermanagement', 'Executie', 'Klantbeleving', 'Groei'],
-    linkedin:    'https://www.linkedin.com/profile/view?id=8838938',
+    linkedin:    'https://www.linkedin.com/in/markdekock/',
   }),
   buildProfessionalServiceSchema({
     name:        'Strategisch mentorschap AI & executie | Mark de Kock',
