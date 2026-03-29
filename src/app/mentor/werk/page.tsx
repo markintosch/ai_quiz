@@ -87,6 +87,22 @@ const T = {
     ctaCta:   'Plan gratis intake →',
     ctaTrust: 'Gratis · Geen verplichting · 30 minuten',
 
+    faqLabel: 'Veelgestelde vragen',
+    faqTitle: 'Alles wat je wilt weten voor je besluit',
+    faq: [
+      { q: 'Hoe ziet een traject er in de praktijk uit?', a: 'Dat verschilt per klant. Afhankelijk van onze eerste gesprekken en prioriteiten bepalen we samen waar behoefte aan is. Soms werk ik 2–3 weken intensief samen. Andere keren komen we 1 keer samen en werk ik bijvoorbeeld een workshop of visiedocument uit om te bespreken. Ik ben altijd bereikbaar voor kortere vragen of beslismomenten. Elk gesprek heeft een concreet doel: een openstaande vraag beantwoorden, een keuze maken of een volgende stap vastleggen.' },
+      { q: 'Hoe vaak spreken we af?', a: 'Afhankelijk van de grootte en het belang van de opdracht maken we samen afspraken hoe vaak we elkaar zien — fysiek en/of online. Bij de meeste opdrachten is met name het begin veel meer fysiek en in contact met alle spelers, medewerkers en partners. Het ritme past zich aan op basis van wat er speelt.' },
+      { q: 'Is dit voor de CEO/CDO/CTO/CMO zelf of voor het hele managementteam?', a: 'Het begint vaak met 1 persoon en idealiter heb ik contact met het hele team. AI is niet iets dat je half moet aanpakken binnen 1 deel van de organisatie. Waar we bijvoorbeeld eerst aan de slag gaan met marketing en sales, kan het goed zijn om een bredere workshop te houden met het hele MT — zodat iedereen op hetzelfde kennisniveau komt en de muren tussen afdelingen mogelijk ook worden geslecht door een verbindend element zoals AI. Uiteraard waar wenselijk en mogelijk.' },
+      { q: 'Werkt dit ook als mijn organisatie nog nauwelijks met AI bezig is?', a: 'Juist dan. Het meeste werk zit niet in de technologie — het zit in de vraag welke richting je op wilt en hoe je dat intern voor elkaar krijgt. Daar begin je mee, ongeacht hoe ver je al bent.' },
+      { q: 'Wat als we al een AI-strategie hebben?', a: 'Dan kijken we of die strategie werkt — of hij gedeeld wordt, of hij vertaald is naar keuzes die mensen daadwerkelijk maken. Een strategie op papier is iets anders dan beweging in een organisatie.' },
+      { q: 'Wat levert drie maanden op?', a: 'Na drie maanden heb je één heldere prioriteit waar iedereen achter staat, een eerste concrete stap die werkt, en de taal om dit intern en extern goed te communiceren. Geen eindrapport — iets dat daadwerkelijk verder gaat. Uiteraard bekijken we samen of het standaard proces ook voor jouw specifieke uitdaging de beste keus is. Waar nodig passen we de aanpak aan.' },
+      { q: 'Wat kost een traject?', a: 'Dat wordt pas echt helder na het intakegesprek — afhankelijk van omvang en context van de uitdaging. Ik zorg er altijd voor dat de stappen behapbaar zijn en voorzien van duidelijke deliverables per fase. Zo kun je te allen tijde beslissen om te stoppen als de realiteit van alle dag daarom vraagt. Je zult dan ook altijd de opgeleverde documenten, presentaties, data en agents bezitten. Het intakegesprek zelf is gratis en vrijblijvend.' },
+      { q: 'Hoe snel kan ik starten?', a: 'Vaak kunnen we binnen 1 à 2 weken beginnen met een kick-off zodat we snel duidelijk krijgen wat de beste aanpak is. Ik werk met maximaal vijf trajecten tegelijk.' },
+      { q: 'In welke sectoren heb je gewerkt?', a: 'Door mijn brede ervaring heb ik voor bijna alle sectoren gewerkt. Denk aan Automotive, Finance, Gezondheidszorg, FMCG, Overheid, Publiek/privaat, duurzaamheid en klantbeleving. Maar AI-vraagstukken voor leiders zijn sectoroverstijdend — de patronen die ik zie, herhalen zich ongeacht de branche.' },
+      { q: 'Waarom Kirk & Blackbeard?', a: 'Kirk & Blackbeard is een netwerk van senior operators — mensen met brede ervaring in strategie, groei en executie. Ik werk vanuit dat netwerk omdat het mij de ruimte geeft om selectief en persoonlijk te zijn. Geen groot bureau, geen junior consultants. Daarnaast hebben we een netwerk van mensen die bewezen kwaliteit leveren, waar we eerder mee hebben gewerkt en voor hun kwaliteit kunnen instaan.' },
+      { q: 'Wat maakt dit anders dan een coach of consultant?', a: 'Een coach werkt aan jou als persoon. Een consultant lost een probleem op. Ik doe iets ertussenin: ik help jou als leidinggevende de juiste beslissingen nemen over een specifiek strategisch vraagstuk — en zorg dat je het daarna zelf kunt. Terwijl ik ook de stakeholders binnen jouw omgeving meeneem op de reis naar hun doelen, met de ondersteuning van AI. Want AI zelf is nooit het doel.' },
+    ],
+
     footerCopy: 'Strategisch mentor voor AI & executie',
     footerSub:  'markdekock.com',
     footerBack: '← Terug naar markdekock.com',
@@ -153,6 +169,22 @@ const T = {
     ctaCta:   'Book free intake →',
     ctaTrust: 'Free · No commitment · 30 minutes',
 
+    faqLabel: 'FAQ',
+    faqTitle: 'Everything you want to know before you decide',
+    faq: [
+      { q: 'How does an engagement work in practice?', a: 'It depends on the client. Based on our first conversations and priorities we decide together where the need is. Sometimes I work intensively together for 2–3 weeks. Other times we meet once and I work out a workshop or vision document to discuss. I\'m always reachable for shorter questions or decision moments. Every conversation has a concrete goal: answer an open question, make a choice, or fix the next step.' },
+      { q: 'How often do we meet?', a: 'Depending on the scale and importance of the assignment, we agree together on how often we see each other — in person and/or online. For most assignments the beginning is much more physical and in contact with all players, employees and partners. The rhythm adapts based on what\'s happening.' },
+      { q: 'Is this for the CEO/CDO/CTO/CMO or the entire management team?', a: 'It often starts with 1 person and ideally I have contact with the whole team. AI is not something you can tackle halfway within 1 part of the organisation. Where we first start with marketing and sales, for example, it can be good to hold a broader workshop with the whole MT — so everyone is at the same knowledge level and the walls between departments can be broken down through a connecting element like AI. Obviously where desirable and possible.' },
+      { q: 'Does this work if my organisation is barely engaged with AI yet?', a: 'Especially then. Most of the work is not in the technology — it\'s in the question of which direction you want to go and how you get that done internally. That\'s where you start, regardless of how far along you are.' },
+      { q: 'What if we already have an AI strategy?', a: 'Then we look at whether that strategy works — whether it\'s shared, whether it\'s translated into choices people actually make. A strategy on paper is different from movement in an organisation.' },
+      { q: 'What does three months deliver?', a: 'After three months you have one clear priority everyone stands behind, a first concrete step that works, and the language to communicate this well internally and externally. No final report — something that actually moves forward. Of course we look together at whether the standard process is also the best choice for your specific challenge. We adapt the approach where needed.' },
+      { q: 'What does an engagement cost?', a: 'That only becomes clear after the intake conversation — depending on scale and context of the challenge. I always make sure the steps are manageable and provided with clear deliverables per phase. So you can decide at any time to stop if day-to-day reality requires it. You will also always own the delivered documents, presentations, data and agents. The intake conversation itself is free and without obligation.' },
+      { q: 'How quickly can I start?', a: 'We can often start within 1 to 2 weeks with a kick-off so we quickly get clarity on the best approach. I work with a maximum of five engagements at a time.' },
+      { q: 'Which sectors have you worked in?', a: 'Through my broad experience I have worked for almost all sectors. Think Automotive, Finance, Healthcare, FMCG, Government, Public/private, sustainability and customer experience. But AI questions for leaders are cross-sectoral — the patterns I see repeat themselves regardless of the sector.' },
+      { q: 'Why Kirk & Blackbeard?', a: 'Kirk & Blackbeard is a network of senior operators — people with broad experience in strategy, growth and execution. I work from that network because it gives me the space to be selective and personal. No large firm, no junior consultants. We also have a network of people who deliver proven quality, with whom we have worked before and can vouch for.' },
+      { q: 'What makes this different from a coach or consultant?', a: 'A coach works on you as a person. A consultant solves a problem. I do something in between: I help you as a leader make the right decisions about a specific strategic question — and make sure you can do it yourself afterwards. While I also bring the stakeholders within your environment along on the journey towards their goals, with the support of AI. Because AI itself is never the goal.' },
+    ],
+
     footerCopy: 'Strategic mentor for AI & execution',
     footerSub:  'markdekock.com',
     footerBack: '← Back to markdekock.com',
@@ -162,6 +194,7 @@ const T = {
 export default function WerkPage() {
   const [lang, setLang] = useState<'nl' | 'en'>('nl')
   const t = T[lang]
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   return (
     <div style={{ minHeight: '100vh', background: WHITE, color: INK, fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
@@ -305,6 +338,39 @@ export default function WerkPage() {
                   <p style={{ fontSize: 15, color: BODY, lineHeight: 1.75 }}>{t.closingBody}</p>
                 </div>
               </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section style={{ background: WHITE, padding: '80px 24px' }}>
+        <div className="max-w-3xl mx-auto">
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }}>
+            <motion.p variants={fadeUp} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: WARM, marginBottom: 14 }}>
+              {t.faqLabel}
+            </motion.p>
+            <motion.h2 variants={fadeUp} style={{ textAlign: 'center', fontSize: 'clamp(20px, 3vw, 28px)', fontWeight: 800, color: INK, marginBottom: 52, lineHeight: 1.25 }}>
+              {t.faqTitle}
+            </motion.h2>
+            <motion.div variants={fadeUp}>
+              {t.faq.map((item, i) => (
+                <div key={i} style={{ borderTop: `1px solid ${BORDER}` }}>
+                  <button
+                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                    style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 0', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', gap: 16 }}
+                  >
+                    <span style={{ fontSize: 15, fontWeight: 700, color: INK, lineHeight: 1.4 }}>{item.q}</span>
+                    <span style={{ fontSize: 20, color: MUTED, flexShrink: 0, transform: openFaq === i ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s', lineHeight: 1 }}>+</span>
+                  </button>
+                  {openFaq === i && (
+                    <p style={{ fontSize: 15, color: BODY, lineHeight: 1.75, paddingBottom: 24, margin: 0, maxWidth: 620 }}>
+                      {item.a}
+                    </p>
+                  )}
+                </div>
+              ))}
+              <div style={{ borderTop: `1px solid ${BORDER}` }} />
             </motion.div>
           </motion.div>
         </div>

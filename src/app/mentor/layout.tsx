@@ -48,29 +48,59 @@ export const metadata: Metadata = {
 
 const FAQ_ITEMS = [
   {
-    question: 'Wat doet een strategisch AI-mentor?',
+    question: 'Hoe ziet een traject er in de praktijk uit?',
     answer:
-      'Een strategisch AI-mentor helpt leidinggevenden en managementteams AI te vertalen naar concrete richting en keuzes — zonder dat ze zelf technisch expert hoeven te worden. De focus ligt op prioriteiten, intern draagvlak en een eerste use case die daadwerkelijk werkt.',
+      'Dat verschilt per klant. Afhankelijk van onze eerste gesprekken en prioriteiten bepalen we samen waar behoefte aan is. Soms werk ik 2–3 weken intensief samen. Andere keren komen we 1 keer samen en werk ik bijvoorbeeld een workshop of visiedocument uit om te bespreken. Ik ben altijd bereikbaar voor kortere vragen of beslismomenten. Elk gesprek heeft een concreet doel: een openstaande vraag beantwoorden, een keuze maken of een volgende stap vastleggen.',
   },
   {
-    question: 'Voor wie is strategische AI-mentoring bedoeld?',
+    question: 'Hoe vaak spreken we af?',
     answer:
-      'Voor senior leiders en managementteams die weten dat AI impact gaat hebben op hun organisatie, maar moeite hebben met de vertaling naar concrete stappen. Geen training, maar persoonlijke begeleiding bij echte beslissingen.',
+      'Afhankelijk van de grootte en het belang van de opdracht maken we samen afspraken hoe vaak we elkaar zien — fysiek en/of online. Bij de meeste opdrachten is met name het begin veel meer fysiek en in contact met alle spelers, medewerkers en partners. Het ritme past zich aan op basis van wat er speelt.',
   },
   {
-    question: 'Wat is het verschil tussen AI-mentoring en AI-consultancy?',
+    question: 'Is dit voor de CEO/CDO/CTO/CMO zelf of voor het hele managementteam?',
     answer:
-      'Een consultant levert een rapport of implementeert een oplossing. Een mentor begeleidt jou als leidinggevende — zodat de richting, de keuzes en het eigenaarschap intern blijven. Het doel is dat jij na drie maanden zelfstandig verder kunt.',
+      'Het begint vaak met 1 persoon en idealiter heb ik contact met het hele team. AI is niet iets dat je half moet aanpakken binnen 1 deel van de organisatie. Waar we bijvoorbeeld eerst aan de slag gaan met marketing en sales, kan het goed zijn om een bredere workshop te houden met het hele MT — zodat iedereen op hetzelfde kennisniveau komt en de muren tussen afdelingen mogelijk ook worden geslecht door een verbindend element zoals AI. Uiteraard waar wenselijk en mogelijk.',
   },
   {
-    question: 'Hoe lang duurt een AI-mentortraject bij Mark de Kock?',
+    question: 'Werkt dit ook als mijn organisatie nog nauwelijks met AI bezig is?',
     answer:
-      'Een standaard traject duurt drie maanden. Het begint met een gratis intakegesprek om te beoordelen of er een match is. Mark werkt met maximaal vijf trajecten tegelijk voor persoonlijke betrokkenheid.',
+      'Juist dan. Het meeste werk zit niet in de technologie — het zit in de vraag welke richting je op wilt en hoe je dat intern voor elkaar krijgt. Daar begin je mee, ongeacht hoe ver je al bent.',
   },
   {
-    question: 'Wat kost een intake bij Mark de Kock?',
+    question: 'Wat als we al een AI-strategie hebben?',
     answer:
-      'Het intakegesprek is gratis en vrijblijvend. Tijdens de intake beoordelen Mark en de leidinggevende samen of er een match is qua situatie, urgentie en verwachtingen.',
+      'Dan kijken we of die strategie werkt — of hij gedeeld wordt, of hij vertaald is naar keuzes die mensen daadwerkelijk maken. Een strategie op papier is iets anders dan beweging in een organisatie.',
+  },
+  {
+    question: 'Wat levert drie maanden op?',
+    answer:
+      'Na drie maanden heb je één heldere prioriteit waar iedereen achter staat, een eerste concrete stap die werkt, en de taal om dit intern en extern goed te communiceren. Geen eindrapport — iets dat daadwerkelijk verder gaat. Uiteraard bekijken we samen of het standaard proces ook voor jouw specifieke uitdaging de beste keus is. Waar nodig passen we de aanpak aan.',
+  },
+  {
+    question: 'Wat kost een traject?',
+    answer:
+      'Dat wordt pas echt helder na het intakegesprek — afhankelijk van omvang en context van de uitdaging. Ik zorg er altijd voor dat de stappen behapbaar zijn en voorzien van duidelijke deliverables per fase. Zo kun je te allen tijde beslissen om te stoppen als de realiteit van alle dag daarom vraagt. Je zult dan ook altijd de opgeleverde documenten, presentaties, data en agents bezitten. Het intakegesprek zelf is gratis en vrijblijvend.',
+  },
+  {
+    question: 'Hoe snel kan ik starten?',
+    answer:
+      'Vaak kunnen we binnen 1 à 2 weken beginnen met een kick-off zodat we snel duidelijk krijgen wat de beste aanpak is. Ik werk met maximaal vijf trajecten tegelijk.',
+  },
+  {
+    question: 'In welke sectoren heb je gewerkt?',
+    answer:
+      'Door mijn brede ervaring heb ik voor bijna alle sectoren gewerkt. Denk aan Automotive, Finance, Gezondheidszorg, FMCG, Overheid, Publiek/privaat, duurzaamheid en klantbeleving. Maar AI-vraagstukken voor leiders zijn sectoroverstijdend — de patronen die ik zie, herhalen zich ongeacht de branche.',
+  },
+  {
+    question: 'Waarom Kirk & Blackbeard?',
+    answer:
+      'Kirk & Blackbeard is een netwerk van senior operators — mensen met brede ervaring in strategie, groei en executie. Ik werk vanuit dat netwerk omdat het mij de ruimte geeft om selectief en persoonlijk te zijn. Geen groot bureau, geen junior consultants. Daarnaast hebben we een netwerk van mensen die bewezen kwaliteit leveren, waar we dus ook eerder mee hebben gewerkt en voor hun kwaliteit kunnen instaan.',
+  },
+  {
+    question: 'Wat maakt dit anders dan een coach of consultant?',
+    answer:
+      'Een coach werkt aan jou als persoon. Een consultant lost een probleem op. Ik doe iets ertussenin: ik help jou als leidinggevende de juiste beslissingen nemen over een specifiek strategisch vraagstuk — en zorg dat je het daarna zelf kunt. Terwijl ik ook de stakeholders binnen jouw omgeving meeneem op de reis naar hun doelen, met de ondersteuning van AI. Want AI zelf is nooit het doel.',
   },
 ]
 
