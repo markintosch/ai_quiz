@@ -8,6 +8,7 @@ export default async function LandingPage() {
   const config = getProductConfig(productKey)
   const productShortName = config.name.replace(/ Assessment$/, '').replace(/ Quiz$/, '')
   const dimensions = config.dimensions.map(d => ({
+    key: d.key,
     icon: d.icon ?? '⚡',
     label: d.label,
     desc: d.description ?? '',

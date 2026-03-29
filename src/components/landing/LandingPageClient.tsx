@@ -45,7 +45,7 @@ const stagger = {
 interface Props {
   productName: string
   productShortName: string
-  dimensions: Array<{ icon: string; label: string; desc: string }>
+  dimensions: Array<{ key: string; icon: string; label: string; desc: string }>
   productKey: string
 }
 
@@ -53,7 +53,7 @@ export default function LandingPageClient({ productName, productShortName, dimen
   const t = useTranslations('landing')
 
   const SAMPLE_SCORES: DimensionScore[] = dimensions.slice(0, 6).map((d, i) => ({
-    dimension: d.label as DimensionScore['dimension'],
+    dimension: d.key as DimensionScore['dimension'],
     label: d.label,
     raw: [3, 4, 2, 3, 1, 4][i] ?? 3,
     max: 5,
