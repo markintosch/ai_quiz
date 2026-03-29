@@ -200,7 +200,7 @@ export default function LandingPageClient({ productName, productShortName, dimen
             variants={stagger}
             initial="hidden"
             whileInView="show"
-            viewport={{ once: true, margin: '-80px' }}
+            viewport={{ once: true, amount: 0.05 }}
           >
             <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-widest mb-2 text-center" style={{ color: '#D97706' }}>
               {t('howItWorks.label')}
@@ -232,7 +232,7 @@ export default function LandingPageClient({ productName, productShortName, dimen
           variants={stagger}
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={{ once: true, amount: 0.05 }}
         >
           <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-widest mb-2 text-center" style={{ color: '#D97706' }}>
             {t('preview.label')}
@@ -278,7 +278,7 @@ export default function LandingPageClient({ productName, productShortName, dimen
           variants={stagger}
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={{ once: true, amount: 0.05 }}
         >
           <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-widest mb-2 text-center" style={{ color: '#D97706' }}>
             {t('dimensions.label')}
@@ -310,7 +310,7 @@ export default function LandingPageClient({ productName, productShortName, dimen
             variants={stagger}
             initial="hidden"
             whileInView="show"
-            viewport={{ once: true, margin: '-80px' }}
+            viewport={{ once: true, amount: 0.05 }}
           >
             <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-widest mb-2 text-center" style={{ color: '#D97706' }}>
               {t('practitioners.label')}
@@ -360,7 +360,7 @@ export default function LandingPageClient({ productName, productShortName, dimen
           variants={stagger}
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={{ once: true, amount: 0.05 }}
         >
           <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black mb-4">
             {t('finalCta.heading')}
