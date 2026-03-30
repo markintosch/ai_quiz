@@ -297,6 +297,26 @@
       "Performance": {
         "insight": "Vous êtes à un niveau élevé. Regardez quel est votre prochain objectif — une course, un PR ou une spécialisation.",
         "urgency": "Continuez à vous challenger et cherchez de nouvelles stimulations."
+      },
+      "Reactief": {
+        "insight": "Votre organisation réagit aux situations au fur et à mesure, mais n'a pas encore d'approche PR proactive. C'est le point de départ — avec le bon accompagnement, des progrès rapides sont possibles.",
+        "urgency": "Sans structure, les RP restent coûteuses et imprévisibles. C'est le moment de poser les bases."
+      },
+      "Bewust": {
+        "insight": "Vous reconnaissez l'importance des RP, mais l'approche est encore fragmentée. Des opportunités peuvent déjà être saisies avec une structure qui rend les résultats mesurables.",
+        "urgency": "De conscient à planifié : l'étape qui rapporte le plus est de fixer une priorité claire maintenant."
+      },
+      "Gepland": {
+        "insight": "Vous avez une base et travaillez de manière structurée, mais les RP ne sont pas encore un levier stratégique. En vous concentrant sur les dimensions les plus faibles, vous pouvez transformer la communication.",
+        "urgency": "Les organisations qui agissent maintenant façonneront le narratif de leur marché."
+      },
+      "Strategisch": {
+        "insight": "Les RP sont une fonction stratégique à part entière dans votre organisation. Pour continuer à faire la différence, une attention continue aux maillons les plus faibles est nécessaire.",
+        "urgency": "Rester stratégiquement en avance nécessite un investissement dans les dimensions qui renforcent le plus votre position."
+      },
+      "Leidend": {
+        "insight": "Vous faites partie des leaders en matière de RP dans votre secteur. Le défi est de sécuriser et d'innover : nouvelles plateformes, nouveaux formats et thought leadership renforcent votre position.",
+        "urgency": "Maintenir le leadership signifie construire la prochaine opportunité avant d'en avoir besoin."
       }
     },
     "dimensionLabels": {
@@ -311,7 +331,13 @@
       "mental_drive": "Drive Mental",
       "mobility_recovery": "Mobilité & Récupération",
       "nutrition_habits": "Nutrition & Énergie",
-      "training_consistency": "Régularité"
+      "training_consistency": "Régularité",
+      "pr_strategy": "Stratégie RP & Politique",
+      "media_relations": "Relations Médias",
+      "messaging_positioning": "Message & Positionnement",
+      "crisis_communication": "Communication de Crise",
+      "content_visibility": "Contenu & Visibilité",
+      "internal_alignment": "Alignement Interne"
     },
     "radarShortLabels": {
       "strategy_vision": "Stratégie",
@@ -350,7 +376,13 @@
       "mental_drive": "Motivation",
       "mobility_recovery": "Mobilité",
       "nutrition_habits": "Nutrition",
-      "training_consistency": "Régularité"
+      "training_consistency": "Régularité",
+      "pr_strategy": "Stratégie",
+      "media_relations": "Médias",
+      "messaging_positioning": "Message",
+      "crisis_communication": "Crise",
+      "content_visibility": "Contenu",
+      "internal_alignment": "Interne"
     },
     "legend": {
       "yourScore": "Votre score",

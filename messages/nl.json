@@ -297,6 +297,26 @@
       "Performance": {
         "insight": "Je zit op een hoog niveau. Kijk wat het volgende doel voor jou is — een race, een PR, of een specialisatie.",
         "urgency": "Blijf je doelen uitdagen en zoek nieuwe prikkels om op niveau te blijven."
+      },
+      "Reactief": {
+        "insight": "Uw organisatie reageert op situaties als ze zich voordoen, maar heeft nog geen proactieve PR-aanpak. Dit is het startpunt — met de juiste begeleiding zijn er snel stappen te zetten die direct zichtbaar effect hebben op uw reputatie.",
+        "urgency": "Zonder structuur blijft PR kostbaar en onvoorspelbaar. Nu is het moment om de basis te leggen."
+      },
+      "Bewust": {
+        "insight": "U ziet het belang van PR en communicatie, maar de aanpak is nog gefragmenteerd. Er zijn kansen die nu al benut kunnen worden met een structuur die resultaten meetbaar en herhaalbaar maakt.",
+        "urgency": "Van bewust naar gepland: de stap die het meeste oplevert is nu een duidelijke prioriteit stellen."
+      },
+      "Gepland": {
+        "insight": "U heeft een basis en werkt gestructureerd, maar PR is nog geen strategische businessdriver. Met de juiste focus op de zwakste dimensies kunt u communicatie omzetten in een echte reputatiemotor.",
+        "urgency": "De organisaties die nu doorpakken, bepalen straks het narratief in hun markt."
+      },
+      "Strategisch": {
+        "insight": "PR is bij u een volwaardige strategische functie. Om het verschil te blijven maken is continue aandacht voor de zwakste schakels nodig — en het verdiepen van mediarelaties en crisisvoorbereiding.",
+        "urgency": "Strategisch voorop blijven vereist investering in de dimensies die uw positie het meest versterken."
+      },
+      "Leidend": {
+        "insight": "U behoort tot de koplopers op PR-vlak in uw sector. Uitdaging is om dit niveau te borgen en te innoveren: nieuwe platforms, nieuwe verhaalvormen en thought leadership versterken uw positie.",
+        "urgency": "Leiderschap volhouden betekent de volgende kans bouwen vóórdat u hem nodig heeft."
       }
     },
     "dimensionLabels": {
@@ -311,7 +331,13 @@
       "mental_drive": "Mentale Drive",
       "mobility_recovery": "Mobiliteit & Herstel",
       "nutrition_habits": "Voeding & Energie",
-      "training_consistency": "Regelmaat"
+      "training_consistency": "Regelmaat",
+      "pr_strategy": "PR Strategie & Beleid",
+      "media_relations": "Mediarelaties",
+      "messaging_positioning": "Boodschap & Positionering",
+      "crisis_communication": "Crisiscommunicatie",
+      "content_visibility": "Content & Zichtbaarheid",
+      "internal_alignment": "Interne Afstemming"
     },
     "radarShortLabels": {
       "strategy_vision": "Strategie",
@@ -350,7 +376,13 @@
       "mental_drive": "Drive",
       "mobility_recovery": "Mobiliteit",
       "nutrition_habits": "Voeding",
-      "training_consistency": "Regelmaat"
+      "training_consistency": "Regelmaat",
+      "pr_strategy": "Strategie",
+      "media_relations": "Media",
+      "messaging_positioning": "Boodschap",
+      "crisis_communication": "Crisis",
+      "content_visibility": "Content",
+      "internal_alignment": "Intern"
     },
     "legend": {
       "yourScore": "Jouw score",

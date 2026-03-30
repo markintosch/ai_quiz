@@ -297,6 +297,26 @@
       "Performance": {
         "insight": "You're at a high level. Look at what the next goal is for you — a race, a PR, or a specialisation.",
         "urgency": "Keep challenging your goals and seek new stimuli to stay at this level."
+      },
+      "Reactief": {
+        "insight": "Your organisation responds to situations as they arise, but has no proactive PR approach yet. This is the starting point — with the right guidance, you can quickly take steps that have an immediately visible impact on your reputation.",
+        "urgency": "Without structure, PR remains costly and unpredictable. Now is the moment to lay the foundation."
+      },
+      "Bewust": {
+        "insight": "You recognise the importance of PR and communications, but the approach is still fragmented. There are opportunities that can be seized now with a structure that makes results measurable and repeatable.",
+        "urgency": "From aware to planned: the step that delivers the most is now setting a clear priority."
+      },
+      "Gepland": {
+        "insight": "You have a foundation and work in a structured way, but PR is not yet a strategic business driver. With the right focus on the weakest dimensions, you can turn communications into a real reputation engine.",
+        "urgency": "Organisations that act decisively now will shape the narrative in their market."
+      },
+      "Strategisch": {
+        "insight": "PR is a fully-fledged strategic function at your organisation. To keep making a difference, continuous attention to the weakest links is needed — deepening media relations and crisis preparation.",
+        "urgency": "Staying strategically ahead requires investment in the dimensions that strengthen your position most."
+      },
+      "Leidend": {
+        "insight": "You are among the leaders in PR in your sector. The challenge is to secure and innovate: new platforms, new storytelling formats and thought leadership reinforce your position.",
+        "urgency": "Maintaining leadership means building the next opportunity before you need it."
       }
     },
     "dimensionLabels": {
@@ -311,7 +331,13 @@
       "mental_drive": "Mental Drive",
       "mobility_recovery": "Mobility & Recovery",
       "nutrition_habits": "Nutrition & Energy",
-      "training_consistency": "Consistency"
+      "training_consistency": "Consistency",
+      "pr_strategy": "PR Strategy & Policy",
+      "media_relations": "Media Relations",
+      "messaging_positioning": "Messaging & Positioning",
+      "crisis_communication": "Crisis Communications",
+      "content_visibility": "Content & Visibility",
+      "internal_alignment": "Internal Alignment"
     },
     "radarShortLabels": {
       "strategy_vision": "Strategy",
@@ -350,7 +376,13 @@
       "mental_drive": "Drive",
       "mobility_recovery": "Mobility",
       "nutrition_habits": "Nutrition",
-      "training_consistency": "Consistency"
+      "training_consistency": "Consistency",
+      "pr_strategy": "Strategy",
+      "media_relations": "Media",
+      "messaging_positioning": "Messaging",
+      "crisis_communication": "Crisis",
+      "content_visibility": "Content",
+      "internal_alignment": "Internal"
     },
     "legend": {
       "yourScore": "Your score",

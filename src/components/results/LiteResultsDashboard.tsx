@@ -36,6 +36,12 @@ const MATURITY_COLORS: Record<string, { color: string; bg: string; ring: string 
   Actief:      { color: 'text-yellow-600', bg: 'bg-yellow-50', ring: 'ring-yellow-200' },
   Gevorderd:   { color: 'text-teal-600',   bg: 'bg-teal-50',   ring: 'ring-teal-200'   },
   Performance: { color: 'text-green-600',  bg: 'bg-green-50',  ring: 'ring-green-200'  },
+  // PR Maturity levels
+  Reactief:    { color: 'text-red-500',    bg: 'bg-red-50',    ring: 'ring-red-200'    },
+  Bewust:      { color: 'text-orange-500', bg: 'bg-orange-50', ring: 'ring-orange-200' },
+  Gepland:     { color: 'text-yellow-600', bg: 'bg-yellow-50', ring: 'ring-yellow-200' },
+  Strategisch: { color: 'text-teal-600',   bg: 'bg-teal-50',   ring: 'ring-teal-200'   },
+  Leidend:     { color: 'text-green-600',  bg: 'bg-green-50',  ring: 'ring-green-200'  },
 }
 
 // ── Animated count-up ─────────────────────────────────────────
@@ -381,7 +387,7 @@ export function LiteResultsDashboard({
       </motion.div>
 
       {/* ═══ 8. FULL ASSESSMENT CTA (secondary) ═════════════════ */}
-      {productKey !== 'fitness_readiness' && (
+      {productKey !== 'fitness_readiness' && productKey !== 'pr_maturity' && (
         <motion.div
           variants={fadeUp}
           className="border border-gray-200 rounded-2xl p-6 text-center bg-white"

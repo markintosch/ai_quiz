@@ -12,6 +12,7 @@ import { MANDA_CONFIG } from './manda/config'
 import { HR_READINESS_CONFIG } from './hr_readiness/config'
 import { UTRECHTZORG_CONFIG } from './utrechtzorg/config'
 import { FITNESS_READINESS_CONFIG } from './fitness_readiness/config'
+import { PR_MATURITY_CONFIG } from './pr_maturity/config'
 import type { QuizProductConfig } from './types'
 
 const REGISTRY: Record<string, QuizProductConfig> = {
@@ -21,6 +22,7 @@ const REGISTRY: Record<string, QuizProductConfig> = {
   hr_readiness:       HR_READINESS_CONFIG,
   zorgmarkt_readiness: UTRECHTZORG_CONFIG,
   fitness_readiness:  FITNESS_READINESS_CONFIG,
+  pr_maturity:        PR_MATURITY_CONFIG,
   // digital_readiness: DIGITAL_READINESS_CONFIG,   ← add future products here
   // esg_maturity:      ESG_MATURITY_CONFIG,
 }
@@ -60,6 +62,8 @@ const SUBDOMAIN_MAP: Record<string, string> = {
   'uz':           'zorgmarkt_readiness',// uz.brandpwrdmedia.nl (alias)
   'fitness':      'fitness_readiness',  // fitness.brandpwrdmedia.nl
   'hc45':         'fitness_readiness',  // hc45.brandpwrdmedia.nl (Healthclub45 alias)
+  'prevo':        'pr_maturity',        // prevo.brandpwrdmedia.nl (Mareille Prevo)
+  'pr':           'pr_maturity',        // pr.brandpwrdmedia.nl (alias)
   // 'digital-readiness': 'digital_readiness',  ← add when product is launched
 }
 
