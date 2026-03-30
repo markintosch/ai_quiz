@@ -34,6 +34,8 @@ export interface LeadFormData {
   gdprConsent: boolean
   /** Optional consent to receive marketing insights & updates */
   marketingConsent: boolean
+  phone?: string
+  callMeBack?: boolean
 }
 
 // ─── Supabase row shapes (mirrors schema.sql) ─────────────────

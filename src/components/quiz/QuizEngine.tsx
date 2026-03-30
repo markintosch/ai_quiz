@@ -41,6 +41,7 @@ interface QuizEngineProps {
   questions?: Question[]
   /** 'full' = all lead fields (default); 'minimal' = name + email only */
   leadCaptureMode?: 'full' | 'minimal'
+  showCallbackOption?: boolean
 }
 
 export function QuizEngine({
@@ -57,6 +58,7 @@ export function QuizEngine({
   waveId,
   questions: questionsProp,
   leadCaptureMode = 'full',
+  showCallbackOption,
 }: QuizEngineProps) {
   const t = useTranslations('quiz.engine')
   const locale = useLocale()
@@ -209,6 +211,7 @@ export function QuizEngine({
           onSubmit={handlePreLeadSubmit}
           mode={leadCaptureMode}
           companyName={companyName}
+          showCallbackOption={showCallbackOption}
         />
       </div>
     )
@@ -248,6 +251,7 @@ export function QuizEngine({
           loading={submitting}
           mode={leadCaptureMode}
           companyName={companyName}
+          showCallbackOption={showCallbackOption}
         />
       </div>
     )

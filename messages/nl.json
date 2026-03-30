@@ -114,7 +114,7 @@
       "sub": "12 vragen · ~5 minuten · Direct gepersonaliseerde score"
     },
     "engine": {
-      "submitting": "Jouw AI-volwassenheidsscore wordt berekend…",
+      "submitting": "Jouw score wordt berekend…",
       "back": "← Terug",
       "next": "Volgende →",
       "seeResults": "Bekijk mijn resultaten →",
@@ -122,7 +122,7 @@
       "postHeadingFull": "Assessment voltooid!",
       "postHeadingLite": "Jouw resultaten zijn klaar",
       "postSubFull": "Je hebt alle 26 vragen beantwoord. Vul je gegevens in en we genereren je volledige AI-volwassenheidsrapport.",
-      "postSubLite": "Vul je gegevens in om je AI-volwassenheidsscore en gepersonaliseerde aanbevelingen te bekijken."
+      "postSubLite": "Vul je naam en e-mailadres in om je score en persoonlijke aanbevelingen te bekijken."
     },
     "lead": {
       "fullName": "Volledige naam",
@@ -158,7 +158,7 @@
   },
   "results": {
     "scoreLabel": "Jouw AI-volwassenheidsscore",
-    "greeting": "Hoi {firstName} — dit is een richtinggevende momentopname over 6 AI-dimensies.",
+    "greeting": "Hoi {firstName} — hier is jouw persoonlijke score op alle dimensies.",
     "avgLabel": "Gemiddelde score over alle assessments:",
     "vsAvgPos": "+{delta} vs gem.",
     "vsAvgNeg": "{delta} vs gem.",
@@ -227,6 +227,26 @@
       "Leading": {
         "insight": "Je opereert aan de frontlinie van AI-adoptie. Het risico in dit stadium is zelfgenoegzaamheid — het landschap verandert snel en voorop blijven vereist voortdurende investering in capability, talent en governance.",
         "urgency": "Leiderschap volhouden betekent de volgende kans bouwen vóórdat je hem nodig hebt."
+      },
+      "Startend": {
+        "insight": "Je staat aan het begin — of keert terug na een pauze. Precies het goede moment om te starten met de juiste begeleiding.",
+        "urgency": "Een goede start maakt het verschil. Laat je niet ontmoedigen — elke stap telt."
+      },
+      "Opbouwend": {
+        "insight": "Je hebt een basis, maar er is veel potentie dat nog niet benut wordt. Met de juiste richting kun je snel stappen zetten.",
+        "urgency": "De grootste winst zit in consistentie en een goed plan. Nu is het moment."
+      },
+      "Actief": {
+        "insight": "Je traint al regelmatig en hebt een solide basis. De uitdaging is om slimmer te trainen — gerichter, met een plan.",
+        "urgency": "Kleine aanpassingen in je aanpak kunnen grote resultaten opleveren."
+      },
+      "Gevorderd": {
+        "insight": "Je presteert boven gemiddeld. Progressie vraagt nu om specifiekere aanpak: gerichter trainen en beter herstel.",
+        "urgency": "Dit is het moment om het volgende niveau te zoeken — misschien zelfs HYROX."
+      },
+      "Performance": {
+        "insight": "Je zit op een hoog niveau. Kijk wat het volgende doel voor jou is — een race, een PR, of een specialisatie.",
+        "urgency": "Blijf je doelen uitdagen en zoek nieuwe prikkels om op niveau te blijven."
       }
     },
     "dimensionLabels": {
@@ -235,7 +255,13 @@
       "data_readiness": "Data-gereedheid",
       "talent_culture": "Talent & Cultuur",
       "governance_risk": "Governance & Risico",
-      "opportunity_awareness": "Kansenbewustzijn"
+      "opportunity_awareness": "Kansenbewustzijn",
+      "cardio_base": "Cardio & Conditie",
+      "strength_power": "Kracht & Power",
+      "mental_drive": "Mentale Drive",
+      "mobility_recovery": "Mobiliteit & Herstel",
+      "nutrition_habits": "Voeding & Energie",
+      "training_consistency": "Regelmaat"
     },
     "radarShortLabels": {
       "strategy_vision": "Strategie",

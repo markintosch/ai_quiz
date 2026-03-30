@@ -171,6 +171,12 @@ export const FITNESS_READINESS_CONFIG: QuizProductConfig = {
       // ── Footer ──
       footerOwner:     'Healthclub45',
       footerOwnerLink: 'https://healthclub45.nl',
+      // ── Quiz page ──
+      quizTitle: 'Fitness Readiness Scan',
+      quizSub: '18 vragen · 3 minuten · Direct jouw fitnessscore',
+      leadCaptureMode: 'minimal' as const,
+      showCallbackOption: true,
+      scoreLabelOverride: 'Jouw Fitnessscore',
     },
     en: {
       // ── Hero ──
@@ -222,6 +228,12 @@ export const FITNESS_READINESS_CONFIG: QuizProductConfig = {
       // ── Footer ──
       footerOwner:     'Healthclub45',
       footerOwnerLink: 'https://healthclub45.nl',
+      // ── Quiz page ──
+      quizTitle: 'Fitness Readiness Scan',
+      quizSub: '18 questions · 3 minutes · Instant your fitness score',
+      leadCaptureMode: 'minimal' as const,
+      showCallbackOption: true,
+      scoreLabelOverride: 'Your Fitness Score',
     },
   },
 }

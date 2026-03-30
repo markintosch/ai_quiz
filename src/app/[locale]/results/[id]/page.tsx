@@ -72,6 +72,9 @@ export default async function ResultsPage({ params }: PageProps) {
   // Resolve product config (fall back to ai_maturity for legacy responses without product_key)
   const productKey = (response.product_key as string | null) ?? 'ai_maturity'
   const productUI = toProductUI(getProductConfig(productKey))
+  const localeKey = (locale === 'nl' || locale === 'fr') ? locale : 'en'
+  const productCopy = getProductConfig(productKey).defaultCopy?.[localeKey] ?? getProductConfig(productKey).defaultCopy?.['en'] ?? {}
+  const scoreLabelOverride = productCopy.scoreLabelOverride
 
   const isLite      = response.quiz_version === 'lite'
   const isCompany   = !!respondent?.source && respondent.source !== 'public'
@@ -91,6 +94,8 @@ export default async function ResultsPage({ params }: PageProps) {
             respondentEmail={respondent?.email ?? ''}
             respondentCompany={respondent?.company_name ?? ''}
             responseId={id}
+            productKey={productKey}
+            scoreLabelOverride={scoreLabelOverride}
           />
         ) : (
           /* Extended / company quiz → original full dashboard */

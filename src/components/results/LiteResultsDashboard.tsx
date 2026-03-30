@@ -20,6 +20,8 @@ interface LiteResultsDashboardProps {
   respondentEmail: string
   respondentCompany?: string
   responseId: string
+  productKey?: string
+  scoreLabelOverride?: string
 }
 
 // ── Config ────────────────────────────────────────────────────
@@ -29,6 +31,11 @@ const MATURITY_COLORS: Record<string, { color: string; bg: string; ring: string 
   Experimenting:{ color: 'text-yellow-600', bg: 'bg-yellow-50', ring: 'ring-yellow-200' },
   Scaling:      { color: 'text-teal-600',   bg: 'bg-teal-50',   ring: 'ring-teal-200'   },
   Leading:      { color: 'text-green-600',  bg: 'bg-green-50',  ring: 'ring-green-200'  },
+  Startend:    { color: 'text-red-500',    bg: 'bg-red-50',    ring: 'ring-red-200'    },
+  Opbouwend:   { color: 'text-orange-500', bg: 'bg-orange-50', ring: 'ring-orange-200' },
+  Actief:      { color: 'text-yellow-600', bg: 'bg-yellow-50', ring: 'ring-yellow-200' },
+  Gevorderd:   { color: 'text-teal-600',   bg: 'bg-teal-50',   ring: 'ring-teal-200'   },
+  Performance: { color: 'text-green-600',  bg: 'bg-green-50',  ring: 'ring-green-200'  },
 }
 
 // ── Animated count-up ─────────────────────────────────────────
@@ -123,6 +130,8 @@ export function LiteResultsDashboard({
   respondentEmail,
   respondentCompany = '',
   responseId,
+  productKey,
+  scoreLabelOverride,
 }: LiteResultsDashboardProps) {
   const t = useTranslations('results')
   const locale = useLocale()
@@ -167,7 +176,7 @@ export function LiteResultsDashboard({
         className="bg-brand rounded-2xl px-8 pt-8 pb-6 text-white text-center"
       >
         <p className="text-xs font-semibold uppercase tracking-widest text-white/60 mb-5">
-          {t('scoreLabel')}
+          {scoreLabelOverride ?? t('scoreLabel')}
         </p>
 
         {/* Score circle */}
@@ -372,31 +381,33 @@ export function LiteResultsDashboard({
       </motion.div>
 
       {/* ═══ 8. FULL ASSESSMENT CTA (secondary) ═════════════════ */}
-      <motion.div
-        variants={fadeUp}
-        className="border border-gray-200 rounded-2xl p-6 text-center bg-white"
-      >
-        <p className="text-xs font-semibold uppercase tracking-widest text-gray-600 mb-2">
-          {t('fullAssessment.label')}
-        </p>
-        <h3 className="text-base font-bold text-gray-900 mb-2">
-          {t('fullAssessment.heading')}
-        </h3>
-        <p className="text-sm text-gray-600 mb-5 max-w-sm mx-auto">
-          {t('fullAssessment.body')}
-        </p>
-        <a
-          href="/a/extended"
-          onClick={() => trackEvent('full_assessment_clicked', {
-            source:         'lite_results',
-            maturity_level: score.maturityLevel,
-          })}
-          className="inline-block px-6 py-2.5 bg-brand hover:bg-brand-light text-white font-semibold rounded-xl text-sm transition-colors"
+      {productKey !== 'fitness_readiness' && (
+        <motion.div
+          variants={fadeUp}
+          className="border border-gray-200 rounded-2xl p-6 text-center bg-white"
         >
-          {t('fullAssessment.cta')}
-        </a>
-        <p className="text-xs text-gray-500 mt-3">{t('fullAssessment.free')}</p>
-      </motion.div>
+          <p className="text-xs font-semibold uppercase tracking-widest text-gray-600 mb-2">
+            {t('fullAssessment.label')}
+          </p>
+          <h3 className="text-base font-bold text-gray-900 mb-2">
+            {t('fullAssessment.heading')}
+          </h3>
+          <p className="text-sm text-gray-600 mb-5 max-w-sm mx-auto">
+            {t('fullAssessment.body')}
+          </p>
+          <a
+            href="/a/extended"
+            onClick={() => trackEvent('full_assessment_clicked', {
+              source:         'lite_results',
+              maturity_level: score.maturityLevel,
+            })}
+            className="inline-block px-6 py-2.5 bg-brand hover:bg-brand-light text-white font-semibold rounded-xl text-sm transition-colors"
+          >
+            {t('fullAssessment.cta')}
+          </a>
+          <p className="text-xs text-gray-500 mt-3">{t('fullAssessment.free')}</p>
+        </motion.div>
+      )}
 
       {/* ═══ 9. SHARE RESULTS ════════════════════════════════════ */}
       <motion.div variants={fadeUp}>

@@ -39,7 +39,7 @@ export const FITNESS_QUESTIONS: Question[] = [
     dimension: 'cardio_base' as Question['dimension'],
     text: 'Hoe lang kun jij aaneengesloten sporten of bewegen zonder te stoppen?',
     type: 'likert',
-    lite: false,
+    lite: true,
     scored: true,
     options: [
       { value: 1, label: 'Korter dan 10 minuten' },
@@ -54,7 +54,7 @@ export const FITNESS_QUESTIONS: Question[] = [
     dimension: 'cardio_base' as Question['dimension'],
     text: 'Hoe snel herstel jij nadat je hard hebt gesprongen of gesprint?',
     type: 'likert',
-    lite: false,
+    lite: true,
     scored: true,
     options: [
       { value: 1, label: 'Het duurt lang voor ik weer op adem ben' },
@@ -86,7 +86,7 @@ export const FITNESS_QUESTIONS: Question[] = [
     dimension: 'strength_power' as Question['dimension'],
     text: 'Hoeveel push-ups kun jij aaneengesloten uitvoeren met correcte techniek?',
     type: 'likert',
-    lite: false,
+    lite: true,
     scored: true,
     options: [
       { value: 1, label: 'Minder dan 5' },
@@ -101,7 +101,7 @@ export const FITNESS_QUESTIONS: Question[] = [
     dimension: 'strength_power' as Question['dimension'],
     text: 'Hoe gaat het met functionele krachtoefeningen zoals squats, lunges en deadlifts?',
     type: 'likert',
-    lite: false,
+    lite: true,
     scored: true,
     options: [
       { value: 1, label: 'Ik doe ze niet of weet niet hoe ik ze correct uitvoer' },
@@ -133,7 +133,7 @@ export const FITNESS_QUESTIONS: Question[] = [
     dimension: 'mental_drive' as Question['dimension'],
     text: 'Hoe reageer jij als een training zwaar of uitdagend is?',
     type: 'likert',
-    lite: false,
+    lite: true,
     scored: true,
     options: [
       { value: 1, label: 'Ik stop of verlaag de intensiteit zo snel mogelijk' },
@@ -148,7 +148,7 @@ export const FITNESS_QUESTIONS: Question[] = [
     dimension: 'mental_drive' as Question['dimension'],
     text: 'Hoe ga jij om met een concreet sportdoel stellen en ernaartoe werken?',
     type: 'likert',
-    lite: false,
+    lite: true,
     scored: true,
     options: [
       { value: 1, label: 'Ik stel geen doelen — ik sport gewoon als het uitkomt' },
@@ -165,7 +165,7 @@ export const FITNESS_QUESTIONS: Question[] = [
     dimension: 'mobility_recovery' as Question['dimension'],
     text: 'Hoe soepel en beweeglijk voel jij jezelf in het dagelijks leven?',
     type: 'likert',
-    lite: false,
+    lite: true,
     scored: true,
     options: [
       { value: 1, label: 'Ik heb regelmatig last van stijfheid, spanning of beperkte beweging' },
@@ -180,7 +180,7 @@ export const FITNESS_QUESTIONS: Question[] = [
     dimension: 'mobility_recovery' as Question['dimension'],
     text: 'Hoeveel aandacht besteed jij bewust aan herstel na een training?',
     type: 'likert',
-    lite: false,
+    lite: true,
     scored: true,
     options: [
       { value: 1, label: 'Vrijwel niets — ik ga direct door na een training' },
@@ -195,7 +195,7 @@ export const FITNESS_QUESTIONS: Question[] = [
     dimension: 'mobility_recovery' as Question['dimension'],
     text: 'Hoe vaak heb jij last van blessures, pijn of overbelasting door sport?',
     type: 'likert',
-    lite: false,
+    lite: true,
     scored: true,
     options: [
       { value: 5, label: 'Zelden of nooit — ik train pijnvrij' },
@@ -212,7 +212,7 @@ export const FITNESS_QUESTIONS: Question[] = [
     dimension: 'nutrition_habits' as Question['dimension'],
     text: 'Hoe bewust ga jij om met wat je eet in relatie tot jouw sportdoelen?',
     type: 'likert',
-    lite: false,
+    lite: true,
     scored: true,
     options: [
       { value: 1, label: 'Ik eet wat ik lekker vind — voeding heeft geen prioriteit' },
@@ -227,7 +227,7 @@ export const FITNESS_QUESTIONS: Question[] = [
     dimension: 'nutrition_habits' as Question['dimension'],
     text: 'Hoe regelmatig en gebalanceerd eet jij op een gemiddelde dag?',
     type: 'likert',
-    lite: false,
+    lite: true,
     scored: true,
     options: [
       { value: 1, label: 'Onregelmatig, veel snacks en weinig structuur' },
@@ -242,7 +242,7 @@ export const FITNESS_QUESTIONS: Question[] = [
     dimension: 'nutrition_habits' as Question['dimension'],
     text: 'Hoe ga jij om met jouw energieniveau gedurende de dag?',
     type: 'likert',
-    lite: false,
+    lite: true,
     scored: true,
     options: [
       { value: 1, label: 'Ik voel me regelmatig moe en heb weinig energie' },
@@ -274,7 +274,7 @@ export const FITNESS_QUESTIONS: Question[] = [
     dimension: 'training_consistency' as Question['dimension'],
     text: 'Hoe consistent houd jij jouw trainingsroutine vol gedurende het jaar?',
     type: 'likert',
-    lite: false,
+    lite: true,
     scored: true,
     options: [
       { value: 1, label: 'Ik sport sporadisch — maanden kunnen voorbijgaan' },
@@ -289,7 +289,7 @@ export const FITNESS_QUESTIONS: Question[] = [
     dimension: 'training_consistency' as Question['dimension'],
     text: 'Wat is de grootste drempel die jou tegenhoudt om jouw fitnessdoelen te bereiken?',
     type: 'likert',
-    lite: false,
+    lite: true,
     scored: true,
     options: [
       { value: 1, label: 'Ik weet niet waar ik moet beginnen of wat ik moet doen' },

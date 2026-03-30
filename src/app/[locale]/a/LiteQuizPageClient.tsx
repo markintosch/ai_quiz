@@ -9,10 +9,17 @@ interface Props {
   productKey: string
   productShortName: string
   liteQuestions: Question[]
+  quizTitle?: string
+  quizSub?: string
+  leadCaptureMode?: 'full' | 'minimal'
+  showCallbackOption?: boolean
 }
 
-export default function LiteQuizPageClient({ productKey, productShortName, liteQuestions }: Props) {
+export default function LiteQuizPageClient({ productKey, productShortName, liteQuestions, quizTitle, quizSub, leadCaptureMode, showCallbackOption }: Props) {
   const t = useTranslations('quiz.lite')
+
+  const title = quizTitle ?? `${productShortName} Quick Scan`
+  const sub   = quizSub   ?? t('sub')
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -25,13 +32,19 @@ export default function LiteQuizPageClient({ productKey, productShortName, liteQ
             {t('brand')}
           </p>
           <h1 className="text-3xl font-bold text-gray-900 mb-3">
-            {productShortName} Quick Scan
+            {title}
           </h1>
           <p className="text-gray-500 text-base max-w-md mx-auto">
-            {t('sub')}
+            {sub}
           </p>
         </div>
-        <QuizEngine version="lite" questions={liteQuestions} productKey={productKey} />
+        <QuizEngine
+          version="lite"
+          questions={liteQuestions}
+          productKey={productKey}
+          leadCaptureMode={leadCaptureMode ?? 'full'}
+          showCallbackOption={showCallbackOption}
+        />
       </div>
     </main>
   )

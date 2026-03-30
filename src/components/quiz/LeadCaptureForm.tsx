@@ -15,9 +15,10 @@ interface LeadCaptureFormProps {
   mode?: 'full' | 'minimal'
   /** Company name — replaces "Brand PWRD Media" in GDPR text when provided */
   companyName?: string
+  showCallbackOption?: boolean
 }
 
-export function LeadCaptureForm({ variant, initialValues, onSubmit, loading = false, mode = 'full', companyName }: LeadCaptureFormProps) {
+export function LeadCaptureForm({ variant, initialValues, onSubmit, loading = false, mode = 'full', companyName, showCallbackOption }: LeadCaptureFormProps) {
   const t = useTranslations('quiz.lead')
   const industries = t.raw('industries') as string[]
   const isMinimal = mode === 'minimal'
@@ -33,6 +34,8 @@ export function LeadCaptureForm({ variant, initialValues, onSubmit, loading = fa
     companySize:      initialValues?.companySize      ?? '',
     gdprConsent:      initialValues?.gdprConsent      ?? false,
     marketingConsent: initialValues?.marketingConsent ?? false,
+    phone:            initialValues?.phone            ?? '',
+    callMeBack:       initialValues?.callMeBack       ?? false,
   })
 
   const [errors, setErrors] = useState<Partial<Record<keyof LeadFormData, string>>>({})
@@ -72,6 +75,34 @@ export function LeadCaptureForm({ variant, initialValues, onSubmit, loading = fa
         <input type="email" value={form.email} onChange={e => set('email', e.target.value)}
           placeholder={t('emailPh')} className={inputCls(!!errors.email)} autoComplete="email" />
       </Field>
+
+      {showCallbackOption && (
+        <>
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={form.callMeBack ?? false}
+              onChange={e => set('callMeBack', e.target.checked)}
+              className="mt-0.5 w-4 h-4 rounded border-gray-300 accent-brand-accent flex-shrink-0"
+            />
+            <span className="text-sm text-gray-700 leading-relaxed">
+              Bel me terug voor een persoonlijk gesprek of intake-afspraak
+            </span>
+          </label>
+          {form.callMeBack && (
+            <Field label="Mobiel nummer" error={undefined}>
+              <input
+                type="tel"
+                value={form.phone ?? ''}
+                onChange={e => set('phone', e.target.value)}
+                placeholder="06 12 34 56 78"
+                className={inputCls(false)}
+                autoComplete="tel"
+              />
+            </Field>
+          )}
+        </>
+      )}
 
       {!isMinimal && (
         <>

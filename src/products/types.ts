@@ -111,6 +111,13 @@ export interface ProductCopy {
   // ── Footer ──
   footerOwner?: string
   footerOwnerLink?: string
+  // ── Quiz page ──
+  quizTitle?: string
+  quizSub?: string
+  leadCaptureMode?: 'full' | 'minimal'
+  showCallbackOption?: boolean
+  // ── Results ──
+  scoreLabelOverride?: string
   // ── Company landing page heading parts (legacy) ──
   heading1?: string
   headingExternalAccent?: string

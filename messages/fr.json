@@ -114,7 +114,7 @@
       "sub": "12 questions · ~5 minutes · Score personnalisé immédiat"
     },
     "engine": {
-      "submitting": "Calcul de votre score de maturité IA…",
+      "submitting": "Calcul de votre score…",
       "back": "← Retour",
       "next": "Suivant →",
       "seeResults": "Voir mes résultats →",
@@ -122,7 +122,7 @@
       "postHeadingFull": "Évaluation terminée !",
       "postHeadingLite": "Vos résultats sont prêts",
       "postSubFull": "Vous avez répondu aux 26 questions. Renseignez vos coordonnées et nous générerons votre rapport complet de maturité IA.",
-      "postSubLite": "Renseignez vos coordonnées pour révéler votre score de maturité IA et vos recommandations personnalisées."
+      "postSubLite": "Entrez votre nom et adresse e-mail pour voir votre score et vos recommandations personnalisées."
     },
     "lead": {
       "fullName": "Nom complet",
@@ -158,7 +158,7 @@
   },
   "results": {
     "scoreLabel": "Votre score de maturité IA",
-    "greeting": "Bonjour {firstName} — voici un aperçu directionnel sur 6 dimensions IA.",
+    "greeting": "Bonjour {firstName} — voici votre score personnel sur toutes les dimensions.",
     "avgLabel": "Score moyen sur toutes les évaluations :",
     "vsAvgPos": "+{delta} vs moy.",
     "vsAvgNeg": "{delta} vs moy.",
@@ -227,6 +227,26 @@
       "Leading": {
         "insight": "Vous opérez à la frontière de l'adoption IA. Le risque à ce stade est la complaisance — le paysage évolue vite et rester en tête nécessite un investissement continu dans les capacités, le talent et la gouvernance.",
         "urgency": "Maintenir le leadership signifie construire le prochain avantage avant d'en avoir besoin."
+      },
+      "Startend": {
+        "insight": "Vous débutez — ou revenez après une pause. C'est exactement le bon moment pour commencer avec le bon accompagnement.",
+        "urgency": "Un bon départ fait toute la différence. Chaque étape compte."
+      },
+      "Opbouwend": {
+        "insight": "Vous avez une base, mais il y a beaucoup de potentiel inexploité. Avec la bonne direction, vous pouvez progresser rapidement.",
+        "urgency": "Les plus grands gains viennent de la constance et d'un bon plan. C'est le moment."
+      },
+      "Actief": {
+        "insight": "Vous vous entraînez déjà régulièrement et avez une base solide. Le défi est maintenant de vous entraîner plus intelligemment.",
+        "urgency": "De petits ajustements peuvent produire de grands résultats."
+      },
+      "Gevorderd": {
+        "insight": "Vous performez au-dessus de la moyenne. La progression nécessite maintenant une approche plus spécifique.",
+        "urgency": "C'est le moment de viser le niveau suivant — peut-être même HYROX."
+      },
+      "Performance": {
+        "insight": "Vous êtes à un niveau élevé. Regardez quel est votre prochain objectif — une course, un PR ou une spécialisation.",
+        "urgency": "Continuez à vous challenger et cherchez de nouvelles stimulations."
       }
     },
     "dimensionLabels": {
@@ -235,7 +255,13 @@
       "data_readiness": "Maturité des données",
       "talent_culture": "Talent & Culture",
       "governance_risk": "Gouvernance & Risques",
-      "opportunity_awareness": "Conscience des opportunités"
+      "opportunity_awareness": "Conscience des opportunités",
+      "cardio_base": "Cardio & Condition",
+      "strength_power": "Force & Puissance",
+      "mental_drive": "Drive Mental",
+      "mobility_recovery": "Mobilité & Récupération",
+      "nutrition_habits": "Nutrition & Énergie",
+      "training_consistency": "Régularité"
     },
     "radarShortLabels": {
       "strategy_vision": "Stratégie",

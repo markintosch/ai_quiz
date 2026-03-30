@@ -26,6 +26,8 @@ export async function POST(req: NextRequest) {
 
   const { version, answers, lead, companySlug, cohortId, waveId, locale = 'en', productKey = 'ai_maturity',
           refSource, utmSource, utmMedium, utmCampaign } = body
+  // Extract optional fitness-specific lead fields
+  const { phone, callMeBack } = lead as { phone?: string; callMeBack?: boolean }
 
   // ── Basic validation ──────────────────────────────────────
   if (!version || !answers || !lead) {
@@ -73,6 +75,8 @@ export async function POST(req: NextRequest) {
           company_size: lead.companySize ?? null,
           company_id:   companyId,
           source:       companySlug ?? 'public',
+          phone:        phone ?? null,
+          call_me_back: callMeBack ?? false,
         })
         .eq('id', existing.id)
 
@@ -94,6 +98,8 @@ export async function POST(req: NextRequest) {
           gdpr_consent:      lead.gdprConsent,
           marketing_consent: lead.marketingConsent ?? false,
           unsubscribed:      false,
+          phone:             phone ?? null,
+          call_me_back:      callMeBack ?? false,
         })
         .select('id')
         .single()

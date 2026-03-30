@@ -114,7 +114,7 @@
       "sub": "12 questions · ~5 minutes · Instant personalised score"
     },
     "engine": {
-      "submitting": "Calculating your AI Maturity Score…",
+      "submitting": "Calculating your score…",
       "back": "← Back",
       "next": "Next →",
       "seeResults": "See My Results →",
@@ -122,7 +122,7 @@
       "postHeadingFull": "Assessment complete!",
       "postHeadingLite": "Your results are ready",
       "postSubFull": "You've completed all 26 questions. Enter your details and we'll generate your full AI Maturity report.",
-      "postSubLite": "Enter your details to reveal your AI Maturity Score and personalised recommendations."
+      "postSubLite": "Enter your name and email to view your score and personalised recommendations."
     },
     "lead": {
       "fullName": "Full Name",
@@ -158,7 +158,7 @@
   },
   "results": {
     "scoreLabel": "Your AI Maturity Score",
-    "greeting": "Hi {firstName} — this is a directional snapshot across 6 AI dimensions.",
+    "greeting": "Hi {firstName} — here is your personal score across all dimensions.",
     "avgLabel": "Average score across all assessments:",
     "vsAvgPos": "+{delta} vs avg",
     "vsAvgNeg": "{delta} vs avg",
@@ -227,6 +227,26 @@
       "Leading": {
         "insight": "You are operating at the frontier of AI adoption. The risk at this stage is complacency — the landscape shifts fast and staying ahead requires continuous investment in capability, talent and governance.",
         "urgency": "Sustaining leadership means building the next advantage before you need it."
+      },
+      "Startend": {
+        "insight": "You're at the beginning — or returning after a break. This is exactly the right time to start with the right guidance.",
+        "urgency": "A good start makes all the difference. Every step counts."
+      },
+      "Opbouwend": {
+        "insight": "You have a foundation, but there's a lot of potential not yet unlocked. With the right direction you can make fast progress.",
+        "urgency": "The biggest gains come from consistency and a good plan. Now is the moment."
+      },
+      "Actief": {
+        "insight": "You already train regularly and have a solid base. The challenge now is to train smarter — more targeted, with a plan.",
+        "urgency": "Small adjustments in your approach can produce big results."
+      },
+      "Gevorderd": {
+        "insight": "You're performing above average. Progress now requires a more specific approach: targeted training and better recovery.",
+        "urgency": "This is the time to aim for the next level — maybe even HYROX."
+      },
+      "Performance": {
+        "insight": "You're at a high level. Look at what the next goal is for you — a race, a PR, or a specialisation.",
+        "urgency": "Keep challenging your goals and seek new stimuli to stay at this level."
       }
     },
     "dimensionLabels": {
@@ -235,7 +255,13 @@
       "data_readiness": "Data Readiness",
       "talent_culture": "Talent & Culture",
       "governance_risk": "Governance & Risk",
-      "opportunity_awareness": "Opportunity Awareness"
+      "opportunity_awareness": "Opportunity Awareness",
+      "cardio_base": "Cardio & Fitness",
+      "strength_power": "Strength & Power",
+      "mental_drive": "Mental Drive",
+      "mobility_recovery": "Mobility & Recovery",
+      "nutrition_habits": "Nutrition & Energy",
+      "training_consistency": "Consistency"
     },
     "radarShortLabels": {
       "strategy_vision": "Strategy",
