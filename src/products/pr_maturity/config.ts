@@ -146,6 +146,11 @@ export const PR_MATURITY_CONFIG: QuizProductConfig = {
       leadCaptureMode: 'minimal' as const,
       hideMarketingConsent: true,
       scoreLabelOverride: 'Uw PR-score',
+      // ── Company landing page ──
+      headingSubject: 'PR en communicatie',
+      defaultWelcomeExternal: 'Ontdek in 5 minuten hoe uw organisatie scoort op PR en communicatie — van strategie en mediarelaties tot crisiscommunicatie en interne afstemming. Gebruik de resultaten om te prioriteren en de volgende stap te zetten.',
+      ctaExternal: 'Ontdek uw PR-niveau →',
+      meta: '18 vragen · 5 minuten · Vertrouwelijke resultaten',
     },
     en: {
       // ── Hero ──
@@ -196,6 +201,43 @@ export const PR_MATURITY_CONFIG: QuizProductConfig = {
       leadCaptureMode: 'minimal' as const,
       hideMarketingConsent: true,
       scoreLabelOverride: 'Your PR Score',
+      // ── Company landing page ──
+      headingSubject: 'PR and communications',
+      defaultWelcomeExternal: 'Discover in 5 minutes how your organisation scores on PR and communications — from strategy and media relations to crisis communication and internal alignment. Use the results to prioritise and plan your next steps.',
+      ctaExternal: 'Discover your PR level →',
+      meta: '18 questions · 5 minutes · Confidential results',
+    },
+    fr: {
+      // ── Hero ──
+      badge:       'Gratuit · 5 minutes · Résultats immédiats',
+      scoreLabel:  'Votre score RP',
+      heroHeading: 'Où en est vraiment votre organisation en matière de RP ?',
+      heroCta:     'Démarrer l\'évaluation →',
+      sub:         'Découvrez en 5 minutes comment votre organisation se positionne en matière de RP et de communication — de la stratégie aux relations médias, en passant par la gestion de crise et l\'alignement interne.',
+      authors:     'Pour les dirigeants, directeurs marketing et professionnels de la communication qui veulent savoir où ils en sont.',
+      ctaSub:      '18 questions · 5 minutes · gratuit',
+      hideExtendedCta: true,
+      trust:       ['Gratuit', '5 minutes', 'Sans compte', 'Résultats immédiats'],
+      // ── Quiz page ──
+      quizTitle: 'Évaluation de maturité RP',
+      quizSub: '18 questions · 5 minutes · Votre score RP immédiat',
+      quizCompanyName: 'Mareille Prevo',
+      leadCaptureMode: 'minimal' as const,
+      hideMarketingConsent: true,
+      scoreLabelOverride: 'Votre score RP',
+      // ── Company landing page ──
+      headingSubject: 'RP et la communication',
+      defaultWelcomeExternal: 'Découvrez en 5 minutes comment votre organisation se positionne en matière de RP et de communication — de la stratégie et des relations médias à la gestion de crise et à l\'alignement interne. Utilisez les résultats pour prioriser et planifier vos prochaines étapes.',
+      ctaExternal: 'Découvrez votre niveau en RP →',
+      meta: '18 questions · 5 minutes · Réponses confidentielles',
+      // ── Practitioners ──
+      practitionerName:      'Mareille Prevo',
+      practitionerInitial:   'M',
+      markRole:              'Stratège RP & Communication',
+      // ── Footer ──
+      footerOwner:     'Mareille Prevo',
+      footerOwnerLink: 'https://mareilleprevo.nl',
+      hideFullCta: true,
     },
   },
 }

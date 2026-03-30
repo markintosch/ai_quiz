@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { setRequestLocale } from 'next-intl/server'
+import { setRequestLocale, getTranslations } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
 import { getProductConfig } from '@/products'
 import { CompanyLandingPage } from '@/components/quiz/CompanyLandingPage'
@@ -115,11 +115,25 @@ export default async function FullQuizPage({ params }: PageProps) {
   const bgColor = company.bg_color ?? '#354E5E'
   const assessmentMode = (company.assessment_mode === 'external' ? 'external' : 'internal') as 'internal' | 'external'
   const questionCount = productConfig.questions.filter((q) => !excludedCodes.includes(q.code)).length
-  const dimensionLabels = productConfig.dimensions.map(d => d.label)
-  // headingSubject: null → CMS controls heading2; undefined → auto-derive from name
-  const productSubject = productConfig.headingSubject !== undefined
-    ? productConfig.headingSubject   // explicit override (null = no subject)
-    : productConfig.name.replace(/ Assessment$/, '').replace(/ Quiz$/, '')
+
+  // ── Locale-aware dimension labels ─────────────────────────────────────────
+  // Use messages/[locale].json > results.dimensionLabels > config label (Dutch fallback)
+  const tResults = await getTranslations({ locale, namespace: 'results' })
+  const dimensionLabels = productConfig.dimensions.map(d => {
+    try {
+      const translated = tResults(`dimensionLabels.${d.key}` as Parameters<typeof tResults>[0])
+      return translated || d.label
+    } catch {
+      return d.label
+    }
+  })
+
+  // ── headingSubject: null → CMS controls heading2; undefined → auto-derive ──
+  // productDefaultCopy?.headingSubject allows locale-specific override (e.g. FR "RP et la communication")
+  const productSubject = productDefaultCopy?.headingSubject
+    ?? (productConfig.headingSubject !== undefined
+      ? productConfig.headingSubject   // explicit config override (null = no subject)
+      : productConfig.name.replace(/ Assessment$/, '').replace(/ Quiz$/, '').replace(/ Scan$/, ''))
   const formPosition = (company.form_position ?? 'pre') as 'pre' | 'post'
   const leadCaptureMode = (company.lead_capture_mode ?? 'full') as 'full' | 'minimal'
 

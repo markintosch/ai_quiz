@@ -325,8 +325,11 @@ export function CompanyLandingPage({
   const metaLine = rawMeta.replace('{count}', String(questionCount))
 
   // ── Welcome / intro ─────────────────────────────────────────
+  // Priority: DB welcomeMessage > productDefaultCopy.defaultWelcomeExternal > generic translation
   const introText = welcomeMessage
-    ?? (isExternal ? t('defaultWelcomeExternal') : t('defaultWelcome', { name: displayName }))
+    ?? (isExternal
+      ? (productDefaultCopy?.defaultWelcomeExternal ?? t('defaultWelcomeExternal'))
+      : t('defaultWelcome', { name: displayName }))
 
   // Show access gate before landing page if code is required and not yet unlocked
   if (!unlocked) {

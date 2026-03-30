@@ -127,6 +127,17 @@ export interface ProductCopy {
   heading2?: string
   ctaExternal?: string
   meta?: string
+  /**
+   * Locale-aware override for the product subject phrase used in headings and CTAs.
+   * E.g. NL "PR en communicatie", EN "PR and communications", FR "RP et la communication".
+   * When set, overrides the config-level headingSubject for this locale.
+   */
+  headingSubject?: string
+  /**
+   * Locale-aware override for the intro/welcome text shown on the company landing page
+   * when in external (client-facing) mode and no welcomeMessage is set in Supabase.
+   */
+  defaultWelcomeExternal?: string
 }
 
 // ── Product-specific signal detectors (e.g. Shadow AI) ───────────────────────
