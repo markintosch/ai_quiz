@@ -151,9 +151,8 @@ export async function generateMetadata({
   }
 }
 
-export function generateStaticParams() {
-  return routing.locales.map(locale => ({ locale }))
-}
+// generateStaticParams removed — layout is force-dynamic (host-based product routing)
+// Pre-rendering locales statically conflicts with subdomain product detection
 
 // ── JSON-LD structured data ───────────────────────────────────────────────────
 import {
