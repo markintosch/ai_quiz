@@ -333,10 +333,10 @@ export default function LandingPageClient({ productName, productShortName, dimen
             viewport={{ once: true, amount: 0.05 }}
           >
             <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-widest mb-2 text-center" style={{ color: '#D97706' }}>
-              {t('practitioners.label')}
+              {copy.practitionersLabel ?? t('practitioners.label')}
             </motion.p>
             <motion.h2 variants={fadeUp} className="text-3xl font-bold text-center mb-3">
-              {t('practitioners.heading')}
+              {copy.practitionersHeading ?? t('practitioners.heading')}
             </motion.h2>
             <motion.p variants={fadeUp} className="text-gray-400 text-center mb-12 max-w-xl mx-auto">
               {copy.practitionersSub ?? t('practitioners.sub')}

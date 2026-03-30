@@ -92,6 +92,8 @@ export interface ProductCopy {
   dimensionsLabel?: string
   dimensionsHeading?: string
   // ── Practitioners / Built by ──
+  practitionersLabel?: string
+  practitionersHeading?: string
   practitionersSub?: string
   practitionerName?: string
   practitionerPhoto?: string
