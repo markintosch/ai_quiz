@@ -57,17 +57,19 @@ const stagger = {
 }
 
 // ── Share results bar (extended public only) ───────────────────────────────
-function ShareResultsBar({ score, maturityLevel, responseId, locale }: {
+function ShareResultsBar({ score, maturityLevel, responseId, locale, assessmentName }: {
   score: number
   maturityLevel: string
   responseId?: string
   locale: string
+  assessmentName?: string
 }) {
   const [copied, setCopied] = useState(false)
   const resultsPath = responseId ? `/${locale}/results/${responseId}` : `/${locale}`
   const resultsUrl = typeof window !== 'undefined' ? `${window.location.origin}${resultsPath}` : ''
+  const name = assessmentName ?? 'AI Maturity Assessment'
   const linkedInText = encodeURIComponent(
-    `I scored ${score}/100 on the AI Maturity Assessment — ${maturityLevel} level. Curious where your organisation stands?`
+    `I scored ${score}/100 on the ${name} — ${maturityLevel} level. Curious where your organisation stands?`
   )
   const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(resultsUrl)}&summary=${linkedInText}`
 
@@ -344,6 +346,7 @@ export function ScoreDashboard({
             maturityLevel={score.maturityLevel}
             responseId={responseId}
             locale={locale}
+            assessmentName={productUI?.name}
           />
         </motion.div>
       )}

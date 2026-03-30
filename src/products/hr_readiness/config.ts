@@ -104,12 +104,14 @@ export const HR_READINESS_CONFIG: QuizProductConfig = {
       scoreLabel:  'HR Volwassenheidsscore',
       heroHeading: 'Hoe klaar zijn de mensen in uw organisatie?',
       heroCta:     'Start de check →',
+      defaultWelcomeExternal: 'Ontdek in 24 vragen hoe uw HR-organisatie scoort op zes dimensies — van strategie en leiderschap tot talent, data en operationele effectiviteit. Gebruik de resultaten om te bepalen waar HR de meeste impact kan maken.',
     },
     en: {
       badge:       'People Readiness Check · REEF',
       scoreLabel:  'People Readiness Score',
       heroHeading: 'How ready are the people in your organisation?',
       heroCta:     'Start the check →',
+      defaultWelcomeExternal: 'Discover in 24 questions how your HR organisation scores across six dimensions — from strategy and leadership to talent, data and operational effectiveness. Use the results to determine where HR can make the most impact.',
     },
   },
 }

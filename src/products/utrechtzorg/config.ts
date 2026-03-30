@@ -111,6 +111,7 @@ export const UTRECHTZORG_CONFIG: QuizProductConfig = {
       heading2:             'staat in zorg en welzijn',
       ctaExternal:          'Start de scan →',
       meta:                 '{count} vragen · circa 10 minuten · Vertrouwelijk',
+      defaultWelcomeExternal: 'Ontdek in 24 vragen hoe uw organisatie scoort op zes zorgmarktdimensies — van personeel en informele zorg tot digitalisering, ketenregie, financiën en governance. Gebruik de resultaten om prioriteiten te stellen voor de komende periode.',
     },
     en: {
       badge:                'Zorgmarkt Readiness · UtrechtZorg',
@@ -120,6 +121,7 @@ export const UTRECHTZORG_CONFIG: QuizProductConfig = {
       heading2:             'stands in the Zorgmarkt',
       ctaExternal:          'Start the scan →',
       meta:                 '{count} questions · approx. 10 minutes · Confidential',
+      defaultWelcomeExternal: 'Discover in 24 questions how your organisation scores across six care market dimensions — from workforce and informal care to digitalisation, chain coordination, finances and governance. Use the results to set priorities for the coming period.',
     },
   },
 }

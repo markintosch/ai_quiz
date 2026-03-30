@@ -95,6 +95,7 @@ export default async function ResultsPage({ params }: PageProps) {
             respondentCompany={respondent?.company_name ?? ''}
             responseId={id}
             productKey={productKey}
+            productName={productUI.name}
             scoreLabelOverride={scoreLabelOverride}
           />
         ) : (

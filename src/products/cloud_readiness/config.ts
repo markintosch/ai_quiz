@@ -105,10 +105,12 @@ export const CLOUD_READINESS_CONFIG: QuizProductConfig = {
     en: {
       badge:      'Cloud Readiness Assessment',
       scoreLabel: 'Your Cloud Readiness Score',
+      defaultWelcomeExternal: 'Discover in 30 questions how your organisation scores on cloud readiness across six dimensions — from cloud strategy and adoption to security, DevOps automation and FinOps. Use the results to identify your biggest gaps and plan your roadmap.',
     },
     nl: {
       badge:      'Cloud Readiness Assessment',
       scoreLabel: 'Uw Cloud Readiness Score',
+      defaultWelcomeExternal: 'Ontdek in 30 vragen hoe uw organisatie scoort op cloud-gereedheid — van strategie en adoptie tot beveiliging, DevOps-automatisering en FinOps. Gebruik de resultaten om de grootste hiaten te identificeren en uw roadmap te plannen.',
     },
   },
 }

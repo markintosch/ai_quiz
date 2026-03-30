@@ -117,12 +117,17 @@ export default async function FullQuizPage({ params }: PageProps) {
   const questionCount = productConfig.questions.filter((q) => !excludedCodes.includes(q.code)).length
 
   // ── Locale-aware dimension labels ─────────────────────────────────────────
-  // Use messages/[locale].json > results.dimensionLabels > config label (Dutch fallback)
+  // Use messages/[locale].json > results.dimensionLabels > config label (product fallback)
+  // next-intl returns the key path (e.g. "dimensionLabels.personeel_veerkracht") when a
+  // key is missing — detect that and fall back to the config label instead.
   const tResults = await getTranslations({ locale, namespace: 'results' })
   const dimensionLabels = productConfig.dimensions.map(d => {
     try {
-      const translated = tResults(`dimensionLabels.${d.key}` as Parameters<typeof tResults>[0])
-      return translated || d.label
+      const keyPath = `dimensionLabels.${d.key}` as Parameters<typeof tResults>[0]
+      const translated = tResults(keyPath)
+      // Detect missing translation: next-intl returns the key path as fallback string
+      if (!translated || translated === `dimensionLabels.${d.key}`) return d.label
+      return translated
     } catch {
       return d.label
     }

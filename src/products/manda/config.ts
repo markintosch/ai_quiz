@@ -212,16 +212,19 @@ export const MANDA_CONFIG: QuizProductConfig = {
       badge:       'AI & M&A Readiness',
       scoreLabel:  'Your Readiness Score',
       heroHeading: 'Does your company survive a buyer\'s lens?',
+      defaultWelcomeExternal: 'Discover in 24 questions how your company scores across seven deal readiness dimensions — from leadership and commercial engine to AI capability, operational scalability and value creation potential. Use the results to identify your strengths and the areas that need attention before any transaction.',
     },
     nl: {
       badge:       'AI & M&A Gereedheid',
       scoreLabel:  'Uw gereedheidscore',
       heroHeading: 'Overleeft uw bedrijf de blik van een koper?',
+      defaultWelcomeExternal: 'Ontdek in 24 vragen hoe uw bedrijf scoort op zeven deal-readiness dimensies — van leiderschap en commercieel vermogen tot AI-capaciteit, operationele schaalbaarheid en waardecreatie. Gebruik de resultaten om uw sterke punten en aandachtsgebieden te bepalen.',
     },
     fr: {
       badge:       'Maturité IA & M&A',
       scoreLabel:  'Votre score de maturité',
       heroHeading: 'Votre entreprise résiste-t-elle à l\'œil d\'un acheteur ?',
+      defaultWelcomeExternal: 'Découvrez en 24 questions comment votre entreprise se positionne sur sept dimensions — du leadership et du moteur commercial aux capacités IA, à l\'évolutivité opérationnelle et au potentiel de création de valeur. Utilisez les résultats pour identifier vos atouts et les domaines à renforcer.',
     },
   },
 }

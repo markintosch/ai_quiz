@@ -21,27 +21,50 @@ interface LiteResultsDashboardProps {
   respondentCompany?: string
   responseId: string
   productKey?: string
+  productName?: string
   scoreLabelOverride?: string
 }
 
 // ── Config ────────────────────────────────────────────────────
 const MATURITY_COLORS: Record<string, { color: string; bg: string; ring: string }> = {
+  // AI Maturity levels
   Unaware:      { color: 'text-red-500',    bg: 'bg-red-50',    ring: 'ring-red-200'    },
   Exploring:    { color: 'text-orange-500', bg: 'bg-orange-50', ring: 'ring-orange-200' },
   Experimenting:{ color: 'text-yellow-600', bg: 'bg-yellow-50', ring: 'ring-yellow-200' },
   Scaling:      { color: 'text-teal-600',   bg: 'bg-teal-50',   ring: 'ring-teal-200'   },
   Leading:      { color: 'text-green-600',  bg: 'bg-green-50',  ring: 'ring-green-200'  },
-  Startend:    { color: 'text-red-500',    bg: 'bg-red-50',    ring: 'ring-red-200'    },
-  Opbouwend:   { color: 'text-orange-500', bg: 'bg-orange-50', ring: 'ring-orange-200' },
-  Actief:      { color: 'text-yellow-600', bg: 'bg-yellow-50', ring: 'ring-yellow-200' },
-  Gevorderd:   { color: 'text-teal-600',   bg: 'bg-teal-50',   ring: 'ring-teal-200'   },
-  Performance: { color: 'text-green-600',  bg: 'bg-green-50',  ring: 'ring-green-200'  },
-  // PR Maturity levels
-  Reactief:    { color: 'text-red-500',    bg: 'bg-red-50',    ring: 'ring-red-200'    },
-  Bewust:      { color: 'text-orange-500', bg: 'bg-orange-50', ring: 'ring-orange-200' },
-  Gepland:     { color: 'text-yellow-600', bg: 'bg-yellow-50', ring: 'ring-yellow-200' },
-  Strategisch: { color: 'text-teal-600',   bg: 'bg-teal-50',   ring: 'ring-teal-200'   },
-  Leidend:     { color: 'text-green-600',  bg: 'bg-green-50',  ring: 'ring-green-200'  },
+  // Fitness Readiness levels
+  Startend:     { color: 'text-red-500',    bg: 'bg-red-50',    ring: 'ring-red-200'    },
+  Opbouwend:    { color: 'text-orange-500', bg: 'bg-orange-50', ring: 'ring-orange-200' },
+  Actief:       { color: 'text-yellow-600', bg: 'bg-yellow-50', ring: 'ring-yellow-200' },
+  Gevorderd:    { color: 'text-teal-600',   bg: 'bg-teal-50',   ring: 'ring-teal-200'   },
+  Performance:  { color: 'text-green-600',  bg: 'bg-green-50',  ring: 'ring-green-200'  },
+  // PR Maturity levels (also shared with HR Readiness: Reactief, Bewust, Strategisch)
+  Reactief:     { color: 'text-red-500',    bg: 'bg-red-50',    ring: 'ring-red-200'    },
+  Bewust:       { color: 'text-orange-500', bg: 'bg-orange-50', ring: 'ring-orange-200' },
+  Gepland:      { color: 'text-yellow-600', bg: 'bg-yellow-50', ring: 'ring-yellow-200' },
+  Strategisch:  { color: 'text-teal-600',   bg: 'bg-teal-50',   ring: 'ring-teal-200'   },
+  Leidend:      { color: 'text-green-600',  bg: 'bg-green-50',  ring: 'ring-green-200'  },
+  // HR Readiness additional levels
+  Structureel:  { color: 'text-yellow-500', bg: 'bg-yellow-50', ring: 'ring-yellow-200' },
+  Proactief:    { color: 'text-teal-500',   bg: 'bg-teal-50',   ring: 'ring-teal-200'   },
+  // UtrechtZorg / Zorgmarkt levels
+  'Onder druk':             { color: 'text-red-500',    bg: 'bg-red-50',    ring: 'ring-red-200'    },
+  'Kwetsbaar in transitie': { color: 'text-orange-500', bg: 'bg-orange-50', ring: 'ring-orange-200' },
+  'In ontwikkeling':        { color: 'text-yellow-600', bg: 'bg-yellow-50', ring: 'ring-yellow-200' },
+  'Toekomstbestendig':      { color: 'text-green-600',  bg: 'bg-green-50',  ring: 'ring-green-200'  },
+  // Cloud Readiness levels
+  'Ad Hoc':    { color: 'text-red-500',    bg: 'bg-red-50',    ring: 'ring-red-200'    },
+  Developing:  { color: 'text-orange-500', bg: 'bg-orange-50', ring: 'ring-orange-200' },
+  Defined:     { color: 'text-yellow-500', bg: 'bg-yellow-50', ring: 'ring-yellow-200' },
+  Managed:     { color: 'text-teal-500',   bg: 'bg-teal-50',   ring: 'ring-teal-200'   },
+  Optimising:  { color: 'text-green-500',  bg: 'bg-green-50',  ring: 'ring-green-200'  },
+  // AI & M&A Readiness levels
+  'At Risk':    { color: 'text-red-600',    bg: 'bg-red-50',    ring: 'ring-red-200'    },
+  'Pre-Mature': { color: 'text-orange-500', bg: 'bg-orange-50', ring: 'ring-orange-200' },
+  Emerging:     { color: 'text-yellow-600', bg: 'bg-yellow-50', ring: 'ring-yellow-200' },
+  'Deal-Ready': { color: 'text-teal-600',   bg: 'bg-teal-50',   ring: 'ring-teal-200'   },
+  Premium:      { color: 'text-green-600',  bg: 'bg-green-50',  ring: 'ring-green-200'  },
 }
 
 // ── Animated count-up ─────────────────────────────────────────
@@ -81,11 +104,12 @@ const fadeUp = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.1 } } }
 
 // ── Share results bar ─────────────────────────────────────────
-function ShareResultsBar({ score, maturityLevel, responseId, locale }: { score: number; maturityLevel: string; responseId: string; locale: string }) {
+function ShareResultsBar({ score, maturityLevel, responseId, locale, assessmentName }: { score: number; maturityLevel: string; responseId: string; locale: string; assessmentName?: string }) {
   const [copied, setCopied] = useState(false)
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
   const resultsUrl = `${baseUrl}/${locale}/results/${responseId}`
-  const linkedInText = encodeURIComponent(`I scored ${score}/100 on the AI Maturity Assessment — ${maturityLevel} level. Curious where your organisation stands?`)
+  const name = assessmentName ?? 'AI Maturity Assessment'
+  const linkedInText = encodeURIComponent(`I scored ${score}/100 on the ${name} — ${maturityLevel} level. Curious where your organisation stands?`)
   const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(resultsUrl)}&summary=${linkedInText}`
 
   function handleCopy() {
@@ -137,6 +161,7 @@ export function LiteResultsDashboard({
   respondentCompany = '',
   responseId,
   productKey,
+  productName,
   scoreLabelOverride,
 }: LiteResultsDashboardProps) {
   const t = useTranslations('results')
@@ -417,7 +442,7 @@ export function LiteResultsDashboard({
 
       {/* ═══ 9. SHARE RESULTS ════════════════════════════════════ */}
       <motion.div variants={fadeUp}>
-        <ShareResultsBar score={score.overall} maturityLevel={score.maturityLevel} responseId={responseId} locale={locale} />
+        <ShareResultsBar score={score.overall} maturityLevel={score.maturityLevel} responseId={responseId} locale={locale} assessmentName={productName} />
       </motion.div>
 
       {/* ═══ 10. REFERRAL (collapsible) ══════════════════════════ */}
