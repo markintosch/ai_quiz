@@ -108,8 +108,8 @@ export const FITNESS_READINESS_CONFIG: QuizProductConfig = {
     {
       key: 'hyrox_ready',
       detect: (dimensionScores) => {
-        const mentalDrive  = dimensionScores.find(d => d.dimension === 'mental_drive')
-        const cardioBase   = dimensionScores.find(d => d.dimension === 'cardio_base')
+        const mentalDrive  = dimensionScores.find(d => (d.dimension as string) === 'mental_drive')
+        const cardioBase   = dimensionScores.find(d => (d.dimension as string) === 'cardio_base')
         return (
           (mentalDrive?.normalized  ?? 0) >= 60 &&
           (cardioBase?.normalized   ?? 0) >= 50
