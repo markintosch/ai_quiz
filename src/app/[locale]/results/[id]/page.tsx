@@ -10,13 +10,65 @@ import type { BenchmarkData } from '@/components/results/BenchmarkComparison'
 import { getProductConfig } from '@/products'
 import { toProductUI } from '@/products/types'
 
+export const dynamic = 'force-dynamic'
+
 interface PageProps {
   params: Promise<{ locale: string; id: string }>
 }
 
-export const metadata: Metadata = {
-  title: 'Your Assessment Results — Brand PWRD Media',
-  description: 'Your personalised score, dimension breakdown and recommendations.',
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale, id } = await params
+  const supabase = createServiceClient()
+
+  const { data: response } = await supabase
+    .from('responses')
+    .select('maturity_level, scores, product_key')
+    .eq('id', id)
+    .single()
+
+  if (!response) {
+    return { title: 'Assessment Results' }
+  }
+
+  const productKey = (response.product_key as string | null) ?? 'ai_maturity'
+  const productConfig = getProductConfig(productKey)
+  const scores = response.scores as { overall?: number } | null
+  const overall = typeof scores?.overall === 'number' ? Math.round(scores.overall) : null
+  const maturityLevel = response.maturity_level as string | null
+
+  // Locale-aware labels
+  const isNl = locale === 'nl'
+  const isFr = locale === 'fr'
+  const scoreWord  = isNl ? 'score' : isFr ? 'score' : 'score'
+  const resultsWord = isNl ? 'Resultaten' : isFr ? 'Résultats' : 'Results'
+  const descBase   = isNl
+    ? `Bekijk de ${productConfig.name} resultaten — score, dimensieprofiel en aanbevelingen.`
+    : isFr
+    ? `Consultez les résultats de ${productConfig.name} — score, profil et recommandations.`
+    : `See the ${productConfig.name} results — score, dimension profile and recommendations.`
+
+  const title = overall && maturityLevel
+    ? `${overall}/100 · ${maturityLevel} | ${productConfig.name}`
+    : `${productConfig.name} ${resultsWord}`
+
+  const description = overall
+    ? `${scoreWord}: ${overall}/100${maturityLevel ? ` · ${maturityLevel}` : ''} — ${descBase}`
+    : descBase
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary',
+      title,
+      description,
+    },
+  }
 }
 
 export default async function ResultsPage({ params }: PageProps) {
