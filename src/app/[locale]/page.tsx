@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { headers } from 'next/headers'
 import { getProductKeyFromHost, getProductConfig } from '@/products'
 import LandingPageClient from '@/components/landing/LandingPageClient'
