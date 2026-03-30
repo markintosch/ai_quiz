@@ -25,21 +25,57 @@
       "label": "How it works",
       "heading": "Three steps. Zero jargon.",
       "steps": [
-        { "n": "01", "title": "Answer 12 honest questions", "desc": "5 minutes · no jargon · no sign-up required upfront" },
-        { "n": "02", "title": "See your score instantly", "desc": "A radar chart across all 6 AI maturity dimensions" },
-        { "n": "03", "title": "Know your next move", "desc": "Prioritised actions — specific to your score, not generic advice" }
+        {
+          "n": "01",
+          "title": "Answer 12 honest questions",
+          "desc": "5 minutes · no jargon · no sign-up required upfront"
+        },
+        {
+          "n": "02",
+          "title": "See your score instantly",
+          "desc": "A radar chart across all 6 AI maturity dimensions"
+        },
+        {
+          "n": "03",
+          "title": "Know your next move",
+          "desc": "Prioritised actions — specific to your score, not generic advice"
+        }
       ]
     },
     "dimensions": {
       "label": "What you get",
       "heading": "A score across 6 dimensions that actually matter",
       "items": [
-        { "icon": "🧭", "label": "Strategy & Vision", "desc": "Is AI central to how you compete — or still a side project?" },
-        { "icon": "⚡", "label": "Current Usage", "desc": "Are AI tools genuinely embedded across your organisation?" },
-        { "icon": "🗄️", "label": "Data Readiness", "desc": "Is your data architecture ready to power real AI outcomes?" },
-        { "icon": "🧑‍💻", "label": "Talent & Culture", "desc": "Do your people feel equipped and motivated to work with AI?" },
-        { "icon": "🛡️", "label": "Governance & Risk", "desc": "Do you have the guardrails and policies that responsible AI requires?" },
-        { "icon": "🔍", "label": "Opportunity Awareness", "desc": "Does your leadership team agree on where AI creates the most value?" }
+        {
+          "icon": "🧭",
+          "label": "Strategy & Vision",
+          "desc": "Is AI central to how you compete — or still a side project?"
+        },
+        {
+          "icon": "⚡",
+          "label": "Current Usage",
+          "desc": "Are AI tools genuinely embedded across your organisation?"
+        },
+        {
+          "icon": "🗄️",
+          "label": "Data Readiness",
+          "desc": "Is your data architecture ready to power real AI outcomes?"
+        },
+        {
+          "icon": "🧑‍💻",
+          "label": "Talent & Culture",
+          "desc": "Do your people feel equipped and motivated to work with AI?"
+        },
+        {
+          "icon": "🛡️",
+          "label": "Governance & Risk",
+          "desc": "Do you have the guardrails and policies that responsible AI requires?"
+        },
+        {
+          "icon": "🔍",
+          "label": "Opportunity Awareness",
+          "desc": "Does your leadership team agree on where AI creates the most value?"
+        }
       ]
     },
     "preview": {
@@ -140,7 +176,7 @@
       "privacyLabel": "Your data & privacy",
       "gdprRequired": "Required — I agree to {brand} processing my personal data to generate and deliver my assessment results. See our <link>Privacy Policy</link>.",
       "privacyLinkText": "Privacy Policy",
-      "gdprOptional": "Optional — I'd like to receive occasional AI insights and updates from {brand}. I can unsubscribe at any time.",
+      "gdprOptional": "Optional — I'd like to receive updates and tips from {brand}. I can unsubscribe at any time.",
       "submitPre": "Start Assessment →",
       "submitPost": "Reveal My Score →",
       "submitLoading": "Please wait…",
@@ -152,7 +188,21 @@
         "companyRequired": "Company name is required",
         "gdprRequired": "You must agree to continue"
       },
-      "industries": ["Financial Services", "Technology", "Healthcare", "Retail & E-commerce", "Manufacturing", "Professional Services", "Media & Entertainment", "Education", "Government & Public Sector", "Other"]
+      "industries": [
+        "Financial Services",
+        "Technology",
+        "Healthcare",
+        "Retail & E-commerce",
+        "Manufacturing",
+        "Professional Services",
+        "Media & Entertainment",
+        "Education",
+        "Government & Public Sector",
+        "Other"
+      ],
+      "emailPersonal": "Email address",
+      "emailPersonalPh": "you@example.com",
+      "brand": "Brand PWRD Media"
     },
     "progress": "Question {current} of {total}"
   },

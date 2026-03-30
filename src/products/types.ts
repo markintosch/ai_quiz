@@ -114,8 +114,11 @@ export interface ProductCopy {
   // ── Quiz page ──
   quizTitle?: string
   quizSub?: string
+  quizLogoUrl?: string
+  quizCompanyName?: string
   leadCaptureMode?: 'full' | 'minimal'
   showCallbackOption?: boolean
+  hideMarketingConsent?: boolean
   // ── Results ──
   scoreLabelOverride?: string
   // ── Company landing page heading parts (legacy) ──

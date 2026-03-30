@@ -25,21 +25,57 @@
       "label": "Comment ça marche",
       "heading": "Trois étapes. Zéro jargon.",
       "steps": [
-        { "n": "01", "title": "Répondez à 12 questions honnêtes", "desc": "5 minutes · pas de jargon · sans inscription préalable" },
-        { "n": "02", "title": "Visualisez votre score immédiatement", "desc": "Un graphique radar sur les 6 dimensions de maturité IA" },
-        { "n": "03", "title": "Connaissez votre prochaine étape", "desc": "Actions priorisées — adaptées à votre score, pas des conseils génériques" }
+        {
+          "n": "01",
+          "title": "Répondez à 12 questions honnêtes",
+          "desc": "5 minutes · pas de jargon · sans inscription préalable"
+        },
+        {
+          "n": "02",
+          "title": "Visualisez votre score immédiatement",
+          "desc": "Un graphique radar sur les 6 dimensions de maturité IA"
+        },
+        {
+          "n": "03",
+          "title": "Connaissez votre prochaine étape",
+          "desc": "Actions priorisées — adaptées à votre score, pas des conseils génériques"
+        }
       ]
     },
     "dimensions": {
       "label": "Ce que vous obtenez",
       "heading": "Un score sur 6 dimensions qui comptent vraiment",
       "items": [
-        { "icon": "🧭", "label": "Stratégie & Vision", "desc": "L'IA est-elle au cœur de votre compétitivité — ou encore un projet secondaire ?" },
-        { "icon": "⚡", "label": "Utilisation actuelle", "desc": "Les outils IA sont-ils réellement intégrés dans votre organisation ?" },
-        { "icon": "🗄️", "label": "Maturité des données", "desc": "Votre architecture data est-elle prête à soutenir de vrais résultats IA ?" },
-        { "icon": "🧑‍💻", "label": "Talent & Culture", "desc": "Vos équipes se sentent-elles prêtes et motivées à travailler avec l'IA ?" },
-        { "icon": "🛡️", "label": "Gouvernance & Risques", "desc": "Disposez-vous des garde-fous et politiques qu'exige une IA responsable ?" },
-        { "icon": "🔍", "label": "Conscience des opportunités", "desc": "Votre équipe dirigeante est-elle alignée sur où l'IA crée le plus de valeur ?" }
+        {
+          "icon": "🧭",
+          "label": "Stratégie & Vision",
+          "desc": "L'IA est-elle au cœur de votre compétitivité — ou encore un projet secondaire ?"
+        },
+        {
+          "icon": "⚡",
+          "label": "Utilisation actuelle",
+          "desc": "Les outils IA sont-ils réellement intégrés dans votre organisation ?"
+        },
+        {
+          "icon": "🗄️",
+          "label": "Maturité des données",
+          "desc": "Votre architecture data est-elle prête à soutenir de vrais résultats IA ?"
+        },
+        {
+          "icon": "🧑‍💻",
+          "label": "Talent & Culture",
+          "desc": "Vos équipes se sentent-elles prêtes et motivées à travailler avec l'IA ?"
+        },
+        {
+          "icon": "🛡️",
+          "label": "Gouvernance & Risques",
+          "desc": "Disposez-vous des garde-fous et politiques qu'exige une IA responsable ?"
+        },
+        {
+          "icon": "🔍",
+          "label": "Conscience des opportunités",
+          "desc": "Votre équipe dirigeante est-elle alignée sur où l'IA crée le plus de valeur ?"
+        }
       ]
     },
     "preview": {
@@ -140,7 +176,7 @@
       "privacyLabel": "Vos données & confidentialité",
       "gdprRequired": "Obligatoire — J'accepte que {brand} traite mes données personnelles pour générer et livrer mes résultats d'évaluation. Voir notre <link>Politique de confidentialité</link>.",
       "privacyLinkText": "Politique de confidentialité",
-      "gdprOptional": "Optionnel — Je souhaite recevoir occasionnellement des insights IA et des actualités de {brand}. Je peux me désabonner à tout moment.",
+      "gdprOptional": "Optionnel — Je souhaite recevoir des mises à jour et des conseils de {brand}. Je peux me désabonner à tout moment.",
       "submitPre": "Démarrer l'évaluation →",
       "submitPost": "Révéler mon score →",
       "submitLoading": "Veuillez patienter…",
@@ -152,7 +188,21 @@
         "companyRequired": "Le nom de l'entreprise est requis",
         "gdprRequired": "Vous devez accepter pour continuer"
       },
-      "industries": ["Services financiers", "Technologie", "Santé", "Commerce & E-commerce", "Industrie manufacturière", "Services professionnels", "Médias & Divertissement", "Éducation", "Gouvernement & Secteur public", "Autre"]
+      "industries": [
+        "Services financiers",
+        "Technologie",
+        "Santé",
+        "Commerce & E-commerce",
+        "Industrie manufacturière",
+        "Services professionnels",
+        "Médias & Divertissement",
+        "Éducation",
+        "Gouvernement & Secteur public",
+        "Autre"
+      ],
+      "emailPersonal": "Adresse e-mail",
+      "emailPersonalPh": "vous@exemple.com",
+      "brand": "Brand PWRD Media"
     },
     "progress": "Question {current} sur {total}"
   },

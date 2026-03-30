@@ -25,21 +25,57 @@
       "label": "Hoe het werkt",
       "heading": "Drie stappen. Geen jargon.",
       "steps": [
-        { "n": "01", "title": "Beantwoord 12 eerlijke vragen", "desc": "5 minuten · geen jargon · geen registratie vooraf vereist" },
-        { "n": "02", "title": "Zie je score direct", "desc": "Een radarkaart over alle 6 AI-volwassenheidsdimensies" },
-        { "n": "03", "title": "Weet wat je volgende stap is", "desc": "Geprioriteerde acties — specifiek voor jouw score, geen generiek advies" }
+        {
+          "n": "01",
+          "title": "Beantwoord 12 eerlijke vragen",
+          "desc": "5 minuten · geen jargon · geen registratie vooraf vereist"
+        },
+        {
+          "n": "02",
+          "title": "Zie je score direct",
+          "desc": "Een radarkaart over alle 6 AI-volwassenheidsdimensies"
+        },
+        {
+          "n": "03",
+          "title": "Weet wat je volgende stap is",
+          "desc": "Geprioriteerde acties — specifiek voor jouw score, geen generiek advies"
+        }
       ]
     },
     "dimensions": {
       "label": "Wat je krijgt",
       "heading": "Een score op 6 dimensies die er echt toe doen",
       "items": [
-        { "icon": "🧭", "label": "Strategie & Visie", "desc": "Staat AI centraal in hoe je concurreert — of is het nog een bijproject?" },
-        { "icon": "⚡", "label": "Huidig gebruik", "desc": "Zijn AI-tools echt ingebed in je hele organisatie?" },
-        { "icon": "🗄️", "label": "Data-gereedheid", "desc": "Is je dataarchitectuur klaar voor echte AI-resultaten?" },
-        { "icon": "🧑‍💻", "label": "Talent & Cultuur", "desc": "Voelen je mensen zich toegerust en gemotiveerd om met AI te werken?" },
-        { "icon": "🛡️", "label": "Governance & Risico", "desc": "Heb je de richtlijnen en het beleid dat verantwoord AI vereist?" },
-        { "icon": "🔍", "label": "Kansenbewustzijn", "desc": "Is jouw leiderschapsteam het eens over waar AI de meeste waarde creëert?" }
+        {
+          "icon": "🧭",
+          "label": "Strategie & Visie",
+          "desc": "Staat AI centraal in hoe je concurreert — of is het nog een bijproject?"
+        },
+        {
+          "icon": "⚡",
+          "label": "Huidig gebruik",
+          "desc": "Zijn AI-tools echt ingebed in je hele organisatie?"
+        },
+        {
+          "icon": "🗄️",
+          "label": "Data-gereedheid",
+          "desc": "Is je dataarchitectuur klaar voor echte AI-resultaten?"
+        },
+        {
+          "icon": "🧑‍💻",
+          "label": "Talent & Cultuur",
+          "desc": "Voelen je mensen zich toegerust en gemotiveerd om met AI te werken?"
+        },
+        {
+          "icon": "🛡️",
+          "label": "Governance & Risico",
+          "desc": "Heb je de richtlijnen en het beleid dat verantwoord AI vereist?"
+        },
+        {
+          "icon": "🔍",
+          "label": "Kansenbewustzijn",
+          "desc": "Is jouw leiderschapsteam het eens over waar AI de meeste waarde creëert?"
+        }
       ]
     },
     "preview": {
@@ -140,7 +176,7 @@
       "privacyLabel": "Jouw gegevens & privacy",
       "gdprRequired": "Verplicht — Ik ga akkoord met de verwerking van mijn persoonsgegevens door {brand} om mijn assessmentresultaten te genereren en te leveren. Zie ons <link>Privacybeleid</link>.",
       "privacyLinkText": "Privacybeleid",
-      "gdprOptional": "Optioneel — Ik ontvang graag af en toe AI-inzichten en updates van {brand}. Ik kan me op elk moment afmelden.",
+      "gdprOptional": "Optioneel — Ik ontvang graag updates en tips van {brand}. Ik kan me op elk moment afmelden.",
       "submitPre": "Start assessment →",
       "submitPost": "Bekijk mijn score →",
       "submitLoading": "Even geduld…",
@@ -152,7 +188,21 @@
         "companyRequired": "Bedrijfsnaam is verplicht",
         "gdprRequired": "Je moet akkoord gaan om door te gaan"
       },
-      "industries": ["Financiële dienstverlening", "Technologie", "Gezondheidszorg", "Retail & E-commerce", "Maakindustrie", "Professionele dienstverlening", "Media & Entertainment", "Onderwijs", "Overheid & Publieke sector", "Overig"]
+      "industries": [
+        "Financiële dienstverlening",
+        "Technologie",
+        "Gezondheidszorg",
+        "Retail & E-commerce",
+        "Maakindustrie",
+        "Professionele dienstverlening",
+        "Media & Entertainment",
+        "Onderwijs",
+        "Overheid & Publieke sector",
+        "Overig"
+      ],
+      "emailPersonal": "E-mailadres",
+      "emailPersonalPh": "jij@voorbeeld.nl",
+      "brand": "Brand PWRD Media"
     },
     "progress": "Vraag {current} van {total}"
   },

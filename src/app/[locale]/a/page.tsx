@@ -21,8 +21,11 @@ export default async function LiteQuizPage() {
       liteQuestions={liteQuestions}
       quizTitle={copy.quizTitle}
       quizSub={copy.quizSub}
+      quizLogoUrl={copy.quizLogoUrl}
+      quizCompanyName={copy.quizCompanyName}
       leadCaptureMode={copy.leadCaptureMode}
       showCallbackOption={copy.showCallbackOption}
+      hideMarketingConsent={copy.hideMarketingConsent}
     />
   )
 }

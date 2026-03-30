@@ -16,9 +16,11 @@ interface LeadCaptureFormProps {
   /** Company name — replaces "Brand PWRD Media" in GDPR text when provided */
   companyName?: string
   showCallbackOption?: boolean
+  /** Hide the optional marketing consent checkbox entirely */
+  hideMarketingConsent?: boolean
 }
 
-export function LeadCaptureForm({ variant, initialValues, onSubmit, loading = false, mode = 'full', companyName, showCallbackOption }: LeadCaptureFormProps) {
+export function LeadCaptureForm({ variant, initialValues, onSubmit, loading = false, mode = 'full', companyName, showCallbackOption, hideMarketingConsent }: LeadCaptureFormProps) {
   const t = useTranslations('quiz.lead')
   const industries = t.raw('industries') as string[]
   const isMinimal = mode === 'minimal'
@@ -71,7 +73,7 @@ export function LeadCaptureForm({ variant, initialValues, onSubmit, loading = fa
           placeholder={t('fullNamePh')} className={inputCls(!!errors.name)} />
       </Field>
 
-      <Field label={t('email')} error={errors.email} required>
+      <Field label={isMinimal ? t('emailPersonal') : t('email')} error={errors.email} required>
         <input type="email" value={form.email} onChange={e => set('email', e.target.value)}
           placeholder={t('emailPh')} className={inputCls(!!errors.email)} autoComplete="email" />
       </Field>
@@ -158,15 +160,17 @@ export function LeadCaptureForm({ variant, initialValues, onSubmit, loading = fa
           )}
         </div>
 
-        {/* Optional: marketing */}
-        <label className="flex items-start gap-3 cursor-pointer">
-          <input type="checkbox" checked={form.marketingConsent}
-            onChange={e => set('marketingConsent', e.target.checked)}
-            className="mt-0.5 w-4 h-4 rounded border-gray-300 accent-brand-accent flex-shrink-0" />
-          <span className="text-sm text-gray-500 leading-relaxed">
-            {t.rich('gdprOptional', { brand: brandName })}
-          </span>
-        </label>
+        {/* Optional: marketing — hidden when product requests it */}
+        {!hideMarketingConsent && (
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input type="checkbox" checked={form.marketingConsent}
+              onChange={e => set('marketingConsent', e.target.checked)}
+              className="mt-0.5 w-4 h-4 rounded border-gray-300 accent-brand-accent flex-shrink-0" />
+            <span className="text-sm text-gray-500 leading-relaxed">
+              {t.rich('gdprOptional', { brand: brandName })}
+            </span>
+          </label>
+        )}
       </div>
 
       <button type="submit" disabled={loading}

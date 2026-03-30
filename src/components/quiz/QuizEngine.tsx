@@ -42,6 +42,7 @@ interface QuizEngineProps {
   /** 'full' = all lead fields (default); 'minimal' = name + email only */
   leadCaptureMode?: 'full' | 'minimal'
   showCallbackOption?: boolean
+  hideMarketingConsent?: boolean
 }
 
 export function QuizEngine({
@@ -59,6 +60,7 @@ export function QuizEngine({
   questions: questionsProp,
   leadCaptureMode = 'full',
   showCallbackOption,
+  hideMarketingConsent,
 }: QuizEngineProps) {
   const t = useTranslations('quiz.engine')
   const locale = useLocale()
@@ -212,6 +214,7 @@ export function QuizEngine({
           mode={leadCaptureMode}
           companyName={companyName}
           showCallbackOption={showCallbackOption}
+          hideMarketingConsent={hideMarketingConsent}
         />
       </div>
     )
@@ -252,6 +255,7 @@ export function QuizEngine({
           mode={leadCaptureMode}
           companyName={companyName}
           showCallbackOption={showCallbackOption}
+          hideMarketingConsent={hideMarketingConsent}
         />
       </div>
     )
