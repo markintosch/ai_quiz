@@ -59,12 +59,57 @@ export interface CalendlyRule {
 
 // ── CMS default copy ──────────────────────────────────────────────────────────
 
+export interface ProductCopyStep {
+  n: string
+  title: string
+  desc: string
+}
+
 export interface ProductCopy {
+  // ── Hero ──
   badge?: string
   scoreLabel?: string
   heroHeading?: string
   heroCta?: string
-  /** Company landing page heading parts — override t() values */
+  sub?: string
+  authors?: string
+  ctaSub?: string
+  hideExtendedCta?: boolean
+  trust?: string[]
+  // ── Nav ──
+  navSub?: string
+  navSubHref?: string
+  // ── How it works ──
+  howItWorksLabel?: string
+  howItWorksHeading?: string
+  steps?: ProductCopyStep[]
+  // ── Preview ──
+  previewLabel?: string
+  previewHeading?: string
+  previewSub?: string
+  previewExampleLevel?: string
+  // ── Dimensions ──
+  dimensionsLabel?: string
+  dimensionsHeading?: string
+  // ── Practitioners / Built by ──
+  practitionersSub?: string
+  practitionerName?: string
+  practitionerPhoto?: string
+  practitionerInitial?: string
+  markRole?: string
+  markBio?: string
+  practitionersLink?: string
+  practitionersLinkLabel?: string
+  // ── Final CTA ──
+  finalCtaHeading?: string
+  finalCtaSub?: string
+  finalCtaButton?: string
+  finalCtaButtonSub?: string
+  hideFullCta?: boolean
+  // ── Footer ──
+  footerOwner?: string
+  footerOwnerLink?: string
+  // ── Company landing page heading parts (legacy) ──
   heading1?: string
   headingExternalAccent?: string
   heading2?: string

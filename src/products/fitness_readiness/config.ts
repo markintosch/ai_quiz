@@ -122,16 +122,102 @@ export const FITNESS_READINESS_CONFIG: QuizProductConfig = {
 
   defaultCopy: {
     nl: {
+      // ── Hero ──
       badge:       'Fitness Readiness Scan · Healthclub45',
       scoreLabel:  'Jouw Fitnessscore',
       heroHeading: 'Hoe fit ben jij écht?',
-      heroCta:     'Start de scan — 3 minuten →',
+      heroCta:     'Start de scan →',
+      sub:         'Ontdek in 3 minuten je sterkste en zwakste punten — van cardio en kracht tot voeding en mentale drive.',
+      authors:     'Aangeboden door Healthclub45 · voor leden én niet-leden',
+      ctaSub:      '18 vragen · 3 minuten · gratis',
+      hideExtendedCta: true,
+      trust:       ['Gratis', '3 minuten', 'Geen account nodig', 'Direct resultaat'],
+      // ── Nav ──
+      navSub:      'healthclub45.nl →',
+      navSubHref:  'https://healthclub45.nl',
+      // ── How it works ──
+      howItWorksLabel:   'Hoe het werkt',
+      howItWorksHeading: 'Drie stappen naar inzicht',
+      steps: [
+        { n: '01', title: 'Beantwoord 18 vragen', desc: 'Over je conditie, kracht, voeding, herstel en motivatie. Eerlijk en snel — in 3 minuten klaar.' },
+        { n: '02', title: 'Zie je fitnessscore', desc: 'Je krijgt een score op 6 dimensies. Directe inzage in je sterktes, zwaktes en waar de grootste winst zit.' },
+        { n: '03', title: 'Ontvang persoonlijk advies', desc: 'Op basis van je score krijg je een concreet startpunt en weet je wat je volgende stap is.' },
+      ],
+      // ── Preview ──
+      previewLabel:        'Jouw resultaat',
+      previewHeading:      'Zo ziet jouw scan eruit',
+      previewSub:          'Een score op 6 fitnessdimensies — overzichtelijk, eerlijk en direct bruikbaar.',
+      previewExampleLevel: 'Actief',
+      // ── Dimensions ──
+      dimensionsLabel:   'Wat we meten',
+      dimensionsHeading: 'Jouw fitness in 6 dimensies',
+      // ── Practitioners ──
+      practitionersSub:      'Healthclub45 biedt je de tools en begeleiding om het meeste uit je training te halen — wat je doel ook is.',
+      practitionerName:      'Healthclub45',
+      practitionerPhoto:     'https://www.healthclub45.nl/assets/files/healthclub45-logo.png',
+      practitionerInitial:   'H',
+      markRole:              'Fitness & HYROX · Nieuw-Vennep',
+      markBio:               'Bij Healthclub45 draait het om meer dan bewegen. We willen weten hoe jij ervoor staat — zodat we je kunnen begeleiden op een manier die echt bij je past. Of je nu beginner bent of klaar voor HYROX.',
+      practitionersLink:     'https://healthclub45.nl',
+      practitionersLinkLabel:'Bezoek healthclub45.nl →',
+      // ── Final CTA ──
+      finalCtaHeading:    'Wil jij weten hoe fit jij écht bent?',
+      finalCtaSub:        'Doe de scan. 3 minuten. Geen account nodig. Direct inzicht in jouw fitnessniveau.',
+      finalCtaButton:     'Start de Fitness Scan →',
+      finalCtaButtonSub:  '18 vragen · gratis · direct resultaat',
+      hideFullCta:        true,
+      // ── Footer ──
+      footerOwner:     'Healthclub45',
+      footerOwnerLink: 'https://healthclub45.nl',
     },
     en: {
+      // ── Hero ──
       badge:       'Fitness Readiness Scan · Healthclub45',
       scoreLabel:  'Your Fitness Score',
       heroHeading: 'How fit are you really?',
-      heroCta:     'Start the scan — 3 minutes →',
+      heroCta:     'Start the scan →',
+      sub:         'Discover your strongest and weakest areas in 3 minutes — from cardio and strength to nutrition and mental drive.',
+      authors:     'Offered by Healthclub45 · for members and non-members',
+      ctaSub:      '18 questions · 3 minutes · free',
+      hideExtendedCta: true,
+      trust:       ['Free', '3 minutes', 'No account needed', 'Instant results'],
+      // ── Nav ──
+      navSub:      'healthclub45.nl →',
+      navSubHref:  'https://healthclub45.nl',
+      // ── How it works ──
+      howItWorksLabel:   'How it works',
+      howItWorksHeading: 'Three steps to insight',
+      steps: [
+        { n: '01', title: 'Answer 18 questions', desc: 'About your fitness, strength, nutrition, recovery and motivation. Honest and fast — done in 3 minutes.' },
+        { n: '02', title: 'See your fitness score', desc: 'Across 6 dimensions. Direct insight into your strengths, weaknesses and where the biggest gains are.' },
+        { n: '03', title: 'Get personal advice', desc: 'Based on your score you receive a concrete starting point and know exactly what your next step is.' },
+      ],
+      // ── Preview ──
+      previewLabel:        'Your results',
+      previewHeading:      'This is what your scan looks like',
+      previewSub:          'A score across 6 fitness dimensions — clear, honest and immediately actionable.',
+      previewExampleLevel: 'Active',
+      // ── Dimensions ──
+      dimensionsLabel:   'What we measure',
+      dimensionsHeading: 'Your fitness in 6 dimensions',
+      // ── Practitioners ──
+      practitionersSub:      'Healthclub45 provides the tools and coaching to get the most out of your training — whatever your goal.',
+      practitionerName:      'Healthclub45',
+      practitionerPhoto:     'https://www.healthclub45.nl/assets/files/healthclub45-logo.png',
+      practitionerInitial:   'H',
+      markRole:              'Fitness & HYROX · Nieuw-Vennep',
+      markBio:               'At Healthclub45, it\'s about more than just moving. We want to know where you stand — so we can guide you in a way that truly fits you. Whether you\'re a beginner or ready for HYROX.',
+      practitionersLink:     'https://healthclub45.nl',
+      practitionersLinkLabel:'Visit healthclub45.nl →',
+      // ── Final CTA ──
+      finalCtaHeading:    'Want to know how fit you really are?',
+      finalCtaSub:        'Take the scan. 3 minutes. No account needed. Instant insight into your fitness level.',
+      finalCtaButton:     'Start the Fitness Scan →',
+      finalCtaButtonSub:  '18 questions · free · instant results',
+      hideFullCta:        true,
+      // ── Footer ──
+      footerOwner:     'Healthclub45',
+      footerOwnerLink: 'https://healthclub45.nl',
     },
   },
 }

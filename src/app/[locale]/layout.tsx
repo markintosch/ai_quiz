@@ -76,6 +76,26 @@ const PRODUCT_META: Record<string, Record<string, LocaleMeta>> = {
       ogLocale: 'fr_FR',
     },
   },
+  fitness_readiness: {
+    en: {
+      title: 'Fitness Readiness Scan | Healthclub45',
+      description:
+        'How fit are you really? Find out in 3 minutes. Free fitness diagnostic across 6 dimensions — cardio, strength, mental drive, mobility, nutrition and consistency.',
+      ogLocale: 'en_GB',
+    },
+    nl: {
+      title: 'Fitness Readiness Scan | Healthclub45',
+      description:
+        'Hoe fit ben jij écht? Ontdek het in 3 minuten. Gratis fitnessdiagnose op 6 dimensies — cardio, kracht, mentale drive, mobiliteit, voeding en regelmaat.',
+      ogLocale: 'nl_NL',
+    },
+    fr: {
+      title: 'Fitness Readiness Scan | Healthclub45',
+      description:
+        'À quel point êtes-vous vraiment en forme ? Découvrez-le en 3 minutes. Diagnostic fitness gratuit sur 6 dimensions.',
+      ogLocale: 'fr_FR',
+    },
+  },
 }
 
 // Fallback for any product not listed above
