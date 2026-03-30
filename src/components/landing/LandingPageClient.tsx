@@ -42,14 +42,27 @@ const stagger = {
   show:   { transition: { staggerChildren: 0.12 } },
 }
 
+interface ProductCopyOverride {
+  badge?: string
+  scoreLabel?: string
+  heroHeading?: string
+  heroCta?: string
+  heading1?: string
+  headingExternalAccent?: string
+  heading2?: string
+  ctaExternal?: string
+  meta?: string
+}
+
 interface Props {
   productName: string
   productShortName: string
   dimensions: Array<{ key: string; icon: string; label: string; desc: string }>
   productKey: string
+  copy?: ProductCopyOverride
 }
 
-export default function LandingPageClient({ productName, productShortName, dimensions, productKey }: Props) {
+export default function LandingPageClient({ productName, productShortName, dimensions, productKey, copy = {} }: Props) {
   const t = useTranslations('landing')
 
   const SAMPLE_SCORES: DimensionScore[] = dimensions.slice(0, 6).map((d, i) => ({
@@ -123,7 +136,7 @@ export default function LandingPageClient({ productName, productShortName, dimen
 
           <motion.div variants={fadeUp}>
             <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-xs font-semibold tracking-widest uppercase mb-6 border border-white/10" style={{ color: '#D97706' }}>
-              {t('hero.badge')}
+              {copy.badge ?? t('hero.badge')}
             </span>
           </motion.div>
 
@@ -131,8 +144,10 @@ export default function LandingPageClient({ productName, productShortName, dimen
             variants={fadeUp}
             className="text-5xl md:text-6xl font-black leading-tight mb-6 tracking-tight"
           >
-            {t('hero.heading1')}{' '}
-            <span style={{ color: '#D97706' }}>{t('hero.heading2')}</span>
+            {copy.heroHeading
+              ? <span>{copy.heroHeading}</span>
+              : <>{t('hero.heading1')}{' '}<span style={{ color: '#D97706' }}>{t('hero.heading2')}</span></>
+            }
           </motion.h1>
 
           <motion.p
@@ -157,7 +172,7 @@ export default function LandingPageClient({ productName, productShortName, dimen
               className="inline-flex flex-col items-center px-10 py-5 text-white font-bold rounded-2xl transition-colors shadow-xl hover:bg-blue-700"
               style={{ background: '#1D4ED8', boxShadow: '0 20px 40px rgba(29,78,216,0.3)' }}
             >
-              <span className="text-xl">{t('hero.ctaMain')}</span>
+              <span className="text-xl">{copy.heroCta ?? t('hero.ctaMain')}</span>
               <span className="text-xs font-normal text-white/70 mt-1">{t('hero.ctaSub')}</span>
             </Link>
           </motion.div>
