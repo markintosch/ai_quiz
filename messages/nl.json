@@ -268,7 +268,13 @@
       "infrastructure_arch": "Infrastructuur",
       "devops_automation": "DevOps",
       "security_compliance": "Security",
-      "finops_cost": "FinOps"
+      "finops_cost": "FinOps",
+      "cardio_base": "Cardio",
+      "strength_power": "Kracht",
+      "mental_drive": "Drive",
+      "mobility_recovery": "Mobiliteit",
+      "nutrition_habits": "Voeding",
+      "training_consistency": "Regelmaat"
     },
     "legend": {
       "yourScore": "Jouw score",

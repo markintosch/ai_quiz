@@ -268,7 +268,13 @@
       "infrastructure_arch": "Infrastructure",
       "devops_automation": "DevOps",
       "security_compliance": "Sécurité",
-      "finops_cost": "FinOps"
+      "finops_cost": "FinOps",
+      "cardio_base": "Cardio",
+      "strength_power": "Force",
+      "mental_drive": "Motivation",
+      "mobility_recovery": "Mobilité",
+      "nutrition_habits": "Nutrition",
+      "training_consistency": "Régularité"
     },
     "legend": {
       "yourScore": "Votre score",
