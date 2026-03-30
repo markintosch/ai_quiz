@@ -298,17 +298,20 @@ export function ScoreDashboard({
             overallScore={score.overall}
             name={respondentName}
             email={respondentEmail}
+            calendlyUrl={productUI?.key !== 'ai_maturity' ? calendlyHref : undefined}
           />
-          {/* Secondary next-steps link below embed */}
-          <p className="text-center text-sm text-gray-500">
-            Prefer to explore options at your own pace?{' '}
-            <a
-              href={`/${locale}/next-steps${responseId ? `?r=${responseId}` : ''}`}
-              className="text-brand font-medium hover:underline"
-            >
-              See all ways to work with us →
-            </a>
-          </p>
+          {/* Secondary next-steps link — AI maturity only (Brand PWRD Media page) */}
+          {productUI?.key === 'ai_maturity' && (
+            <p className="text-center text-sm text-gray-500">
+              Prefer to explore options at your own pace?{' '}
+              <a
+                href={`/${locale}/next-steps${responseId ? `?r=${responseId}` : ''}`}
+                className="text-brand font-medium hover:underline"
+              >
+                See all ways to work with us →
+              </a>
+            </p>
+          )}
         </motion.div>
       )}
 

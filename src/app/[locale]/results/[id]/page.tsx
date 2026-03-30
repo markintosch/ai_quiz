@@ -15,8 +15,8 @@ interface PageProps {
 }
 
 export const metadata: Metadata = {
-  title: 'Your AI Maturity Results — Brand PWRD Media',
-  description: 'Your personalised AI Maturity Score, dimension breakdown and recommendations.',
+  title: 'Your Assessment Results — Brand PWRD Media',
+  description: 'Your personalised score, dimension breakdown and recommendations.',
 }
 
 export default async function ResultsPage({ params }: PageProps) {

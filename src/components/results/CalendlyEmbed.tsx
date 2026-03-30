@@ -6,6 +6,8 @@ interface CalendlyEmbedProps {
   overallScore: number
   name: string
   email: string
+  /** When provided, overrides the score-based env-var lookup */
+  calendlyUrl?: string
 }
 
 declare global {
@@ -20,11 +22,12 @@ declare global {
   }
 }
 
-export function CalendlyEmbed({ overallScore, name, email }: CalendlyEmbedProps) {
-  const url =
+export function CalendlyEmbed({ overallScore, name, email, calendlyUrl }: CalendlyEmbedProps) {
+  const url = calendlyUrl ?? (
     overallScore < 50
       ? process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL
       : process.env.NEXT_PUBLIC_CALENDLY_STRATEGY_URL
+  )
 
   const callLabel = overallScore < 50 ? '15-min Discovery Call' : '30-min Strategy Session'
 
@@ -60,9 +63,11 @@ export function CalendlyEmbed({ overallScore, name, email }: CalendlyEmbedProps)
           Book your {callLabel}
         </h3>
         <p className="text-sm text-gray-500 mt-1">
-          {overallScore < 50
-            ? 'Let\'s discuss where AI can create quick wins for your organisation.'
-            : 'You\'re ready to accelerate. Let\'s map out your AI strategy.'}
+          {calendlyUrl
+            ? 'Plan een gesprek en bespreek wat de volgende stap is voor uw organisatie.'
+            : overallScore < 50
+              ? 'Let\'s discuss where AI can create quick wins for your organisation.'
+              : 'You\'re ready to accelerate. Let\'s map out your AI strategy.'}
         </p>
       </div>
       <div
