@@ -354,7 +354,7 @@ export default function MentorPage() {
         {/* Bridge sketch — inverted (white lines on dark), screen-blended so the black bg disappears */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/bridge-sketch.png"
+          src="/bridge-sketch2.png"
           alt=""
           aria-hidden="true"
           style={{
@@ -364,7 +364,7 @@ export default function MentorPage() {
             height: '100%',
             objectFit: 'cover',
             objectPosition: 'center 40%',
-            filter: 'invert(1) contrast(20)',
+            filter: 'contrast(20)',
             mixBlendMode: 'screen',
             opacity: 0.5,
             pointerEvents: 'none',
