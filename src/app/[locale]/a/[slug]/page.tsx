@@ -125,8 +125,10 @@ export default async function FullQuizPage({ params }: PageProps) {
     try {
       const keyPath = `dimensionLabels.${d.key}` as Parameters<typeof tResults>[0]
       const translated = tResults(keyPath)
-      // Detect missing translation: next-intl returns the key path as fallback string
-      if (!translated || translated === `dimensionLabels.${d.key}`) return d.label
+      // Detect missing translation: next-intl v4 returns the fully-qualified key as fallback
+      // e.g. "results.dimensionLabels.personeel_veerkracht" — detect by checking if the
+      // result ends with the dimension key (works for both namespace-prefixed and bare returns)
+      if (!translated || translated.endsWith(d.key)) return d.label
       return translated
     } catch {
       return d.label
