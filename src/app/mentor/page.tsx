@@ -349,8 +349,30 @@ export default function MentorPage() {
       </nav>
 
       {/* ── Hero ── */}
-      <section style={{ background: INK, paddingTop: 96, paddingBottom: 104 }}>
-        <div className="max-w-3xl mx-auto px-6 text-center">
+      <section style={{ background: INK, paddingTop: 96, paddingBottom: 104, position: 'relative', overflow: 'hidden' }}>
+
+        {/* Bridge sketch — inverted (white lines on dark), screen-blended so the black bg disappears */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/bridge-sketch.png"
+          alt=""
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center 40%',
+            filter: 'invert(1)',
+            mixBlendMode: 'screen',
+            opacity: 0.5,
+            pointerEvents: 'none',
+            userSelect: 'none',
+          }}
+        />
+
+        <div className="max-w-3xl mx-auto px-6 text-center" style={{ position: 'relative', zIndex: 1 }}>
           <motion.div variants={stagger} initial="hidden" animate="show">
 
             <motion.div variants={fadeUp}>
