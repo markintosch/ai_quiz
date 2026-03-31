@@ -115,7 +115,7 @@ const T = {
     collabBody:  'Ik werk vanuit een brede kring van specialisten. Strategen, technologen, trainers en uitvoerders die ik op het juiste moment inbreng. Geen vast team. Wel mensen met wie ik inhoudelijk op één lijn zit.',
     collabNote:  'Hieronder een paar voorbeelden van mensen met wie ik samenwerk.',
     collabPeople: [
-      { initials: 'WB',   name: 'Wouter Bloik',     role: 'Marketing en commerciële groei',       bio: 'Wouter combineert merkstrategie met commerciële uitvoering. Met zijn Growth Flywheel aanpak brengt hij mensen, processen en platforms op één lijn zodat marketinginspanningen daadwerkelijk door de organisatie heen werken. Brede ervaring in FMCG en retailomgevingen.' },
+      { initials: 'WB',   name: 'Wouter Blok',     role: 'Marketing en commerciële groei',       bio: 'Wouter combineert merkstrategie met commerciële uitvoering. Met zijn Growth Flywheel aanpak brengt hij mensen, processen en platforms op één lijn zodat marketinginspanningen daadwerkelijk door de organisatie heen werken. Brede ervaring in FMCG en retailomgevingen.' },
       { initials: 'BvdB', name: 'Ben van der Burg',  role: 'Technologie en digitale strategie',    bio: 'Podcast-host van De Technoloog en BNR Digitaal, spreker en tech-expert. Ben vertaalt technologische complexiteit naar strategisch inzicht voor leiders die de juiste vragen willen stellen zonder techneut te worden.' },
       { initials: 'FM',   name: 'Frank Meeuwsen',    role: 'AI-trainer en consultant',              bio: '30 jaar digitale ervaring. Frank helpt professionals en teams om AI praktisch te integreren in hun dagelijkse werk. Zonder hype, zonder jargon. Scherp op toepassing, eerlijk over wat wel en niet werkt.' },
       { initials: 'SH',   name: 'Sandra Hofstede',   role: 'Strategisch leiderschap en integratie', bio: '20 jaar ervaring in governance, M&A-integratie en turnaround. Sandra stapt in als er beweging nodig is. Bij fusies, schaalvraagstukken of organisaties die vastlopen. Ze herstelt eigenaarschap en brengt structuur waar de druk het hoogst is.' },
@@ -230,7 +230,7 @@ const T = {
     collabBody:  'I work from a broad circle of specialists. Strategists, technologists, trainers and practitioners I bring in at the right moment. No fixed team. People I am genuinely aligned with.',
     collabNote:  'A few examples of people I work with.',
     collabPeople: [
-      { initials: 'WB',   name: 'Wouter Bloik',     role: 'Marketing and commercial growth',       bio: 'Wouter combines brand strategy with commercial execution. His Growth Flywheel approach aligns people, processes and platforms so that marketing efforts actually work through the organisation. Broad experience in FMCG and retail environments.' },
+      { initials: 'WB',   name: 'Wouter Blok',     role: 'Marketing and commercial growth',       bio: 'Wouter combines brand strategy with commercial execution. His Growth Flywheel approach aligns people, processes and platforms so that marketing efforts actually work through the organisation. Broad experience in FMCG and retail environments.' },
       { initials: 'BvdB', name: 'Ben van der Burg',  role: 'Technology and digital strategy',       bio: 'Podcast host of De Technoloog and BNR Digitaal, speaker and tech expert. Ben translates technological complexity into clear strategic insight for leaders who want to ask the right questions without becoming technical experts.' },
       { initials: 'FM',   name: 'Frank Meeuwsen',    role: 'AI trainer and consultant',             bio: '30 years of digital experience. Frank helps professionals and teams integrate AI practically into their daily work. No hype, no jargon. Sharp on application, honest about what works and what does not.' },
       { initials: 'SH',   name: 'Sandra Hofstede',   role: 'Strategic leadership and integration',  bio: '20 years of experience in governance, M&A integration and turnaround. Sandra steps in when movement is needed. In mergers, scaling challenges or organisations that have stalled. She restores ownership and brings structure under pressure.' },
@@ -364,7 +364,7 @@ export default function MentorPage() {
             height: '100%',
             objectFit: 'cover',
             objectPosition: 'center 40%',
-            filter: 'invert(1)',
+            filter: 'invert(1) contrast(20)',
             mixBlendMode: 'screen',
             opacity: 0.5,
             pointerEvents: 'none',
