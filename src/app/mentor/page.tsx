@@ -367,6 +367,8 @@ export default function MentorPage() {
             filter: 'contrast(20)',
             mixBlendMode: 'screen',
             opacity: 0.5,
+            maskImage: 'linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)',
             pointerEvents: 'none',
             userSelect: 'none',
           }}
