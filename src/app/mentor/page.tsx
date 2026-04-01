@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { motion, type Variants } from 'framer-motion'
 
 // ── Brand tokens ──────────────────────────────────────────────────────────────
@@ -261,11 +262,120 @@ const T = {
     footerSub:   'markdekock.com',
     footerWerk:  'What I build →',
   },
+  de: {
+    navName:    'Mark de Kock',
+    navRole:    'Strategischer Mentor für KI & Umsetzung',
+    navPartner: 'Partner · Kirk & Blackbeard',
+    navCta:     'Gespräch vereinbaren →',
+    heroBadge:  'Persönliches Mentoring · Begrenzte Verfügbarkeit',
+    heroH1a:    'Von KI-Ambitionen zu',
+    heroH1b:    'etwas, das in deiner Organisation wirklich funktioniert.',
+    heroBody:   'Die meisten Führungskräfte, mit denen ich spreche, haben keinen Mangel an Informationen über KI. Was fehlt, ist jemand, der hilft, Entscheidungen zu treffen. Nicht als Trainer, sondern als jemand, der sich zwischen Strategie und dem bewegt, was tatsächlich umgesetzt wird.',
+    heroCta1:   'Erstgespräch vereinbaren →',
+    heroCta2:   'Zuerst den kostenlosen KI-Scan machen',
+    heroTrust:  'Persönlich · Begrenzte Verfügbarkeit · Kostenloses Erstgespräch',
+
+    probLabel:  'Was ich beobachte',
+    probTitle:  'Die Ambition ist nicht das Problem. Der Weg dorthin schon.',
+    probItems: [
+      { icon: '🎯', title: 'Die Richtung fehlt nicht. Die Orientierung schon.', body: 'Teams greifen unter Druck zu Tools. Das fühlt sich nach Bewegung an. Aber ein Tool ist keine Antwort auf eine Frage, die noch nicht gestellt wurde.' },
+      { icon: '📋', title: 'Strategische Entscheidungen landen nicht in der Organisation.', body: 'Marketing, Vertrieb und Operations arbeiten weiterhin auf eigene Rechnung. Die KI-Entscheidung wurde nie in Ziele übersetzt, an denen sie arbeiten. Es fehlt ein gemeinsamer Rahmen zur Steuerung.' },
+      { icon: '💼', title: 'Die Führungskraft hat bereits genug auf dem Tisch.', body: 'Von Marke bis Vertrieb bis Bestandskunden. Eine klare KI-Strategie klingt logisch, fühlt sich aber wie ein weiteres Risiko an. Was fehlt, ist jemand, dem man vertrauen kann, um das geordnet zu halten.' },
+    ],
+
+    whyLabel:  'Warum ich',
+    whyTitle:  'Zwanzig Jahre an der Schnittstelle von Strategie und Umsetzung. KI ist die neueste Herausforderung. Nicht die erste.',
+    whyP1:     'Das gibt eine andere Perspektive als die eines KI-Spezialisten. Ich weiss, wie Entscheidungen ins Stocken geraten. Wo der wirkliche Widerstand sitzt. Warum gute Pläne im Raum zwischen Führung und Umsetzung steckenbleiben.',
+    whyP2:     'In dieser Zeit habe ich KI-Lösungen in den Bereichen Gesundheitswesen, Finance, FMCG und Nachhaltigkeit entwickelt und eingeführt. Immer an derselben Stelle: zwischen der Ambition und dem, was tatsächlich daraus wird.',
+    whyP3:     'Meine Rolle liegt in dieser Mitte. Zwischen der strategischen Entscheidung an der Spitze und den Teams, die damit arbeiten müssen. Diese Lücke ist grösser, als die meisten Führungsteams vermuten.',
+
+    forLabel:   'Für wen',
+    forTitle:   'Das richtet sich an Führungskräfte und Managementteams, die KI ernsthaft angehen wollen — ohne sich im Hype zu verlieren.',
+    forItems: [
+      { icon: '🧭', text: 'Du weisst, dass KI Auswirkungen auf deine Organisation haben wird, aber die Übersetzung in Richtung und Priorität fehlt noch.' },
+      { icon: '❓', text: 'Du möchtest die richtigen Fragen stellen können, ohne selbst Spezialist oder Techniker werden zu müssen.' },
+      { icon: '🤝', text: 'Du suchst persönliche Begleitung bei echten Entscheidungen, keine Schulung oder aufwändige Beratungsebene.' },
+      { icon: '💬', text: 'Du möchtest glaubwürdig führen: gegenüber deinem Team, dem Vorstand, Kunden und Investoren.' },
+      { icon: '📈', text: 'Du möchtest am Ende etwas haben, das funktioniert und intern weiter wachsen kann.' },
+    ],
+
+    areasLabel: 'Woran wir arbeiten',
+    areasTitle: 'Kein Template. Deine Situation als Ausgangspunkt.',
+    areasBody:  'Ich verwende eine klare Denkrichtung, kein Template. Die Themen, die wir angehen, hängen davon ab, was in deiner Situation wirklich eine Rolle spielt.',
+    areas: [
+      { icon: '🧭', title: 'Richtung und Priorität', body: 'Wo berührt KI dein Geschäftsmodell, deine Leistungen oder deine Arbeitsweise? Was braucht jetzt Aufmerksamkeit, und was noch nicht?' },
+      { icon: '👔', title: 'Führung und Entscheidungsfindung', body: 'Welche Rolle musst du als Führungskraft übernehmen? Was kannst du delegieren, und was musst du selbst verantworten? Wie behältst du die Steuerung, ohne alles selbst wissen zu müssen?' },
+      { icon: '🛡️', title: 'Risiko, Governance und Verantwortung', body: 'Wie gehst du mit Daten, Reputation, Compliance und internen Leitlinien um, ohne dass Vorsicht alles blockiert?' },
+      { icon: '⚡', title: 'Was in deiner Organisation bereits passiert', body: 'Welche KI-Initiativen, Experimente oder informellen Praktiken gibt es bereits? Was funktioniert wirklich, was ist Lärm, und wo steckt Energie, die du nutzen kannst?' },
+      { icon: '🧑‍💻', title: 'Menschen, Kultur und Adoption', body: 'Wer führt das intern? Wie nimmst du Menschen mit, ohne zusätzlichen Veränderungsdruck zu erzeugen? Was braucht dein Team, um sicher und praktisch zu lernen?' },
+      { icon: '🎯', title: 'Der erste Use Case, der wirklich zählt', body: 'Wir wählen nicht die spektakulärste Anwendung, sondern die, die glaubwürdig, machbar und wertvoll genug ist, um echte Bewegung zu erzeugen.' },
+    ],
+
+    programLabel: 'Wie es funktioniert',
+    programTitle: 'Drei Schritte. Persönlich und auf etwas ausgerichtet, das wirklich funktioniert.',
+    programMonths: [
+      { n: '01', title: 'Klarheit über die Situation gewinnen', body: 'Wir bringen deine Situation klar in Sicht. Wo liegt die Ambition? Wo herrscht Unklarheit? Was passiert bereits? Wo müssen Entscheidungen getroffen werden? Du bekommst ein ehrliches Bild und einen klaren Fokus.', tag: 'Schritt 1' },
+      { n: '02', title: 'Von Erkenntnis zur Anwendung', body: 'Wir übersetzen diesen Fokus in einen ersten konkreten Schritt. Das kann ein funktionierender Use Case sein, ein Entscheidungsrahmen, ein Führungsansatz oder eine Kombination. In jedem Fall etwas, das über reines Reden hinausgeht.', tag: 'Schritt 2' },
+      { n: '03', title: 'Verankern und nach vorne schauen', body: 'Wir sorgen dafür, dass nicht nur etwas gestartet wird, sondern auch etwas bestehen bleibt: in Sprache, Richtung, Verantwortung und Weiterführung. So dass du danach selbstständig weiterbauen kannst.', tag: 'Schritt 3' },
+    ],
+
+    proofLabel:  'Erfahrung aus der Praxis',
+    proofTitle:  'Ich arbeite an der Grenze zwischen Ambition und Machbarkeit. Dort entsteht der echte Wert.',
+    proofBody:   'In Aufträgen und Sektoren mache ich immer dieselbe Übersetzung. Von dem, was eine Organisation will, zum ersten Schritt, den Menschen tatsächlich gehen können.',
+    proofItems: [
+      { icon: '💜', color: '#6B2D8B', sector: 'Gesundheitswesen', body: 'Von strategischer Ambition rund um Wissensteilung und Best Practice zu einer Anwendung, die Fachleute selbst in ihrer täglichen Arbeit nutzen.' },
+      { icon: '♻️', color: '#398684', sector: 'Immobilien & Nachhaltigkeit', body: 'Von externem Druck und CSRD-Verpflichtungen zu einem praktischen Modell, mit dem Führung und operatives Team auf dieselbe Realität blicken.' },
+      { icon: '⭐', color: '#1D4ED8', sector: 'Customer Experience', body: 'Von abstrakter Kundenambition zu einem Mess- und Steuerungsmodell, das hilft, Prioritäten zu setzen und intern Rückhalt für die richtigen Entscheidungen aufzubauen.' },
+      { icon: '🏦', color: '#374151', sector: 'Finance & reguliertes Umfeld', body: 'Von Vorsicht und Compliance-Bedenken zu einem praktikablen Weg, KI verantwortungsvoll zu erkunden und einzusetzen.' },
+    ],
+
+    collabLabel: 'Zusammenarbeit',
+    collabTitle: 'Ein Netzwerk von Menschen, denen ich vertraue und die ich kenne.',
+    collabBody:  'Ich arbeite aus einem breiten Kreis von Spezialisten heraus. Strategen, Technologen, Trainer und Umsetzer, die ich im richtigen Moment einbringe. Kein festes Team. Aber Menschen, mit denen ich inhaltlich auf einer Linie bin.',
+    collabNote:  'Einige Beispiele von Menschen, mit denen ich zusammenarbeite.',
+    collabPeople: [
+      { initials: 'WB',   name: 'Wouter Blok',     role: 'Marketing und kommerzielles Wachstum',       bio: 'Wouter verbindet Markenstrategie mit kommerzieller Umsetzung. Sein Growth-Flywheel-Ansatz bringt Menschen, Prozesse und Plattformen auf eine Linie, damit Marketingbemühungen tatsächlich durch die Organisation wirken. Breite Erfahrung in FMCG- und Handelsumgebungen.' },
+      { initials: 'BvdB', name: 'Ben van der Burg',  role: 'Technologie und digitale Strategie',    bio: 'Podcast-Host von De Technoloog und BNR Digitaal, Speaker und Tech-Experte. Ben übersetzt technologische Komplexität in klare strategische Erkenntnisse für Führungskräfte, die die richtigen Fragen stellen möchten, ohne Techniker zu werden.' },
+      { initials: 'FM',   name: 'Frank Meeuwsen',    role: 'KI-Trainer und Berater',              bio: '30 Jahre digitale Erfahrung. Frank hilft Fachleuten und Teams, KI praktisch in ihre tägliche Arbeit zu integrieren. Ohne Hype, ohne Jargon. Präzise in der Anwendung, ehrlich darüber, was funktioniert und was nicht.' },
+      { initials: 'SH',   name: 'Sandra Hofstede',   role: 'Strategische Führung und Integration', bio: '20 Jahre Erfahrung in Governance, M&A-Integration und Turnaround. Sandra tritt ein, wenn Bewegung nötig ist. Bei Fusionen, Skalierungsfragen oder Organisationen, die feststecken. Sie stellt Eigenverantwortung wieder her und bringt Struktur dort, wo der Druck am höchsten ist.' },
+    ],
+
+    aboutLabel: 'Über mich',
+    aboutTitle: 'Ich helfe Führungskräften und Managementteams, Orientierung zu geben, wo Strategie konkret werden muss.',
+    aboutBody1: 'In meiner Laufbahn habe ich viel an der Schnittstelle von Strategie, Wachstum und Umsetzung gearbeitet. KI ist für mich kein separates Thema obendrauf, sondern die neueste Realität an einer vertrauten Schnittstelle: Wie sorgt man dafür, dass gute Ideen wirklich landen?',
+    aboutBody2: 'Was ich mitbringe: praktische Erfahrung mit KI in der Realität und jahrelange Erfahrung mit Organisationen, die sich bewegen müssen, aber immer wieder steckenbleiben. Ich weiss, wann ein Plan tragfähig ist. Und wann er gut klingt, aber nie umgesetzt wird.',
+    aboutCredentials: [
+      'Partner bei Kirk & Blackbeard',
+      'Umfangreiche Erfahrung in Strategie, Wachstum, Customer Experience und Umsetzung',
+      'Praktische Entwicklung und Anwendung von KI in mehreren Sektoren',
+      'Arbeitet auf Niederländisch und Englisch (internationale Projekte)',
+      'Erfahrung in Gesundheitswesen, Finance, FMCG, Nachhaltigkeit, CX und mehr',
+    ],
+
+    programCta:  'Trajektoptionen ansehen →',
+
+    spotsLabel:  'Verfügbarkeit',
+    spotsTitle:  'Ich arbeite mit einer kleinen Anzahl von Begleitungen gleichzeitig.',
+    spotsBody:   'Weil das nur funktioniert, wenn ich wirklich in deiner Situation mitdenken kann. Kein Standardformat. Persönliche Begleitung mit einem konkreten Ergebnis.',
+    spotsCta1:   'Erstgespräch vereinbaren →',
+    spotsCta2:   'Zuerst den kostenlosen KI-Scan machen',
+    spotsTrust:  'Kostenloses Erstgespräch · Keine Verpflichtung · Wir schauen gemeinsam, ob es passt',
+
+    footerCopy:  'Strategischer Mentor für KI & Umsetzung',
+    footerSub:   'markdekock.com',
+    footerWerk:  'Was ich baue →',
+  },
 }
 
-export default function MentorPage() {
-  const [lang, setLang] = useState<'nl'|'en'>('nl')
+function MentorPageInner() {
+  const searchParams = useSearchParams()
+  const router = useRouter()
+
+  const rawLang = searchParams.get('lang') ?? 'nl'
+  const lang = (['nl', 'en', 'de'].includes(rawLang) ? rawLang : 'nl') as 'nl' | 'en' | 'de'
   const t = T[lang]
+
+  const switchLang = (l: 'nl' | 'en' | 'de') => router.replace(`/mentor?lang=${l}`)
 
   // ── Store UTM attribution in sessionStorage so the quiz can pick it up ──
   useEffect(() => {
@@ -303,10 +413,10 @@ export default function MentorPage() {
           <div className="flex items-center gap-3">
             {/* Lang toggle */}
             <div style={{ display: 'flex', background: '#F1F5F9', borderRadius: 100, padding: 3, gap: 2 }}>
-              {(['nl', 'en'] as const).map(l => (
+              {(['nl', 'en', 'de'] as const).map(l => (
                 <button
                   key={l}
-                  onClick={() => setLang(l)}
+                  onClick={() => switchLang(l)}
                   style={{
                     padding: '4px 12px', borderRadius: 100, fontSize: 12, fontWeight: 700,
                     background: lang === l ? WHITE : 'transparent',
@@ -330,7 +440,7 @@ export default function MentorPage() {
               onMouseEnter={e => (e.currentTarget.style.borderBottomColor = WARM)}
               onMouseLeave={e => (e.currentTarget.style.borderBottomColor = 'transparent')}
             >
-              {lang === 'nl' ? 'Projecten' : 'Projects'}
+              {lang === 'nl' ? 'Projecten' : lang === 'de' ? 'Projekte' : 'Projects'}
             </a>
             <a
               href={CALENDLY_INTAKE}
@@ -646,7 +756,7 @@ export default function MentorPage() {
                 fontSize: 13, fontWeight: 600, color: ACCENT, textDecoration: 'none',
                 borderBottom: `1px solid ${ACCENT}`, paddingBottom: 2,
               }}>
-                {lang === 'nl' ? 'Bekijk projecten →' : 'View projects →'}
+                {lang === 'nl' ? 'Bekijk projecten →' : lang === 'de' ? 'Projekte ansehen →' : 'View projects →'}
               </a>
             </motion.div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -826,5 +936,13 @@ export default function MentorPage() {
       </footer>
 
     </div>
+  )
+}
+
+export default function MentorPage() {
+  return (
+    <Suspense fallback={<div />}>
+      <MentorPageInner />
+    </Suspense>
   )
 }
