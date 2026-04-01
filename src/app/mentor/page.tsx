@@ -70,7 +70,7 @@ const T = {
     ],
 
     areasLabel: 'Waar we aan werken',
-    areasTitle: 'Geen template. Jouw situatie als vertrekpunt.',
+    areasTitle: 'Jouw situatie als vertrekpunt.',
     areasBody:  'Ik gebruik een vaste denkrichting, geen template. De thema\'s die we aanpakken hangen af van wat er in jouw situatie speelt.',
     areas: [
       { icon: '🧭', title: 'Richting en prioriteit',                       body: 'Waar raakt AI jouw businessmodel, je dienstverlening of je manier van werken? Wat vraagt nu aandacht, en wat juist nog niet?' },
@@ -185,7 +185,7 @@ const T = {
     ],
 
     areasLabel: 'What we work on',
-    areasTitle: 'No template. Your situation as the starting point.',
+    areasTitle: 'Your situation as the starting point.',
     areasBody:  'I use a consistent framework, not a template. The themes we work on depend on what is actually happening in your situation.',
     areas: [
       { icon: '🧭', title: 'Direction and priority',                         body: 'Where does AI touch your business model, your services or your way of working? What needs attention now, and what can wait?' },
@@ -300,7 +300,7 @@ const T = {
     ],
 
     areasLabel: 'Woran wir arbeiten',
-    areasTitle: 'Kein Template. Deine Situation als Ausgangspunkt.',
+    areasTitle: 'Deine Situation als Ausgangspunkt.',
     areasBody:  'Ich verwende eine klare Denkrichtung, kein Template. Die Themen, die wir angehen, hängen davon ab, was in deiner Situation wirklich eine Rolle spielt.',
     areas: [
       { icon: '🧭', title: 'Richtung und Priorität', body: 'Wo berührt KI dein Geschäftsmodell, deine Leistungen oder deine Arbeitsweise? Was braucht jetzt Aufmerksamkeit, und was noch nicht?' },
