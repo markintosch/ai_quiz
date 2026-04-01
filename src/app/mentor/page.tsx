@@ -43,7 +43,7 @@ const T = {
     heroBody:   'De meeste leidinggevenden die ik spreek missen geen informatie over AI. Ze missen iemand die helpt beslissen. Niet als trainer, maar als iemand die beweegt tussen strategie en wat er in de praktijk van terechtkomt.',
     heroCta1:   'Plan een intakegesprek →',
     heroCta2:   'Doe eerst de gratis AI-scan',
-    heroTrust:  'Persoonlijk · Beperkt beschikbaar · Gratis intake',
+    heroTrust:  'Persoonlijk · Gratis intake',
 
     probLabel:  'Wat ik zie',
     probTitle:  'De ambitie is niet het probleem. Het pad ernaar toe wel.',
@@ -158,7 +158,7 @@ const T = {
     heroBody:   'Most leaders I speak with don\'t lack information about AI. They lack someone to help them decide. Not as a trainer, but as someone who moves between strategy and what actually gets delivered.',
     heroCta1:   'Book an intake call →',
     heroCta2:   'Take the free AI scan first',
-    heroTrust:  'Personal · Limited availability · Free intake',
+    heroTrust:  'Personal · Free intake',
 
     probLabel:  'What I see',
     probTitle:  'The ambition isn\'t the problem. Finding the path forward is.',
@@ -273,7 +273,7 @@ const T = {
     heroBody:   'Die meisten Führungskräfte, mit denen ich spreche, haben keinen Mangel an Informationen über KI. Was fehlt, ist jemand, der hilft, Entscheidungen zu treffen. Nicht als Trainer, sondern als jemand, der sich zwischen Strategie und dem bewegt, was tatsächlich umgesetzt wird.',
     heroCta1:   'Erstgespräch vereinbaren →',
     heroCta2:   'Zuerst den kostenlosen KI-Scan machen',
-    heroTrust:  'Persönlich · Begrenzte Verfügbarkeit · Kostenloses Erstgespräch',
+    heroTrust:  'Persönlich · Kostenloses Erstgespräch',
 
     probLabel:  'Was ich beobachte',
     probTitle:  'Die Ambition ist nicht das Problem. Der Weg dorthin schon.',
