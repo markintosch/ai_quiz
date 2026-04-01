@@ -1,96 +1,79 @@
 'use client'
 
 import { useState, Suspense } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import {
-  getCxContent,
-  scoreColour, overallScore,
-  type CxDimScores,
-} from '@/products/cx_essense/data'
-import CxRadarChart from '@/components/cx/RadarChart'
+import { getCxContent } from '@/products/cx_essense/data'
 
-// ── Brand tokens (Essense) ────────────────────────────────────────────────────
+// ── Brand tokens ──────────────────────────────────────────────────────────────
 const GREEN       = '#24CF7A'
 const GREEN_DARK  = '#044524'
 const GREEN_LIGHT = '#EAF5F2'
-const GREEN_MID   = '#D2F5E8'
 const DARK        = '#1A1A2E'
 const BODY        = '#374151'
 const MUTED       = '#94A3B8'
 
-type Step = 'select' | 'assess' | 'results'
+type Step = 'select' | 'assess'
 
 // ── Translations ──────────────────────────────────────────────────────────────
 const T = {
   en: {
-    stepBadge:       (n: number) => `Step ${n} of 3`,
-    selectTitle:     'What is your role?',
-    selectBody:      'Different roles see different facets of CX maturity. Your context shapes the picture.',
-    selectCta:       'Start the 24 questions →',
-    dimOf:           (a: number, b: number) => `Dimension ${a} of ${b}`,
-    scaleLabels:     ['Not at all', 'Somewhat', 'Often', 'Fully'],
-    prevBtn:         '← Previous',
-    nextBtn:         'Next dimension →',
-    remainingBtn:    (n: number) => `${n} question${n !== 1 ? 's' : ''} remaining`,
-    seeResultsBtn:   'See my results →',
-    resultsLabel:    'Your Results',
-    resultsTitle:    'Your CX Maturity Picture',
-    assessedAs:      'Assessed as:',
-    radarLabel:      'CX Maturity Radar',
-    overallLabel:    'Overall score',
-    gapsTitle:       'Your 3 biggest opportunities',
-    strengthsTitle:  'Where you\'re already strong',
-    ctaTitle:        'Want to turn this into action?',
-    ctaBody:         'These results are a starting point — not a verdict. Book a conversation with Essense to explore what the gaps mean for your organisation and what a practical next step looks like.',
-    ctaBtn:          'Talk to Essense →',
-    retakeBtn:       'Retake assessment',
-    ctaCaption:      'No sales pitch. Just a useful, practical conversation.',
-    backLink:        '← Back to overview',
-    subTitle:        'CX Maturity Assessment',
+    stepBadge:    (n: number) => `Step ${n} of 3`,
+    selectTitle:  'What is your role?',
+    selectBody:   'Different roles see different facets of CX maturity. Your context shapes the picture.',
+    selectCta:    'Start the 24 questions →',
+    dimOf:        (a: number, b: number) => `Dimension ${a} of ${b}`,
+    scaleLabels:  ['Not at all', 'Somewhat', 'Often', 'Fully'],
+    prevBtn:      '← Previous',
+    nextBtn:      'Next dimension →',
+    remainingBtn: (n: number) => `${n} question${n !== 1 ? 's' : ''} remaining`,
+    seeResultsBtn:'See my results →',
+    backLink:     '← Back to overview',
+    subTitle:     'CX Maturity Assessment',
   },
   nl: {
-    stepBadge:       (n: number) => `Stap ${n} van 3`,
-    selectTitle:     'Wat is jouw rol?',
-    selectBody:      'Verschillende rollen zien verschillende facetten van CX-volwassenheid. Jouw context bepaalt het beeld.',
-    selectCta:       'Start de 24 vragen →',
-    dimOf:           (a: number, b: number) => `Dimensie ${a} van ${b}`,
-    scaleLabels:     ['Helemaal niet', 'Soms', 'Vaak', 'Volledig'],
-    prevBtn:         '← Vorige',
-    nextBtn:         'Volgende dimensie →',
-    remainingBtn:    (n: number) => `Nog ${n} vra${n !== 1 ? 'gen' : 'ag'}`,
-    seeResultsBtn:   'Bekijk mijn resultaten →',
-    resultsLabel:    'Jouw Resultaten',
-    resultsTitle:    'Jouw CX Volwassenheidsprofiel',
-    assessedAs:      'Beoordeeld als:',
-    radarLabel:      'CX Volwassenheidsradar',
-    overallLabel:    'Totaalscore',
-    gapsTitle:       'Jouw 3 grootste kansen',
-    strengthsTitle:  'Waar je al sterk in bent',
-    ctaTitle:        'Wil je dit omzetten in actie?',
-    ctaBody:         'Deze resultaten zijn een startpunt — geen eindoordeel. Plan een gesprek met Essense om te verkennen wat de verbeterpunten betekenen voor jouw organisatie en hoe een praktische volgende stap eruitziet.',
-    ctaBtn:          'Praat met Essense →',
-    retakeBtn:       'Assessment opnieuw doen',
-    ctaCaption:      'Geen verkooppraatje. Gewoon een nuttig, praktisch gesprek.',
-    backLink:        '← Terug naar overzicht',
-    subTitle:        'CX Volwassenheidsassessment',
+    stepBadge:    (n: number) => `Stap ${n} van 3`,
+    selectTitle:  'Wat is jouw rol?',
+    selectBody:   'Verschillende rollen zien verschillende facetten van CX-volwassenheid. Jouw context bepaalt het beeld.',
+    selectCta:    'Start de 24 vragen →',
+    dimOf:        (a: number, b: number) => `Dimensie ${a} van ${b}`,
+    scaleLabels:  ['Helemaal niet', 'Soms', 'Vaak', 'Volledig'],
+    prevBtn:      '← Vorige',
+    nextBtn:      'Volgende dimensie →',
+    remainingBtn: (n: number) => `Nog ${n} vra${n !== 1 ? 'gen' : 'ag'}`,
+    seeResultsBtn:'Bekijk mijn resultaten →',
+    backLink:     '← Terug naar overzicht',
+    subTitle:     'CX Volwassenheidsassessment',
   },
 }
 
 // ── Inner component ────────────────────────────────────────────────────────────
 function CxEssenseAssessInner() {
   const searchParams = useSearchParams()
-  const lang = (searchParams.get('lang') === 'nl' ? 'nl' : 'en') as 'en' | 'nl'
-  const t = T[lang]
+  const router       = useRouter()
+  const lang         = (searchParams.get('lang') === 'nl' ? 'nl' : 'en') as 'en' | 'nl'
+  const t            = T[lang]
   const { DIMENSIONS, QUESTIONS, ROLES } = getCxContent(lang)
-  const backHref = lang === 'nl' ? '/cx_essense?lang=nl' : '/cx_essense'
+  const backHref     = lang === 'nl' ? '/cx_essense?lang=nl' : '/cx_essense'
 
   const [step, setStep]           = useState<Step>('select')
   const [roleId, setRoleId]       = useState('')
   const [answers, setAnswers]     = useState<Record<string, number>>({})
   const [activeDim, setActiveDim] = useState(0)
 
-  // ── Step 1: role selection ───────────────────────────────────────────────
+  // ── Navigate to results page with encoded scores ──────────────────────────
+  const goToResults = () => {
+    const dimScores: Record<string, number> = {}
+    DIMENSIONS.forEach(d => {
+      const qs   = QUESTIONS.filter(q => q.dimensionId === d.id)
+      const vals = qs.map(q => answers[q.id] ?? 0).filter(Boolean)
+      dimScores[d.id] = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 1
+    })
+    const encoded = encodeURIComponent(btoa(JSON.stringify(dimScores)))
+    router.push(`/cx_essense/results?d=${encoded}&role=${roleId}&lang=${lang}`)
+  }
+
+  // ── Step 1: role selection ────────────────────────────────────────────────
   if (step === 'select') {
     return (
       <div style={{ minHeight: '100vh', background: '#FAFBFD', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
@@ -98,11 +81,7 @@ function CxEssenseAssessInner() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 64px)', padding: '48px 24px' }}>
           <div style={{ width: '100%', maxWidth: 520 }}>
 
-            <span style={{
-              display: 'inline-block', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em',
-              textTransform: 'uppercase', color: GREEN_DARK, background: GREEN_LIGHT,
-              padding: '3px 12px', borderRadius: 100, marginBottom: 20,
-            }}>
+            <span style={{ display: 'inline-block', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: GREEN_DARK, background: GREEN_LIGHT, padding: '3px 12px', borderRadius: 100, marginBottom: 20 }}>
               {t.stepBadge(1)}
             </span>
 
@@ -125,9 +104,7 @@ function CxEssenseAssessInner() {
                     cursor: 'pointer', transition: 'all 0.15s',
                   }}
                 >
-                  <p style={{ fontSize: 14, fontWeight: 700, color: roleId === r.id ? GREEN_DARK : DARK, marginBottom: 4 }}>
-                    {r.label}
-                  </p>
+                  <p style={{ fontSize: 14, fontWeight: 700, color: roleId === r.id ? GREEN_DARK : DARK, marginBottom: 4 }}>{r.label}</p>
                   <p style={{ fontSize: 12, color: MUTED, lineHeight: 1.5 }}>{r.description}</p>
                 </button>
               ))}
@@ -140,8 +117,7 @@ function CxEssenseAssessInner() {
                 width: '100%', padding: '14px 24px', borderRadius: 100,
                 background: roleId ? `linear-gradient(135deg, ${GREEN}, #1DB865)` : '#E2E8F0',
                 color: roleId ? '#fff' : MUTED,
-                fontWeight: 700, fontSize: 15, border: 'none', cursor: roleId ? 'pointer' : 'not-allowed',
-                transition: 'all 0.15s',
+                fontWeight: 700, fontSize: 15, border: 'none', cursor: roleId ? 'pointer' : 'not-allowed', transition: 'all 0.15s',
               }}
             >
               {t.selectCta}
@@ -153,583 +129,137 @@ function CxEssenseAssessInner() {
   }
 
   // ── Step 2: questions ─────────────────────────────────────────────────────
-  if (step === 'assess') {
-    const dim = DIMENSIONS[activeDim]
-    const dimQuestions = QUESTIONS.filter(q => q.dimensionId === dim.id)
-    const dimAnswered = dimQuestions.every(q => answers[q.id] !== undefined)
-    const totalAnswered = Object.keys(answers).length
-    const progress = Math.round((totalAnswered / QUESTIONS.length) * 100)
-
-    return (
-      <div style={{ minHeight: '100vh', background: '#FAFBFD', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-        <AssessHeader backHref={backHref} backLabel={t.backLink} subTitle={t.subTitle} />
-
-        {/* Progress bar */}
-        <div style={{ height: 3, background: '#EEF2F7' }}>
-          <div style={{
-            height: 3, transition: 'width 0.4s ease',
-            width: `${progress}%`,
-            background: `linear-gradient(90deg, ${GREEN_DARK}, ${GREEN})`,
-          }} />
-        </div>
-
-        <div style={{ maxWidth: 720, margin: '0 auto', padding: '32px 24px 64px' }}>
-
-          {/* Dimension tabs */}
-          <div style={{ display: 'flex', gap: 8, marginBottom: 32, overflowX: 'auto', paddingBottom: 4 }}>
-            {DIMENSIONS.map((d, i) => {
-              const dimQs = QUESTIONS.filter(q => q.dimensionId === d.id)
-              const done = dimQs.every(q => answers[q.id] !== undefined)
-              return (
-                <button
-                  key={d.id}
-                  onClick={() => setActiveDim(i)}
-                  style={{
-                    flexShrink: 0, padding: '6px 14px', borderRadius: 100,
-                    fontSize: 12, fontWeight: 700, border: '2px solid',
-                    borderColor: activeDim === i ? GREEN : done ? `${GREEN}44` : '#E2E8F0',
-                    background: activeDim === i ? GREEN_DARK : done ? GREEN_LIGHT : '#fff',
-                    color: activeDim === i ? '#fff' : done ? GREEN_DARK : MUTED,
-                    cursor: 'pointer', transition: 'all 0.15s',
-                  }}
-                >
-                  {done && activeDim !== i ? '✓ ' : ''}{d.short}
-                </button>
-              )
-            })}
-          </div>
-
-          {/* Dimension header */}
-          <div style={{ marginBottom: 24 }}>
-            <span style={{
-              display: 'inline-block', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em',
-              textTransform: 'uppercase', color: GREEN_DARK, background: GREEN_LIGHT,
-              padding: '3px 12px', borderRadius: 100, marginBottom: 10,
-            }}>
-              {t.dimOf(activeDim + 1, DIMENSIONS.length)}
-            </span>
-            <h2 style={{ fontSize: 24, fontWeight: 900, color: DARK, marginBottom: 4 }}>
-              {dim.icon} {dim.name}
-            </h2>
-            <p style={{ fontSize: 14, color: BODY, lineHeight: 1.65 }}>{dim.description}</p>
-          </div>
-
-          {/* Questions */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            {dimQuestions.map((q) => {
-              const selected = answers[q.id]
-              return (
-                <div
-                  key={q.id}
-                  style={{
-                    background: '#fff', borderRadius: 20, padding: '24px 22px',
-                    border: '1px solid #EEF2F7',
-                    boxShadow: '0 2px 12px rgba(0,0,0,0.04)',
-                  }}
-                >
-                  <p style={{ fontSize: 15, fontWeight: 600, color: DARK, marginBottom: 12, lineHeight: 1.55 }}>
-                    {q.text}
-                  </p>
-
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: MUTED, marginBottom: 10 }}>
-                    <span>{q.lowAnchor}</span>
-                    <span style={{ textAlign: 'right' }}>{q.highAnchor}</span>
-                  </div>
-
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    {[1, 2, 3, 4].map(v => {
-                      const isSelected = selected === v
-                      const accentColor = v <= 2 ? '#F59E0B' : GREEN
-                      return (
-                        <button
-                          key={v}
-                          onClick={() => setAnswers(prev => ({ ...prev, [q.id]: v }))}
-                          style={{
-                            flex: 1, padding: '10px 0', borderRadius: 12,
-                            fontWeight: 700, fontSize: 16,
-                            border: `2px solid ${isSelected ? accentColor : '#E2E8F0'}`,
-                            background: isSelected ? accentColor : '#F8FAFC',
-                            color: isSelected ? '#fff' : '#CBD5E1',
-                            cursor: 'pointer', transition: 'all 0.15s',
-                          }}
-                        >
-                          {v}
-                        </button>
-                      )
-                    })}
-                  </div>
-
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: '#CBD5E1', marginTop: 6 }}>
-                    {t.scaleLabels.map(label => (
-                      <span key={label}>{label}</span>
-                    ))}
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-
-          {/* Navigation */}
-          <div style={{ display: 'flex', gap: 12, marginTop: 32 }}>
-            {activeDim > 0 && (
-              <button
-                onClick={() => setActiveDim(a => a - 1)}
-                style={{
-                  flex: 1, padding: '13px 24px', borderRadius: 100,
-                  border: '2px solid #E2E8F0', background: '#fff',
-                  fontWeight: 600, fontSize: 14, color: BODY, cursor: 'pointer',
-                }}
-              >
-                {t.prevBtn}
-              </button>
-            )}
-            {activeDim < DIMENSIONS.length - 1 ? (
-              <button
-                disabled={!dimAnswered}
-                onClick={() => setActiveDim(a => a + 1)}
-                style={{
-                  flex: 1, padding: '13px 24px', borderRadius: 100,
-                  background: dimAnswered ? GREEN_DARK : '#E2E8F0',
-                  color: dimAnswered ? '#fff' : MUTED,
-                  fontWeight: 700, fontSize: 14, border: 'none',
-                  cursor: dimAnswered ? 'pointer' : 'not-allowed', transition: 'all 0.15s',
-                }}
-              >
-                {t.nextBtn}
-              </button>
-            ) : (
-              <button
-                disabled={totalAnswered < QUESTIONS.length}
-                onClick={() => setStep('results')}
-                style={{
-                  flex: 1, padding: '13px 24px', borderRadius: 100,
-                  background: totalAnswered >= QUESTIONS.length
-                    ? `linear-gradient(135deg, ${GREEN}, #1DB865)`
-                    : '#E2E8F0',
-                  color: totalAnswered >= QUESTIONS.length ? '#fff' : MUTED,
-                  fontWeight: 700, fontSize: 14, border: 'none',
-                  cursor: totalAnswered >= QUESTIONS.length ? 'pointer' : 'not-allowed',
-                  transition: 'all 0.15s',
-                }}
-              >
-                {totalAnswered < QUESTIONS.length
-                  ? t.remainingBtn(QUESTIONS.length - totalAnswered)
-                  : t.seeResultsBtn}
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  // ── Step 3: results ───────────────────────────────────────────────────────
-  const dimScores: CxDimScores = {} as CxDimScores
-  DIMENSIONS.forEach(d => {
-    const qs = QUESTIONS.filter(q => q.dimensionId === d.id)
-    const vals = qs.map(q => answers[q.id] ?? 0).filter(Boolean)
-    dimScores[d.id] = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 1
-  })
-
-  const avg = overallScore(dimScores)
-  const overallCol = scoreColour(avg)
-  const role = ROLES.find(r => r.id === roleId)!
-  const scoreLabel = lang === 'nl' ? overallCol.labelNl : overallCol.label
-  const mailtoSubject = lang === 'nl'
-    ? 'CX%20Volwassenheidsassessment%20%E2%80%94%20Gesprek%20aanvragen'
-    : 'CX%20Maturity%20Assessment%20%E2%80%94%20Let%27s%20talk'
-  const mailtoBody = lang === 'nl'
-    ? `Hallo%20Essense%2C%0A%0AIk%20heb%20zojuist%20het%20CX%20Volwassenheidsassessment%20ingevuld%20en%20scoorde%20${avg.toFixed(1)}%20(${encodeURIComponent(scoreLabel)}).%0A%0AIk%20wil%20graag%20bespreken%20wat%20dit%20betekent%20voor%20mijn%20organisatie.%0A%0AMet%20vriendelijke%20groet%2C`
-    : `Hello%20Essense%2C%0A%0AI%20just%20completed%20the%20CX%20Maturity%20Assessment%20and%20scored%20${avg.toFixed(1)}%20(${encodeURIComponent(scoreLabel)}).%0A%0AI%27d%20love%20to%20discuss%20what%20this%20means%20for%20my%20organisation.%0A%0AKind%20regards%2C`
-  const mailtoHref = `mailto:hello@essense.eu?subject=${mailtoSubject}&body=${mailtoBody}`
-
-  const gaps = DIMENSIONS
-    .map(d => ({ dim: d, score: dimScores[d.id] ?? 1 }))
-    .sort((a, b) => a.score - b.score)
-    .slice(0, 3)
-
-  const strengths = DIMENSIONS
-    .map(d => ({ dim: d, score: dimScores[d.id] ?? 1 }))
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 2)
+  const dim          = DIMENSIONS[activeDim]
+  const dimQuestions = QUESTIONS.filter(q => q.dimensionId === dim.id)
+  const dimAnswered  = dimQuestions.every(q => answers[q.id] !== undefined)
+  const totalAnswered = Object.keys(answers).length
+  const progress     = Math.round((totalAnswered / QUESTIONS.length) * 100)
 
   return (
     <div style={{ minHeight: '100vh', background: '#FAFBFD', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
       <AssessHeader backHref={backHref} backLabel={t.backLink} subTitle={t.subTitle} />
 
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: '40px 24px 80px' }}>
+      {/* Progress bar */}
+      <div style={{ height: 3, background: '#EEF2F7' }}>
+        <div style={{ height: 3, transition: 'width 0.4s ease', width: `${progress}%`, background: `linear-gradient(90deg, ${GREEN_DARK}, ${GREEN})` }} />
+      </div>
 
-        {/* Results header */}
-        <div style={{ marginBottom: 32 }}>
-          <span style={{
-            display: 'inline-block', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em',
-            textTransform: 'uppercase', color: GREEN_DARK, background: GREEN_LIGHT,
-            padding: '3px 12px', borderRadius: 100, marginBottom: 16,
-          }}>
-            {t.resultsLabel}
+      <div style={{ maxWidth: 720, margin: '0 auto', padding: '32px 24px 64px' }}>
+
+        {/* Dimension tabs */}
+        <div style={{ display: 'flex', gap: 8, marginBottom: 32, overflowX: 'auto', paddingBottom: 4 }}>
+          {DIMENSIONS.map((d, i) => {
+            const dimQs = QUESTIONS.filter(q => q.dimensionId === d.id)
+            const done  = dimQs.every(q => answers[q.id] !== undefined)
+            return (
+              <button
+                key={d.id}
+                onClick={() => setActiveDim(i)}
+                style={{
+                  flexShrink: 0, padding: '6px 14px', borderRadius: 100,
+                  fontSize: 12, fontWeight: 700, border: '2px solid',
+                  borderColor: activeDim === i ? GREEN : done ? `${GREEN}44` : '#E2E8F0',
+                  background: activeDim === i ? GREEN_DARK : done ? GREEN_LIGHT : '#fff',
+                  color: activeDim === i ? '#fff' : done ? GREEN_DARK : MUTED,
+                  cursor: 'pointer', transition: 'all 0.15s',
+                }}
+              >
+                {done && activeDim !== i ? '✓ ' : ''}{d.short}
+              </button>
+            )
+          })}
+        </div>
+
+        {/* Dimension header */}
+        <div style={{ marginBottom: 24 }}>
+          <span style={{ display: 'inline-block', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: GREEN_DARK, background: GREEN_LIGHT, padding: '3px 12px', borderRadius: 100, marginBottom: 10 }}>
+            {t.dimOf(activeDim + 1, DIMENSIONS.length)}
           </span>
-          <h1 style={{ fontSize: 32, fontWeight: 900, color: DARK, marginBottom: 8, lineHeight: 1.2 }}>
-            {t.resultsTitle}
-          </h1>
-          <p style={{ fontSize: 15, color: BODY }}>
-            {t.assessedAs} <strong>{role.label}</strong>
-          </p>
-        </div>
-
-        {/* Overall score + radar */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 24, marginBottom: 24, alignItems: 'start' }}>
-
-          {/* Radar */}
-          <div style={{
-            background: '#fff', borderRadius: 24, padding: '28px 24px',
-            border: '1px solid #EEF2F7', boxShadow: '0 2px 16px rgba(0,0,0,0.04)',
-            display: 'flex', flexDirection: 'column', alignItems: 'center',
-          }}>
-            <p style={{ fontSize: 13, fontWeight: 600, color: MUTED, marginBottom: 16 }}>{t.radarLabel}</p>
-            <CxRadarChart scores={dimScores} size={260} primaryColor={overallCol.bg} />
-          </div>
-
-          {/* Score + dimension bars */}
-          <div style={{
-            background: '#fff', borderRadius: 24, padding: '28px 24px',
-            border: '1px solid #EEF2F7', boxShadow: '0 2px 16px rgba(0,0,0,0.04)',
-          }}>
-            {/* Overall score badge */}
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: 12,
-              background: overallCol.pastelBg,
-              borderRadius: 16, padding: '14px 20px', marginBottom: 24,
-            }}>
-              <div style={{
-                width: 52, height: 52, borderRadius: '50%',
-                background: overallCol.bg, color: '#fff',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 20, fontWeight: 900,
-              }}>
-                {avg.toFixed(1)}
-              </div>
-              <div>
-                <p style={{ fontSize: 12, color: MUTED, marginBottom: 2 }}>{t.overallLabel}</p>
-                <p style={{ fontSize: 18, fontWeight: 900, color: overallCol.bg }}>{scoreLabel}</p>
-              </div>
-            </div>
-
-            {/* Dimension bars */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-              {DIMENSIONS.map(d => {
-                const s = dimScores[d.id] ?? 1
-                const col = scoreColour(s)
-                const dimLabel = lang === 'nl' ? col.labelNl : col.label
-                const bar = ((s - 1) / 3) * 100
-                return (
-                  <div key={d.id}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5, alignItems: 'center' }}>
-                      <span style={{ fontSize: 13, fontWeight: 600, color: DARK }}>
-                        {d.icon} {d.name}
-                      </span>
-                      <span style={{ fontSize: 12, fontWeight: 800, color: col.bg }}>
-                        {s.toFixed(1)} · {dimLabel}
-                      </span>
-                    </div>
-                    <div style={{ height: 8, background: '#F1F5F9', borderRadius: 100, overflow: 'hidden' }}>
-                      <div style={{
-                        height: 8, borderRadius: 100, transition: 'width 0.6s ease',
-                        width: `${bar}%`, background: col.bg,
-                      }} />
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Top 3 gaps */}
-        <div style={{
-          background: '#fff', borderRadius: 24, padding: '28px 24px',
-          border: '1px solid #EEF2F7', boxShadow: '0 2px 16px rgba(0,0,0,0.04)',
-          marginBottom: 24,
-        }}>
-          <h2 style={{ fontSize: 18, fontWeight: 900, color: DARK, marginBottom: 20 }}>
-            {t.gapsTitle}
+          <h2 style={{ fontSize: 24, fontWeight: 900, color: DARK, marginBottom: 4 }}>
+            {dim.icon} {dim.name}
           </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
-            {gaps.map(({ dim, score }, i) => {
-              const col = scoreColour(score)
-              const gapLabel = lang === 'nl' ? col.labelNl : col.label
-              return (
-                <div
-                  key={dim.id}
-                  style={{ borderRadius: 18, padding: '20px 18px', background: col.pastelBg, border: `1px solid ${col.bg}33` }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-                    <span style={{ width: 26, height: 26, borderRadius: '50%', background: col.bg, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 900, flexShrink: 0 }}>
-                      {i + 1}
-                    </span>
-                    <span style={{ fontSize: 14, fontWeight: 800, color: DARK }}>{dim.name}</span>
-                  </div>
-                  <p style={{ fontSize: 12, color: BODY, lineHeight: 1.6, marginBottom: 10 }}>{dim.description}</p>
-                  <p style={{ fontSize: 22, fontWeight: 900, color: col.bg }}>{score.toFixed(1)}</p>
-                  <p style={{ fontSize: 11, color: col.bg, fontWeight: 600 }}>{gapLabel}</p>
+          <p style={{ fontSize: 14, color: BODY, lineHeight: 1.65 }}>{dim.description}</p>
+        </div>
+
+        {/* Questions */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {dimQuestions.map(q => {
+            const selected = answers[q.id]
+            return (
+              <div key={q.id} style={{ background: '#fff', borderRadius: 20, padding: '24px 22px', border: '1px solid #EEF2F7', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
+                <p style={{ fontSize: 15, fontWeight: 600, color: DARK, marginBottom: 12, lineHeight: 1.55 }}>{q.text}</p>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: MUTED, marginBottom: 10 }}>
+                  <span>{q.lowAnchor}</span>
+                  <span style={{ textAlign: 'right' }}>{q.highAnchor}</span>
                 </div>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Strengths strip */}
-        <div style={{
-          background: '#fff', borderRadius: 24, padding: '22px 24px',
-          border: '1px solid #EEF2F7', boxShadow: '0 2px 16px rgba(0,0,0,0.04)',
-          marginBottom: 32, display: 'flex', gap: 16, alignItems: 'flex-start',
-        }}>
-          <div style={{ flexShrink: 0, marginTop: 2 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: GREEN_LIGHT, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>✨</div>
-          </div>
-          <div style={{ flex: 1 }}>
-            <p style={{ fontSize: 14, fontWeight: 800, color: DARK, marginBottom: 8 }}>{t.strengthsTitle}</p>
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-              {strengths.map(({ dim, score }) => {
-                const col = scoreColour(score)
-                return (
-                  <span key={dim.id} style={{ fontSize: 13, fontWeight: 600, padding: '5px 14px', borderRadius: 100, background: col.pastelBg, color: col.bg, border: `1px solid ${col.bg}33` }}>
-                    {dim.icon} {dim.name} · {score.toFixed(1)}
-                  </span>
-                )
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Refer a colleague */}
-        <ReferralCard lang={lang} />
-
-        {/* Email results to myself */}
-        <EmailResultsCard lang={lang} avg={avg} scoreLabel={scoreLabel} dimScores={dimScores} dimensions={DIMENSIONS} />
-
-        {/* CTA — contact Essense */}
-        <div style={{
-          background: GREEN_DARK,
-          borderRadius: 28, padding: '40px 36px',
-          textAlign: 'center',
-        }}>
-          <div style={{ width: 64, height: 64, borderRadius: 16, background: GREEN, margin: '0 auto 20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ color: GREEN_DARK, fontSize: 36, fontWeight: 900 }}>e</span>
-          </div>
-          <h2 style={{ fontSize: 24, fontWeight: 900, color: '#fff', marginBottom: 10, lineHeight: 1.3 }}>
-            {t.ctaTitle}
-          </h2>
-          <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.7)', lineHeight: 1.7, maxWidth: 440, margin: '0 auto 28px' }}>
-            {t.ctaBody}
-          </p>
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <a
-              href={mailtoHref}
-              style={{
-                display: 'inline-block',
-                background: `linear-gradient(135deg, ${GREEN}, #1DB865)`,
-                color: '#fff', fontWeight: 700, fontSize: 15,
-                padding: '14px 32px', borderRadius: 100, textDecoration: 'none',
-              }}
-            >
-              {t.ctaBtn}
-            </a>
-            <button
-              onClick={() => { setStep('select'); setAnswers({}); setActiveDim(0); setRoleId('') }}
-              style={{
-                padding: '14px 28px', borderRadius: 100,
-                border: `2px solid ${GREEN}44`, background: 'transparent',
-                fontWeight: 600, fontSize: 14, color: GREEN, cursor: 'pointer',
-              }}
-            >
-              {t.retakeBtn}
-            </button>
-          </div>
-          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginTop: 16 }}>
-            {t.ctaCaption}
-          </p>
-        </div>
-
-      </div>
-    </div>
-  )
-}
-
-// ── Email results card ────────────────────────────────────────────────────────
-function EmailResultsCard({ lang, avg, scoreLabel, dimScores, dimensions }: {
-  lang: 'en' | 'nl'
-  avg: number
-  scoreLabel: string
-  dimScores: Record<string, number>
-  dimensions: { id: string; name: string; icon: string }[]
-}) {
-  const [name,    setName]    = useState('')
-  const [email,   setEmail]   = useState('')
-  const [sent,    setSent]    = useState(false)
-  const [sending, setSending] = useState(false)
-  const [error,   setError]   = useState('')
-
-  const dimLines = dimensions
-    .map(d => `${d.icon} ${d.name}: ${(dimScores[d.id] ?? 1).toFixed(1)}/4`)
-    .join('%0A')
-
-  const subject = lang === 'nl'
-    ? `Mijn%20CX%20Volwassenheidsresultaten%20%E2%80%94%20${encodeURIComponent(scoreLabel)}`
-    : `My%20CX%20Maturity%20Results%20%E2%80%94%20${encodeURIComponent(scoreLabel)}`
-
-  const body = lang === 'nl'
-    ? `Hoi${name ? `%20${encodeURIComponent(name)}` : ''}%2C%0A%0AHier%20zijn%20je%20resultaten%20van%20het%20CX%20Volwassenheidsassessment%20door%20Essense.%0A%0AOverall%20score%3A%20${avg.toFixed(1)}%2F4%20%E2%80%94%20${encodeURIComponent(scoreLabel)}%0A%0ADimensiescores%3A%0A${dimLines}%0A%0AWil%20je%20deze%20resultaten%20bespreken%3F%20Neem%20contact%20op%20met%20Essense%3A%20hello%40essense.eu%0A%0Awww.essense.eu`
-    : `Hi${name ? `%20${encodeURIComponent(name)}` : ''}%2C%0A%0AHere%20are%20your%20results%20from%20the%20CX%20Maturity%20Assessment%20by%20Essense.%0A%0AOverall%20score%3A%20${avg.toFixed(1)}%2F4%20%E2%80%94%20${encodeURIComponent(scoreLabel)}%0A%0ADimension%20scores%3A%0A${dimLines}%0A%0AWant%20to%20discuss%20these%20results%3F%20Reach%20out%20to%20Essense%3A%20hello%40essense.eu%0A%0Awww.essense.eu`
-
-  const handleSend = () => {
-    if (!email.includes('@')) { setError(lang === 'nl' ? 'Voer een geldig e-mailadres in.' : 'Please enter a valid email address.'); return }
-    setSending(true)
-    window.location.href = `mailto:${encodeURIComponent(email)}?subject=${subject}&body=${body}`
-    setTimeout(() => { setSending(false); setSent(true) }, 800)
-  }
-
-  return (
-    <div style={{
-      background: '#fff', borderRadius: 24, padding: '28px 28px',
-      border: '1px solid #EEF2F7', boxShadow: '0 2px 16px rgba(0,0,0,0.04)',
-      marginBottom: 24,
-    }}>
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
-        <div style={{ width: 40, height: 40, borderRadius: 12, background: '#EAF5F2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0 }}>
-          📩
-        </div>
-        <div style={{ flex: 1 }}>
-          <p style={{ fontSize: 15, fontWeight: 800, color: '#1A1A2E', marginBottom: 4 }}>
-            {lang === 'nl' ? 'Ontvang je resultaten per e-mail' : 'Email your results to yourself'}
-          </p>
-          <p style={{ fontSize: 13, color: '#374151', lineHeight: 1.6, marginBottom: 16 }}>
-            {lang === 'nl'
-              ? 'Bewaar je scores en deel ze eenvoudig met anderen.'
-              : 'Keep a record of your scores and share them easily.'}
-          </p>
-
-          {sent ? (
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 18px', borderRadius: 100, background: '#EAF5F2', color: '#044524', fontSize: 13, fontWeight: 700 }}>
-              ✓ {lang === 'nl' ? 'E-mailclient geopend!' : 'Email client opened!'}
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                <input
-                  type="text"
-                  placeholder={lang === 'nl' ? 'Jouw naam (optioneel)' : 'Your name (optional)'}
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  style={{
-                    flex: '1 1 140px', padding: '9px 14px', borderRadius: 10,
-                    border: '1.5px solid #E2E8F0', fontSize: 13, color: '#1A1A2E',
-                    outline: 'none', background: '#F8FAFC',
-                  }}
-                />
-                <input
-                  type="email"
-                  placeholder={lang === 'nl' ? 'jouw@email.nl' : 'your@email.com'}
-                  value={email}
-                  onChange={e => { setEmail(e.target.value); setError('') }}
-                  style={{
-                    flex: '2 1 180px', padding: '9px 14px', borderRadius: 10,
-                    border: `1.5px solid ${error ? '#E05A7A' : '#E2E8F0'}`, fontSize: 13, color: '#1A1A2E',
-                    outline: 'none', background: '#F8FAFC',
-                  }}
-                />
-                <button
-                  onClick={handleSend}
-                  disabled={sending}
-                  style={{
-                    padding: '9px 20px', borderRadius: 100,
-                    background: sending ? '#E2E8F0' : '#044524',
-                    color: sending ? '#94A3B8' : '#fff',
-                    fontSize: 13, fontWeight: 700, border: 'none',
-                    cursor: sending ? 'not-allowed' : 'pointer', transition: 'all 0.15s',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  {sending ? '...' : (lang === 'nl' ? 'Verstuur →' : 'Send →')}
-                </button>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  {[1, 2, 3, 4].map(v => {
+                    const isSelected   = selected === v
+                    const accentColor  = v <= 2 ? '#F59E0B' : GREEN
+                    return (
+                      <button
+                        key={v}
+                        onClick={() => setAnswers(prev => ({ ...prev, [q.id]: v }))}
+                        style={{
+                          flex: 1, padding: '10px 0', borderRadius: 12, fontWeight: 700, fontSize: 16,
+                          border: `2px solid ${isSelected ? accentColor : '#E2E8F0'}`,
+                          background: isSelected ? accentColor : '#F8FAFC',
+                          color: isSelected ? '#fff' : '#CBD5E1',
+                          cursor: 'pointer', transition: 'all 0.15s',
+                        }}
+                      >
+                        {v}
+                      </button>
+                    )
+                  })}
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: '#CBD5E1', marginTop: 6 }}>
+                  {t.scaleLabels.map(label => <span key={label}>{label}</span>)}
+                </div>
               </div>
-              {error && <p style={{ fontSize: 12, color: '#E05A7A', margin: 0 }}>{error}</p>}
-            </div>
-          )}
+            )
+          })}
         </div>
-      </div>
-    </div>
-  )
-}
 
-// ── Referral card ─────────────────────────────────────────────────────────────
-function ReferralCard({ lang }: { lang: 'en' | 'nl' }) {
-  const [copied, setCopied] = useState(false)
-  const url = typeof window !== 'undefined'
-    ? `${window.location.origin}/cx_essense`
-    : 'https://aiquiz.brandpwrdmedia.nl/cx_essense'
-
-  const emailSubject = lang === 'nl'
-    ? 'Doe%20ook%20het%20CX%20Volwassenheidsassessment'
-    : 'Take%20the%20CX%20Maturity%20Assessment'
-  const emailBody = lang === 'nl'
-    ? `Hoi%2C%0A%0AIk%20heb%20zojuist%20een%20CX%20assessment%20gedaan%20van%20Essense%20en%20vond%20het%20erg%20nuttig.%20Misschien%20ook%20interessant%20voor%20jou%3F%0A%0A${encodeURIComponent(url)}%0A%0AGroet`
-    : `Hi%2C%0A%0AI%20just%20completed%20a%20CX%20Maturity%20Assessment%20by%20Essense%20and%20found%20it%20genuinely%20useful.%20Thought%20it%20might%20be%20relevant%20for%20you%20too.%0A%0A${encodeURIComponent(url)}%0A%0ABest`
-
-  const copy = () => {
-    navigator.clipboard.writeText(url).then(() => {
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    })
-  }
-
-  return (
-    <div style={{
-      background: '#fff', borderRadius: 24, padding: '28px 28px',
-      border: '1px solid #EEF2F7', boxShadow: '0 2px 16px rgba(0,0,0,0.04)',
-      marginBottom: 24,
-    }}>
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
-        <div style={{ width: 40, height: 40, borderRadius: 12, background: '#EAF5F2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0 }}>
-          🤝
-        </div>
-        <div style={{ flex: 1 }}>
-          <p style={{ fontSize: 15, fontWeight: 800, color: '#1A1A2E', marginBottom: 4 }}>
-            {lang === 'nl' ? 'Stuur dit door naar een collega' : 'Refer this to a colleague'}
-          </p>
-          <p style={{ fontSize: 13, color: '#374151', lineHeight: 1.6, marginBottom: 16 }}>
-            {lang === 'nl'
-              ? 'Zijn jullie resultaten eensgezind — of ziet een collega de organisatie anders? Vergelijk jullie perspectieven.'
-              : 'Are your results aligned — or does a colleague see the organisation differently? Compare your perspectives.'}
-          </p>
-          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-            <a
-              href={`mailto:?subject=${emailSubject}&body=${emailBody}`}
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6,
-                padding: '9px 18px', borderRadius: 100,
-                background: '#044524', color: '#fff',
-                fontSize: 13, fontWeight: 700, textDecoration: 'none',
-              }}
-            >
-              ✉️ {lang === 'nl' ? 'Stuur via e-mail' : 'Send by email'}
-            </a>
+        {/* Navigation */}
+        <div style={{ display: 'flex', gap: 12, marginTop: 32 }}>
+          {activeDim > 0 && (
             <button
-              onClick={copy}
+              onClick={() => setActiveDim(a => a - 1)}
+              style={{ flex: 1, padding: '13px 24px', borderRadius: 100, border: '2px solid #E2E8F0', background: '#fff', fontWeight: 600, fontSize: 14, color: BODY, cursor: 'pointer' }}
+            >
+              {t.prevBtn}
+            </button>
+          )}
+          {activeDim < DIMENSIONS.length - 1 ? (
+            <button
+              disabled={!dimAnswered}
+              onClick={() => setActiveDim(a => a + 1)}
               style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6,
-                padding: '9px 18px', borderRadius: 100,
-                background: copied ? '#EAF5F2' : '#F1F5F9',
-                border: `1.5px solid ${copied ? '#24CF7A' : '#E2E8F0'}`,
-                color: copied ? '#044524' : '#374151',
-                fontSize: 13, fontWeight: 700, cursor: 'pointer',
-                transition: 'all 0.2s',
+                flex: 1, padding: '13px 24px', borderRadius: 100,
+                background: dimAnswered ? GREEN_DARK : '#E2E8F0',
+                color: dimAnswered ? '#fff' : MUTED,
+                fontWeight: 700, fontSize: 14, border: 'none',
+                cursor: dimAnswered ? 'pointer' : 'not-allowed', transition: 'all 0.15s',
               }}
             >
-              {copied ? '✓' : '🔗'} {copied
-                ? (lang === 'nl' ? 'Gekopieerd!' : 'Copied!')
-                : (lang === 'nl' ? 'Kopieer link' : 'Copy link')}
+              {t.nextBtn}
             </button>
-          </div>
+          ) : (
+            <button
+              disabled={totalAnswered < QUESTIONS.length}
+              onClick={goToResults}
+              style={{
+                flex: 1, padding: '13px 24px', borderRadius: 100,
+                background: totalAnswered >= QUESTIONS.length ? `linear-gradient(135deg, ${GREEN}, #1DB865)` : '#E2E8F0',
+                color: totalAnswered >= QUESTIONS.length ? '#fff' : MUTED,
+                fontWeight: 700, fontSize: 14, border: 'none',
+                cursor: totalAnswered >= QUESTIONS.length ? 'pointer' : 'not-allowed', transition: 'all 0.15s',
+              }}
+            >
+              {totalAnswered < QUESTIONS.length ? t.remainingBtn(QUESTIONS.length - totalAnswered) : t.seeResultsBtn}
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -738,10 +268,6 @@ function ReferralCard({ lang }: { lang: 'en' | 'nl' }) {
 
 // ── Shared header ─────────────────────────────────────────────────────────────
 function AssessHeader({ backHref, backLabel, subTitle }: { backHref: string; backLabel: string; subTitle: string }) {
-  const GREEN      = '#24CF7A'
-  const GREEN_DARK = '#044524'
-  const DARK       = '#1A1A2E'
-  const MUTED      = '#94A3B8'
   return (
     <nav style={{ background: '#fff', borderBottom: '1px solid #EEF2F7', height: 64, display: 'flex', alignItems: 'center' }}>
       <div style={{ maxWidth: 900, margin: '0 auto', width: '100%', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -762,7 +288,7 @@ function AssessHeader({ backHref, backLabel, subTitle }: { backHref: string; bac
   )
 }
 
-// ── Page export with Suspense boundary ────────────────────────────────────────
+// ── Page export ───────────────────────────────────────────────────────────────
 export default function CxEssenseAssessPage() {
   return (
     <Suspense fallback={
