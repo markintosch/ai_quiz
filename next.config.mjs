@@ -36,6 +36,9 @@ const nextConfig = {
       { source: '/nl/quiz/:slug', destination: '/nl/a/:slug', permanent: false },
       { source: '/fr/quiz/:slug', destination: '/fr/a/:slug', permanent: false },
       { source: '/results/:id', destination: '/en/results/:id', permanent: false },
+      // Clean URLs for static HTML pitch pages
+      { source: '/hire',               destination: '/hire.html',               permanent: false },
+      { source: '/match-engine-pitch', destination: '/match-engine-pitch.html', permanent: false },
     ]
   },
 }
