@@ -490,9 +490,9 @@ function MentorPageInner() {
             <motion.div variants={fadeUp}>
               <span style={{
                 display: 'inline-block', fontSize: 11, fontWeight: 700, letterSpacing: '0.14em',
-                textTransform: 'uppercase', color: WARM, background: `${WARM}22`,
+                textTransform: 'uppercase', color: WARM, background: `${WARM}55`,
                 padding: '5px 16px', borderRadius: 100, marginBottom: 32,
-                border: `1px solid ${WARM}44`,
+                border: `1px solid ${WARM}88`,
               }}>
                 {t.heroBadge}
               </span>
@@ -548,7 +548,7 @@ function MentorPageInner() {
               </a>
             </motion.div>
 
-            <motion.p variants={fadeUp} style={{ fontSize: 13, color: '#475569', marginTop: 20 }}>
+            <motion.p variants={fadeUp} style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)', marginTop: 20 }}>
               {t.heroTrust}
             </motion.p>
 
