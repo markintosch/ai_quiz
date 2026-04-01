@@ -501,6 +501,12 @@ function CxEssenseAssessInner() {
           </div>
         </div>
 
+        {/* Refer a colleague */}
+        <ReferralCard lang={lang} />
+
+        {/* Email results to myself */}
+        <EmailResultsCard lang={lang} avg={avg} scoreLabel={scoreLabel} dimScores={dimScores} dimensions={DIMENSIONS} />
+
         {/* CTA — contact Essense */}
         <div style={{
           background: GREEN_DARK,
@@ -544,6 +550,187 @@ function CxEssenseAssessInner() {
           </p>
         </div>
 
+      </div>
+    </div>
+  )
+}
+
+// ── Email results card ────────────────────────────────────────────────────────
+function EmailResultsCard({ lang, avg, scoreLabel, dimScores, dimensions }: {
+  lang: 'en' | 'nl'
+  avg: number
+  scoreLabel: string
+  dimScores: Record<string, number>
+  dimensions: { id: string; name: string; icon: string }[]
+}) {
+  const [name,    setName]    = useState('')
+  const [email,   setEmail]   = useState('')
+  const [sent,    setSent]    = useState(false)
+  const [sending, setSending] = useState(false)
+  const [error,   setError]   = useState('')
+
+  const dimLines = dimensions
+    .map(d => `${d.icon} ${d.name}: ${(dimScores[d.id] ?? 1).toFixed(1)}/4`)
+    .join('%0A')
+
+  const subject = lang === 'nl'
+    ? `Mijn%20CX%20Volwassenheidsresultaten%20%E2%80%94%20${encodeURIComponent(scoreLabel)}`
+    : `My%20CX%20Maturity%20Results%20%E2%80%94%20${encodeURIComponent(scoreLabel)}`
+
+  const body = lang === 'nl'
+    ? `Hoi${name ? `%20${encodeURIComponent(name)}` : ''}%2C%0A%0AHier%20zijn%20je%20resultaten%20van%20het%20CX%20Volwassenheidsassessment%20door%20Essense.%0A%0AOverall%20score%3A%20${avg.toFixed(1)}%2F4%20%E2%80%94%20${encodeURIComponent(scoreLabel)}%0A%0ADimensiescores%3A%0A${dimLines}%0A%0AWil%20je%20deze%20resultaten%20bespreken%3F%20Neem%20contact%20op%20met%20Essense%3A%20hello%40essense.eu%0A%0Awww.essense.eu`
+    : `Hi${name ? `%20${encodeURIComponent(name)}` : ''}%2C%0A%0AHere%20are%20your%20results%20from%20the%20CX%20Maturity%20Assessment%20by%20Essense.%0A%0AOverall%20score%3A%20${avg.toFixed(1)}%2F4%20%E2%80%94%20${encodeURIComponent(scoreLabel)}%0A%0ADimension%20scores%3A%0A${dimLines}%0A%0AWant%20to%20discuss%20these%20results%3F%20Reach%20out%20to%20Essense%3A%20hello%40essense.eu%0A%0Awww.essense.eu`
+
+  const handleSend = () => {
+    if (!email.includes('@')) { setError(lang === 'nl' ? 'Voer een geldig e-mailadres in.' : 'Please enter a valid email address.'); return }
+    setSending(true)
+    window.location.href = `mailto:${encodeURIComponent(email)}?subject=${subject}&body=${body}`
+    setTimeout(() => { setSending(false); setSent(true) }, 800)
+  }
+
+  return (
+    <div style={{
+      background: '#fff', borderRadius: 24, padding: '28px 28px',
+      border: '1px solid #EEF2F7', boxShadow: '0 2px 16px rgba(0,0,0,0.04)',
+      marginBottom: 24,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
+        <div style={{ width: 40, height: 40, borderRadius: 12, background: '#EAF5F2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0 }}>
+          📩
+        </div>
+        <div style={{ flex: 1 }}>
+          <p style={{ fontSize: 15, fontWeight: 800, color: '#1A1A2E', marginBottom: 4 }}>
+            {lang === 'nl' ? 'Ontvang je resultaten per e-mail' : 'Email your results to yourself'}
+          </p>
+          <p style={{ fontSize: 13, color: '#374151', lineHeight: 1.6, marginBottom: 16 }}>
+            {lang === 'nl'
+              ? 'Bewaar je scores en deel ze eenvoudig met anderen.'
+              : 'Keep a record of your scores and share them easily.'}
+          </p>
+
+          {sent ? (
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 18px', borderRadius: 100, background: '#EAF5F2', color: '#044524', fontSize: 13, fontWeight: 700 }}>
+              ✓ {lang === 'nl' ? 'E-mailclient geopend!' : 'Email client opened!'}
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                <input
+                  type="text"
+                  placeholder={lang === 'nl' ? 'Jouw naam (optioneel)' : 'Your name (optional)'}
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                  style={{
+                    flex: '1 1 140px', padding: '9px 14px', borderRadius: 10,
+                    border: '1.5px solid #E2E8F0', fontSize: 13, color: '#1A1A2E',
+                    outline: 'none', background: '#F8FAFC',
+                  }}
+                />
+                <input
+                  type="email"
+                  placeholder={lang === 'nl' ? 'jouw@email.nl' : 'your@email.com'}
+                  value={email}
+                  onChange={e => { setEmail(e.target.value); setError('') }}
+                  style={{
+                    flex: '2 1 180px', padding: '9px 14px', borderRadius: 10,
+                    border: `1.5px solid ${error ? '#E05A7A' : '#E2E8F0'}`, fontSize: 13, color: '#1A1A2E',
+                    outline: 'none', background: '#F8FAFC',
+                  }}
+                />
+                <button
+                  onClick={handleSend}
+                  disabled={sending}
+                  style={{
+                    padding: '9px 20px', borderRadius: 100,
+                    background: sending ? '#E2E8F0' : '#044524',
+                    color: sending ? '#94A3B8' : '#fff',
+                    fontSize: 13, fontWeight: 700, border: 'none',
+                    cursor: sending ? 'not-allowed' : 'pointer', transition: 'all 0.15s',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {sending ? '...' : (lang === 'nl' ? 'Verstuur →' : 'Send →')}
+                </button>
+              </div>
+              {error && <p style={{ fontSize: 12, color: '#E05A7A', margin: 0 }}>{error}</p>}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Referral card ─────────────────────────────────────────────────────────────
+function ReferralCard({ lang }: { lang: 'en' | 'nl' }) {
+  const [copied, setCopied] = useState(false)
+  const url = typeof window !== 'undefined'
+    ? `${window.location.origin}/cx_essense`
+    : 'https://aiquiz.brandpwrdmedia.nl/cx_essense'
+
+  const emailSubject = lang === 'nl'
+    ? 'Doe%20ook%20het%20CX%20Volwassenheidsassessment'
+    : 'Take%20the%20CX%20Maturity%20Assessment'
+  const emailBody = lang === 'nl'
+    ? `Hoi%2C%0A%0AIk%20heb%20zojuist%20een%20CX%20assessment%20gedaan%20van%20Essense%20en%20vond%20het%20erg%20nuttig.%20Misschien%20ook%20interessant%20voor%20jou%3F%0A%0A${encodeURIComponent(url)}%0A%0AGroet`
+    : `Hi%2C%0A%0AI%20just%20completed%20a%20CX%20Maturity%20Assessment%20by%20Essense%20and%20found%20it%20genuinely%20useful.%20Thought%20it%20might%20be%20relevant%20for%20you%20too.%0A%0A${encodeURIComponent(url)}%0A%0ABest`
+
+  const copy = () => {
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
+
+  return (
+    <div style={{
+      background: '#fff', borderRadius: 24, padding: '28px 28px',
+      border: '1px solid #EEF2F7', boxShadow: '0 2px 16px rgba(0,0,0,0.04)',
+      marginBottom: 24,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
+        <div style={{ width: 40, height: 40, borderRadius: 12, background: '#EAF5F2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0 }}>
+          🤝
+        </div>
+        <div style={{ flex: 1 }}>
+          <p style={{ fontSize: 15, fontWeight: 800, color: '#1A1A2E', marginBottom: 4 }}>
+            {lang === 'nl' ? 'Stuur dit door naar een collega' : 'Refer this to a colleague'}
+          </p>
+          <p style={{ fontSize: 13, color: '#374151', lineHeight: 1.6, marginBottom: 16 }}>
+            {lang === 'nl'
+              ? 'Zijn jullie resultaten eensgezind — of ziet een collega de organisatie anders? Vergelijk jullie perspectieven.'
+              : 'Are your results aligned — or does a colleague see the organisation differently? Compare your perspectives.'}
+          </p>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <a
+              href={`mailto:?subject=${emailSubject}&body=${emailBody}`}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+                padding: '9px 18px', borderRadius: 100,
+                background: '#044524', color: '#fff',
+                fontSize: 13, fontWeight: 700, textDecoration: 'none',
+              }}
+            >
+              ✉️ {lang === 'nl' ? 'Stuur via e-mail' : 'Send by email'}
+            </a>
+            <button
+              onClick={copy}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+                padding: '9px 18px', borderRadius: 100,
+                background: copied ? '#EAF5F2' : '#F1F5F9',
+                border: `1.5px solid ${copied ? '#24CF7A' : '#E2E8F0'}`,
+                color: copied ? '#044524' : '#374151',
+                fontSize: 13, fontWeight: 700, cursor: 'pointer',
+                transition: 'all 0.2s',
+              }}
+            >
+              {copied ? '✓' : '🔗'} {copied
+                ? (lang === 'nl' ? 'Gekopieerd!' : 'Copied!')
+                : (lang === 'nl' ? 'Kopieer link' : 'Copy link')}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   )
