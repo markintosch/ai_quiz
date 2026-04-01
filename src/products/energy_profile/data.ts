@@ -399,7 +399,7 @@ export function profileColour(avgScore: number): {
     descriptionEn: 'You switch easily between styles. Strong across diverse environments and teams.',
   }
   return {
-    bg: '#1a1526', label: 'Hoog Intern', labelEn: 'High Internal',
+    bg: '#2C2447', label: 'Hoog Intern', labelEn: 'High Internal',
     description: 'Jij werkt diep, denkt voor je spreekt en haalt kracht uit focus. Waardevol in complexe, inhoudelijke omgevingen.',
     descriptionEn: 'You work deep, think before speaking and draw strength from focus. Valuable in complex, content-heavy environments.',
   }

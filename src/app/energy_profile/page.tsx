@@ -51,40 +51,40 @@ function EnergyProfileLandingInner() {
   const assessHref = `/energy_profile/assess?lang=${lang}`
 
   return (
-    <div style={{ minHeight: '100vh', background: '#fff', color: '#1C2B3A', fontFamily: "-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" }}>
+    <div style={{ minHeight: '100vh', background: '#fff', color: '#2C2447', fontFamily: "-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" }}>
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
       <nav style={{ background: '#fff', borderBottom: '1px solid #E2E8F0', position: 'sticky', top: 0, zIndex: 50 }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#E8491A', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#2C2447', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <span style={{ color: '#fff', fontSize: 14, fontWeight: 900 }}>LD</span>
             </div>
             <div>
-              <p style={{ fontSize: 13, fontWeight: 700, color: '#1C2B3A', lineHeight: 1.2, margin: 0 }}>{t.navName}</p>
-              <p style={{ fontSize: 11, color: '#718096', lineHeight: 1.2, margin: 0 }}>{t.navRole}</p>
+              <p style={{ fontSize: 13, fontWeight: 700, color: '#2C2447', lineHeight: 1.2, margin: 0 }}>{t.navName}</p>
+              <p style={{ fontSize: 11, color: '#696284', lineHeight: 1.2, margin: 0 }}>{t.navRole}</p>
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <div style={{ display: 'flex', background: '#F7FAFC', borderRadius: 100, padding: 3, gap: 2 }}>
               {(['nl', 'en'] as Lang[]).map(l => (
-                <button key={l} onClick={() => switchLang(l)} style={{ padding: '4px 12px', borderRadius: 100, fontSize: 12, fontWeight: 700, background: lang === l ? '#fff' : 'transparent', color: lang === l ? '#1C2B3A' : '#718096', border: 'none', cursor: 'pointer', transition: 'all 0.15s' }}>
+                <button key={l} onClick={() => switchLang(l)} style={{ padding: '4px 12px', borderRadius: 100, fontSize: 12, fontWeight: 700, background: lang === l ? '#fff' : 'transparent', color: lang === l ? '#2C2447' : '#696284', border: 'none', cursor: 'pointer', transition: 'all 0.15s' }}>
                   {l.toUpperCase()}
                 </button>
               ))}
             </div>
-            <Link href={assessHref} style={{ background: '#E8491A', color: '#fff', fontSize: 13, fontWeight: 700, padding: '8px 20px', borderRadius: 100, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+            <Link href={assessHref} style={{ background: '#2C2447', color: '#fff', fontSize: 13, fontWeight: 700, padding: '8px 20px', borderRadius: 100, textDecoration: 'none', whiteSpace: 'nowrap' }}>
               {t.startCta}
             </Link>
           </div>
         </div>
       </nav>
-      <section style={{ background: '#1C2B3A', padding: '88px 24px 96px' }}>
+      <section style={{ background: '#2C2447', padding: '88px 24px 96px' }}>
         <div style={{ maxWidth: 680, margin: '0 auto', textAlign: 'center' }}>
-          <span style={{ display: 'inline-block', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#fff', background: '#E8491A', padding: '5px 16px', borderRadius: 100, marginBottom: 28 }}>{t.badge}</span>
+          <span style={{ display: 'inline-block', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#fff', background: '#2C2447', padding: '5px 16px', borderRadius: 100, marginBottom: 28 }}>{t.badge}</span>
           <h1 style={{ fontSize: 'clamp(30px,5vw,52px)', fontWeight: 900, lineHeight: 1.15, color: '#fff', margin: '0 0 20px' }}>{t.heroTitle}</h1>
           <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.75)', lineHeight: 1.7, maxWidth: 520, margin: '0 auto 40px' }}>{t.heroSub}</p>
           <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 28 }}>
-            <Link href={assessHref} style={{ background: '#E8491A', color: '#fff', fontWeight: 700, fontSize: 16, padding: '15px 38px', borderRadius: 100, textDecoration: 'none', boxShadow: '0 10px 30px rgba(232,73,26,0.4)' }}>{t.heroPrimary}</Link>
+            <Link href={assessHref} style={{ background: '#2C2447', color: '#fff', fontWeight: 700, fontSize: 16, padding: '15px 38px', borderRadius: 100, textDecoration: 'none', boxShadow: '0 10px 30px rgba(232,73,26,0.4)' }}>{t.heroPrimary}</Link>
             <a href="#hoe-het-werkt" style={{ background: 'transparent', color: '#fff', fontWeight: 600, fontSize: 15, padding: '15px 28px', borderRadius: 100, textDecoration: 'none', border: '2px solid rgba(255,255,255,0.3)' }}>{t.heroSecondary}</a>
           </div>
           <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', margin: 0 }}>{t.trustLine}</p>
@@ -92,42 +92,42 @@ function EnergyProfileLandingInner() {
       </section>
       <section id="hoe-het-werkt" style={{ background: '#fff', padding: '80px 24px' }}>
         <div style={{ maxWidth: 1000, margin: '0 auto' }}>
-          <h2 style={{ textAlign: 'center', fontSize: 26, fontWeight: 800, color: '#1C2B3A', marginBottom: 48 }}>{t.howTitle}</h2>
+          <h2 style={{ textAlign: 'center', fontSize: 26, fontWeight: 800, color: '#2C2447', marginBottom: 48 }}>{t.howTitle}</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(180px,1fr))', gap: 16 }}>
             {DIMENSIONS.map((dim, i) => (
-              <div key={dim.id} style={{ borderRadius: 16, padding: '24px 20px', background: i % 2 === 1 ? '#FFF3EE' : '#FFF9F6', border: '1px solid rgba(232,73,26,0.13)' }}>
-                <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#E8491A', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, marginBottom: 14 }}>{dim.icon}</div>
-                <p style={{ fontSize: 14, fontWeight: 800, color: '#1C2B3A', margin: '0 0 6px' }}>{dim.name}</p>
-                <p style={{ fontSize: 13, color: '#2D3748', lineHeight: 1.6, margin: '0 0 14px' }}>{dim.description}</p>
-                <div style={{ fontSize: 11, color: '#718096', display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+              <div key={dim.id} style={{ borderRadius: 16, padding: '24px 20px', background: i % 2 === 1 ? '#FFF3EE' : '#F8F7FA', border: '1px solid rgba(232,73,26,0.13)' }}>
+                <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#2C2447', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, marginBottom: 14 }}>{dim.icon}</div>
+                <p style={{ fontSize: 14, fontWeight: 800, color: '#2C2447', margin: '0 0 6px' }}>{dim.name}</p>
+                <p style={{ fontSize: 13, color: '#2C2447', lineHeight: 1.6, margin: '0 0 14px' }}>{dim.description}</p>
+                <div style={{ fontSize: 11, color: '#696284', display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                   <span>{dim.lowLabel}</span>
                   <span style={{ textAlign: 'right', maxWidth: '45%' }}>{dim.highLabel}</span>
                 </div>
-                <div style={{ height: 4, borderRadius: 100, background: 'linear-gradient(90deg,#1C2B3A 0%,#E8491A 100%)', opacity: 0.35 }} />
+                <div style={{ height: 4, borderRadius: 100, background: 'linear-gradient(90deg,#2C2447 0%,#2C2447 100%)', opacity: 0.35 }} />
               </div>
             ))}
           </div>
         </div>
       </section>
-      <section style={{ background: '#FFF9F6', padding: '80px 24px' }}>
+      <section style={{ background: '#F8F7FA', padding: '80px 24px' }}>
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
-          <h2 style={{ textAlign: 'center', fontSize: 26, fontWeight: 800, color: '#1C2B3A', marginBottom: 48 }}>{t.benefitsTitle}</h2>
+          <h2 style={{ textAlign: 'center', fontSize: 26, fontWeight: 800, color: '#2C2447', marginBottom: 48 }}>{t.benefitsTitle}</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(220px,1fr))', gap: 20 }}>
             {t.benefits.map(b => (
               <div key={b.title} style={{ background: '#fff', borderRadius: 16, padding: '28px 24px', border: '1px solid #E2E8F0', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
                 <div style={{ fontSize: 28, marginBottom: 14 }}>{b.icon}</div>
-                <p style={{ fontSize: 15, fontWeight: 700, color: '#1C2B3A', margin: '0 0 8px' }}>{b.title}</p>
-                <p style={{ fontSize: 14, color: '#2D3748', lineHeight: 1.65, margin: 0 }}>{b.body}</p>
+                <p style={{ fontSize: 15, fontWeight: 700, color: '#2C2447', margin: '0 0 8px' }}>{b.title}</p>
+                <p style={{ fontSize: 14, color: '#2C2447', lineHeight: 1.65, margin: 0 }}>{b.body}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
-      <section style={{ background: '#E8491A', padding: '80px 24px', textAlign: 'center' }}>
+      <section style={{ background: '#2C2447', padding: '80px 24px', textAlign: 'center' }}>
         <h2 style={{ fontSize: 'clamp(26px,4vw,38px)', fontWeight: 900, color: '#fff', margin: '0 0 28px' }}>{t.ctaTitle}</h2>
-        <Link href={assessHref} style={{ display: 'inline-block', background: '#fff', color: '#E8491A', fontWeight: 800, fontSize: 16, padding: '16px 40px', borderRadius: 100, textDecoration: 'none', boxShadow: '0 8px 24px rgba(0,0,0,0.15)' }}>{t.ctaBtn}</Link>
+        <Link href={assessHref} style={{ display: 'inline-block', background: '#fff', color: '#2C2447', fontWeight: 800, fontSize: 16, padding: '16px 40px', borderRadius: 100, textDecoration: 'none', boxShadow: '0 8px 24px rgba(0,0,0,0.15)' }}>{t.ctaBtn}</Link>
       </section>
-      <footer style={{ background: '#1C2B3A', padding: '28px 24px' }}>
+      <footer style={{ background: '#2C2447', padding: '28px 24px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', fontWeight: 600 }}>{t.footerLeft}</span>
           <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>{t.footerRight}</span>
@@ -139,7 +139,7 @@ function EnergyProfileLandingInner() {
 
 export default function EnergyProfileLandingPage() {
   return (
-    <Suspense fallback={<div style={{ minHeight: '100vh', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div style={{ width: 28, height: 28, borderRadius: '50%', border: '3px solid #E8491A', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }} /></div>}>
+    <Suspense fallback={<div style={{ minHeight: '100vh', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div style={{ width: 28, height: 28, borderRadius: '50%', border: '3px solid #2C2447', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }} /></div>}>
       <EnergyProfileLandingInner />
     </Suspense>
   )
