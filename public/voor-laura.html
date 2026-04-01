@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voor Laura — Mark de Kock</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:    #0F172A;
+      --navy:   #1E3A5F;
+      --amber:  #D97706;
+      --muted:  #64748B;
+      --border: #E2E8F0;
+      --light:  #F8FAFC;
+      --white:  #FFFFFF;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--white);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-left { display: flex; align-items: center; gap: 10px; }
+    .monogram {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--ink);
+      color: var(--white);
+      font-weight: 800; font-size: 13px;
+      display: flex; align-items: center; justify-content: center;
+      letter-spacing: 0.02em;
+      flex-shrink: 0;
+    }
+    .nav-name  { font-size: 13px; font-weight: 700; color: var(--ink); }
+    .nav-role  { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .nav-link  {
+      font-size: 12px; font-weight: 600; color: var(--muted);
+      text-decoration: none;
+    }
+    .nav-link:hover { color: var(--ink); }
+
+    /* ── Main layout ── */
+    .page {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 72px 24px 96px;
+    }
+
+    /* ── To/From badge ── */
+    .to-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--light);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 6px 16px 6px 8px;
+      margin-bottom: 48px;
+    }
+    .to-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: #2C2447;
+      color: white; font-size: 11px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .to-text { font-size: 12px; font-weight: 600; color: var(--muted); }
+    .to-name { color: var(--ink); }
+
+    /* ── Letter ── */
+    .salute {
+      font-size: 28px; font-weight: 800; color: var(--ink);
+      line-height: 1.2;
+      margin-bottom: 32px;
+    }
+
+    .letter p {
+      font-size: 17px; line-height: 1.75;
+      color: #334155;
+      margin-bottom: 22px;
+    }
+    .letter p strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+    .letter p em {
+      font-style: normal;
+      color: var(--ink);
+      font-weight: 500;
+      border-bottom: 2px solid var(--amber);
+    }
+
+    /* ── What's inside box ── */
+    .inside-box {
+      margin: 40px 0;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .inside-header {
+      background: var(--light);
+      padding: 16px 24px;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .inside-items { padding: 8px 0; }
+    .inside-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .inside-item:last-child { border-bottom: none; }
+    .inside-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--ink);
+      color: white; font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .inside-item-title { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+    .inside-item-body  { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+    /* ── CTA ── */
+    .cta-block {
+      margin-top: 48px;
+      display: flex; flex-direction: column; align-items: flex-start; gap: 16px;
+    }
+    .cta-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--ink);
+      color: var(--white);
+      font-size: 15px; font-weight: 700;
+      padding: 14px 28px;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+    .cta-primary:hover { opacity: 0.85; }
+    .cta-note {
+      font-size: 13px; color: var(--muted);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .cta-note::before {
+      content: '';
+      display: inline-block;
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--amber);
+    }
+
+    /* ── Signature ── */
+    .signature {
+      margin-top: 56px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; gap: 16px;
+    }
+    .sig-avatar {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--ink);
+      color: white; font-size: 16px; font-weight: 800;
+      font-family: serif;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .sig-name  { font-size: 14px; font-weight: 700; color: var(--ink); }
+    .sig-role  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .sig-links { margin-top: 6px; display: flex; gap: 12px; }
+    .sig-link  { font-size: 12px; color: var(--amber); font-weight: 600; text-decoration: none; }
+    .sig-link:hover { text-decoration: underline; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 12px; color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── Animation ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 600px) {
+      .page { padding: 48px 20px 72px; }
+      .salute { font-size: 22px; }
+      .letter p { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-left">
+      <div class="monogram">M</div>
+      <div>
+        <div class="nav-name">Mark de Kock</div>
+        <div class="nav-role">Strategisch mentor · Kirk &amp; Blackbeard</div>
+      </div>
+    </div>
+    <a href="https://markdekock.com" class="nav-link">markdekock.com</a>
+  </nav>
+
+  <div class="page">
+
+    <div class="to-badge fade-in">
+      <div class="to-avatar">LD</div>
+      <span class="to-text">Persoonlijk bericht voor <span class="to-name">Laura Dijcks</span></span>
+    </div>
+
+    <h1 class="salute fade-in">Hoi Laura,</h1>
+
+    <div class="letter">
+      <p class="fade-in">
+        Ik ben Mark. We zijn verbonden via LinkedIn en ik volg al een tijdje hoe jij je werk doet.
+        Wat me opvalt: jij bent een van de weinige recruiters die écht zegt wat ze doet
+        — <strong>niet het cv, maar de persoon.</strong>
+        Dat is geen marketingtekst bij jou. Dat zie ik ook terug in hoe je schrijft, hoe je je positioneert.
+      </p>
+      <p class="fade-in">
+        Ik werk zelf op het snijvlak van strategie en uitvoering. Eén van de dingen waar ik mee bezig ben,
+        is het bouwen van <em>diagnostische tools</em> die helpen om gesprekken beter te starten.
+        Assessments die niet toetsen, maar in kaart brengen.
+      </p>
+      <p class="fade-in">
+        Ik dacht aan jou bij een concept dat ik het <strong>Match Engine</strong> noem.
+        Twee korte scans — één voor de kandidaat, één voor het team — die samen een eerlijker
+        startpunt geven dan een cv en een eerste gesprek van dertig minuten.
+      </p>
+      <p class="fade-in">
+        Ik heb het uitgewerkt als een concreet concept, inclusief een werkende demo van de kandidaatscan.
+        Geen prototype, geen wireframes. Je kunt het gewoon proberen.
+      </p>
+      <p class="fade-in">
+        Ik deel het niet breed. Ik vraag het aan een klein aantal mensen van wie ik denk
+        dat ze er iets mee kunnen. Jij was de eerste naam die ik opschreef.
+      </p>
+    </div>
+
+    <!-- What's inside -->
+    <div class="inside-box fade-in">
+      <div class="inside-header">Wat je aantreft</div>
+      <div class="inside-items">
+        <div class="inside-item">
+          <div class="inside-icon">⚡</div>
+          <div>
+            <div class="inside-item-title">Kandidaat Energy Profile — werkende demo</div>
+            <div class="inside-item-body">15 vragen, 5 dimensies, volledig resultaat. Probeer het zelf alsof je kandidaat bent.</div>
+          </div>
+        </div>
+        <div class="inside-item">
+          <div class="inside-icon">🔗</div>
+          <div>
+            <div class="inside-item-title">Het grotere concept — The Match Engine</div>
+            <div class="inside-item-body">Hoe kandidaatprofiel + teamanalyse samen één gespreksbasis geven. Uitgewerkt als visuele pitch.</div>
+          </div>
+        </div>
+        <div class="inside-item">
+          <div class="inside-icon">💬</div>
+          <div>
+            <div class="inside-item-title">Geen verplichting, geen verkooppraatje</div>
+            <div class="inside-item-body">Ik ben benieuwd wat jij ervan vindt. Of het klopt met hoe jij werkt. Dat is het enige wat ik vraag.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-block fade-in">
+      <a href="/match-engine-pitch.html" class="cta-primary">
+        Bekijk het concept →
+      </a>
+      <span class="cta-note">Duurt ongeveer 10 minuten om door te lopen</span>
+    </div>
+
+    <div class="signature fade-in">
+      <div class="sig-avatar">M</div>
+      <div>
+        <div class="sig-name">Mark de Kock</div>
+        <div class="sig-role">Strategisch mentor voor AI &amp; executie · Partner Kirk &amp; Blackbeard</div>
+        <div class="sig-links">
+          <a href="https://markdekock.com" class="sig-link">markdekock.com</a>
+          <a href="https://linkedin.com/in/markdekock" class="sig-link">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    Persoonlijk gedeeld door Mark de Kock · Niet publiek
+  </footer>
+
+  <script>
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 60);
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+  </script>
+
+</body>
+</html>

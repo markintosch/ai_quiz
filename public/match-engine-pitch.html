@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Match Engine · Laura Dijcks · Hire.nl</title>
+  <meta name="description" content="Twee scans. Één inzicht. Een gesprek dat écht ergens over gaat." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Reset & Base ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brand:      #2C2447;
+      --brand-d:    #1a1526;
+      --brand-mid:  #696284;
+      --taupe:      #C5C1B9;
+      --border:     #DFDDE3;
+      --bg:         #F8F7FA;
+      --white:      #FFFFFF;
+      --text:       #2C2447;
+      --muted:      #696284;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img { display: block; max-width: 100%; }
+
+    /* ─── Animations ─── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(32px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-24px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes pulseBar {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.7; }
+    }
+
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .animate-on-scroll.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.3s; }
+    .delay-4 { transition-delay: 0.4s; }
+
+    /* ─── Layout ─── */
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section { padding: 80px 0; }
+
+    /* ─── NAV ─── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .nav-mono {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--brand);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 15px;
+      flex-shrink: 0;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-name {
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .nav-role {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .nav-cta {
+      background: var(--brand);
+      color: var(--white);
+      border: none;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+      white-space: nowrap;
+    }
+    .nav-cta:hover { background: var(--brand-d); transform: translateY(-1px); }
+
+    /* ─── HERO ─── */
+    .hero {
+      background: var(--brand);
+      padding: 100px 0 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -120px; left: 50%;
+      transform: translateX(-50%);
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(105,98,132,0.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(44,36,71,0.15);
+      border: 1px solid var(--border);
+      color: var(--white);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 999px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      animation: fadeIn 0.6s ease both;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.1;
+      max-width: 700px;
+      margin: 0 auto 20px;
+      letter-spacing: -1px;
+      animation: fadeInUp 0.7s ease both 0.1s;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: rgba(255,255,255,0.8);
+      max-width: 520px;
+      margin: 0 auto 40px;
+      font-weight: 400;
+      animation: fadeInUp 0.7s ease both 0.2s;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 60px;
+      animation: fadeInUp 0.7s ease both 0.3s;
+    }
+
+    .btn-primary {
+      background: var(--brand);
+      color: var(--white);
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(44,36,71,0.4);
+      border: 2px solid rgba(255,255,255,0.3);
+    }
+    .btn-primary:hover { background: var(--brand-d); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(44,36,71,0.5); }
+
+    .btn-ghost {
+      border: 2px solid rgba(255,255,255,0.4);
+      color: var(--white);
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+      background: transparent;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.07); transform: translateY(-2px); }
+
+    .hero-stats {
+      display: flex;
+      gap: 0;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeInUp 0.7s ease both 0.4s;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 40px;
+    }
+
+    .hero-stat {
+      flex: 1;
+      min-width: 180px;
+      padding: 0 24px;
+      text-align: center;
+      border-right: 1px solid rgba(255,255,255,0.1);
+    }
+    .hero-stat:last-child { border-right: none; }
+
+    .hero-stat-num {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--white);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .hero-stat-label {
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      font-weight: 400;
+    }
+
+    /* ─── SECTION HEADERS ─── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--brand);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 800;
+      color: var(--brand);
+      line-height: 1.2;
+      letter-spacing: -0.5px;
+    }
+
+    .section-sub {
+      font-size: 17px;
+      color: var(--muted);
+      margin-top: 12px;
+      max-width: 520px;
+    }
+
+    /* ─── PROBLEEM ─── */
+    .probleem { background: var(--bg); }
+
+    .probleem-header { text-align: center; margin-bottom: 56px; }
+    .probleem-header .section-sub { margin: 12px auto 0; }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .pain-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 32px 28px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.07), 0 0 0 1px var(--border);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .pain-card:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+
+    .pain-icon {
+      font-size: 2rem;
+      margin-bottom: 16px;
+    }
+
+    .pain-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--brand);
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+
+    .pain-body {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* ─── HOE HET WERKT ─── */
+    .hoe-het-werkt { background: var(--white); }
+    .hoe-header { text-align: center; margin-bottom: 64px; }
+    .hoe-header .section-sub { margin: 12px auto 0; }
+
+    .steps-row {
+      display: grid;
+      grid-template-columns: 1fr 40px 1fr 40px 1fr;
+      align-items: start;
+      gap: 0;
+    }
+
+    .step-arrow {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 48px;
+      color: var(--border);
+      font-size: 28px;
+      font-weight: 300;
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .step-top {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .step-num-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .step-num {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .step-num-coral { background: rgba(44,36,71,0.12); color: var(--brand); }
+    .step-num-navy  { background: rgba(44,36,71,0.12); color: var(--brand); }
+    .step-num-amber { background: rgba(105,98,132,0.15); color: var(--brand-mid); }
+
+    .step-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+    .step-label-coral { color: var(--brand); }
+    .step-label-navy  { color: var(--brand); }
+    .step-label-amber { color: var(--brand-mid); }
+
+    .step-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--brand);
+      line-height: 1.3;
+    }
+
+    .step-body {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* ─── PROFILE CARD (mock) ─── */
+    .profile-card {
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+      font-size: 13px;
+    }
+
+    .card-header-coral {
+      background: var(--brand);
+      padding: 16px 20px;
+      color: var(--white);
+    }
+
+    .card-header-navy {
+      background: var(--brand);
+      padding: 16px 20px;
+      color: var(--white);
+    }
+
+    .card-header-amber {
+      background: var(--brand);
+      padding: 16px 20px;
+      color: var(--white);
+    }
+
+    .card-header-name {
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 1.2;
+    }
+
+    .card-header-sub {
+      font-size: 11px;
+      opacity: 0.75;
+      margin-top: 2px;
+    }
+
+    .card-body {
+      background: var(--white);
+      padding: 18px 20px;
+    }
+
+    .dim-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 14px;
+    }
+    .dim-row:last-of-type { margin-bottom: 0; }
+
+    .dim-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dim-icon { font-size: 14px; flex-shrink: 0; }
+
+    .dim-name {
+      font-weight: 600;
+      font-size: 12px;
+      color: var(--brand);
+      flex: 1;
+    }
+
+    .dim-bar-wrap {
+      position: relative;
+      height: 8px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .dim-bar-fill-coral {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      background: var(--brand);
+      border-radius: 999px;
+    }
+
+    .dim-bar-fill-navy {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      background: var(--brand);
+      border-radius: 999px;
+    }
+
+    .dim-bar-fill-amber {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      background: var(--brand-mid);
+      border-radius: 999px;
+    }
+
+    .dim-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .card-quote {
+      background: rgba(44,36,71,0.05);
+      border-left: 3px solid var(--brand);
+      padding: 12px 14px;
+      font-size: 12px;
+      color: var(--text);
+      line-height: 1.6;
+      font-style: italic;
+      margin-top: 14px;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .card-footer {
+      padding: 10px 20px;
+      background: var(--bg);
+      font-size: 10px;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    .insight-box {
+      background: rgba(44,36,71,0.08);
+      border-left: 3px solid var(--brand);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 16px;
+      font-size: 12px;
+      color: var(--brand);
+      line-height: 1.6;
+      margin-top: 14px;
+      font-weight: 500;
+    }
+    .insight-box strong { font-weight: 700; }
+
+    /* ─── DEMO SECTIONS ─── */
+    .demo-kandidaat { background: var(--bg); }
+    .demo-team      { background: var(--white); }
+    .demo-match     { background: var(--bg); }
+
+    .demo-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 56px;
+      align-items: start;
+    }
+
+    .demo-text h2 {
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 800;
+      color: var(--brand);
+      line-height: 1.2;
+      margin-bottom: 16px;
+      letter-spacing: -0.3px;
+    }
+
+    .demo-text p {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 16px;
+    }
+
+    .demo-text p:last-child { margin-bottom: 0; }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .tag {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    .tag-coral { background: rgba(44,36,71,0.1); color: var(--brand); border: 1px solid var(--border); }
+    .tag-navy  { background: rgba(44,36,71,0.1); color: var(--brand); border: 1px solid var(--border); }
+    .tag-amber { background: rgba(105,98,132,0.12); color: var(--brand-mid); border: 1px solid var(--border); }
+
+    /* ─── MATCH ─── */
+    .match-table {
+      background: var(--white);
+      border-radius: 14px;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+
+    .match-header {
+      background: var(--brand);
+      padding: 16px 24px;
+      color: var(--white);
+      font-weight: 700;
+      font-size: 14px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .match-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 130px;
+      gap: 12px;
+      padding: 16px 24px;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .match-row:last-child { border-bottom: none; }
+
+    .match-dim {
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--brand);
+    }
+
+    .match-values {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .match-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 999px;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .match-badge-ok     { background: var(--brand); color: var(--white); }
+    .match-badge-amber  { background: var(--brand-mid); color: var(--white); }
+
+    .match-note {
+      grid-column: 1 / -1;
+      font-size: 12px;
+      color: var(--muted);
+      font-style: italic;
+      margin-top: -6px;
+      padding-bottom: 4px;
+    }
+
+    .match-quote-box {
+      background: var(--brand);
+      border-radius: 12px;
+      padding: 24px;
+      color: var(--white);
+      margin-top: 24px;
+    }
+
+    .match-quote-text {
+      font-size: 15px;
+      font-style: italic;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .match-quote-attr {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      margin-top: 10px;
+    }
+
+    /* ─── VOOR WIE ─── */
+    .voor-wie { background: var(--white); }
+    .voor-wie-header { text-align: center; margin-bottom: 56px; }
+    .voor-wie-header .section-sub { margin: 12px auto 0; }
+
+    .voor-wie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+
+    .vw-card {
+      border-radius: 14px;
+      padding: 32px 28px;
+      border: 1px solid var(--border);
+    }
+
+    .vw-card-coral { background: rgba(44,36,71,0.04); border-color: rgba(44,36,71,0.15); }
+    .vw-card-navy  { background: rgba(44,36,71,0.04); border-color: rgba(44,36,71,0.15); }
+    .vw-card-amber { background: rgba(105,98,132,0.06); border-color: rgba(105,98,132,0.25); }
+
+    .vw-icon {
+      font-size: 2rem;
+      margin-bottom: 14px;
+    }
+
+    .vw-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--brand);
+      margin-bottom: 16px;
+    }
+
+    .vw-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .vw-list li {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.5;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .vw-list li::before {
+      content: '✓';
+      font-weight: 700;
+      font-size: 13px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .vw-card-coral .vw-list li::before { color: var(--brand); }
+    .vw-card-navy  .vw-list li::before { color: var(--brand); }
+    .vw-card-amber .vw-list li::before { color: var(--brand-mid); }
+
+    /* ─── ABOUT ─── */
+    .about-laura {
+      background: var(--brand);
+      padding: 80px 0;
+    }
+
+    .about-inner {
+      display: flex;
+      gap: 56px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .about-photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--white);
+      flex-shrink: 0;
+      border: 4px solid rgba(255,255,255,0.2);
+    }
+
+    .about-text { flex: 1; min-width: 240px; }
+
+    .about-name {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+
+    .about-role {
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 20px;
+    }
+
+    .about-quote {
+      font-size: 16px;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.7;
+      font-style: italic;
+      border-left: 3px solid rgba(255,255,255,0.4);
+      padding-left: 20px;
+    }
+
+    /* ─── CTA ─── */
+    .cta-section {
+      background: var(--brand);
+      padding: 80px 0;
+      text-align: center;
+    }
+
+    .cta-section h2 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+
+    .cta-section p {
+      font-size: 17px;
+      color: rgba(255,255,255,0.8);
+      max-width: 480px;
+      margin: 0 auto 36px;
+      line-height: 1.7;
+    }
+
+    .btn-white {
+      display: inline-block;
+      background: var(--white);
+      color: var(--brand);
+      padding: 16px 36px;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .btn-white:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(0,0,0,0.2); }
+
+    .trust-line {
+      margin-top: 24px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.65);
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .trust-line span::before { content: '· '; }
+    .trust-line span:first-child::before { content: ''; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--brand-d);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 28px 24px;
+      text-align: center;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .footer-brand {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .footer-brand span {
+      font-weight: 400;
+      color: rgba(255,255,255,0.45);
+    }
+
+    .footer-copy {
+      font-size: 13px;
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      section { padding: 60px 0; }
+
+      .steps-row {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      .step-arrow { display: none; }
+
+      .demo-layout {
+        grid-template-columns: 1fr;
+        gap: 36px;
+      }
+
+      .match-row {
+        grid-template-columns: 1fr 80px;
+        gap: 8px;
+      }
+      .match-values { display: none; }
+
+      .about-inner { flex-direction: column; gap: 28px; text-align: center; }
+      .about-quote { text-align: left; }
+
+      .hero-stat { min-width: 140px; }
+
+      .footer-inner { flex-direction: column; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+      .nav-inner { padding: 12px 16px; }
+      .container { padding: 0 16px; }
+      .hero { padding: 72px 0 60px; }
+      .hero-stats { flex-direction: column; gap: 16px; }
+      .hero-stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 16px; }
+      .hero-stat:last-child { border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── NAV ─── -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="nav-brand">
+        <div class="nav-mono">LD</div>
+        <div>
+          <div class="nav-name">Laura Dijcks</div>
+          <div class="nav-role">Lead Recruiter · Hire.nl</div>
+        </div>
+      </a>
+      <a href="#contact" class="nav-cta">Neem contact op</a>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <section class="hero" id="home">
+    <div class="container">
+      <div class="hero-badge">Nieuw · Selectiemethode</div>
+      <h1>De juiste match begint<br/>van binnenuit.</h1>
+      <p class="hero-sub">Twee scans. Één inzicht. Een gesprek dat écht ergens over gaat.</p>
+      <div class="hero-buttons">
+        <a href="#demo-kandidaat" class="btn-primary">Bekijk de demo →</a>
+        <a href="#hoe-het-werkt" class="btn-ghost">Hoe het werkt</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-num">15 min</span>
+          <span class="hero-stat-label">per kandidaat</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-num">5</span>
+          <span class="hero-stat-label">dimensies</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-num">1</span>
+          <span class="hero-stat-label">helder profiel</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── HET PROBLEEM ─── -->
+  <section class="probleem" id="probleem">
+    <div class="container">
+      <div class="probleem-header animate-on-scroll">
+        <div class="section-label">Het probleem</div>
+        <h2 class="section-title">Waarom mislukken goede kandidaten?</h2>
+        <p class="section-sub">Niet door gebrek aan skills. Maar omdat de match niet diep genoeg gaat.</p>
+      </div>
+      <div class="cards-grid">
+        <div class="pain-card animate-on-scroll delay-1">
+          <div class="pain-icon">📄</div>
+          <div class="pain-title">Een cv vertelt je wie iemand was. Niet wie ze zijn.</div>
+          <p class="pain-body">Werkervaring is een achteruitkijkspiegel. Het zegt weinig over hoe iemand écht samenwerkt, communiceert of omgaat met druk.</p>
+        </div>
+        <div class="pain-card animate-on-scroll delay-2">
+          <div class="pain-icon">🎭</div>
+          <div class="pain-title">Eerste gesprekken zijn te kort voor echte diepte.</div>
+          <p class="pain-body">In 45 minuten speelt iedereen zijn beste versie. De echte cultuurfit — of het ontbreken ervan — zie je pas in week drie.</p>
+        </div>
+        <div class="pain-card animate-on-scroll delay-3">
+          <div class="pain-icon">❌</div>
+          <div class="pain-title">Mismatches kosten tijd, geld en energie — van iedereen.</div>
+          <p class="pain-body">Een mislukte plaatsing is duur voor het bedrijf, demotiverend voor de kandidaat en raakt jouw reputatie als recruiter.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── HOE HET WERKT ─── -->
+  <section class="hoe-het-werkt" id="hoe-het-werkt">
+    <div class="container">
+      <div class="hoe-header animate-on-scroll">
+        <div class="section-label">De methode</div>
+        <h2 class="section-title">Hoe The Match Engine werkt</h2>
+        <p class="section-sub">Twee korte scans leveren samen een eerlijker startpunt op voor elk gesprek.</p>
+      </div>
+
+      <div class="steps-row">
+        <!-- STEP 1 -->
+        <div class="step animate-on-scroll delay-1">
+          <div class="step-top">
+            <div class="step-num-wrap">
+              <div class="step-num step-num-coral">1</div>
+              <div class="step-label step-label-coral">Kandidaat</div>
+            </div>
+            <div class="step-title">Energy Profile Scan</div>
+            <p class="step-body">De kandidaat doet de Energy Profile Scan. 15 vragen. 5 minuten. Geen goed of fout — alleen eerlijk inzicht in wie ze zijn.</p>
+            <div class="tag-list">
+              <span class="tag tag-coral">15 vragen</span>
+              <span class="tag tag-coral">5 min</span>
+              <span class="tag tag-coral">Anoniem</span>
+            </div>
+          </div>
+          <div class="profile-card">
+            <div class="card-header-coral">
+              <div class="card-header-name">Emma V. · Energy Profile</div>
+              <div class="card-header-sub">Kandidaat scan · Hire.nl · 2025</div>
+            </div>
+            <div class="card-body">
+              <div class="dim-row">
+                <div class="dim-top">
+                  <span class="dim-icon">⚡</span>
+                  <span class="dim-name">Energie-stijl</span>
+                </div>
+                <div class="dim-bar-wrap"><div class="dim-bar-fill-coral" style="width: 25%"></div></div>
+                <div class="dim-labels"><span>Gefocust &amp; diepgaand</span><span>Sociaal &amp; breed</span></div>
+              </div>
+              <div class="dim-row">
+                <div class="dim-top">
+                  <span class="dim-icon">💬</span>
+                  <span class="dim-name">Communicatie</span>
+                </div>
+                <div class="dim-bar-wrap"><div class="dim-bar-fill-coral" style="width: 75%"></div></div>
+                <div class="dim-labels"><span>Reflectief</span><span>Direct &amp; snel</span></div>
+              </div>
+              <div class="dim-row">
+                <div class="dim-top">
+                  <span class="dim-icon">🎯</span>
+                  <span class="dim-name">Motivatie</span>
+                </div>
+                <div class="dim-bar-wrap"><div class="dim-bar-fill-coral" style="width: 80%"></div></div>
+                <div class="dim-labels"><span>Stabiliteit</span><span>Impact &amp; zingeving</span></div>
+              </div>
+              <div class="dim-row">
+                <div class="dim-top">
+                  <span class="dim-icon">🤝</span>
+                  <span class="dim-name">Samenwerking</span>
+                </div>
+                <div class="dim-bar-wrap"><div class="dim-bar-fill-coral" style="width: 30%"></div></div>
+                <div class="dim-labels"><span>Versterken &amp; steunen</span><span>Leiden &amp; initiëren</span></div>
+              </div>
+              <div class="dim-row">
+                <div class="dim-top">
+                  <span class="dim-icon">🧠</span>
+                  <span class="dim-name">Omgang met druk</span>
+                </div>
+                <div class="dim-bar-wrap"><div class="dim-bar-fill-coral" style="width: 70%"></div></div>
+                <div class="dim-labels"><span>Analyseren</span><span>Handelen &amp; aanpassen</span></div>
+              </div>
+            </div>
+            <div class="card-footer">Kandidaatprofiel · Hire.nl · Laura Dijcks</div>
+          </div>
+        </div>
+
+        <!-- ARROW 1 -->
+        <div class="step-arrow">→</div>
+
+        <!-- STEP 2 -->
+        <div class="step animate-on-scroll delay-2">
+          <div class="step-top">
+            <div class="step-num-wrap">
+              <div class="step-num step-num-navy">2</div>
+              <div class="step-label step-label-navy">Bedrijf</div>
+            </div>
+            <div class="step-title">Team DNA Scan</div>
+            <p class="step-body">De hiring manager doet de Team DNA Scan. Wat mist het team? Wat is de cultuur? Waar loopt het op vast? Eerlijk en snel.</p>
+            <div class="tag-list">
+              <span class="tag tag-navy">10 vragen</span>
+              <span class="tag tag-navy">Team cultuur</span>
+              <span class="tag tag-navy">Wat ontbreekt</span>
+            </div>
+          </div>
+          <div class="profile-card">
+            <div class="card-header-navy">
+              <div class="card-header-name">Growth Team · Team DNA</div>
+              <div class="card-header-sub">TechBedrijf X · Team scan · 2025</div>
+            </div>
+            <div class="card-body">
+              <div class="dim-row">
+                <div class="dim-top">
+                  <span class="dim-icon">👑</span>
+                  <span class="dim-name">Leiderschapsstijl</span>
+                </div>
+                <div class="dim-bar-wrap"><div class="dim-bar-fill-navy" style="width: 70%"></div></div>
+                <div class="dim-labels"><span>Coachend</span><span>Sturend</span></div>
+              </div>
+              <div class="dim-row">
+                <div class="dim-top">
+                  <span class="dim-icon">💬</span>
+                  <span class="dim-name">Communicatiecultuur</span>
+                </div>
+                <div class="dim-bar-wrap"><div class="dim-bar-fill-navy" style="width: 85%"></div></div>
+                <div class="dim-labels"><span>Overwogen</span><span>Direct &amp; snel</span></div>
+              </div>
+              <div class="dim-row">
+                <div class="dim-top">
+                  <span class="dim-icon">🚀</span>
+                  <span class="dim-name">Groeiverwachting</span>
+                </div>
+                <div class="dim-bar-wrap"><div class="dim-bar-fill-navy" style="width: 80%"></div></div>
+                <div class="dim-labels"><span>Stabiel &amp; zeker</span><span>Hoog tempo</span></div>
+              </div>
+              <div class="dim-row">
+                <div class="dim-top">
+                  <span class="dim-icon">🔍</span>
+                  <span class="dim-name">Wat ontbreekt</span>
+                </div>
+                <div class="dim-bar-wrap"><div class="dim-bar-fill-amber" style="width: 20%"></div></div>
+                <div class="dim-labels"><span>Reflectie &amp; structuur</span><span>Snelheid &amp; actie</span></div>
+              </div>
+              <div class="insight-box">
+                <strong>Team-inzicht:</strong> Dit team mist iemand die rust en structuur brengt zonder de snelheid te remmen.
+              </div>
+            </div>
+            <div class="card-footer">Teamprofiel · Hire.nl · Laura Dijcks</div>
+          </div>
+        </div>
+
+        <!-- ARROW 2 -->
+        <div class="step-arrow">→</div>
+
+        <!-- STEP 3 -->
+        <div class="step animate-on-scroll delay-3">
+          <div class="step-top">
+            <div class="step-num-wrap">
+              <div class="step-num step-num-amber">3</div>
+              <div class="step-label step-label-amber">The Match</div>
+            </div>
+            <div class="step-title">Inzicht in één pagina</div>
+            <p class="step-body">Laura gebruikt beide profielen als basis voor het gesprek. Geen verassingen meer in week drie. Het gesprek gaat nu écht ergens over.</p>
+            <div class="tag-list">
+              <span class="tag tag-amber">Matches zichtbaar</span>
+              <span class="tag tag-amber">Spanningen bespreekbaar</span>
+            </div>
+          </div>
+          <div class="profile-card">
+            <div class="card-header-amber">
+              <div class="card-header-name">Match-overzicht · Emma &amp; Growth Team</div>
+              <div class="card-header-sub">Gegenereerd via Hire.nl</div>
+            </div>
+            <div class="card-body">
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(44,36,71,0.06); border-radius: 8px;">
+                  <span style="font-size: 12px; font-weight: 600; color: var(--brand);">Communicatiestijl</span>
+                  <span style="font-size: 11px; font-weight: 700; background: var(--brand); color: var(--white); padding: 3px 10px; border-radius: 999px;">✓ MATCH</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(44,36,71,0.06); border-radius: 8px;">
+                  <span style="font-size: 12px; font-weight: 600; color: var(--brand);">Tempovoorkeur</span>
+                  <span style="font-size: 11px; font-weight: 700; background: var(--brand); color: var(--white); padding: 3px 10px; border-radius: 999px;">✓ MATCH</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(105,98,132,0.08); border-radius: 8px;">
+                  <span style="font-size: 12px; font-weight: 600; color: var(--brand);">Energie-stijl</span>
+                  <span style="font-size: 11px; font-weight: 700; background: var(--brand-mid); color: var(--white); padding: 3px 10px; border-radius: 999px;">↔ SPANNING</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(44,36,71,0.06); border-radius: 8px;">
+                  <span style="font-size: 12px; font-weight: 600; color: var(--brand);">Wat ontbreekt</span>
+                  <span style="font-size: 11px; font-weight: 700; background: var(--brand); color: var(--white); padding: 3px 10px; border-radius: 999px;">✓ MATCH</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer">Match Engine rapport · Hire.nl</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── DEMO: KANDIDAAT PROFIEL ─── -->
+  <section class="demo-kandidaat" id="demo-kandidaat">
+    <div class="container">
+      <div class="demo-layout">
+        <div class="demo-text animate-on-scroll">
+          <div class="section-label">Demo · Kandidaat</div>
+          <h2>Zo ziet het Kandidaat Profiel eruit</h2>
+          <p>Na de scan krijgt elke kandidaat een persoonlijk profiel: visueel, begrijpelijk en eerlijk. Geen label, geen score — een spectrum dat laat zien wie ze zijn.</p>
+          <p>Het profiel is de basis voor een gesprek dat dieper gaat dan "wat staat er op je cv?". Laura gebruikt het als intake-document voor het eerste gesprek.</p>
+          <div class="tag-list">
+            <span class="tag tag-coral">Geen goed of fout</span>
+            <span class="tag tag-coral">5 dimensies</span>
+            <span class="tag tag-coral">Direct inzicht</span>
+          </div>
+        </div>
+        <div class="animate-on-scroll delay-2">
+          <div class="profile-card" style="max-width: 420px; box-shadow: 0 8px 40px rgba(0,0,0,0.14);">
+            <div class="card-header-coral">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                  <div class="card-header-name" style="font-size: 16px;">Emma V. · Energy Profile</div>
+                  <div class="card-header-sub">Marketing Specialist · Kandidaatprofiel</div>
+                </div>
+                <div style="width: 36px; height: 36px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px;">👤</div>
+              </div>
+            </div>
+            <div class="card-body">
+              <p style="font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px;">Dimensie profiel</p>
+              <div class="dim-row">
+                <div class="dim-top">
+                  <span class="dim-icon">⚡</span>
+                  <span class="dim-name">Energie-stijl</span>
+                </div>
+                <div class="dim-bar-wrap"><div class="dim-bar-fill-coral" style="width: 25%"></div></div>
+                <div class="dim-labels"><span>Gefocust &amp; diepgaand</span><span>Sociaal &amp; breed</span></div>
+              </div>
+              <div class="dim-row">
+                <div class="dim-top">
+                  <span class="dim-icon">💬</span>
+                  <span class="dim-name">Communicatie</span>
+                </div>
+                <div class="dim-bar-wrap"><div class="dim-bar-fill-coral" style="width: 75%"></div></div>
+                <div class="dim-labels"><span>Reflectief</span><span>Direct &amp; snel</span></div>
+              </div>
+              <div class="dim-row">
+                <div class="dim-top">
+                  <span class="dim-icon">🎯</span>
+                  <span class="dim-name">Motivatie</span>
+                </div>
+                <div class="dim-bar-wrap"><div class="dim-bar-fill-coral" style="width: 80%"></div></div>
+                <div class="dim-labels"><span>Stabiliteit</span><span>Impact &amp; zingeving</span></div>
+              </div>
+              <div class="dim-row">
+                <div class="dim-top">
+                  <span class="dim-icon">🤝</span>
+                  <span class="dim-name">Samenwerking</span>
+                </div>
+                <div class="dim-bar-wrap"><div class="dim-bar-fill-coral" style="width: 30%"></div></div>
+                <div class="dim-labels"><span>Versterken &amp; steunen</span><span>Leiden &amp; initiëren</span></div>
+              </div>
+              <div class="dim-row">
+                <div class="dim-top">
+                  <span class="dim-icon">🧠</span>
+                  <span class="dim-name">Omgang met druk</span>
+                </div>
+                <div class="dim-bar-wrap"><div class="dim-bar-fill-coral" style="width: 70%"></div></div>
+                <div class="dim-labels"><span>Analyseren</span><span>Handelen &amp; aanpassen</span></div>
+              </div>
+              <div class="card-quote">
+                "Emma werkt het beste alleen of in klein verband, communiceert direct en is gedreven door impact. Ze floreert in omgevingen waar ze vrijheid heeft maar weet wat ze bijdraagt."
+              </div>
+            </div>
+            <div class="card-footer">Gedeeld via Hire.nl · Laura Dijcks</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── DEMO: TEAM DNA ─── -->
+  <section class="demo-team" id="demo-team">
+    <div class="container">
+      <div class="demo-layout" style="direction: ltr;">
+        <div class="animate-on-scroll delay-1" style="order: 2;">
+          <div class="profile-card" style="max-width: 420px; box-shadow: 0 8px 40px rgba(0,0,0,0.14);">
+            <div class="card-header-navy">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                  <div class="card-header-name" style="font-size: 16px;">Growth Team · Team DNA</div>
+                  <div class="card-header-sub">TechBedrijf X · Team DNA scan</div>
+                </div>
+                <div style="width: 36px; height: 36px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px;">🏢</div>
+              </div>
+            </div>
+            <div class="card-body">
+              <p style="font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px;">Team dimensies</p>
+              <div class="dim-row">
+                <div class="dim-top">
+                  <span class="dim-icon">👑</span>
+                  <span class="dim-name">Leiderschapsstijl</span>
+                </div>
+                <div class="dim-bar-wrap"><div class="dim-bar-fill-navy" style="width: 70%"></div></div>
+                <div class="dim-labels"><span>Coachend</span><span>Sturend</span></div>
+              </div>
+              <div class="dim-row">
+                <div class="dim-top">
+                  <span class="dim-icon">💬</span>
+                  <span class="dim-name">Communicatiecultuur</span>
+                </div>
+                <div class="dim-bar-wrap"><div class="dim-bar-fill-navy" style="width: 85%"></div></div>
+                <div class="dim-labels"><span>Overwogen</span><span>Direct &amp; snel</span></div>
+              </div>
+              <div class="dim-row">
+                <div class="dim-top">
+                  <span class="dim-icon">🚀</span>
+                  <span class="dim-name">Groeiverwachting</span>
+                </div>
+                <div class="dim-bar-wrap"><div class="dim-bar-fill-navy" style="width: 80%"></div></div>
+                <div class="dim-labels"><span>Stabiel &amp; zeker</span><span>Hoog tempo</span></div>
+              </div>
+              <div class="dim-row">
+                <div class="dim-top">
+                  <span class="dim-icon">🔍</span>
+                  <span class="dim-name">Wat ontbreekt</span>
+                </div>
+                <div class="dim-bar-wrap"><div class="dim-bar-fill-amber" style="width: 20%"></div></div>
+                <div class="dim-labels"><span>Reflectie &amp; structuur</span><span>Snelheid &amp; actie</span></div>
+              </div>
+              <div class="insight-box">
+                <strong>Team-inzicht:</strong> Dit team mist iemand die rust en structuur brengt zonder de snelheid te remmen.
+              </div>
+            </div>
+            <div class="card-footer">Teamprofiel · Hire.nl · Laura Dijcks</div>
+          </div>
+        </div>
+
+        <div class="demo-text animate-on-scroll" style="order: 1;">
+          <div class="section-label">Demo · Bedrijf</div>
+          <h2>Zo ziet het Team Profiel eruit</h2>
+          <p>De hiring manager vult de Team DNA Scan in. Tien gerichte vragen over hoe het team nu werkt, wat de cultuur is en waar het soms wringt.</p>
+          <p>Het resultaat: een Team Fingerprint. Concreet inzicht in wat het team écht nodig heeft — niet wat de vacaturetekst zegt.</p>
+          <div class="tag-list">
+            <span class="tag tag-navy">4 dimensies</span>
+            <span class="tag tag-navy">Teamcultuur</span>
+            <span class="tag tag-navy">Blinde vlekken zichtbaar</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── DEMO: THE MATCH ─── -->
+  <section class="demo-match" id="demo-match">
+    <div class="container">
+      <div style="text-align: center; margin-bottom: 56px;" class="animate-on-scroll">
+        <div class="section-label">Demo · The Match</div>
+        <h2 class="section-title">De match — op één pagina</h2>
+        <p class="section-sub" style="margin: 12px auto 0;">Matches en spanningen naast elkaar. Eerlijk en bespreekbaar — nog voor het eerste gesprek.</p>
+      </div>
+
+      <div style="max-width: 680px; margin: 0 auto;" class="animate-on-scroll delay-1">
+        <div class="match-table">
+          <div class="match-header">
+            <span>🔀</span> Emma V. · Growth Team — Match Analyse
+          </div>
+
+          <div class="match-row">
+            <div>
+              <div class="match-dim">Communicatie</div>
+              <div class="match-values">Emma: Direct &amp; snel · Team: Direct &amp; snel</div>
+            </div>
+            <div></div>
+            <div class="match-badge match-badge-ok">✓ MATCH</div>
+          </div>
+
+          <div class="match-row">
+            <div>
+              <div class="match-dim">Tempo &amp; groeiverwachting</div>
+              <div class="match-values">Emma: Hoog tempo · Team: Hoog tempo</div>
+            </div>
+            <div></div>
+            <div class="match-badge match-badge-ok">✓ MATCH</div>
+          </div>
+
+          <div class="match-row" style="flex-wrap: wrap;">
+            <div>
+              <div class="match-dim">Energie-stijl</div>
+              <div class="match-values">Emma: Gefocust &amp; solo · Team: Hoog-sociaal</div>
+            </div>
+            <div></div>
+            <div class="match-badge match-badge-amber">↔ SPANNING</div>
+            <div class="match-note">Emma werkt liever solo, het team is hoog-sociaal en snel van slag. Goed bespreken in het gesprek.</div>
+          </div>
+
+          <div class="match-row">
+            <div>
+              <div class="match-dim">Wat ontbreekt (team)</div>
+              <div class="match-values">Ontbreekt: Structuur · Emma: Versterken &amp; steunen</div>
+            </div>
+            <div></div>
+            <div class="match-badge match-badge-ok">✓ MATCH</div>
+          </div>
+        </div>
+
+        <div class="match-quote-box animate-on-scroll delay-2">
+          <div class="match-quote-text">
+            "Laura gebruikt dit als intake voor het eerste gesprek. Geen verbazing meer in week drie — de matches liggen er al op tafel, en de spanningen zijn bespreekbaar gemaakt."
+          </div>
+          <div class="match-quote-attr">— The Match Engine · Hire.nl methode</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── VOOR WIE ─── -->
+  <section class="voor-wie" id="voor-wie">
+    <div class="container">
+      <div class="voor-wie-header animate-on-scroll">
+        <div class="section-label">Voor wie</div>
+        <h2 class="section-title">Wie profiteert van The Match Engine?</h2>
+        <p class="section-sub">De methode werkt voor iedereen in het recruitmentproces — van kandidaat tot hiring manager.</p>
+      </div>
+      <div class="voor-wie-grid">
+        <div class="vw-card vw-card-coral animate-on-scroll delay-1">
+          <div class="vw-icon">👤</div>
+          <div class="vw-title">Kandidaten</div>
+          <ul class="vw-list">
+            <li>Je laat zien wie je écht bent, niet alleen wat je gedaan hebt</li>
+            <li>Je gaat beter voorbereid het gesprek in</li>
+            <li>Je weet waar je wél en niet past voordat je ja zegt</li>
+          </ul>
+        </div>
+        <div class="vw-card vw-card-navy animate-on-scroll delay-2">
+          <div class="vw-icon">🏢</div>
+          <div class="vw-title">Bedrijven</div>
+          <ul class="vw-list">
+            <li>Minder verrassingen in de eerste drie maanden</li>
+            <li>Betere gesprekken — gericht op de juiste vragen</li>
+            <li>Minder mismatches, meer langdurige plaatsingen</li>
+          </ul>
+        </div>
+        <div class="vw-card vw-card-amber animate-on-scroll delay-3">
+          <div class="vw-icon">🎯</div>
+          <div class="vw-title">Recruiters</div>
+          <ul class="vw-list">
+            <li>Sterkere toegevoegde waarde naast cv-matching</li>
+            <li>Gesprekken die ergens over gaan — vanaf dag één</li>
+            <li>Een methode die jouw reputatie versterkt</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── ABOUT LAURA ─── -->
+  <section class="about-laura" id="over-laura">
+    <div class="container">
+      <div class="about-inner">
+        <div class="about-photo animate-on-scroll">LD</div>
+        <div class="about-text animate-on-scroll delay-1">
+          <div class="about-name">Laura Dijcks</div>
+          <div class="about-role">Lead Recruiter · Hire.nl</div>
+          <div class="about-quote">
+            "Ik wil weten wie jij bent, niet alleen wat je hebt gedaan. Dit instrument geeft me een eerlijker startpunt — voor het eerste gesprek, maar ook voor de lange termijn. Recruitment gaat over mensen. Dan moet de methode dat ook zijn."
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CTA ─── -->
+  <section class="cta-section" id="contact">
+    <div class="container">
+      <h2 class="animate-on-scroll">Klaar om slimmer<br/>te matchen?</h2>
+      <p class="animate-on-scroll delay-1">Neem contact op en we kijken samen of dit past bij jouw recruitmentproces.</p>
+      <a href="mailto:laura@hire.nl" class="btn-white animate-on-scroll delay-2">Stuur Laura een bericht →</a>
+      <div class="trust-line animate-on-scroll delay-3">
+        <span>Geen verplichting</span>
+        <span>Gratis kennismaking</span>
+        <span>Binnen 24u reactie</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">Laura Dijcks <span>· Hire.nl</span></div>
+      <div class="footer-copy">© 2025 · The Match Engine</div>
+    </div>
+  </footer>
+
+  <!-- ─── JS: IntersectionObserver animations ─── -->
+  <script>
+    (function () {
+      var elements = document.querySelectorAll('.animate-on-scroll');
+
+      if (!('IntersectionObserver' in window)) {
+        elements.forEach(function (el) { el.classList.add('is-visible'); });
+        return;
+      }
+
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+      elements.forEach(function (el) { observer.observe(el); });
+    })();
+  </script>
+
+</body>
+</html>
