@@ -1,7 +1,7 @@
 'use client'
 
-import { Suspense, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { getScanContent, scoreColour } from '@/products/marketing_scan/data'
 
@@ -80,10 +80,11 @@ const MATURITY_SCORES = [3.8, 2.8, 1.8, 1.0] as const
 // ── Inner component ────────────────────────────────────────────────────────────
 function MarketingScanLandingInner() {
   const searchParams = useSearchParams()
-  const initialLang  = (searchParams.get('lang') as Lang) || 'en'
-  const [lang, setLang] = useState<Lang>(
-    ['en', 'nl', 'de', 'de-ch'].includes(initialLang) ? initialLang : 'en'
-  )
+  const router       = useRouter()
+  const rawLang      = searchParams.get('lang') || 'en'
+  const lang         = (['en', 'nl', 'de', 'de-ch'].includes(rawLang) ? rawLang : 'en') as Lang
+
+  const switchLang = (key: Lang) => router.replace(`/marketing_scan?lang=${key}`)
 
   const t        = T[lang]
   const { PILLARS } = getScanContent(lang)
@@ -119,7 +120,7 @@ function MarketingScanLandingInner() {
               {LANG_LABELS.map(({ key, label }) => (
                 <button
                   key={key}
-                  onClick={() => setLang(key)}
+                  onClick={() => switchLang(key)}
                   style={{
                     padding: '4px 10px', borderRadius: 100, fontSize: 11, fontWeight: 700,
                     border: `1px solid ${lang === key ? ACCENT : BORDER}`,
