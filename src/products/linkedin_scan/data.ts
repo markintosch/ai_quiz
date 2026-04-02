@@ -463,7 +463,7 @@ export function computeScores(answers: AnswerMap, lang: Lang) {
 
   return DIMENSIONS.map(dim => {
     const dimQs     = QUESTIONS.filter(q => q.dimensionId === dim.id)
-    const scores    = dimQs.map(q => answers[q.id] ?? 0).filter(v => v > 0)
+    const scores    = dimQs.map(q => answers[q.id] ?? 0).filter(v => v > 0) as number[]
     const avg       = scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0
     const score100  = Math.round((avg / 4) * 100)
     return { ...dim, score: score100, avg }
