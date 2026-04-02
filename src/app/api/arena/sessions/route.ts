@@ -30,6 +30,7 @@ export async function POST(req: NextRequest) {
     company_id?: string | null
     difficulty?: string | null
     topic?: string | null
+    product_key?: string | null
   }
 
   if (!body.host_name?.trim()) {
@@ -61,6 +62,7 @@ export async function POST(req: NextRequest) {
       question_count: body.question_count ?? 10,
       time_per_q:     body.time_per_q ?? 30,
       company_id:     body.company_id ?? null,
+      product_key:    body.product_key ?? 'cloud_arena',
       status:         'lobby',
       questions:      [],
     })

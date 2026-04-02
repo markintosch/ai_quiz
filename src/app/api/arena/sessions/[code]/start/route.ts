@@ -16,9 +16,9 @@ export async function POST(
 
   const { data: session } = await supabase
     .from('arena_sessions')
-    .select('id, status, question_count, time_per_q, scheduled_at, title')
+    .select('id, status, question_count, time_per_q, scheduled_at, title, product_key')
     .eq('join_code', code)
-    .single() as { data: { id: string; status: string; question_count: number; time_per_q: number; scheduled_at: string | null; title: string | null } | null }
+    .single() as { data: { id: string; status: string; question_count: number; time_per_q: number; scheduled_at: string | null; title: string | null; product_key: string | null } | null }
 
   if (!session) return NextResponse.json({ error: 'Session not found' }, { status: 404 })
   if (session.status !== 'lobby') {
@@ -31,11 +31,13 @@ export async function POST(
     return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
   }
 
-  // Pick random active questions
+  // Pick random active questions filtered by product_key
+  const productKey = session.product_key ?? 'cloud_arena'
   const { data: questions } = await supabase
     .from('arena_questions')
     .select('id, question_text, options, correct_value, explanation, difficulty, topic')
     .eq('active', true)
+    .eq('product_key', productKey)
     .order('created_at', { ascending: true })
     .limit(200)
 
