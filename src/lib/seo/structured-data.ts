@@ -154,13 +154,13 @@ export function buildOrganizationSchema(o: OrgConfig) {
 
 // ── WebSite ───────────────────────────────────────────────────────────────────
 
-export function buildWebSiteSchema(url: string, name: string) {
+export function buildWebSiteSchema(url: string, name: string, languages: string[] = ['nl', 'en', 'de']) {
   return {
     '@type':    'WebSite',
     '@id':      `${url}/#website`,
     url,
     name,
-    inLanguage: ['nl', 'en'],
+    inLanguage: languages,
   }
 }
 
@@ -176,6 +176,25 @@ export function buildFAQSchema(items: FAQItem[]) {
         '@type': 'Answer',
         text:    item.answer,
       },
+    })),
+  }
+}
+
+// ── BreadcrumbList ────────────────────────────────────────────────────────────
+
+export interface BreadcrumbItem {
+  name: string
+  url:  string
+}
+
+export function buildBreadcrumbSchema(items: BreadcrumbItem[]) {
+  return {
+    '@type':            'BreadcrumbList',
+    itemListElement:    items.map((item, i) => ({
+      '@type':          'ListItem',
+      position:         i + 1,
+      name:             item.name,
+      item:             item.url,
     })),
   }
 }

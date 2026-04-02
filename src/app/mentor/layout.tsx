@@ -7,26 +7,30 @@ import {
   serializeJsonLd,
 } from '@/lib/seo/structured-data'
 
+const BASE = 'https://markdekock.com'
+
 // ── Metadata ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
   title: 'Strategisch mentor voor AI & executie | Mark de Kock',
   description:
     'Van AI-ambitie naar heldere richting, intern draagvlak en een eerste use case die werkt. Persoonlijke begeleiding voor senior leiders. Partner Kirk & Blackbeard. Max. 5 trajecten tegelijk.',
-  metadataBase: new URL('https://markdekock.com'),
+  metadataBase: new URL(BASE),
   robots: { index: true, follow: true },
   alternates: {
-    canonical: 'https://markdekock.com',
+    canonical: `${BASE}/mentor`,
     languages: {
-      'nl': 'https://markdekock.com',
-      'en': 'https://markdekock.com/en',
+      'nl':    `${BASE}/mentor`,
+      'en':    `${BASE}/mentor?lang=en`,
+      'de':    `${BASE}/mentor?lang=de`,
+      'x-default': `${BASE}/mentor`,
     },
   },
   openGraph: {
     title: 'Van AI-ambitie naar richting, draagvlak en een use case die werkt | Mark de Kock',
     description:
       'Persoonlijke begeleiding voor senior leiders. Geen training, geen consultancy — strategische mentoring op het punt waar ambitie concreet moet worden. Max. 5 trajecten tegelijk.',
-    url: 'https://markdekock.com',
+    url: `${BASE}/mentor`,
     siteName: 'Mark de Kock',
     type: 'website',
     locale: 'nl_NL',
@@ -110,7 +114,7 @@ const FAQ_ITEMS = [
 ]
 
 const jsonLd = serializeJsonLd([
-  buildWebSiteSchema('https://markdekock.com', 'Mark de Kock'),
+  buildWebSiteSchema(`${BASE}`, 'Mark de Kock'),
   buildPersonSchema({
     name:        'Mark de Kock',
     url:         'https://markdekock.com',
@@ -119,7 +123,11 @@ const jsonLd = serializeJsonLd([
     orgName:     'Kirk & Blackbeard',
     orgUrl:      'https://kirkandblackbeard.com',
     country:     'NL',
-    knowsAbout:  ['AI strategie', 'Digitale transformatie', 'Verandermanagement', 'Executie', 'Klantbeleving', 'Groei'],
+    knowsAbout:  [
+      'AI strategie', 'Digitale transformatie', 'Verandermanagement', 'Executie', 'Klantbeleving', 'Groei',
+      'AI strategy', 'Digital transformation', 'Change management', 'Execution', 'Customer experience',
+      'AI implementation', 'Strategic leadership', 'AI readiness',
+    ],
     linkedin:    'https://www.linkedin.com/in/markdekock/',
   }),
   buildProfessionalServiceSchema({
