@@ -15,7 +15,7 @@ const WHITE  = '#FFFFFF'
 const MUTED  = '#8B9EB0'
 const BODY   = '#C8D6E5'
 
-const CALENDLY_SYSDIG = process.env.NEXT_PUBLIC_SYSDIG_CALENDLY_URL ?? 'https://calendly.com/sysdig'
+const CALENDLY_SYSDIG = process.env.NEXT_PUBLIC_SYSDIG_CALENDLY_URL ?? 'https://calendly.com/markiesbpm/ai-intro-meeting-mark-de-kock'
 const REPORT_URL      = process.env.NEXT_PUBLIC_SYSDIG_REPORT_URL   ?? 'https://sysdig.com/resources/cloud-defense-report-2025/'
 
 // ── Score ring ────────────────────────────────────────────────────────────────

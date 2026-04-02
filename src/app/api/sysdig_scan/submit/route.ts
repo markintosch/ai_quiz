@@ -12,7 +12,7 @@ const resend = new Resend(process.env.RESEND_API_KEY)
 const FROM         = 'Sysdig Assessment <noreply@brandpwrdmedia.nl>'
 const NOTIFY_EMAIL = process.env.SYSDIG_NOTIFY_EMAIL ?? 'mark@brandpwrdmedia.nl'
 const REPORT_URL   = process.env.NEXT_PUBLIC_SYSDIG_REPORT_URL ?? 'https://sysdig.com/resources/cloud-defense-report-2025/'
-const CALENDLY_URL = process.env.NEXT_PUBLIC_SYSDIG_CALENDLY_URL ?? 'https://calendly.com/sysdig'
+const CALENDLY_URL = process.env.NEXT_PUBLIC_SYSDIG_CALENDLY_URL ?? 'https://calendly.com/markiesbpm/ai-intro-meeting-mark-de-kock'
 
 // ── Email: results to respondent ─────────────────────────────────────────────
 function resultsEmailHtml(name: string, overall: number, tierLabel: string, tierColour: string, dimensionRows: string) {
