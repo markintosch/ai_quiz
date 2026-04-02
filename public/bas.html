@@ -136,11 +136,14 @@
     /* ── CTA ── */
     .cta-block {
       margin-top: 48px;
-      display: flex; flex-direction: column; align-items: flex-start; gap: 16px;
+      display: flex; flex-direction: column; align-items: flex-start; gap: 12px;
+    }
+    .cta-row {
+      display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
     }
     .cta-primary {
       display: inline-flex; align-items: center; gap: 8px;
-      background: var(--ink);
+      background: var(--green);
       color: var(--white);
       font-size: 15px; font-weight: 700;
       padding: 14px 28px;
@@ -149,6 +152,18 @@
       transition: opacity 0.15s;
     }
     .cta-primary:hover { opacity: 0.85; }
+    .cta-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent;
+      color: var(--ink);
+      font-size: 15px; font-weight: 700;
+      padding: 13px 28px;
+      border-radius: 100px;
+      text-decoration: none;
+      border: 2px solid var(--border);
+      transition: border-color 0.15s;
+    }
+    .cta-secondary:hover { border-color: var(--ink); }
     .cta-note {
       font-size: 13px; color: var(--muted);
       display: flex; align-items: center; gap: 6px;
@@ -286,10 +301,15 @@
     </div>
 
     <div class="cta-block fade-in">
-      <a href="/bas_energy" class="cta-primary">
-        Start de Energy Scan →
-      </a>
-      <span class="cta-note">15 vragen · ~5 minuten · daarna direct door naar de Match Engine</span>
+      <div class="cta-row">
+        <a href="/bas_energy" class="cta-primary">
+          🧭 Start Energy Scan →
+        </a>
+        <a href="/match_engine" class="cta-secondary">
+          🎯 Bekijk Match Engine →
+        </a>
+      </div>
+      <span class="cta-note">Energy Scan eerst, dan automatisch door naar de Match Engine</span>
     </div>
 
     <div class="signature fade-in">
