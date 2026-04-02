@@ -4,10 +4,11 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://markdekock.com'
 const LOCALES  = ['en', 'nl', 'fr'] as const
 
 // ── Mark de Kock personal pages ───────────────────────────────────────────────
+// Note: /mentor/werk is noindex (canonical is /werk) — use /werk in sitemap
 const MENTOR_PAGES = [
   { path: '/mentor',        priority: 1.0, changeFrequency: 'weekly'  as const },
   { path: '/mentor/aanpak', priority: 0.8, changeFrequency: 'monthly' as const },
-  { path: '/mentor/werk',   priority: 0.8, changeFrequency: 'monthly' as const },
+  { path: '/werk',          priority: 0.8, changeFrequency: 'monthly' as const },
 ]
 
 // ── AI assessment public pages (locale-prefixed) ──────────────────────────────
