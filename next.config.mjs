@@ -39,6 +39,9 @@ const nextConfig = {
       // Clean URLs for static HTML pitch pages
       { source: '/hire',               destination: '/hire.html',               permanent: false },
       { source: '/match-engine-pitch', destination: '/match-engine-pitch.html', permanent: false },
+      // Bas Westland pitch pages
+      { source: '/bas',                destination: '/bas.html',                permanent: false },
+      { source: '/recruiter-pitch',    destination: '/recruiter-pitch.html',    permanent: false },
     ]
   },
 }
