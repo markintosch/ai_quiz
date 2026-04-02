@@ -65,7 +65,7 @@ const NL_DIMENSIONS: Dimension[] = [
   {
     id: 'sourcing', icon: '🔎',
     name: 'Sourcing & Search',
-    description: 'Hoe effectief gebruik je LinkedIn's zoekfuncties om kandidaten te vinden? Van Boolean search tot Recruiter Lite filters.',
+    description: "Hoe effectief gebruik je LinkedIn's zoekfuncties om kandidaten te vinden? Van Boolean search tot Recruiter Lite filters.",
     lowLabel: 'Standaard zoeken',
     highLabel: 'Expert sourcer',
   },
@@ -134,7 +134,7 @@ const NL_QUESTIONS: Question[] = [
   },
   {
     id: 'n3', dimensionId: 'network',
-    text: 'Hoe gebruik je LinkedIn's "People Also Viewed" en aanbevelingen?',
+    text: "Hoe gebruik je LinkedIn's \"People Also Viewed\" en aanbevelingen?",
     options: [
       { value: 1, label: 'Nooit bewust' },
       { value: 2, label: 'Soms als ik toevallig een goed profiel zie' },
@@ -178,7 +178,7 @@ const NL_QUESTIONS: Question[] = [
   // ── Sourcing & Search ──
   {
     id: 's1', dimensionId: 'sourcing',
-    text: 'Hoe gebruik je LinkedIn's zoekfilters bij het vinden van kandidaten?',
+    text: "Hoe gebruik je LinkedIn's zoekfilters bij het vinden van kandidaten?",
     options: [
       { value: 1, label: 'Alleen functietitel en locatie' },
       { value: 2, label: 'Titel, locatie, branche en verbindingsgraad' },
