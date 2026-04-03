@@ -29,5 +29,14 @@ export async function GET(
     .eq('session_id', session.id as string)
     .order('score', { ascending: false })
 
-  return NextResponse.json({ session, participants: participants ?? [] })
+  // Strip correct_value and explanation from questions — public endpoint.
+  // Answers are only revealed through the /answer route after submission.
+  const safeSession = { ...session }
+  if (Array.isArray(safeSession.questions)) {
+    safeSession.questions = (safeSession.questions as Record<string, unknown>[]).map(
+      ({ correct_value: _cv, explanation: _ex, ...rest }) => rest
+    )
+  }
+
+  return NextResponse.json({ session: safeSession, participants: participants ?? [] })
 }

@@ -14,13 +14,15 @@ export async function GET(req: NextRequest) {
 
   const supabase = createServiceClient()
 
-  // Get all responses for the theme (or all themes)
-  const query = supabase
+  // Get all responses for the theme (or all themes).
+  // Note: Supabase query builder is immutable — must reassign when chaining filters.
+  let query = supabase
     .from('pulse_responses_v2')
     .select('id, theme_id, entity_id, ip_hash, submitted_at')
+    .limit(5000) // cap scan to avoid OOM on large tables
 
   if (themeId) {
-    query.eq('theme_id', themeId)
+    query = query.eq('theme_id', themeId)
   }
 
   const { data: responses, error } = await query
@@ -90,16 +92,19 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  // Store new flags in DB
+  // Upsert flags — avoid duplicate rows on repeated calls.
+  // Requires a unique constraint on (flag_type, entity_id, theme_id) in the DB.
   if (flags.length > 0) {
-    await supabase.from('pulse_anomaly_flags').insert(
+    await supabase.from('pulse_anomaly_flags').upsert(
       flags.map((f) => ({
         theme_id: f.theme_id,
         entity_id: f.entity_id,
         flag_type: f.flag_type,
         severity: f.severity,
         details: f.details as Json,
+        created_at: new Date().toISOString(),
       })),
+      { onConflict: 'flag_type,entity_id,theme_id', ignoreDuplicates: false },
     )
   }
 

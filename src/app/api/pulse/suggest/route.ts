@@ -33,6 +33,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Naam mag maximaal 100 tekens bevatten.' }, { status: 400 })
   }
 
+  // Validate URL — must be https:// if provided, to prevent storing phishing/SSRF links
+  const rawUrl = typeof suggestedUrl === 'string' && suggestedUrl.trim() !== '' ? suggestedUrl.trim() : null
+  if (rawUrl !== null && !rawUrl.startsWith('https://')) {
+    return NextResponse.json({ error: 'URL moet beginnen met https://' }, { status: 400 })
+  }
+
   const supabase = createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -40,7 +46,7 @@ export async function POST(req: NextRequest) {
   const { error } = await supabase.from('pulse_suggestions_v2').insert({
     theme_id: themeId.trim(),
     suggested_label: suggestedLabel.trim(),
-    suggested_url: typeof suggestedUrl === 'string' && suggestedUrl.trim() !== '' ? suggestedUrl.trim() : null,
+    suggested_url: rawUrl,
     suggested_by_email: typeof email === 'string' && email.trim() !== '' ? email.trim() : null,
   })
 
