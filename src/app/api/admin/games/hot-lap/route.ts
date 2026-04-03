@@ -4,8 +4,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 import { isAuthorised } from '@/lib/admin/auth'
 
-export async function GET(req: NextRequest) {
-  if (!isAuthorised(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+export async function GET(_req: NextRequest) {
+  if (!await isAuthorised()) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const supabase = createServiceClient()
   const { data, error } = await supabase
@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  if (!isAuthorised(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!await isAuthorised()) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { id } = await req.json() as { id: string }
   if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 })
