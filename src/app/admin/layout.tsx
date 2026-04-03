@@ -12,6 +12,7 @@ const NAV_LINKS = [
   { href: '/admin/privacy', label: 'Privacy & Data' },
   { href: '/admin/content', label: 'Homepage copy' },
   { href: '/admin/products', label: 'Products' },
+  { href: '/admin/shop', label: '🛍️ Shop' },
   { href: '/admin/interests', label: 'Interests' },
   { href: '/admin/games', label: '🎮 Games' },
   { href: '/admin/pulse', label: 'Pulse' },
