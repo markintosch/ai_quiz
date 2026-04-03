@@ -37,10 +37,13 @@ export async function PATCH(req: NextRequest) {
   }
 
   const supabase = createServiceClient()
-  const { data, error } = await supabase
+  // Cast to any to work around Supabase generated-type strictness for dynamic update objects.
+  // The whitelist above is the actual safety guard.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const sb = supabase as any
+  const { data, error } = await sb
     .from('shop_products')
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .update(update as any)
+    .update(update)
     .eq('id', id)
     .select()
     .single()
