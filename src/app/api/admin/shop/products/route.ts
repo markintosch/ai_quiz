@@ -39,7 +39,8 @@ export async function PATCH(req: NextRequest) {
   const supabase = createServiceClient()
   const { data, error } = await supabase
     .from('shop_products')
-    .update(update)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .update(update as any)
     .eq('id', id)
     .select()
     .single()
