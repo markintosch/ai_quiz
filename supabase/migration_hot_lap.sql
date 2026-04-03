@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS hot_lap_times (
   total_ms   INTEGER NOT NULL,
   lap_time   TEXT NOT NULL,          -- formatted "M:SS.mmm"
   sectors    JSONB NOT NULL,         -- array of SectorResult
-  questions  JSONB NOT NULL,         -- snapshot of the 10 questions played
+  questions  JSONB,                  -- optional snapshot of the 10 questions played
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
