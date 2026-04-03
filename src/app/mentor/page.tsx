@@ -20,6 +20,15 @@ const BORDER     = '#E2E8F0'
 const CALENDLY_INTAKE   = 'https://calendly.com/markiesbpm/ai-intro-meeting-mark-de-kock'
 const CALENDLY_STRATEGY = 'https://calendly.com/markiesbpm/ai-strategy-session'
 
+// ── GA4 CTA tracking ──────────────────────────────────────────────────────────
+function trackCta(id: string, location: string, label: string) {
+  if (typeof window === 'undefined') return
+  const w = window as unknown as { gtag?: (...a: unknown[]) => void }
+  if (typeof w.gtag === 'function') {
+    w.gtag('event', 'cta_click', { cta_id: id, cta_location: location, cta_label: label })
+  }
+}
+
 // ── Animation helpers ─────────────────────────────────────────────────────────
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 24 },
@@ -432,6 +441,7 @@ function MentorPageInner() {
             </div>
             <a
               href="/werk"
+              onClick={() => trackCta('nav_werk', 'nav', 'Projecten')}
               style={{
                 fontSize: 13, fontWeight: 600, color: BODY, textDecoration: 'none',
                 whiteSpace: 'nowrap',
@@ -446,6 +456,7 @@ function MentorPageInner() {
               href={CALENDLY_INTAKE}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackCta('nav_calendly', 'nav', t.navCta)}
               style={{
                 background: WARM, color: WHITE, fontSize: 13, fontWeight: 700,
                 padding: '8px 20px', borderRadius: 100, textDecoration: 'none',
@@ -524,6 +535,7 @@ function MentorPageInner() {
                 href={CALENDLY_INTAKE}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackCta('hero_calendly', 'hero', t.heroCta1)}
                 style={{
                   display: 'inline-block',
                   background: WARM,
@@ -536,6 +548,7 @@ function MentorPageInner() {
               </a>
               <a
                 href={lang === 'nl' ? '/nl' : '/en'}
+                onClick={() => trackCta('hero_ai_scan', 'hero', t.heroCta2)}
                 style={{
                   display: 'inline-block',
                   background: 'transparent',
@@ -670,6 +683,7 @@ function MentorPageInner() {
             <motion.div variants={fadeUp} style={{ textAlign: 'center', marginTop: 40 }}>
               <a
                 href="/mentor/aanpak"
+                onClick={() => trackCta('program_aanpak', 'program', t.programCta)}
                 style={{
                   display: 'inline-block',
                   fontSize: 14, fontWeight: 700,
@@ -752,7 +766,9 @@ function MentorPageInner() {
               {t.proofBody}
             </motion.p>
             <motion.div variants={fadeUp} style={{ textAlign: 'center', marginBottom: 44 }}>
-              <a href="/werk" style={{
+              <a href="/werk"
+                onClick={() => trackCta('proof_werk', 'proof', 'Bekijk projecten')}
+                style={{
                 fontSize: 13, fontWeight: 600, color: ACCENT, textDecoration: 'none',
                 borderBottom: `1px solid ${ACCENT}`, paddingBottom: 2,
               }}>
@@ -898,6 +914,7 @@ function MentorPageInner() {
                 href={CALENDLY_INTAKE}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackCta('spots_calendly', 'spots', t.spotsCta1)}
                 style={{
                   display: 'inline-block',
                   background: WARM,
@@ -910,6 +927,7 @@ function MentorPageInner() {
               </a>
               <a
                 href={lang === 'nl' ? '/nl' : '/en'}
+                onClick={() => trackCta('spots_ai_scan', 'spots', t.spotsCta2)}
                 style={{
                   display: 'inline-block',
                   background: 'transparent',
@@ -936,7 +954,7 @@ function MentorPageInner() {
             <span style={{ fontSize: 13, color: '#475569' }}>{t.navName} — {t.footerCopy}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-            <a href="/werk" style={{ fontSize: 12, color: '#64748B', textDecoration: 'none' }}>{t.footerWerk}</a>
+            <a href="/werk" onClick={() => trackCta('footer_werk', 'footer', t.footerWerk)} style={{ fontSize: 12, color: '#64748B', textDecoration: 'none' }}>{t.footerWerk}</a>
             <p style={{ fontSize: 12, color: '#334155', margin: 0 }}>{t.footerSub} · {new Date().getFullYear()}</p>
           </div>
         </div>
