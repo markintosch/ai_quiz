@@ -8,9 +8,9 @@ import { createServiceClient } from '@/lib/supabase/server'
 import { arenaEmailHtml } from '@/lib/email/arenaEmail'
 
 export async function GET(req: NextRequest) {
-  // Verify Vercel cron secret
+  // Verify Vercel cron secret — always required, never optional
   const authHeader = req.headers.get('authorization')
-  if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (!process.env.CRON_SECRET || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
   }
 

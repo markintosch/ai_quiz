@@ -1,7 +1,8 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
 import { computeResults } from '@/products/sysdig_scan/data'
+import { rateLimit, getClientIp } from '@/lib/rateLimit'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -159,7 +160,10 @@ function notifyEmailHtml(name: string, email: string, overall: number, tierLabel
 }
 
 // ── Route handler ─────────────────────────────────────────────────────────────
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const ip = getClientIp(req.headers)
+  const rl = rateLimit(`sysdig_submit:${ip}`, 3, 10 * 60 * 1000) // 3 per 10 min
+  if (!rl.allowed) return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
   try {
     const body = await req.json()
     const { name, email, answers, optNewsletter, optExpert, optDownload } = body

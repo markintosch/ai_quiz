@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 import { mollie } from '@/lib/mollie'
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { rateLimit, getClientIp } from '@/lib/rateLimit'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyClient = SupabaseClient<any>
@@ -21,6 +22,10 @@ interface ShopProduct {
 }
 
 export async function POST(req: NextRequest) {
+  const ip = getClientIp(req.headers)
+  const rl = rateLimit(`shop_create:${ip}`, 5, 10 * 60 * 1000) // 5 orders per 10 min per IP
+  if (!rl.allowed) return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+
   let body: { productSlug?: string; customerName?: string; customerEmail?: string }
   try {
     body = await req.json()
@@ -33,6 +38,10 @@ export async function POST(req: NextRequest) {
   // Validate fields
   if (!productSlug || !customerName || !customerEmail) {
     return NextResponse.json({ error: 'Missing required fields: productSlug, customerName, customerEmail' }, { status: 400 })
+  }
+
+  if (customerName.length > 200) {
+    return NextResponse.json({ error: 'Name too long' }, { status: 400 })
   }
 
   // Validate email format

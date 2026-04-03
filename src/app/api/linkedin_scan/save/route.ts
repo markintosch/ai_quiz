@@ -1,8 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { rateLimit, getClientIp } from '@/lib/rateLimit'
+
+function escapeHtml(str: string): string {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
+}
 
 // Fire-and-forget save: stores lead and sends scorecard email
 // Supabase table can be added in v2 — for now just log + email via Resend
 export async function POST(req: NextRequest) {
+  const ip = getClientIp(req.headers)
+  const rl = rateLimit(`linkedin_save:${ip}`, 3, 10 * 60 * 1000) // 3 per 10 min
+  if (!rl.allowed) return NextResponse.json({ ok: false }, { status: 429 })
   try {
     const body = await req.json() as {
       name: string
@@ -15,6 +23,8 @@ export async function POST(req: NextRequest) {
 
     const { name, email, overall, dimScores, lang } = body
     if (!name || !email) return NextResponse.json({ ok: false })
+
+    const safeName = escapeHtml(String(name).slice(0, 100))
 
     // Send scorecard email via Resend (fire-and-forget)
     try {
@@ -49,7 +59,7 @@ export async function POST(req: NextRequest) {
       <p style="font-size:14px;color:rgba(255,255,255,0.8);margin:0;">${isNl ? 'Niveau' : 'Level'}: <strong style="color:#fff;">${tierLabel}</strong></p>
     </div>
     <div style="padding:28px 32px;">
-      <p style="font-size:15px;color:#0D2B20;margin:0 0 20px;">${isNl ? `Hoi ${name},` : `Hi ${name},`}</p>
+      <p style="font-size:15px;color:#0D2B20;margin:0 0 20px;">${isNl ? `Hoi ${safeName},` : `Hi ${safeName},`}</p>
       <p style="font-size:14px;color:#4D7A66;line-height:1.7;margin:0 0 24px;">
         ${isNl
           ? 'Hieronder vind je jouw volledige LinkedIn Recruiter Scorekaart. Dit zijn je scores per dimensie en je top-3 aandachtspunten.'

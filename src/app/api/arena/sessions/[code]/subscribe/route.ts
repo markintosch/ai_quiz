@@ -5,11 +5,16 @@ export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 import { arenaEmailHtml } from '@/lib/email/arenaEmail'
+import { rateLimit, getClientIp } from '@/lib/rateLimit'
 
 export async function POST(
   req: NextRequest,
   { params }: { params: { code: string } }
 ) {
+  const ip = getClientIp(req.headers)
+  const rl = rateLimit(`arena_sub:${ip}`, 5, 60 * 60 * 1000) // 5 per hour
+  if (!rl.allowed) return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+
   const supabase = createServiceClient()
   const code = params.code.toUpperCase()
 

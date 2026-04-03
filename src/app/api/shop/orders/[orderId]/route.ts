@@ -46,10 +46,11 @@ export async function GET(
       .eq('id', order.product_id)
       .single() as { data: ShopProduct | null; error: unknown }
 
+    // Note: customerName intentionally excluded — orderId is in the redirect URL
+    // which can appear in referrer headers and analytics. Returning PII here is unsafe.
     return NextResponse.json({
       status: order.status,
       productTitle: product?.title ?? '',
-      customerName: order.customer_name,
     })
   } catch (err) {
     console.error('Order status error:', err)
