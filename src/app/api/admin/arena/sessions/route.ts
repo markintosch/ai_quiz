@@ -24,7 +24,7 @@ export async function GET(_req: NextRequest) {
     if (p.session_id) countMap.set(p.session_id, (countMap.get(p.session_id) ?? 0) + 1)
   }
 
-  const enriched = (sessions ?? []).map((s: { id: string; company_id?: string }) => ({
+  const enriched = (sessions ?? []).map((s: { id: string; company_id?: string | null }) => ({
     ...s,
     company_name: s.company_id ? (companyMap.get(s.company_id) ?? null) : null,
     participant_count: countMap.get(s.id) ?? 0,
