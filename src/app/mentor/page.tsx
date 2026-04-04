@@ -3,9 +3,6 @@
 import { Suspense, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { motion, type Variants } from 'framer-motion'
-import dynamic from 'next/dynamic'
-
-const BridgeWebGL = dynamic(() => import('@/components/mentor/BridgeWebGL'), { ssr: false })
 
 // ── Brand tokens ──────────────────────────────────────────────────────────────
 const INK        = '#0F172A'   // hero / dark sections
@@ -475,16 +472,26 @@ function MentorPageInner() {
       {/* ── Hero ── */}
       <section style={{ background: INK, paddingTop: 96, paddingBottom: 104, position: 'relative', overflow: 'hidden' }}>
 
-        {/* Bridge WebGL — wireframe canyon bridge, replaces static sketch image */}
-        <BridgeWebGL
+        {/* Bridge sketch — inverted (white lines on dark), screen-blended so the black bg disappears */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/bridge-sketch2.png"
+          alt=""
+          aria-hidden="true"
           style={{
             position: 'absolute',
             inset: 0,
-            opacity: 0.22,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center 40%',
+            filter: 'contrast(20)',
             mixBlendMode: 'screen',
-            maskImage: 'linear-gradient(to bottom, transparent 0%, black 18%, black 82%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 18%, black 82%, transparent 100%)',
+            opacity: 0.25,
+            maskImage: 'linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)',
             pointerEvents: 'none',
+            userSelect: 'none',
           }}
         />
 
