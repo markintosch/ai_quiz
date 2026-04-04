@@ -23,13 +23,13 @@ export default function BridgeWebGL({ className, style }: { className?: string; 
 
     // ── Scene & Camera ────────────────────────────────────────────────────────
     const scene = new THREE.Scene()
-    const camera = new THREE.PerspectiveCamera(42, el.clientWidth / el.clientHeight, 0.1, 200)
-    // Angle matches the sketch: slightly elevated, right-of-centre, looking across
-    camera.position.set(-6, 5, 18)
-    camera.lookAt(2, 0, 0)
+    const camera = new THREE.PerspectiveCamera(58, el.clientWidth / el.clientHeight, 0.1, 200)
+    // Looking across the span from slightly right-rear, elevated, like the sketch
+    camera.position.set(2, 9, 28)
+    camera.lookAt(0, -1, 0)
 
     // Subtle tilt like the hand-drawn perspective in the sketch
-    camera.rotation.z = -0.07
+    camera.rotation.z = -0.05
 
     const MAT = new THREE.LineBasicMaterial({ color: 0xffffff, opacity: 0.9, transparent: true })
 
@@ -166,9 +166,9 @@ export default function BridgeWebGL({ className, style }: { className?: string; 
       t += 0.0003
 
       // Gentle pendulum on camera X/Y — barely perceptible
-      camera.position.x = -6 + Math.sin(t) * 0.4
-      camera.position.y = 5 + Math.cos(t * 0.7) * 0.2
-      camera.lookAt(2, 0, 0)
+      camera.position.x = 2 + Math.sin(t) * 0.5
+      camera.position.y = 9 + Math.cos(t * 0.7) * 0.3
+      camera.lookAt(0, -1, 0)
 
       renderer.render(scene, camera)
     }
