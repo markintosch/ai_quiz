@@ -283,7 +283,7 @@ function ResultsInner() {
 
       <footer style={{ borderTop: `1px solid ${BORDER}`, padding: '20px 24px', textAlign: 'center' }}>
         <p style={{ fontSize: 12, color: MUTED }}>
-          Based on the Sysdig 555 Benchmark · Powered by <span style={{ color: WHITE }}>Kirk & Blackbeard</span>
+          Based on the Sysdig 555 Benchmark · Powered by <span style={{ color: WHITE }}>Brand PWRD Media</span>
         </p>
       </footer>
     </div>

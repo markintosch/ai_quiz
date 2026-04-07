@@ -65,7 +65,7 @@ function resultsEmailHtml(name: string, overall: number, tierLabel: string, tier
 
       <!-- Footer -->
       <p style="font-size:11px;color:#4B5563;text-align:center;margin:0;">
-        This assessment is based on the Sysdig 555 Benchmark. Powered by Kirk &amp; Blackbeard.
+        This assessment is based on the Sysdig 555 Benchmark. Powered by Brand PWRD Media.
       </p>
     </td></tr>
   </table>
@@ -105,7 +105,7 @@ function downloadEmailHtml(name: string) {
         <a href="${REPORT_URL}" style="display:inline-block;background:#00C58E;color:#0B0F1A;font-size:15px;font-weight:800;padding:14px 36px;border-radius:10px;text-decoration:none;margin-bottom:24px;">
           Download the report →
         </a>
-        <p style="font-size:12px;color:#4B5563;margin:0;">Powered by Kirk &amp; Blackbeard</p>
+        <p style="font-size:12px;color:#4B5563;margin:0;">Powered by Brand PWRD Media</p>
       </div>
     </td></tr>
   </table>
@@ -133,7 +133,7 @@ function expertEmailHtml(name: string) {
         <a href="${CALENDLY_URL}" style="display:inline-block;background:#3B82F6;color:#FFFFFF;font-size:15px;font-weight:800;padding:14px 36px;border-radius:10px;text-decoration:none;margin-bottom:24px;">
           Book a time slot →
         </a>
-        <p style="font-size:12px;color:#4B5563;margin:0;">Powered by Kirk &amp; Blackbeard</p>
+        <p style="font-size:12px;color:#4B5563;margin:0;">Powered by Brand PWRD Media</p>
       </div>
     </td></tr>
   </table>
@@ -154,7 +154,7 @@ function notifyEmailHtml(name: string, email: string, overall: number, tierLabel
       <tr><td style="padding:8px 0;font-weight:600;">Opted in</td><td>${opts.join(', ') || 'Nothing selected'}</td></tr>
     </table>
     <hr style="border:none;border-top:1px solid #E5E7EB;margin:20px 0;">
-    <p style="font-size:12px;color:#9CA3AF;margin:0;">Sysdig 555 Assessment · Kirk &amp; Blackbeard</p>
+    <p style="font-size:12px;color:#9CA3AF;margin:0;">Sysdig 555 Assessment · Brand PWRD Media</p>
   </div>
 </body></html>`
 }

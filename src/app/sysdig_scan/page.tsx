@@ -185,7 +185,7 @@ export default function SysdigLandingPage() {
       <footer style={{ borderTop: `1px solid ${BORDER}`, padding: '24px', textAlign: 'center' }}>
         <p style={{ fontSize: 12, color: MUTED }}>
           This assessment is based on the Sysdig 555 Benchmark. Results are for diagnostic purposes.
-          &nbsp;·&nbsp; Powered by <span style={{ color: WHITE }}>Kirk & Blackbeard</span>
+          &nbsp;·&nbsp; Powered by <span style={{ color: WHITE }}>Brand PWRD Media</span>
         </p>
       </footer>
     </div>

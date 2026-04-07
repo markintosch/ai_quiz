@@ -161,7 +161,7 @@ export default function Sysdig555Page() {
             <span style={{ width: 1, height: 20, background: BORDER }} />
             <span style={{ fontSize: 13, color: MUTED }}>555 Games</span>
           </div>
-          <span style={{ fontSize: 12, color: MUTED }}>Kirk &amp; Blackbeard</span>
+          <span style={{ fontSize: 12, color: MUTED }}>Brand PWRD Media</span>
         </div>
       </nav>
 
@@ -452,7 +452,7 @@ export default function Sysdig555Page() {
       {/* ── Footer ── */}
       <div style={{ borderTop: `1px solid ${BORDER}`, padding: '28px 24px', textAlign: 'center' }}>
         <p style={{ fontSize: 12, color: MUTED, margin: 0 }}>
-          Built by <span style={{ color: TEAL, fontWeight: 700 }}>Kirk &amp; Blackbeard</span> for Sysdig.
+          Built by <span style={{ color: TEAL, fontWeight: 700 }}>Brand PWRD Media</span> for Sysdig.
           Questions based on the{' '}
           <a href="https://sysdig.com/555-benchmark/" target="_blank" rel="noopener noreferrer" style={{ color: TEAL, textDecoration: 'none' }}>
             555 Benchmark
