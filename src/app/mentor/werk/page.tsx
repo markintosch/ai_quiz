@@ -28,7 +28,7 @@ const T = {
   nl: {
     navName:    'Mark de Kock',
     navRole:    'Strategisch mentor voor AI & executie',
-    navPartner: 'Partner · Kirk & Blackbeard',
+    navPartner: 'Partner · Brand PWRD Media',
     navCta:     'Plan gesprek →',
 
     heroLabel:  'Wat ik maak',
@@ -99,8 +99,8 @@ const T = {
       { q: 'Moet ik meteen een volledig traject afnemen?', a: 'Nee. We beginnen altijd met een gratis intakegesprek om te kijken of er een match is. Daarna volgt een korte verkenningsfase — zodat we snel helder krijgen wat jouw situatie vraagt. Pas dan beslissen we samen wat logisch is. Sommige trajecten lopen over drie maanden. Andere bestaan uit een reeks gerichte gesprekken. De structuur past zich aan jouw situatie aan, niet andersom.' },
       { q: 'Wat kost een traject?', a: 'Je betaalt per fase, niet voor een volledig traject vooraf. Dat wordt pas helder na het intakegesprek — afhankelijk van omvang en context. Ik zorg er altijd voor dat de stappen behapbaar zijn en voorzien van duidelijke deliverables per fase. Zo kun je te allen tijde beslissen om te stoppen als de realiteit van alle dag daarom vraagt. Je zult ook altijd de opgeleverde documenten, presentaties, data en agents bezitten. Het intakegesprek zelf is gratis en vrijblijvend.' },
       { q: 'Hoe snel kan ik starten?', a: 'Vaak kunnen we binnen 1 à 2 weken beginnen met een kick-off zodat we snel duidelijk krijgen wat de beste aanpak is. Ik werk met maximaal vijf trajecten tegelijk.' },
-      { q: 'In welke sectoren heb je gewerkt?', a: 'Door mijn brede ervaring heb ik voor bijna alle sectoren gewerkt. Denk aan Automotive, Finance, Gezondheidszorg, FMCG, Overheid, Publiek/privaat, duurzaamheid en klantbeleving. Maar AI-vraagstukken voor leiders zijn sectoroverstijdend — de patronen die ik zie, herhalen zich ongeacht de branche.' },
-      { q: 'Waarom Kirk & Blackbeard?', a: 'Kirk & Blackbeard is een netwerk van senior operators — mensen met brede ervaring in strategie, groei en executie. Ik werk vanuit dat netwerk omdat het mij de ruimte geeft om selectief en persoonlijk te zijn. Geen groot bureau, geen junior consultants. Daarnaast hebben we een netwerk van mensen die bewezen kwaliteit leveren, waar we eerder mee hebben gewerkt en voor hun kwaliteit kunnen instaan.' },
+      { q: 'In welke sectoren heb je gewerkt?', a: 'Door mijn brede ervaring heb ik voor bijna alle sectoren gewerkt. Denk aan Automotive, Finance, Gezondheidszorg, FMCG, Overheid, Publiek/privaat, duurzaamheid en klantbeleving. Maar AI-vraagstukken voor leiders zijn sectoroverstijgend — de patronen die ik zie, herhalen zich ongeacht de branche.' },
+      { q: 'Waarom Brand PWRD Media?', a: 'Brand PWRD Media is een netwerk van senior operators — mensen met brede ervaring in strategie, groei en executie. Ik werk vanuit dat netwerk omdat het mij de ruimte geeft om selectief en persoonlijk te zijn. Geen groot bureau, geen junior consultants. Daarnaast hebben we een netwerk van mensen die bewezen kwaliteit leveren, waar we eerder mee hebben gewerkt en voor hun kwaliteit kunnen instaan.' },
       { q: 'Wat maakt dit anders dan een coach of consultant?', a: 'Een coach werkt aan jou als persoon. Een consultant lost een probleem op. Ik doe iets ertussenin: ik help jou als leidinggevende de juiste beslissingen nemen over een specifiek strategisch vraagstuk — en zorg dat je het daarna zelf kunt. Terwijl ik ook de stakeholders binnen jouw omgeving meeneem op de reis naar hun doelen, met de ondersteuning van AI. Want AI zelf is nooit het doel.' },
     ],
 
@@ -111,7 +111,7 @@ const T = {
   en: {
     navName:    'Mark de Kock',
     navRole:    'Strategic mentor for AI & execution',
-    navPartner: 'Partner · Kirk & Blackbeard',
+    navPartner: 'Partner · Brand PWRD Media',
     navCta:     'Book a call →',
 
     heroLabel:  'What I build',
@@ -183,7 +183,7 @@ const T = {
       { q: 'What does an engagement cost?', a: 'You pay per phase, not for a full engagement upfront. The specifics only become clear after the intake — depending on scale and context. I always make sure the steps are manageable with clear deliverables per phase. So you can decide at any time to stop if day-to-day reality requires it. You will also always own the delivered documents, presentations, data and agents. The intake conversation itself is free and without obligation.' },
       { q: 'How quickly can I start?', a: 'We can often start within 1 to 2 weeks with a kick-off so we quickly get clarity on the best approach. I work with a maximum of five engagements at a time.' },
       { q: 'Which sectors have you worked in?', a: 'Through my broad experience I have worked for almost all sectors. Think Automotive, Finance, Healthcare, FMCG, Government, Public/private, sustainability and customer experience. But AI questions for leaders are cross-sectoral — the patterns I see repeat themselves regardless of the sector.' },
-      { q: 'Why Kirk & Blackbeard?', a: 'Kirk & Blackbeard is a network of senior operators — people with broad experience in strategy, growth and execution. I work from that network because it gives me the space to be selective and personal. No large firm, no junior consultants. We also have a network of people who deliver proven quality, with whom we have worked before and can vouch for.' },
+      { q: 'Why Brand PWRD Media?', a: 'Brand PWRD Media is a network of senior operators — people with broad experience in strategy, growth and execution. I work from that network because it gives me the space to be selective and personal. No large firm, no junior consultants. We also have a network of people who deliver proven quality, with whom we have worked before and can vouch for.' },
       { q: 'What makes this different from a coach or consultant?', a: 'A coach works on you as a person. A consultant solves a problem. I do something in between: I help you as a leader make the right decisions about a specific strategic question — and make sure you can do it yourself afterwards. While I also bring the stakeholders within your environment along on the journey towards their goals, with the support of AI. Because AI itself is never the goal.' },
     ],
 
@@ -295,7 +295,6 @@ export default function WerkPage() {
                 }}
                 className="flex-col sm:grid"
               >
-                {/* Left */}
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
                     <div style={{ width: 36, height: 36, borderRadius: 10, background: p.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -316,7 +315,6 @@ export default function WerkPage() {
                     ))}
                   </div>
                 </div>
-                {/* Right */}
                 <div style={{ paddingTop: 4 }}>
                   <p style={{ fontSize: 15, color: BODY, lineHeight: 1.75 }}>{p.body}</p>
                 </div>
