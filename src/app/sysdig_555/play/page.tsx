@@ -257,7 +257,7 @@ function GameInner() {
       {/* Header */}
       <div style={{ padding: '0 24px', borderBottom: `1px solid ${BORDER}` }}>
         <div style={{ maxWidth: 720, margin: '0 auto', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', align: 'center', gap: 8, alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
             <div style={{ width: 20, height: 20, borderRadius: 5, background: TEAL, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span style={{ fontSize: 10, fontWeight: 900, color: DARK }}>S</span>
             </div>
