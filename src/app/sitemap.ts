@@ -18,6 +18,11 @@ const ASSESSMENT_PATHS = [
   { path: '/a/extended', priority: 0.6, changeFrequency: 'monthly' as const }, // full assessment
 ]
 
+// ── Public product pages ──────────────────────────────────────────────────────
+const PRODUCT_PAGES = [
+  { path: '/shop', priority: 0.7, changeFrequency: 'weekly' as const },
+]
+
 // ── Legal / utility ───────────────────────────────────────────────────────────
 const UTILITY_PAGES = [
   { path: '/privacy',     priority: 0.3, changeFrequency: 'yearly' as const },
@@ -59,6 +64,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
       })
     }
+  }
+
+  // Public product pages (no locale prefix)
+  for (const { path, priority, changeFrequency } of PRODUCT_PAGES) {
+    entries.push({
+      url:             `${BASE_URL}${path}`,
+      lastModified:    new Date(),
+      changeFrequency,
+      priority,
+    })
   }
 
   // Utility pages

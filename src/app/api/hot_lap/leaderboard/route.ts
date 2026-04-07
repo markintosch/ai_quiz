@@ -8,7 +8,16 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
+// 5-second in-memory cache — prevents Supabase connection pool saturation under burst load
+let cache: { rows: unknown[]; expiresAt: number } | null = null
+
 export async function GET(_req: NextRequest) {
+  const now = Date.now()
+
+  if (cache && now < cache.expiresAt) {
+    return NextResponse.json({ rows: cache.rows })
+  }
+
   try {
     const { data, error } = await supabase
       .from('hot_lap_times')
@@ -21,7 +30,9 @@ export async function GET(_req: NextRequest) {
       return NextResponse.json({ rows: [] })
     }
 
-    return NextResponse.json({ rows: data ?? [] })
+    const rows = data ?? []
+    cache = { rows, expiresAt: now + 5_000 }
+    return NextResponse.json({ rows })
   } catch (err) {
     console.error('[hot_lap/leaderboard] error:', err)
     return NextResponse.json({ rows: [] })
