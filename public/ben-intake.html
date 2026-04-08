@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Website Intake — Ben van der Burg</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Inter:wght@400;500;600&display=swap');
+
+  :root {
+    --teal-dark: #00272E;
+    --teal-mid: #438EA9;
+    --teal-light: #6BCBD9;
+    --teal-bg: #F0FAFB;
+    --accent: #0B6BCB;
+    --white: #FFFFFF;
+    --gray-50: #F8FAFB;
+    --gray-100: #E8EEF0;
+    --gray-200: #D0DCE0;
+    --gray-600: #4A6068;
+    --gray-800: #1A3038;
+    --success: #16A34A;
+    --radius: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--teal-bg);
+    color: var(--gray-800);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .header {
+    background: var(--teal-dark);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    color: var(--white);
+  }
+  .header h1 {
+    font-family: 'Merriweather', serif;
+    font-size: 1.75rem;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.5rem;
+  }
+  .header p {
+    font-size: 0.95rem;
+    opacity: 0.8;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .header .badge {
+    display: inline-block;
+    background: var(--teal-mid);
+    color: var(--white);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* Progress bar */
+  .progress-wrap {
+    background: var(--white);
+    padding: 1rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,39,46,0.08);
+  }
+  .progress-bar-outer {
+    background: var(--gray-100);
+    border-radius: 20px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .progress-bar-inner {
+    background: linear-gradient(90deg, var(--teal-mid), var(--teal-light));
+    height: 100%;
+    border-radius: 20px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0%;
+  }
+  .progress-text {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--gray-600);
+    margin-top: 0.5rem;
+  }
+
+  /* Main container */
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 1.5rem;
+  }
+
+  /* Intro card */
+  .intro-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 4px rgba(0,39,46,0.06);
+    border-left: 4px solid var(--teal-mid);
+  }
+  .intro-card h2 {
+    font-family: 'Merriweather', serif;
+    font-size: 1.2rem;
+    margin-bottom: 0.75rem;
+    color: var(--teal-dark);
+  }
+  .intro-card p {
+    font-size: 0.9rem;
+    color: var(--gray-600);
+  }
+
+  /* Section */
+  .section {
+    display: none;
+  }
+  .section.active {
+    display: block;
+    animation: fadeIn 0.4s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+  .section-number {
+    background: var(--teal-dark);
+    color: var(--white);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-family: 'Merriweather', serif;
+    font-size: 1.15rem;
+    color: var(--teal-dark);
+  }
+
+  /* Question cards */
+  .q-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 4px rgba(0,39,46,0.06);
+    transition: box-shadow 0.2s;
+  }
+  .q-card:focus-within {
+    box-shadow: 0 0 0 2px var(--teal-light), 0 4px 16px rgba(0,39,46,0.1);
+  }
+  .q-card label.q-label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+    color: var(--gray-800);
+  }
+  .q-card .q-hint {
+    font-size: 0.82rem;
+    color: var(--gray-600);
+    margin-bottom: 0.75rem;
+  }
+
+  /* Inputs */
+  textarea, input[type="text"], select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: var(--gray-800);
+    background: var(--gray-50);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    resize: vertical;
+  }
+  textarea:focus, input[type="text"]:focus, select:focus {
+    outline: none;
+    border-color: var(--teal-mid);
+    box-shadow: 0 0 0 3px rgba(67,142,169,0.15);
+    background: var(--white);
+  }
+  textarea { min-height: 90px; }
+
+  /* Radio / Checkbox options */
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .option-item {
+    position: relative;
+  }
+  .option-item input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .option-item label {
+    display: block;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    background: var(--gray-50);
+  }
+  .option-item label:hover {
+    border-color: var(--teal-mid);
+    background: var(--white);
+  }
+  .option-item input:checked + label {
+    border-color: var(--teal-mid);
+    background: rgba(67,142,169,0.08);
+    color: var(--teal-dark);
+    font-weight: 500;
+  }
+  .option-item input:checked + label::before {
+    content: '✓ ';
+    color: var(--teal-mid);
+    font-weight: 700;
+  }
+
+  /* Scale */
+  .scale-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+  }
+  .scale-row .option-item { flex: 1; }
+  .scale-row .option-item label {
+    text-align: center;
+    padding: 0.6rem 0.25rem;
+    font-size: 0.85rem;
+  }
+  .scale-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--gray-600);
+    margin-top: 0.35rem;
+    padding: 0 0.25rem;
+  }
+
+  /* Navigation buttons */
+  .nav-buttons {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    justify-content: space-between;
+  }
+  .btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-secondary {
+    background: var(--white);
+    color: var(--gray-600);
+    border: 1.5px solid var(--gray-200);
+  }
+  .btn-secondary:hover { border-color: var(--teal-mid); color: var(--teal-dark); }
+  .btn-primary {
+    background: var(--teal-dark);
+    color: var(--white);
+    flex: 1;
+    max-width: 220px;
+    margin-left: auto;
+  }
+  .btn-primary:hover { background: #003a45; }
+  .btn-submit {
+    background: var(--success);
+    color: var(--white);
+    flex: 1;
+    max-width: 260px;
+    margin-left: auto;
+    font-size: 1rem;
+    padding: 0.85rem 2rem;
+  }
+  .btn-submit:hover { background: #15803d; }
+
+  /* Completion screen */
+  .complete-screen {
+    display: none;
+    text-align: center;
+    padding: 3rem 1.5rem;
+  }
+  .complete-screen.active { display: block; animation: fadeIn 0.5s ease; }
+  .complete-icon {
+    width: 72px; height: 72px;
+    background: var(--success);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 2rem;
+    color: var(--white);
+  }
+  .complete-screen h2 {
+    font-family: 'Merriweather', serif;
+    font-size: 1.5rem;
+    color: var(--teal-dark);
+    margin-bottom: 0.75rem;
+  }
+  .complete-screen p {
+    color: var(--gray-600);
+    max-width: 420px;
+    margin: 0 auto 2rem;
+  }
+
+  /* Summary output */
+  .summary-box {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    text-align: left;
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 0 1px 4px rgba(0,39,46,0.06);
+    max-height: 500px;
+    overflow-y: auto;
+  }
+  .summary-box h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--teal-mid);
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+  .summary-box h3:first-child { margin-top: 0; }
+  .summary-box .answer {
+    font-size: 0.9rem;
+    color: var(--gray-800);
+    margin-bottom: 0.35rem;
+    padding-left: 0.5rem;
+    border-left: 2px solid var(--gray-100);
+  }
+  .summary-box .answer strong { color: var(--gray-600); font-weight: 500; }
+
+  .btn-copy {
+    margin-top: 1.5rem;
+    background: var(--teal-dark);
+    color: var(--white);
+    padding: 0.7rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  .btn-copy:hover { background: #003a45; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    font-size: 0.8rem;
+    color: var(--gray-600);
+  }
+
+  @media (max-width: 480px) {
+    .header h1 { font-size: 1.4rem; }
+    .scale-row .option-item label { padding: 0.5rem 0.15rem; font-size: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">Website Intake</div>
+  <h1>Ben van der Burg</h1>
+  <p>Help ons jouw nieuwe website zo goed mogelijk te maken. Beantwoord deze vragen op je eigen tempo.</p>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-bar-outer">
+    <div class="progress-bar-inner" id="progressBar"></div>
+  </div>
+  <div class="progress-text">
+    <span id="progressLabel">Sectie 1 van 6</span>
+    <span id="progressPct">0%</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Intro -->
+  <div class="intro-card">
+    <h2>Hi Ben!</h2>
+    <p>We zijn bezig met het ontwerp van je nieuwe website. Om ervoor te zorgen dat we de juiste richting kiezen, willen we graag een aantal vragen stellen. Het duurt ongeveer <strong>10 minuten</strong> — je hoeft niet alles in één keer in te vullen.</p>
+  </div>
+
+  <!-- SECTION 1: Doelen & Visie -->
+  <div class="section active" data-section="1">
+    <div class="section-header">
+      <div class="section-number">1</div>
+      <div class="section-title">Doelen & Visie</div>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Wat is het primaire doel van je nieuwe website?</label>
+      <p class="q-hint">Kies het belangrijkste doel</p>
+      <div class="options-grid">
+        <div class="option-item"><input type="radio" name="q1_goal" id="q1a" value="Sprekersopdrachten binnenhalen"><label for="q1a">Sprekersopdrachten &amp; dagvoorzitterschap binnenhalen</label></div>
+        <div class="option-item"><input type="radio" name="q1_goal" id="q1b" value="Personal brand versterken"><label for="q1b">Mijn personal brand &amp; zichtbaarheid versterken</label></div>
+        <div class="option-item"><input type="radio" name="q1_goal" id="q1c" value="Hub voor media en podcasts"><label for="q1c">Centrale hub voor mijn media, podcasts &amp; content</label></div>
+        <div class="option-item"><input type="radio" name="q1_goal" id="q1d" value="Nieuwe zakelijke kansen aantrekken"><label for="q1d">Nieuwe zakelijke kansen &amp; samenwerkingen aantrekken</label></div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Zijn er nog andere doelen die belangrijk zijn?</label>
+      <p class="q-hint">Selecteer alles wat van toepassing is</p>
+      <div class="options-grid">
+        <div class="option-item"><input type="checkbox" name="q2_subdoelen" id="q2a" value="Boekingen via de site"><label for="q2a">Directe boekingen/aanvragen via de site</label></div>
+        <div class="option-item"><input type="checkbox" name="q2_subdoelen" id="q2b" value="Portfolio van projecten tonen"><label for="q2b">Portfolio van projecten &amp; startups laten zien</label></div>
+        <div class="option-item"><input type="checkbox" name="q2_subdoelen" id="q2c" value="Blog of thought leadership"><label for="q2c">Blog / thought leadership content publiceren</label></div>
+        <div class="option-item"><input type="checkbox" name="q2_subdoelen" id="q2d" value="Community opbouwen"><label for="q2d">E-mail lijst of community opbouwen</label></div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Wat moet iemand denken na het bezoeken van je site?</label>
+      <p class="q-hint">Beschrijf het gevoel of de eerste indruk die je wilt achterlaten</p>
+      <textarea name="q3_impression" placeholder="Bijv. 'Deze man begrijpt tech én weet te entertainen — ik wil hem boeken voor ons event'"></textarea>
+    </div>
+
+    <div class="nav-buttons">
+      <div></div>
+      <button class="btn btn-primary" onclick="nextSection()">Volgende &rarr;</button>
+    </div>
+  </div>
+
+  <!-- SECTION 2: Doelgroep -->
+  <div class="section" data-section="2">
+    <div class="section-header">
+      <div class="section-number">2</div>
+      <div class="section-title">Doelgroep</div>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Wie is je belangrijkste doelgroep?</label>
+      <p class="q-hint">Kies de primaire groep</p>
+      <div class="options-grid">
+        <div class="option-item"><input type="radio" name="q4_audience" id="q4a" value="Event organisatoren en bureaus"><label for="q4a">Event organisatoren &amp; boeking bureaus</label></div>
+        <div class="option-item"><input type="radio" name="q4_audience" id="q4b" value="Bedrijven en executives"><label for="q4b">Bedrijven &amp; executives (potentiële klanten)</label></div>
+        <div class="option-item"><input type="radio" name="q4_audience" id="q4c" value="Media en journalisten"><label for="q4c">Media, journalisten &amp; redacties</label></div>
+        <div class="option-item"><input type="radio" name="q4_audience" id="q4d" value="Breed tech-geinteresseerd publiek"><label for="q4d">Breed tech-geïnteresseerd publiek (fans &amp; volgers)</label></div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Wat zoeken zij als ze op je site komen?</label>
+      <p class="q-hint">Wat is de meest voorkomende reden dat mensen je site bezoeken?</p>
+      <div class="options-grid">
+        <div class="option-item"><input type="radio" name="q5_intent" id="q5a" value="Beschikbaarheid en boeken"><label for="q5a">Checken of ik beschikbaar ben &amp; boeken</label></div>
+        <div class="option-item"><input type="radio" name="q5_intent" id="q5b" value="Meer over mij te weten komen"><label for="q5b">Meer over mij te weten komen (wie is Ben?)</label></div>
+        <div class="option-item"><input type="radio" name="q5_intent" id="q5c" value="Content bekijken"><label for="q5c">Mijn content bekijken (podcasts, video's, artikelen)</label></div>
+        <div class="option-item"><input type="radio" name="q5_intent" id="q5d" value="Contact opnemen"><label for="q5d">Snel contactgegevens vinden</label></div>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prevSection()">&larr; Terug</button>
+      <button class="btn btn-primary" onclick="nextSection()">Volgende &rarr;</button>
+    </div>
+  </div>
+
+  <!-- SECTION 3: Content & Structuur -->
+  <div class="section" data-section="3">
+    <div class="section-header">
+      <div class="section-number">3</div>
+      <div class="section-title">Content & Structuur</div>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Welke secties zijn essentieel op de nieuwe site?</label>
+      <p class="q-hint">Selecteer alles wat je wilt behouden of toevoegen</p>
+      <div class="options-grid">
+        <div class="option-item"><input type="checkbox" name="q6_sections" id="q6a" value="Over mij / bio"><label for="q6a">Over mij / bio</label></div>
+        <div class="option-item"><input type="checkbox" name="q6_sections" id="q6b" value="Speaking topics & aanbod"><label for="q6b">Speaking topics &amp; aanbod</label></div>
+        <div class="option-item"><input type="checkbox" name="q6_sections" id="q6c" value="Podcasts (De Technoloog, BNR Digitaal)"><label for="q6c">Podcasts (De Technoloog, BNR Digitaal)</label></div>
+        <div class="option-item"><input type="checkbox" name="q6_sections" id="q6d" value="Video / media fragmenten"><label for="q6d">Video / media fragmenten</label></div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">En welke van deze?</label>
+      <p class="q-hint">Selecteer alles wat je wilt</p>
+      <div class="options-grid">
+        <div class="option-item"><input type="checkbox" name="q7_sections2" id="q7a" value="Projecten (Triple, Repudo, Slidejockey)"><label for="q7a">Projecten &amp; startups (Triple, Repudo, Slidejockey)</label></div>
+        <div class="option-item"><input type="checkbox" name="q7_sections2" id="q7b" value="Testimonials / referenties"><label for="q7b">Testimonials / referenties van opdrachtgevers</label></div>
+        <div class="option-item"><input type="checkbox" name="q7_sections2" id="q7c" value="Blog / insights"><label for="q7c">Blog / insights / artikelen</label></div>
+        <div class="option-item"><input type="checkbox" name="q7_sections2" id="q7d" value="Foto's / media kit"><label for="q7d">Foto's / perskit voor media</label></div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Hoe belangrijk is je schaatsverleden voor de nieuwe site?</label>
+      <p class="q-hint">Dit is nu een deel van je verhaal — hoe prominent moet het zijn?</p>
+      <div class="scale-row">
+        <div class="option-item"><input type="radio" name="q8_skating" id="q8a" value="1"><label for="q8a">1</label></div>
+        <div class="option-item"><input type="radio" name="q8_skating" id="q8b" value="2"><label for="q8b">2</label></div>
+        <div class="option-item"><input type="radio" name="q8_skating" id="q8c" value="3"><label for="q8c">3</label></div>
+        <div class="option-item"><input type="radio" name="q8_skating" id="q8d" value="4"><label for="q8d">4</label></div>
+        <div class="option-item"><input type="radio" name="q8_skating" id="q8e" value="5"><label for="q8e">5</label></div>
+      </div>
+      <div class="scale-labels">
+        <span>Kort benoemen</span>
+        <span>Centraal onderdeel</span>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prevSection()">&larr; Terug</button>
+      <button class="btn btn-primary" onclick="nextSection()">Volgende &rarr;</button>
+    </div>
+  </div>
+
+  <!-- SECTION 4: Look & Feel -->
+  <div class="section" data-section="4">
+    <div class="section-header">
+      <div class="section-number">4</div>
+      <div class="section-title">Look & Feel</div>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Welke sfeer past het beste bij jou?</label>
+      <p class="q-hint">Kies de richting die het meest aansluit</p>
+      <div class="options-grid">
+        <div class="option-item"><input type="radio" name="q9_vibe" id="q9a" value="Clean & zakelijk premium"><label for="q9a">Clean &amp; zakelijk premium (denk: consultancy)</label></div>
+        <div class="option-item"><input type="radio" name="q9_vibe" id="q9b" value="Bold & energiek"><label for="q9b">Bold &amp; energiek (denk: speaker/entertainer)</label></div>
+        <div class="option-item"><input type="radio" name="q9_vibe" id="q9c" value="Warm & persoonlijk"><label for="q9c">Warm &amp; persoonlijk (denk: storytelling, menselijk)</label></div>
+        <div class="option-item"><input type="radio" name="q9_vibe" id="q9d" value="Tech-forward & modern"><label for="q9d">Tech-forward &amp; modern (denk: startup/innovatie)</label></div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Wil je de huidige teal/donkergroen kleurstijl behouden?</label>
+      <p class="q-hint">Je huidige site gebruikt #00272E (donker teal) als hoofdkleur</p>
+      <div class="options-grid">
+        <div class="option-item"><input type="radio" name="q10_colors" id="q10a" value="Ja, behouden en verfijnen"><label for="q10a">Ja, behouden en verfijnen</label></div>
+        <div class="option-item"><input type="radio" name="q10_colors" id="q10b" value="Open voor nieuwe kleuren"><label for="q10b">Open voor iets nieuws</label></div>
+        <div class="option-item"><input type="radio" name="q10_colors" id="q10c" value="Laat het aan jullie"><label for="q10c">Laat het aan jullie — verrras me</label></div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Zijn er websites die je inspireren qua design?</label>
+      <p class="q-hint">Deel 1-3 URLs of beschrijf wat je mooi vindt</p>
+      <textarea name="q11_inspiration" placeholder="Bijv. 'Ik vind de site van Tim Ferriss mooi — clean maar toch persoonlijk' of plak een URL"></textarea>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prevSection()">&larr; Terug</button>
+      <button class="btn btn-primary" onclick="nextSection()">Volgende &rarr;</button>
+    </div>
+  </div>
+
+  <!-- SECTION 5: Functionaliteit -->
+  <div class="section" data-section="5">
+    <div class="section-header">
+      <div class="section-number">5</div>
+      <div class="section-title">Functionaliteit</div>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Welke functionaliteiten zijn belangrijk?</label>
+      <p class="q-hint">Selecteer alles wat je wilt</p>
+      <div class="options-grid">
+        <div class="option-item"><input type="checkbox" name="q12_features" id="q12a" value="Contact/boekingsformulier"><label for="q12a">Contact- of boekingsformulier</label></div>
+        <div class="option-item"><input type="checkbox" name="q12_features" id="q12b" value="Agenda / beschikbaarheid"><label for="q12b">Agenda of beschikbaarheidskalender</label></div>
+        <div class="option-item"><input type="checkbox" name="q12_features" id="q12c" value="Nieuwsbrief aanmelding"><label for="q12c">Nieuwsbrief aanmelding</label></div>
+        <div class="option-item"><input type="checkbox" name="q12_features" id="q12d" value="Social media integratie"><label for="q12d">Social media feed integratie</label></div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Hoe belangrijk is het dat je zelf content kunt bijwerken?</label>
+      <p class="q-hint">Denk aan blog posts, nieuwe video's toevoegen, etc.</p>
+      <div class="scale-row">
+        <div class="option-item"><input type="radio" name="q13_cms" id="q13a" value="1"><label for="q13a">1</label></div>
+        <div class="option-item"><input type="radio" name="q13_cms" id="q13b" value="2"><label for="q13b">2</label></div>
+        <div class="option-item"><input type="radio" name="q13_cms" id="q13c" value="3"><label for="q13c">3</label></div>
+        <div class="option-item"><input type="radio" name="q13_cms" id="q13d" value="4"><label for="q13d">4</label></div>
+        <div class="option-item"><input type="radio" name="q13_cms" id="q13e" value="5"><label for="q13e">5</label></div>
+      </div>
+      <div class="scale-labels">
+        <span>Niet belangrijk</span>
+        <span>Essentieel</span>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Gebruik je al specifieke tools die geïntegreerd moeten worden?</label>
+      <p class="q-hint">Denk aan Calendly, Mailchimp, Spotify, YouTube, etc.</p>
+      <textarea name="q14_tools" placeholder="Bijv. 'Ik gebruik Calendly voor boekingen en mijn podcasts staan op Spotify'"></textarea>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prevSection()">&larr; Terug</button>
+      <button class="btn btn-primary" onclick="nextSection()">Volgende &rarr;</button>
+    </div>
+  </div>
+
+  <!-- SECTION 6: Overig -->
+  <div class="section" data-section="6">
+    <div class="section-header">
+      <div class="section-number">6</div>
+      <div class="section-title">Afronding</div>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Wat vind je het beste aan je huidige site?</label>
+      <p class="q-hint">Wat moeten we zeker behouden?</p>
+      <textarea name="q15_keep" placeholder="Bijv. 'De persoonlijke toon en het verhaal over mijn achtergrond'"></textarea>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Wat moet absoluut anders?</label>
+      <p class="q-hint">Wat werkt niet of mist er op de huidige site?</p>
+      <textarea name="q16_change" placeholder="Bijv. 'De site voelt gedateerd en het is niet duidelijk wat ik aanbied'"></textarea>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Nog iets dat we moeten weten?</label>
+      <p class="q-hint">Vrije ruimte voor alles wat niet aan bod is gekomen</p>
+      <textarea name="q17_extra" placeholder="Aanvullende wensen, deadlines, lopende projecten..."></textarea>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prevSection()">&larr; Terug</button>
+      <button class="btn btn-submit" onclick="submitForm()">Verstuur antwoorden &#10003;</button>
+    </div>
+  </div>
+
+  <!-- Completion screen -->
+  <div class="complete-screen" id="completeScreen">
+    <div class="complete-icon">&#10003;</div>
+    <h2>Bedankt, Ben!</h2>
+    <p>Je antwoorden zijn vastgelegd. We gaan hiermee aan de slag en komen snel terug met een eerste ontwerp.</p>
+    <div class="summary-box" id="summaryBox"></div>
+    <button class="btn-copy" onclick="copySummary()">Kopieer samenvatting</button>
+  </div>
+
+  <div class="footer">
+    Gemaakt door <strong>Brand Powered Media</strong> &middot; Vertrouwelijk
+  </div>
+
+</div>
+
+<script>
+  let currentSection = 1;
+  const totalSections = 6;
+
+  function updateProgress() {
+    const pct = Math.round(((currentSection - 1) / totalSections) * 100);
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent = `Sectie ${currentSection} van ${totalSections}`;
+    document.getElementById('progressPct').textContent = pct + '%';
+  }
+
+  function showSection(n) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    const target = document.querySelector(`.section[data-section="${n}"]`);
+    if (target) target.classList.add('active');
+    currentSection = n;
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function nextSection() {
+    if (currentSection < totalSections) showSection(currentSection + 1);
+  }
+
+  function prevSection() {
+    if (currentSection > 1) showSection(currentSection - 1);
+  }
+
+  function getFormData() {
+    const data = {};
+
+    // Radio buttons
+    document.querySelectorAll('input[type="radio"]:checked').forEach(r => {
+      data[r.name] = r.value;
+    });
+
+    // Checkboxes
+    const checkboxGroups = {};
+    document.querySelectorAll('input[type="checkbox"]:checked').forEach(c => {
+      if (!checkboxGroups[c.name]) checkboxGroups[c.name] = [];
+      checkboxGroups[c.name].push(c.value);
+    });
+    Object.assign(data, checkboxGroups);
+
+    // Textareas
+    document.querySelectorAll('textarea').forEach(t => {
+      if (t.value.trim()) data[t.name] = t.value.trim();
+    });
+
+    return data;
+  }
+
+  const labels = {
+    q1_goal: 'Primair doel',
+    q2_subdoelen: 'Overige doelen',
+    q3_impression: 'Gewenste indruk',
+    q4_audience: 'Belangrijkste doelgroep',
+    q5_intent: 'Bezoekersintentie',
+    q6_sections: 'Essentiële secties (1)',
+    q7_sections2: 'Essentiële secties (2)',
+    q8_skating: 'Schaatsverleden prominentie (1-5)',
+    q9_vibe: 'Gewenste sfeer',
+    q10_colors: 'Kleurstijl',
+    q11_inspiration: 'Design inspiratie',
+    q12_features: 'Functionaliteiten',
+    q13_cms: 'Zelf content beheren (1-5)',
+    q14_tools: 'Tool integraties',
+    q15_keep: 'Behouden van huidige site',
+    q16_change: 'Moet anders',
+    q17_extra: 'Overig'
+  };
+
+  const sectionNames = {
+    q1_goal: 'Doelen & Visie', q2_subdoelen: 'Doelen & Visie', q3_impression: 'Doelen & Visie',
+    q4_audience: 'Doelgroep', q5_intent: 'Doelgroep',
+    q6_sections: 'Content & Structuur', q7_sections2: 'Content & Structuur', q8_skating: 'Content & Structuur',
+    q9_vibe: 'Look & Feel', q10_colors: 'Look & Feel', q11_inspiration: 'Look & Feel',
+    q12_features: 'Functionaliteit', q13_cms: 'Functionaliteit', q14_tools: 'Functionaliteit',
+    q15_keep: 'Afronding', q16_change: 'Afronding', q17_extra: 'Afronding'
+  };
+
+  async function submitForm() {
+    const data = getFormData();
+
+    // Verstuur naar API
+    const submitBtn = document.querySelector('.btn-submit');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Versturen...';
+
+    try {
+      const res = await fetch('/api/questionnaire', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error('API fout');
+    } catch (err) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Verstuur antwoorden ✓';
+      alert('Er ging iets mis bij het versturen. Probeer het opnieuw of kopieer de samenvatting.');
+      return;
+    }
+
+    // Build summary
+    let html = '';
+    let currentSec = '';
+    const order = ['q1_goal','q2_subdoelen','q3_impression','q4_audience','q5_intent','q6_sections','q7_sections2','q8_skating','q9_vibe','q10_colors','q11_inspiration','q12_features','q13_cms','q14_tools','q15_keep','q16_change','q17_extra'];
+
+    order.forEach(key => {
+      if (data[key] !== undefined) {
+        const sec = sectionNames[key];
+        if (sec !== currentSec) {
+          html += `<h3>${sec}</h3>`;
+          currentSec = sec;
+        }
+        const val = Array.isArray(data[key]) ? data[key].join(', ') : data[key];
+        html += `<div class="answer"><strong>${labels[key]}:</strong> ${val}</div>`;
+      }
+    });
+
+    if (!html) html = '<p style="color:#888">Geen antwoorden ingevuld.</p>';
+
+    document.getElementById('summaryBox').innerHTML = html;
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById('completeScreen').classList.add('active');
+    document.getElementById('progressBar').style.width = '100%';
+    document.getElementById('progressPct').textContent = '100%';
+    document.getElementById('progressLabel').textContent = 'Voltooid!';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function copySummary() {
+    const data = getFormData();
+    const order = ['q1_goal','q2_subdoelen','q3_impression','q4_audience','q5_intent','q6_sections','q7_sections2','q8_skating','q9_vibe','q10_colors','q11_inspiration','q12_features','q13_cms','q14_tools','q15_keep','q16_change','q17_extra'];
+    let text = 'WEBSITE INTAKE — BEN VAN DER BURG\n' + '='.repeat(40) + '\n\n';
+    let currentSec = '';
+
+    order.forEach(key => {
+      if (data[key] !== undefined) {
+        const sec = sectionNames[key];
+        if (sec !== currentSec) {
+          text += `\n## ${sec}\n`;
+          currentSec = sec;
+        }
+        const val = Array.isArray(data[key]) ? data[key].join(', ') : data[key];
+        text += `${labels[key]}: ${val}\n`;
+      }
+    });
+
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.querySelector('.btn-copy');
+      btn.textContent = 'Gekopieerd! ✓';
+      setTimeout(() => { btn.textContent = 'Kopieer samenvatting'; }, 2000);
+    });
+  }
+
+  // Init
+  updateProgress();
+</script>
+
+</body>
+</html>
