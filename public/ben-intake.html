@@ -422,7 +422,7 @@
     <div class="progress-bar-inner" id="progressBar"></div>
   </div>
   <div class="progress-text">
-    <span id="progressLabel">Sectie 1 van 6</span>
+    <span id="progressLabel">Sectie 1 van 7</span>
     <span id="progressPct">0%</span>
   </div>
 </div>
@@ -432,46 +432,67 @@
   <!-- Intro -->
   <div class="intro-card">
     <h2>Hi Ben!</h2>
-    <p>We zijn bezig met het ontwerp van je nieuwe website. Om ervoor te zorgen dat we de juiste richting kiezen, willen we graag een aantal vragen stellen. Het duurt ongeveer <strong>10 minuten</strong> — je hoeft niet alles in één keer in te vullen.</p>
+    <p>We starten niet met je website — we starten met jou. Wie ben je, wat drijft je, en voor wie doe je het? Daarna kijken we pas naar design en functionaliteiten. Duurt ongeveer <strong>15 minuten</strong> — je hoeft niet alles in één keer in te vullen.</p>
   </div>
 
-  <!-- SECTION 1: Doelen & Visie -->
+  <!-- SECTION 1: Wie ben jij -->
   <div class="section active" data-section="1">
     <div class="section-header">
       <div class="section-number">1</div>
-      <div class="section-title">Doelen & Visie</div>
+      <div class="section-title">Wie ben jij</div>
     </div>
 
     <div class="q-card">
-      <label class="q-label">Wat is het primaire doel van je nieuwe website?</label>
-      <p class="q-hint">Kies alles wat van toepassing is</p>
+      <label class="q-label">Hoe omschrijf je jezelf aan iemand die je nog nooit heeft gezien — in maximaal 2 zinnen?</label>
+      <p class="q-hint">Geen CV, geen functielist. Hoe klinkt het als je het zelf zegt aan de bar?</p>
+      <textarea name="q_statement" placeholder="Bijv. 'Ik ben oud-schaatser die nu het publiek meeneemt in de wereld van topsport en technologie — als dagvoorzitter, als interviewer, als verteller.'"></textarea>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Wat maakt jou anders dan andere sprekers, dagvoorzitters of commentatoren?</label>
+      <p class="q-hint">Wat kun jij zeggen of brengen dat niemand anders kan?</p>
+      <textarea name="q_uniek" placeholder="Bijv. 'Ik combineer topsportverhalen met technologietrends — en ik ben er zelf middenin geweest, niet er naast'"></textarea>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Hoe klinkt jouw communicatie van nature? Kies 2–3 woorden.</label>
+      <p class="q-hint">Dit wordt de stem van je website</p>
       <div class="options-grid">
-        <div class="option-item"><input type="checkbox" name="q1_goal" id="q1a" value="Sprekersopdrachten binnenhalen"><label for="q1a">Sprekersopdrachten &amp; dagvoorzitterschap binnenhalen</label></div>
-        <div class="option-item"><input type="checkbox" name="q1_goal" id="q1b" value="Personal brand versterken"><label for="q1b">Mijn personal brand &amp; zichtbaarheid versterken</label></div>
-        <div class="option-item"><input type="checkbox" name="q1_goal" id="q1c" value="Hub voor media en podcasts"><label for="q1c">Centrale hub voor mijn media, podcasts &amp; content</label></div>
-        <div class="option-item"><input type="checkbox" name="q1_goal" id="q1d" value="Nieuwe zakelijke kansen aantrekken"><label for="q1d">Nieuwe zakelijke kansen &amp; samenwerkingen aantrekken</label></div>
+        <div class="option-item"><input type="checkbox" name="q_tov" id="qtov_a" value="Direct"><label for="qtov_a">Direct</label></div>
+        <div class="option-item"><input type="checkbox" name="q_tov" id="qtov_b" value="Warm"><label for="qtov_b">Warm</label></div>
+        <div class="option-item"><input type="checkbox" name="q_tov" id="qtov_c" value="Analytisch"><label for="qtov_c">Analytisch</label></div>
+        <div class="option-item"><input type="checkbox" name="q_tov" id="qtov_d" value="Provocerend"><label for="qtov_d">Provocerend</label></div>
+        <div class="option-item"><input type="checkbox" name="q_tov" id="qtov_e" value="Inspirerend"><label for="qtov_e">Inspirerend</label></div>
+        <div class="option-item"><input type="checkbox" name="q_tov" id="qtov_f" value="Nuchter"><label for="qtov_f">Nuchter</label></div>
+        <div class="option-item"><input type="checkbox" name="q_tov" id="qtov_g" value="Kwetsbaar"><label for="qtov_g">Kwetsbaar</label></div>
+        <div class="option-item"><input type="checkbox" name="q_tov" id="qtov_h" value="Grappig"><label for="qtov_h">Grappig</label></div>
+        <div class="option-item"><input type="checkbox" name="q_tov" id="qtov_i" value="Serieus"><label for="qtov_i">Serieus</label></div>
+        <div class="option-item"><input type="checkbox" name="q_tov" id="qtov_j" value="Toegankelijk"><label for="qtov_j">Toegankelijk</label></div>
       </div>
-      <span class="toelichting-label">Toelichting (optioneel)</span>
-      <textarea class="toelichting" name="q1_toelichting" placeholder="Voeg toe wat je wilt..."></textarea>
     </div>
 
     <div class="q-card">
-      <label class="q-label">Zijn er nog andere doelen die belangrijk zijn?</label>
-      <p class="q-hint">Selecteer alles wat van toepassing is</p>
+      <label class="q-label">Wat erger je aan hoe jouw vakgebied — sport, media, technologie — vandaag gepresenteerd wordt?</label>
+      <p class="q-hint">Wat klopt er niet? Waar duw jij tegenin? Dit is je standpunt.</p>
+      <textarea name="q_tegenwicht" placeholder="Bijv. 'Techberichten zijn te abstract en te ver van mensen af. Ik wil ze menselijk en herkenbaar maken.'"></textarea>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Waar sta je over 3 jaar? Wat is het grote verhaal dat je aan het schrijven bent?</label>
+      <p class="q-hint">Niet wat je wilt doen — maar wie je wilt zijn</p>
+      <textarea name="q_ambitie" placeholder="Bijv. 'Ik wil dé brug zijn tussen topsportmentaliteit en de zakelijke wereld — als spreker én als contentmaker met eigen platforms'"></textarea>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Hoe draagt de website bij aan je inkomen?</label>
+      <p class="q-hint">Kies alles wat van toepassing is — dit bepaalt waar de focus ligt</p>
       <div class="options-grid">
-        <div class="option-item"><input type="checkbox" name="q2_subdoelen" id="q2a" value="Boekingen via de site"><label for="q2a">Directe boekingen/aanvragen via de site</label></div>
-        <div class="option-item"><input type="checkbox" name="q2_subdoelen" id="q2b" value="Portfolio van projecten tonen"><label for="q2b">Portfolio van projecten &amp; startups laten zien</label></div>
-        <div class="option-item"><input type="checkbox" name="q2_subdoelen" id="q2c" value="Blog of thought leadership"><label for="q2c">Blog / thought leadership content publiceren</label></div>
-        <div class="option-item"><input type="checkbox" name="q2_subdoelen" id="q2d" value="Community opbouwen"><label for="q2d">E-mail lijst of community opbouwen</label></div>
+        <div class="option-item"><input type="checkbox" name="q_revenue" id="qrev_a" value="Sprekers- en dagvoorzittersopdrachten binnenhalen"><label for="qrev_a">Sprekers- &amp; dagvoorzittersopdrachten binnenhalen</label></div>
+        <div class="option-item"><input type="checkbox" name="q_revenue" id="qrev_b" value="Sponsoring of branddeals aantrekken"><label for="qrev_b">Sponsoring of brand deals aantrekken</label></div>
+        <div class="option-item"><input type="checkbox" name="q_revenue" id="qrev_c" value="Podcast of media-bereik laten groeien"><label for="qrev_c">Podcast- of media-bereik laten groeien</label></div>
+        <div class="option-item"><input type="checkbox" name="q_revenue" id="qrev_d" value="Producten of cursussen verkopen"><label for="qrev_d">Producten, cursussen of programma's verkopen</label></div>
+        <div class="option-item"><input type="checkbox" name="q_revenue" id="qrev_e" value="Puur zichtbaarheid — business loopt via andere kanalen"><label for="qrev_e">Puur zichtbaarheid — business loopt via andere kanalen</label></div>
       </div>
-      <span class="toelichting-label">Toelichting (optioneel)</span>
-      <textarea class="toelichting" name="q2_toelichting" placeholder="Voeg toe wat je wilt..."></textarea>
-    </div>
-
-    <div class="q-card">
-      <label class="q-label">Wat moet iemand denken na het bezoeken van je site?</label>
-      <p class="q-hint">Beschrijf het gevoel of de eerste indruk die je wilt achterlaten</p>
-      <textarea name="q3_impression" placeholder="Bijv. 'Deze man begrijpt tech én weet te entertainen — ik wil hem boeken voor ons event'"></textarea>
     </div>
 
     <div class="nav-buttons">
@@ -484,102 +505,155 @@
   <div class="section" data-section="2">
     <div class="section-header">
       <div class="section-number">2</div>
-      <div class="section-title">Doelgroep</div>
+      <div class="section-title">Publiek & Opdrachtgever</div>
     </div>
 
     <div class="q-card">
-      <label class="q-label">Wie is je belangrijkste doelgroep?</label>
-      <p class="q-hint">Kies de primaire groep</p>
+      <label class="q-label">Wie is de opdrachtgever of klant die via de website moet converteren?</label>
+      <p class="q-hint">Wie betaalt jou — en wie moet de site overtuigen om contact op te nemen?</p>
       <div class="options-grid">
-        <div class="option-item"><input type="radio" name="q4_audience" id="q4a" value="Event organisatoren en bureaus"><label for="q4a">Event organisatoren &amp; boeking bureaus</label></div>
-        <div class="option-item"><input type="radio" name="q4_audience" id="q4b" value="Bedrijven en executives"><label for="q4b">Bedrijven &amp; executives (potentiële klanten)</label></div>
-        <div class="option-item"><input type="radio" name="q4_audience" id="q4c" value="Media en journalisten"><label for="q4c">Media, journalisten &amp; redacties</label></div>
-        <div class="option-item"><input type="radio" name="q4_audience" id="q4d" value="Breed tech-geinteresseerd publiek"><label for="q4d">Breed tech-geïnteresseerd publiek (fans &amp; volgers)</label></div>
+        <div class="option-item"><input type="radio" name="q_opdrachtgever" id="qopd_a" value="Event organisatoren en boeking bureaus"><label for="qopd_a">Event organisatoren &amp; boekingsbureaus</label></div>
+        <div class="option-item"><input type="radio" name="q_opdrachtgever" id="qopd_b" value="Bedrijven en executives direct"><label for="qopd_b">Bedrijven &amp; executives die zelf boeken</label></div>
+        <div class="option-item"><input type="radio" name="q_opdrachtgever" id="qopd_c" value="Media en redacties"><label for="qopd_c">Media, journalisten &amp; redacties</label></div>
+        <div class="option-item"><input type="radio" name="q_opdrachtgever" id="qopd_d" value="Meerdere van bovenstaande"><label for="qopd_d">Een mix van bovenstaande</label></div>
       </div>
       <span class="toelichting-label">Toelichting (optioneel)</span>
-      <textarea class="toelichting" name="q4_toelichting" placeholder="Voeg toe wat je wilt..."></textarea>
+      <textarea class="toelichting" name="q4_toelichting" placeholder="Wie is de meest waardevolle klant voor jou?"></textarea>
     </div>
 
     <div class="q-card">
-      <label class="q-label">Wat zoeken zij als ze op je site komen?</label>
-      <p class="q-hint">Wat is de meest voorkomende reden dat mensen je site bezoeken?</p>
+      <label class="q-label">En wie is het publiek dat je wilt opbouwen en vasthouden?</label>
+      <p class="q-hint">Dit zijn de mensen die je volgen, lezen en luisteren — niet per se degenen die betalen</p>
       <div class="options-grid">
-        <div class="option-item"><input type="radio" name="q5_intent" id="q5a" value="Beschikbaarheid en boeken"><label for="q5a">Checken of ik beschikbaar ben &amp; boeken</label></div>
-        <div class="option-item"><input type="radio" name="q5_intent" id="q5b" value="Meer over mij te weten komen"><label for="q5b">Meer over mij te weten komen (wie is Ben?)</label></div>
-        <div class="option-item"><input type="radio" name="q5_intent" id="q5c" value="Content bekijken"><label for="q5c">Mijn content bekijken (podcasts, video's, artikelen)</label></div>
+        <div class="option-item"><input type="checkbox" name="q4_audience" id="q4a" value="Sporters en sportliefhebbers"><label for="q4a">Sporters &amp; sportliefhebbers</label></div>
+        <div class="option-item"><input type="checkbox" name="q4_audience" id="q4b" value="Tech-geinteresseerden en ondernemers"><label for="q4b">Tech-geïnteresseerden &amp; ondernemers</label></div>
+        <div class="option-item"><input type="checkbox" name="q4_audience" id="q4c" value="Leidinggevenden en beslissers"><label for="q4c">Leidinggevenden &amp; beslissers</label></div>
+        <div class="option-item"><input type="checkbox" name="q4_audience" id="q4d" value="Breed publiek via podcasts en media"><label for="q4d">Breed publiek via podcasts &amp; media</label></div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Wat zoekt een typische bezoeker als hij op je site komt?</label>
+      <p class="q-hint">Wat is de meest voorkomende reden voor een bezoek?</p>
+      <div class="options-grid">
+        <div class="option-item"><input type="radio" name="q5_intent" id="q5a" value="Beschikbaarheid en boeken"><label for="q5a">Checken of ik beschikbaar ben &amp; direct boeken</label></div>
+        <div class="option-item"><input type="radio" name="q5_intent" id="q5b" value="Meer over mij te weten komen"><label for="q5b">Meer over mij te weten komen — wie is Ben?</label></div>
+        <div class="option-item"><input type="radio" name="q5_intent" id="q5c" value="Content bekijken"><label for="q5c">Mijn content bekijken — podcasts, video's, artikelen</label></div>
         <div class="option-item"><input type="radio" name="q5_intent" id="q5d" value="Contact opnemen"><label for="q5d">Snel contactgegevens vinden</label></div>
       </div>
       <span class="toelichting-label">Toelichting (optioneel)</span>
       <textarea class="toelichting" name="q5_toelichting" placeholder="Voeg toe wat je wilt..."></textarea>
     </div>
 
+    <div class="q-card">
+      <label class="q-label">Wat moet iemand denken — en voelen — na het bezoeken van je site?</label>
+      <p class="q-hint">Beschrijf de indruk die je wilt achterlaten</p>
+      <textarea name="q3_impression" placeholder="Bijv. 'Dit is iemand die weet waar hij over praat, geen poespas, en ik wil hem persoonlijk ontmoeten'"></textarea>
+    </div>
+
     <div class="nav-buttons">
       <button class="btn btn-secondary" onclick="prevSection()">&larr; Terug</button>
       <button class="btn btn-primary" onclick="nextSection()">Volgende &rarr;</button>
     </div>
   </div>
 
-  <!-- SECTION 3: Content & Structuur -->
+  <!-- SECTION 3: Verhaal & Positionering -->
   <div class="section" data-section="3">
     <div class="section-header">
       <div class="section-number">3</div>
-      <div class="section-title">Content & Structuur</div>
+      <div class="section-title">Verhaal & Positionering</div>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Schaatsen is onderdeel van je verhaal. Is het de kern of de context?</label>
+      <p class="q-hint">Dit bepaalt hoe prominent het op de site staat</p>
+      <div class="options-grid">
+        <div class="option-item"><input type="radio" name="q8_skating" id="q8a" value="Kern — schaatsen IS mijn merk"><label for="q8a">De kern — schaatsen ís mijn merk</label></div>
+        <div class="option-item"><input type="radio" name="q8_skating" id="q8b" value="Context — fundament maar niet allesbepalend"><label for="q8b">De context — het is mijn fundament, maar het gaat om wat ik ermee doe</label></div>
+        <div class="option-item"><input type="radio" name="q8_skating" id="q8c" value="Achtergrond — ik wil verder kijken dan schaatsen"><label for="q8c">De achtergrond — ik wil verder kijken dan schaatsen alleen</label></div>
+      </div>
+      <span class="toelichting-label">Toelichting (optioneel)</span>
+      <textarea class="toelichting" name="q8_toelichting" placeholder="Hoe wil je dat bezoekers dit onderdeel ervaren?"></textarea>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Op welke thema's wil je als autoriteit worden gezien?</label>
+      <p class="q-hint">Niet alleen gevonden worden — maar als dé expert gezien worden. Naar wie wenden media, organisaties of peers zich voor inzicht?</p>
+      <textarea name="q21_seo" placeholder="Bijv. 'Topsportmentaliteit in de boardroom, technologie voor niet-techneuten, mental performance, media & sport'"></textarea>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Welke projecten of ervaringen moeten leidend zijn in je online profiel?</label>
+      <p class="q-hint">Wat definieert je het best voor nieuwe opdrachtgevers of samenwerkingspartners?</p>
+      <textarea name="q22_profiel" placeholder="Bijv. 'Olympisch coaching traject, mijn eigen podcast, de retraite met Bart Veldkamp, mijn werk bij BNR'"></textarea>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Sta je open voor meer persoonlijke verhalen als onderbouwing van je visie?</label>
+      <p class="q-hint">Verslagen, reflecties, ervaringen — zoals de jaarlijkse retraite die je met Bart Veldkamp maakt</p>
+      <div class="options-grid">
+        <div class="option-item"><input type="radio" name="q23_persoonlijk" id="q23a" value="Ja, dat spreekt me aan"><label for="q23a">Ja, dat spreekt me aan — het menselijke maakt me geloofwaardig</label></div>
+        <div class="option-item"><input type="radio" name="q23_persoonlijk" id="q23b" value="Misschien, selectief"><label for="q23b">Misschien — selectief, niet te privé</label></div>
+        <div class="option-item"><input type="radio" name="q23_persoonlijk" id="q23c" value="Nee, liever professioneel houden"><label for="q23c">Nee, ik hou het liever zakelijk en professioneel</label></div>
+      </div>
+      <span class="toelichting-label">Toelichting (optioneel)</span>
+      <textarea class="toelichting" name="q23_toelichting" placeholder="Welk soort ervaringen zou je willen delen?"></textarea>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prevSection()">&larr; Terug</button>
+      <button class="btn btn-primary" onclick="nextSection()">Volgende &rarr;</button>
+    </div>
+  </div>
+
+  <!-- SECTION 4: Doelen & Structuur -->
+  <div class="section" data-section="4">
+    <div class="section-header">
+      <div class="section-number">4</div>
+      <div class="section-title">Doelen & Structuur</div>
+    </div>
+
+    <div class="q-card">
+      <label class="q-label">Wat zijn de doelen van je nieuwe website?</label>
+      <p class="q-hint">Kies alles wat van toepassing is</p>
+      <div class="options-grid">
+        <div class="option-item"><input type="checkbox" name="q1_goal" id="q1a" value="Sprekersopdrachten binnenhalen"><label for="q1a">Sprekersopdrachten &amp; dagvoorzitterschap binnenhalen</label></div>
+        <div class="option-item"><input type="checkbox" name="q1_goal" id="q1b" value="Personal brand versterken"><label for="q1b">Mijn personal brand &amp; zichtbaarheid versterken</label></div>
+        <div class="option-item"><input type="checkbox" name="q1_goal" id="q1c" value="Hub voor media en podcasts"><label for="q1c">Centrale hub voor mijn media, podcasts &amp; content</label></div>
+        <div class="option-item"><input type="checkbox" name="q1_goal" id="q1d" value="Nieuwe zakelijke kansen aantrekken"><label for="q1d">Nieuwe zakelijke kansen &amp; samenwerkingen aantrekken</label></div>
+        <div class="option-item"><input type="checkbox" name="q1_goal" id="q1e" value="Community of email-lijst opbouwen"><label for="q1e">Community of e-maillijst opbouwen</label></div>
+      </div>
+      <span class="toelichting-label">Toelichting (optioneel)</span>
+      <textarea class="toelichting" name="q1_toelichting" placeholder="Voeg toe wat je wilt..."></textarea>
     </div>
 
     <div class="q-card">
       <label class="q-label">Welke secties zijn essentieel op de nieuwe site?</label>
-      <p class="q-hint">Selecteer alles wat je wilt behouden of toevoegen</p>
+      <p class="q-hint">Selecteer alles wat je wilt</p>
       <div class="options-grid">
         <div class="option-item"><input type="checkbox" name="q6_sections" id="q6a" value="Over mij / bio"><label for="q6a">Over mij / bio</label></div>
         <div class="option-item"><input type="checkbox" name="q6_sections" id="q6b" value="Speaking topics & aanbod"><label for="q6b">Speaking topics &amp; aanbod</label></div>
-        <div class="option-item"><input type="checkbox" name="q6_sections" id="q6c" value="Podcasts (De Technoloog, BNR Digitaal)"><label for="q6c">Podcasts (De Technoloog, BNR Digitaal)</label></div>
-        <div class="option-item"><input type="checkbox" name="q6_sections" id="q6d" value="Video / media fragmenten"><label for="q6d">Video / media fragmenten</label></div>
+        <div class="option-item"><input type="checkbox" name="q6_sections" id="q6c" value="Podcasts"><label for="q6c">Podcasts</label></div>
+        <div class="option-item"><input type="checkbox" name="q6_sections" id="q6d" value="Video / media fragmenten"><label for="q6d">Video &amp; media fragmenten</label></div>
+        <div class="option-item"><input type="checkbox" name="q6_sections" id="q6e" value="Projecten en startups"><label for="q6e">Projecten &amp; startups</label></div>
+        <div class="option-item"><input type="checkbox" name="q6_sections" id="q6f" value="Testimonials van opdrachtgevers"><label for="q6f">Testimonials van opdrachtgevers</label></div>
+        <div class="option-item"><input type="checkbox" name="q6_sections" id="q6g" value="Blog of artikelen"><label for="q6g">Blog / artikelen / insights</label></div>
+        <div class="option-item"><input type="checkbox" name="q6_sections" id="q6h" value="Perskit voor media"><label for="q6h">Perskit voor media</label></div>
       </div>
       <span class="toelichting-label">Toelichting (optioneel)</span>
       <textarea class="toelichting" name="q6_toelichting" placeholder="Voeg toe wat je wilt..."></textarea>
     </div>
 
-    <div class="q-card">
-      <label class="q-label">En welke van deze?</label>
-      <p class="q-hint">Selecteer alles wat je wilt</p>
-      <div class="options-grid">
-        <div class="option-item"><input type="checkbox" name="q7_sections2" id="q7a" value="Projecten (Triple, Repudo, Slidejockey)"><label for="q7a">Projecten &amp; startups (Triple, Repudo, Slidejockey)</label></div>
-        <div class="option-item"><input type="checkbox" name="q7_sections2" id="q7b" value="Testimonials / referenties"><label for="q7b">Testimonials / referenties van opdrachtgevers</label></div>
-        <div class="option-item"><input type="checkbox" name="q7_sections2" id="q7c" value="Blog / insights"><label for="q7c">Blog / insights / artikelen</label></div>
-        <div class="option-item"><input type="checkbox" name="q7_sections2" id="q7d" value="Foto's / media kit"><label for="q7d">Foto's / perskit voor media</label></div>
-      </div>
-      <span class="toelichting-label">Toelichting (optioneel)</span>
-      <textarea class="toelichting" name="q7_toelichting" placeholder="Voeg toe wat je wilt..."></textarea>
-    </div>
-
-    <div class="q-card">
-      <label class="q-label">Hoe belangrijk is je schaatsverleden voor de nieuwe site?</label>
-      <p class="q-hint">Dit is nu een deel van je verhaal — hoe prominent moet het zijn?</p>
-      <div class="scale-row">
-        <div class="option-item"><input type="radio" name="q8_skating" id="q8a" value="1"><label for="q8a">1</label></div>
-        <div class="option-item"><input type="radio" name="q8_skating" id="q8b" value="2"><label for="q8b">2</label></div>
-        <div class="option-item"><input type="radio" name="q8_skating" id="q8c" value="3"><label for="q8c">3</label></div>
-        <div class="option-item"><input type="radio" name="q8_skating" id="q8d" value="4"><label for="q8d">4</label></div>
-        <div class="option-item"><input type="radio" name="q8_skating" id="q8e" value="5"><label for="q8e">5</label></div>
-      </div>
-      <div class="scale-labels">
-        <span>Kort benoemen</span>
-        <span>Centraal onderdeel</span>
-      </div>
-      <span class="toelichting-label">Toelichting (optioneel)</span>
-      <textarea class="toelichting" name="q8_toelichting" placeholder="Voeg toe wat je wilt..."></textarea>
-    </div>
-
     <div class="nav-buttons">
       <button class="btn btn-secondary" onclick="prevSection()">&larr; Terug</button>
       <button class="btn btn-primary" onclick="nextSection()">Volgende &rarr;</button>
     </div>
   </div>
 
-  <!-- SECTION 4: Look & Feel -->
-  <div class="section" data-section="4">
+  <!-- SECTION 5: Look & Feel -->
+  <div class="section" data-section="5">
     <div class="section-header">
-      <div class="section-number">4</div>
+      <div class="section-number">5</div>
       <div class="section-title">Look & Feel</div>
     </div>
 
@@ -597,12 +671,24 @@
     </div>
 
     <div class="q-card">
+      <label class="q-label">Sta je open voor een vernieuwde huisstijl?</label>
+      <p class="q-hint">Logo, typografie en kleurpalet — ook toe te passen op email en andere uitingen</p>
+      <div class="options-grid">
+        <div class="option-item"><input type="radio" name="q19_huisstijl" id="q19a" value="Ja, volledig vernieuwen"><label for="q19a">Ja, ik sta open voor een frisse start</label></div>
+        <div class="option-item"><input type="radio" name="q19_huisstijl" id="q19b" value="Aanpassen maar herkenbaar blijven"><label for="q19b">Aanpassen, maar herkenbaar blijven</label></div>
+        <div class="option-item"><input type="radio" name="q19_huisstijl" id="q19c" value="Nee, huisstijl is goed zo"><label for="q19c">Nee, mijn huisstijl is goed zoals hij is</label></div>
+      </div>
+      <span class="toelichting-label">Toelichting (optioneel)</span>
+      <textarea class="toelichting" name="q19_toelichting" placeholder="Welke elementen wil je zeker behouden of juist veranderen?"></textarea>
+    </div>
+
+    <div class="q-card">
       <label class="q-label">Wil je de huidige teal/donkergroen kleurstijl behouden?</label>
       <p class="q-hint">Je huidige site gebruikt #00272E (donker teal) als hoofdkleur</p>
       <div class="options-grid">
         <div class="option-item"><input type="radio" name="q10_colors" id="q10a" value="Ja, behouden en verfijnen"><label for="q10a">Ja, behouden en verfijnen</label></div>
         <div class="option-item"><input type="radio" name="q10_colors" id="q10b" value="Open voor nieuwe kleuren"><label for="q10b">Open voor iets nieuws</label></div>
-        <div class="option-item"><input type="radio" name="q10_colors" id="q10c" value="Laat het aan jullie"><label for="q10c">Laat het aan jullie — verrras me</label></div>
+        <div class="option-item"><input type="radio" name="q10_colors" id="q10c" value="Laat het aan jullie"><label for="q10c">Laat het aan jullie — verras me</label></div>
       </div>
       <span class="toelichting-label">Toelichting (optioneel)</span>
       <textarea class="toelichting" name="q10_toelichting" placeholder="Voeg toe wat je wilt..."></textarea>
@@ -611,7 +697,7 @@
     <div class="q-card">
       <label class="q-label">Zijn er websites die je inspireren qua design?</label>
       <p class="q-hint">Deel 1-3 URLs of beschrijf wat je mooi vindt</p>
-      <textarea name="q11_inspiration" placeholder="Bijv. 'Ik vind de site van Tim Ferriss mooi — clean maar toch persoonlijk' of plak een URL"></textarea>
+      <textarea name="q11_inspiration" placeholder="Bijv. 'De site van Ryan Holiday — clean, sterk en toch persoonlijk' of plak een URL"></textarea>
     </div>
 
     <div class="nav-buttons">
@@ -620,11 +706,11 @@
     </div>
   </div>
 
-  <!-- SECTION 5: Functionaliteit -->
-  <div class="section" data-section="5">
+  <!-- SECTION 6: Functionaliteit & Strategie -->
+  <div class="section" data-section="6">
     <div class="section-header">
-      <div class="section-number">5</div>
-      <div class="section-title">Functionaliteit</div>
+      <div class="section-number">6</div>
+      <div class="section-title">Functionaliteit & Strategie</div>
     </div>
 
     <div class="q-card">
@@ -635,6 +721,8 @@
         <div class="option-item"><input type="checkbox" name="q12_features" id="q12b" value="Agenda / beschikbaarheid"><label for="q12b">Agenda of beschikbaarheidskalender</label></div>
         <div class="option-item"><input type="checkbox" name="q12_features" id="q12c" value="Nieuwsbrief aanmelding"><label for="q12c">Nieuwsbrief aanmelding</label></div>
         <div class="option-item"><input type="checkbox" name="q12_features" id="q12d" value="Social media integratie"><label for="q12d">Social media feed integratie</label></div>
+        <div class="option-item"><input type="checkbox" name="q12_features" id="q12e" value="Zoekfunctie"><label for="q12e">Zoekfunctie</label></div>
+        <div class="option-item"><input type="checkbox" name="q12_features" id="q12f" value="Meertalig"><label for="q12f">Meertalige versie (NL/EN)</label></div>
       </div>
       <span class="toelichting-label">Toelichting (optioneel)</span>
       <textarea class="toelichting" name="q12_toelichting" placeholder="Voeg toe wat je wilt..."></textarea>
@@ -642,7 +730,7 @@
 
     <div class="q-card">
       <label class="q-label">Hoe belangrijk is het dat je zelf content kunt bijwerken?</label>
-      <p class="q-hint">Denk aan blog posts, nieuwe video's toevoegen, etc.</p>
+      <p class="q-hint">Denk aan blog posts, nieuwe video's toevoegen, agenda bijhouden</p>
       <div class="scale-row">
         <div class="option-item"><input type="radio" name="q13_cms" id="q13a" value="1"><label for="q13a">1</label></div>
         <div class="option-item"><input type="radio" name="q13_cms" id="q13b" value="2"><label for="q13b">2</label></div>
@@ -664,22 +752,9 @@
       <textarea name="q14_tools" placeholder="Bijv. 'Ik gebruik Calendly voor boekingen en mijn podcasts staan op Spotify'"></textarea>
     </div>
 
-    <div class="nav-buttons">
-      <button class="btn btn-secondary" onclick="prevSection()">&larr; Terug</button>
-      <button class="btn btn-primary" onclick="nextSection()">Volgende &rarr;</button>
-    </div>
-  </div>
-
-  <!-- SECTION 6: Overig -->
-  <div class="section" data-section="6">
-    <div class="section-header">
-      <div class="section-number">6</div>
-      <div class="section-title">Afronding</div>
-    </div>
-
     <div class="q-card">
       <label class="q-label">Wil je dat partners of derden content kunnen bijdragen op je website?</label>
-      <p class="q-hint">Bijv. gastblogs, podcast-gasten die hun eigen aflevering plaatsen, partners die events posten</p>
+      <p class="q-hint">Bijv. gastblogs, podcast-gasten, samenwerkende partners die events of artikelen plaatsen</p>
       <div class="options-grid">
         <div class="option-item"><input type="radio" name="q18_partners" id="q18a" value="Ja, dat zou interessant zijn"><label for="q18a">Ja, dat zou interessant zijn</label></div>
         <div class="option-item"><input type="radio" name="q18_partners" id="q18b" value="Nee, ik beheer alles zelf"><label for="q18b">Nee, ik beheer alles zelf</label></div>
@@ -690,45 +765,22 @@
     </div>
 
     <div class="q-card">
-      <label class="q-label">Sta je open voor een vernieuwde huisstijl?</label>
-      <p class="q-hint">Denk aan logo, typografie en kleurpalet — ook toe te passen op emailcommunicatie en andere uitingen</p>
-      <div class="options-grid">
-        <div class="option-item"><input type="radio" name="q19_huisstijl" id="q19a" value="Ja, volledig vernieuwen"><label for="q19a">Ja, ik sta open voor een frisse start</label></div>
-        <div class="option-item"><input type="radio" name="q19_huisstijl" id="q19b" value="Aanpassen maar herkenbaar blijven"><label for="q19b">Aanpassen, maar herkenbaar blijven</label></div>
-        <div class="option-item"><input type="radio" name="q19_huisstijl" id="q19c" value="Nee, huisstijl is goed zo"><label for="q19c">Nee, mijn huisstijl is goed zoals hij is</label></div>
-      </div>
-      <span class="toelichting-label">Toelichting (optioneel)</span>
-      <textarea class="toelichting" name="q19_toelichting" placeholder="Welke elementen wil je zeker behouden of juist veranderen?"></textarea>
-    </div>
-
-    <div class="q-card">
       <label class="q-label">Wil je CRM meer gaan inzetten, en hoe speelt de website daar een rol in?</label>
       <p class="q-hint">Bijv. leads verzamelen, relaties opvolgen, nieuwsbrief koppelen, contacthistorie bijhouden</p>
       <textarea name="q20_crm" placeholder="Bijv. 'Ik wil beter bijhouden wie mijn boekingen zijn en ze gericht kunnen mailen na een event'"></textarea>
     </div>
 
-    <div class="q-card">
-      <label class="q-label">Op welke thema's wil je gevonden worden — nu en in de toekomst?</label>
-      <p class="q-hint">Denk aan zoekwoorden, onderwerpen of domeinen waarvoor je autoriteit wilt opbouwen</p>
-      <textarea name="q21_seo" placeholder="Bijv. 'Schaatsen, sport & prestatie, leiderschap, mentaal presteren, podcasting'"></textarea>
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prevSection()">&larr; Terug</button>
+      <button class="btn btn-primary" onclick="nextSection()">Volgende &rarr;</button>
     </div>
+  </div>
 
-    <div class="q-card">
-      <label class="q-label">Welke projecten of ervaringen moeten leidend zijn in je online profiel?</label>
-      <p class="q-hint">Wat definieert je het best — voor nieuwe opdrachtgevers of samenwerkingspartners?</p>
-      <textarea name="q22_profiel" placeholder="Bijv. 'Mijn rol als schaatscoach bij het olympisch team, mijn podcast Rink Talk, mijn boek'"></textarea>
-    </div>
-
-    <div class="q-card">
-      <label class="q-label">Sta je open voor meer persoonlijke verhalen als onderbouwing van je visie?</label>
-      <p class="q-hint">Denk aan verslagen, reflecties of ervaringen — zoals de jaarlijkse retraite die je met Bart Veldkamp maakt</p>
-      <div class="options-grid">
-        <div class="option-item"><input type="radio" name="q23_persoonlijk" id="q23a" value="Ja, dat spreekt me aan"><label for="q23a">Ja, dat spreekt me aan</label></div>
-        <div class="option-item"><input type="radio" name="q23_persoonlijk" id="q23b" value="Misschien, selectief"><label for="q23b">Misschien — selectief en niet te veel</label></div>
-        <div class="option-item"><input type="radio" name="q23_persoonlijk" id="q23c" value="Nee, liever professioneel houden"><label for="q23c">Nee, ik hou het liever professioneel</label></div>
-      </div>
-      <span class="toelichting-label">Toelichting (optioneel)</span>
-      <textarea class="toelichting" name="q23_toelichting" placeholder="Welk soort verhalen of ervaringen zou je willen delen?"></textarea>
+  <!-- SECTION 7: Afronding -->
+  <div class="section" data-section="7">
+    <div class="section-header">
+      <div class="section-number">7</div>
+      <div class="section-title">Afronding</div>
     </div>
 
     <div class="q-card">
@@ -772,7 +824,7 @@
 
 <script>
   let currentSection = 1;
-  const totalSections = 6;
+  const totalSections = 7;
 
   function updateProgress() {
     const pct = Math.round(((currentSection - 1) / totalSections) * 100);
@@ -823,65 +875,70 @@
   }
 
   const labels = {
-    q1_goal: 'Primair doel',
-    q1_toelichting: 'Toelichting — Primair doel',
-    q2_subdoelen: 'Overige doelen',
-    q2_toelichting: 'Toelichting — Overige doelen',
-    q3_impression: 'Gewenste indruk',
-    q4_audience: 'Belangrijkste doelgroep',
-    q4_toelichting: 'Toelichting — Doelgroep',
-    q5_intent: 'Bezoekersintentie',
-    q5_toelichting: 'Toelichting — Bezoekersintentie',
-    q6_sections: 'Essentiële secties (1)',
-    q6_toelichting: 'Toelichting — Secties (1)',
-    q7_sections2: 'Essentiële secties (2)',
-    q7_toelichting: 'Toelichting — Secties (2)',
-    q8_skating: 'Schaatsverleden prominentie (1-5)',
-    q8_toelichting: 'Toelichting — Schaatsverleden',
-    q9_vibe: 'Gewenste sfeer',
-    q9_toelichting: 'Toelichting — Sfeer',
-    q10_colors: 'Kleurstijl',
-    q10_toelichting: 'Toelichting — Kleurstijl',
-    q11_inspiration: 'Design inspiratie',
-    q12_features: 'Functionaliteiten',
-    q12_toelichting: 'Toelichting — Functionaliteiten',
-    q13_cms: 'Zelf content beheren (1-5)',
-    q13_toelichting: 'Toelichting — Content beheer',
-    q14_tools: 'Tool integraties',
-    q18_partners: 'Bijdragen door partners',
-    q18_toelichting: 'Toelichting — Partners',
-    q19_huisstijl: 'Vernieuwde huisstijl',
-    q19_toelichting: 'Toelichting — Huisstijl',
-    q20_crm: 'CRM & website rol',
-    q21_seo: 'Thema\'s voor vindbaarheid',
-    q22_profiel: 'Leidende projecten & ervaring',
+    q_statement:     'Persoonlijk statement',
+    q_uniek:         'Unieke positie',
+    q_tov:           'Tone of voice',
+    q_tegenwicht:    'Standpunt & tegenwicht',
+    q_ambitie:       'Ambitie over 3 jaar',
+    q_revenue:       'Inkomstenbijdrage website',
+    q_opdrachtgever: 'Primaire opdrachtgever',
+    q4_toelichting:  'Toelichting — Opdrachtgever',
+    q4_audience:     'Publiek opbouwen',
+    q5_intent:       'Bezoekersintentie',
+    q5_toelichting:  'Toelichting — Bezoekersintentie',
+    q3_impression:   'Gewenste indruk & gevoel',
+    q8_skating:      'Rol schaatsen in het verhaal',
+    q8_toelichting:  'Toelichting — Schaatsen',
+    q21_seo:         'Autoriteitsthema\'s',
+    q22_profiel:     'Leidende projecten & ervaring',
     q23_persoonlijk: 'Persoonlijke verhalen',
     q23_toelichting: 'Toelichting — Persoonlijke verhalen',
-    q15_keep: 'Behouden van huidige site',
-    q16_change: 'Moet anders',
-    q17_extra: 'Overig'
+    q1_goal:         'Website doelen',
+    q1_toelichting:  'Toelichting — Doelen',
+    q6_sections:     'Essentiële secties',
+    q6_toelichting:  'Toelichting — Secties',
+    q9_vibe:         'Sfeer & uitstraling',
+    q9_toelichting:  'Toelichting — Sfeer',
+    q19_huisstijl:   'Vernieuwde huisstijl',
+    q19_toelichting: 'Toelichting — Huisstijl',
+    q10_colors:      'Kleurstijl',
+    q10_toelichting: 'Toelichting — Kleurstijl',
+    q11_inspiration: 'Design inspiratie',
+    q12_features:    'Functionaliteiten',
+    q12_toelichting: 'Toelichting — Functionaliteiten',
+    q13_cms:         'Zelf content beheren (1-5)',
+    q13_toelichting: 'Toelichting — Content beheer',
+    q14_tools:       'Tool integraties',
+    q18_partners:    'Bijdragen door partners',
+    q18_toelichting: 'Toelichting — Partners',
+    q20_crm:         'CRM & website rol',
+    q15_keep:        'Behouden van huidige site',
+    q16_change:      'Moet anders',
+    q17_extra:       'Overig'
   };
 
   const sectionNames = {
-    q1_goal: 'Doelen & Visie', q1_toelichting: 'Doelen & Visie',
-    q2_subdoelen: 'Doelen & Visie', q2_toelichting: 'Doelen & Visie',
-    q3_impression: 'Doelen & Visie',
-    q4_audience: 'Doelgroep', q4_toelichting: 'Doelgroep',
-    q5_intent: 'Doelgroep', q5_toelichting: 'Doelgroep',
-    q6_sections: 'Content & Structuur', q6_toelichting: 'Content & Structuur',
-    q7_sections2: 'Content & Structuur', q7_toelichting: 'Content & Structuur',
-    q8_skating: 'Content & Structuur', q8_toelichting: 'Content & Structuur',
+    q_statement: 'Wie ben jij', q_uniek: 'Wie ben jij',
+    q_tov: 'Wie ben jij', q_tegenwicht: 'Wie ben jij',
+    q_ambitie: 'Wie ben jij', q_revenue: 'Wie ben jij',
+    q_opdrachtgever: 'Publiek & Opdrachtgever', q4_toelichting: 'Publiek & Opdrachtgever',
+    q4_audience: 'Publiek & Opdrachtgever',
+    q5_intent: 'Publiek & Opdrachtgever', q5_toelichting: 'Publiek & Opdrachtgever',
+    q3_impression: 'Publiek & Opdrachtgever',
+    q8_skating: 'Verhaal & Positionering', q8_toelichting: 'Verhaal & Positionering',
+    q21_seo: 'Verhaal & Positionering', q22_profiel: 'Verhaal & Positionering',
+    q23_persoonlijk: 'Verhaal & Positionering', q23_toelichting: 'Verhaal & Positionering',
+    q1_goal: 'Doelen & Structuur', q1_toelichting: 'Doelen & Structuur',
+    q6_sections: 'Doelen & Structuur', q6_toelichting: 'Doelen & Structuur',
     q9_vibe: 'Look & Feel', q9_toelichting: 'Look & Feel',
+    q19_huisstijl: 'Look & Feel', q19_toelichting: 'Look & Feel',
     q10_colors: 'Look & Feel', q10_toelichting: 'Look & Feel',
     q11_inspiration: 'Look & Feel',
-    q12_features: 'Functionaliteit', q12_toelichting: 'Functionaliteit',
-    q13_cms: 'Functionaliteit', q13_toelichting: 'Functionaliteit',
-    q14_tools: 'Functionaliteit',
-    q18_partners: 'Afronding', q18_toelichting: 'Afronding',
-    q19_huisstijl: 'Afronding', q19_toelichting: 'Afronding',
-    q20_crm: 'Afronding',
-    q21_seo: 'Afronding', q22_profiel: 'Afronding',
-    q23_persoonlijk: 'Afronding', q23_toelichting: 'Afronding',
+    q12_features: 'Functionaliteit & Strategie', q12_toelichting: 'Functionaliteit & Strategie',
+    q13_cms: 'Functionaliteit & Strategie', q13_toelichting: 'Functionaliteit & Strategie',
+    q14_tools: 'Functionaliteit & Strategie',
+    q18_partners: 'Functionaliteit & Strategie', q18_toelichting: 'Functionaliteit & Strategie',
+    q20_crm: 'Functionaliteit & Strategie',
     q15_keep: 'Afronding', q16_change: 'Afronding', q17_extra: 'Afronding'
   };
 
@@ -911,25 +968,25 @@
     let html = '';
     let currentSec = '';
     const order = [
-      'q1_goal','q1_toelichting',
-      'q2_subdoelen','q2_toelichting',
-      'q3_impression',
-      'q4_audience','q4_toelichting',
+      'q_statement','q_uniek','q_tov','q_tegenwicht','q_ambitie','q_revenue',
+      'q_opdrachtgever','q4_toelichting',
+      'q4_audience',
       'q5_intent','q5_toelichting',
-      'q6_sections','q6_toelichting',
-      'q7_sections2','q7_toelichting',
+      'q3_impression',
       'q8_skating','q8_toelichting',
+      'q21_seo','q22_profiel',
+      'q23_persoonlijk','q23_toelichting',
+      'q1_goal','q1_toelichting',
+      'q6_sections','q6_toelichting',
       'q9_vibe','q9_toelichting',
+      'q19_huisstijl','q19_toelichting',
       'q10_colors','q10_toelichting',
       'q11_inspiration',
       'q12_features','q12_toelichting',
       'q13_cms','q13_toelichting',
       'q14_tools',
       'q18_partners','q18_toelichting',
-      'q19_huisstijl','q19_toelichting',
       'q20_crm',
-      'q21_seo','q22_profiel',
-      'q23_persoonlijk','q23_toelichting',
       'q15_keep','q16_change','q17_extra',
     ];
 
@@ -959,25 +1016,25 @@
   function copySummary() {
     const data = getFormData();
     const order = [
-      'q1_goal','q1_toelichting',
-      'q2_subdoelen','q2_toelichting',
-      'q3_impression',
-      'q4_audience','q4_toelichting',
+      'q_statement','q_uniek','q_tov','q_tegenwicht','q_ambitie','q_revenue',
+      'q_opdrachtgever','q4_toelichting',
+      'q4_audience',
       'q5_intent','q5_toelichting',
-      'q6_sections','q6_toelichting',
-      'q7_sections2','q7_toelichting',
+      'q3_impression',
       'q8_skating','q8_toelichting',
+      'q21_seo','q22_profiel',
+      'q23_persoonlijk','q23_toelichting',
+      'q1_goal','q1_toelichting',
+      'q6_sections','q6_toelichting',
       'q9_vibe','q9_toelichting',
+      'q19_huisstijl','q19_toelichting',
       'q10_colors','q10_toelichting',
       'q11_inspiration',
       'q12_features','q12_toelichting',
       'q13_cms','q13_toelichting',
       'q14_tools',
       'q18_partners','q18_toelichting',
-      'q19_huisstijl','q19_toelichting',
       'q20_crm',
-      'q21_seo','q22_profiel',
-      'q23_persoonlijk','q23_toelichting',
       'q15_keep','q16_change','q17_extra',
     ];
     let text = 'WEBSITE INTAKE — BEN VAN DER BURG\n' + '='.repeat(40) + '\n\n';
