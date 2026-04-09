@@ -802,6 +802,12 @@
     </div>
 
     <div class="q-card">
+      <label class="q-label">Welke vraag heb je nog niet gezien maar hadden we wel moeten stellen?</label>
+      <p class="q-hint">Als er iets is dat je wil delen maar nergens paste — dit is je kans</p>
+      <textarea name="q_gemist" placeholder="Bijv. 'Jullie hebben niet gevraagd hoe ik over AI nadenk, terwijl dat centraal staat in mijn werk'"></textarea>
+    </div>
+
+    <div class="q-card">
       <label class="q-label">Nog iets dat we moeten weten?</label>
       <p class="q-hint">Vrije ruimte voor alles wat niet aan bod is gekomen</p>
       <textarea name="q17_extra" placeholder="Aanvullende wensen, deadlines, lopende projecten..."></textarea>
@@ -923,6 +929,7 @@
     q20_crm:         'CRM & website rol',
     q15_keep:        'Behouden van huidige site',
     q16_change:      'Moet anders',
+    q_gemist:        'Gemiste vraag',
     q17_extra:       'Overig'
   };
 
@@ -948,7 +955,7 @@
     q14_tools: 'Functionaliteit & Strategie',
     q18_partners: 'Functionaliteit & Strategie', q18_toelichting: 'Functionaliteit & Strategie',
     q20_crm: 'Functionaliteit & Strategie',
-    q15_keep: 'Afronding', q16_change: 'Afronding', q17_extra: 'Afronding'
+    q15_keep: 'Afronding', q16_change: 'Afronding', q_gemist: 'Afronding', q17_extra: 'Afronding'
   };
 
   async function submitForm() {
@@ -996,7 +1003,7 @@
       'q14_tools',
       'q18_partners','q18_toelichting',
       'q20_crm',
-      'q15_keep','q16_change','q17_extra',
+      'q15_keep','q16_change','q_gemist','q17_extra',
     ];
 
     order.forEach(key => {
@@ -1044,7 +1051,7 @@
       'q14_tools',
       'q18_partners','q18_toelichting',
       'q20_crm',
-      'q15_keep','q16_change','q17_extra',
+      'q15_keep','q16_change','q_gemist','q17_extra',
     ];
     let text = 'WEBSITE INTAKE — BEN VAN DER BURG\n' + '='.repeat(40) + '\n\n';
     let currentSec = '';

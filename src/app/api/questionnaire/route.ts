@@ -51,6 +51,7 @@ const LABELS: Record<string, string> = {
   q20_crm:         'CRM & website rol',
   q15_keep:        'Behouden van huidige site',
   q16_change:      'Moet anders',
+  q_gemist:        'Gemiste vraag',
   q17_extra:       'Overig',
 }
 
@@ -74,7 +75,7 @@ const ORDER = [
   'q14_tools',
   'q18_partners','q18_toelichting',
   'q20_crm',
-  'q15_keep','q16_change','q17_extra',
+  'q15_keep','q16_change','q_gemist','q17_extra',
 ]
 
 function buildTable(data: Record<string, unknown>): string {
