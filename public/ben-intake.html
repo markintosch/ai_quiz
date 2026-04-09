@@ -469,6 +469,8 @@
         <div class="option-item"><input type="checkbox" name="q_tov" id="qtov_i" value="Serieus"><label for="qtov_i">Serieus</label></div>
         <div class="option-item"><input type="checkbox" name="q_tov" id="qtov_j" value="Toegankelijk"><label for="qtov_j">Toegankelijk</label></div>
       </div>
+      <span class="toelichting-label">Toelichting (optioneel) — vul aan of nuanceer</span>
+      <textarea class="toelichting" name="q_tov_toelichting" placeholder="Bijv. 'Direct maar nooit hard — ik houd van humor als verbindingsstof'"></textarea>
     </div>
 
     <div class="q-card">
@@ -493,6 +495,8 @@
         <div class="option-item"><input type="checkbox" name="q_revenue" id="qrev_d" value="Producten of cursussen verkopen"><label for="qrev_d">Producten, cursussen of programma's verkopen</label></div>
         <div class="option-item"><input type="checkbox" name="q_revenue" id="qrev_e" value="Puur zichtbaarheid — business loopt via andere kanalen"><label for="qrev_e">Puur zichtbaarheid — business loopt via andere kanalen</label></div>
       </div>
+      <span class="toelichting-label">Toelichting (optioneel) — vul aan of nuanceer</span>
+      <textarea class="toelichting" name="q_revenue_toelichting" placeholder="Bijv. 'Nu vooral opdrachten, maar ik wil in de toekomst ook een eigen programma lanceren'"></textarea>
     </div>
 
     <div class="nav-buttons">
@@ -530,6 +534,8 @@
         <div class="option-item"><input type="checkbox" name="q4_audience" id="q4c" value="Leidinggevenden en beslissers"><label for="q4c">Leidinggevenden &amp; beslissers</label></div>
         <div class="option-item"><input type="checkbox" name="q4_audience" id="q4d" value="Breed publiek via podcasts en media"><label for="q4d">Breed publiek via podcasts &amp; media</label></div>
       </div>
+      <span class="toelichting-label">Toelichting (optioneel) — vul aan of nuanceer</span>
+      <textarea class="toelichting" name="q_audience_toelichting" placeholder="Bijv. 'Ik wil specifiek jonge ambitieuze sporters bereiken die ook in het bedrijfsleven actief zijn'"></textarea>
     </div>
 
     <div class="q-card">
@@ -875,16 +881,19 @@
   }
 
   const labels = {
-    q_statement:     'Persoonlijk statement',
-    q_uniek:         'Unieke positie',
-    q_tov:           'Tone of voice',
-    q_tegenwicht:    'Standpunt & tegenwicht',
-    q_ambitie:       'Ambitie over 3 jaar',
-    q_revenue:       'Inkomstenbijdrage website',
+    q_statement:          'Persoonlijk statement',
+    q_uniek:              'Unieke positie',
+    q_tov:                'Tone of voice',
+    q_tov_toelichting:    'Toelichting — Tone of voice',
+    q_tegenwicht:         'Standpunt & tegenwicht',
+    q_ambitie:            'Ambitie over 3 jaar',
+    q_revenue:            'Inkomstenbijdrage website',
+    q_revenue_toelichting:'Toelichting — Inkomsten',
     q_opdrachtgever: 'Primaire opdrachtgever',
     q4_toelichting:  'Toelichting — Opdrachtgever',
-    q4_audience:     'Publiek opbouwen',
-    q5_intent:       'Bezoekersintentie',
+    q4_audience:          'Publiek opbouwen',
+    q_audience_toelichting: 'Toelichting — Publiek',
+    q5_intent:            'Bezoekersintentie',
     q5_toelichting:  'Toelichting — Bezoekersintentie',
     q3_impression:   'Gewenste indruk & gevoel',
     q8_skating:      'Rol schaatsen in het verhaal',
@@ -919,10 +928,10 @@
 
   const sectionNames = {
     q_statement: 'Wie ben jij', q_uniek: 'Wie ben jij',
-    q_tov: 'Wie ben jij', q_tegenwicht: 'Wie ben jij',
-    q_ambitie: 'Wie ben jij', q_revenue: 'Wie ben jij',
+    q_tov: 'Wie ben jij', q_tov_toelichting: 'Wie ben jij', q_tegenwicht: 'Wie ben jij',
+    q_ambitie: 'Wie ben jij', q_revenue: 'Wie ben jij', q_revenue_toelichting: 'Wie ben jij',
     q_opdrachtgever: 'Publiek & Opdrachtgever', q4_toelichting: 'Publiek & Opdrachtgever',
-    q4_audience: 'Publiek & Opdrachtgever',
+    q4_audience: 'Publiek & Opdrachtgever', q_audience_toelichting: 'Publiek & Opdrachtgever',
     q5_intent: 'Publiek & Opdrachtgever', q5_toelichting: 'Publiek & Opdrachtgever',
     q3_impression: 'Publiek & Opdrachtgever',
     q8_skating: 'Verhaal & Positionering', q8_toelichting: 'Verhaal & Positionering',
@@ -968,9 +977,9 @@
     let html = '';
     let currentSec = '';
     const order = [
-      'q_statement','q_uniek','q_tov','q_tegenwicht','q_ambitie','q_revenue',
+      'q_statement','q_uniek','q_tov','q_tov_toelichting','q_tegenwicht','q_ambitie','q_revenue','q_revenue_toelichting',
       'q_opdrachtgever','q4_toelichting',
-      'q4_audience',
+      'q4_audience','q_audience_toelichting',
       'q5_intent','q5_toelichting',
       'q3_impression',
       'q8_skating','q8_toelichting',
@@ -1016,9 +1025,9 @@
   function copySummary() {
     const data = getFormData();
     const order = [
-      'q_statement','q_uniek','q_tov','q_tegenwicht','q_ambitie','q_revenue',
+      'q_statement','q_uniek','q_tov','q_tov_toelichting','q_tegenwicht','q_ambitie','q_revenue','q_revenue_toelichting',
       'q_opdrachtgever','q4_toelichting',
-      'q4_audience',
+      'q4_audience','q_audience_toelichting',
       'q5_intent','q5_toelichting',
       'q3_impression',
       'q8_skating','q8_toelichting',
