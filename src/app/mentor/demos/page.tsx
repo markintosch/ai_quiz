@@ -58,16 +58,16 @@ const PROJECTS = [
   {
     num:       '03',
     accent:    '#E10600',
-    tag:       { nl: 'Kennisactivatie · Events', en: 'Knowledge activation · Events' },
-    audience:  { nl: 'Tech & B2B evenementen, talent', en: 'Tech & B2B events, talent' },
+    tag:       { nl: 'F1 kennisrace · Events', en: 'F1 knowledge race · Events' },
+    audience:  { nl: 'F1-fans, corporate events, hospitality', en: 'F1 fans, corporate events, hospitality' },
     method:    'Hot Lap',
     methodColor: '#E10600',
-    title:     { nl: 'Cloud Knowledge Game — Vrooooom', en: 'Cloud Knowledge Game — Vrooooom' },
+    title:     { nl: 'Vrooooom — F1 Kennisrace', en: 'Vrooooom — F1 Knowledge Race' },
     body: {
-      nl: 'Een kennisplatform in twee modi: solo Hot Lap (getimed, elke fout kost seconden) én multiplayer (teams of deelnemers live tegen elkaar). Tien vragen per ronde, wekelijks vernieuwd. Ontwikkeld als terugkerend sponsorplatform — founding sponsor-gesprekken lopen.',
-      en: 'A knowledge platform in two modes: solo Hot Lap (timed, every wrong answer costs seconds) and multiplayer (teams or participants live against each other). Ten questions per round, refreshed weekly. Built as a recurring sponsor platform — founding sponsor conversations in progress.',
+      nl: 'F1-kennisplatform in twee modi: solo Hot Lap (getimed, elke fout kost seconden) én multiplayer (deelnemers live tegen elkaar). Tien vragen per ronde, wekelijks vernieuwd rondom het seizoen. Gebouwd als terugkerend sponsorplatform — founding sponsor-gesprekken lopen.',
+      en: 'F1 knowledge platform in two modes: solo Hot Lap (timed, every wrong answer costs seconds) and multiplayer (participants live against each other). Ten questions per round, refreshed weekly around the season. Built as a recurring sponsor platform — founding sponsor conversations in progress.',
     },
-    pills: { nl: ['Solo + Multiplayer', 'Leaderboard', 'Wekelijks', 'Sponsoring'], en: ['Solo + Multiplayer', 'Leaderboard', 'Weekly', 'Sponsorship'] },
+    pills: { nl: ['F1', 'Solo + Multiplayer', 'Leaderboard', 'Sponsoring'], en: ['F1', 'Solo + Multiplayer', 'Leaderboard', 'Sponsorship'] },
     demo: `${BASE}/vrooooom`,
   },
   {
