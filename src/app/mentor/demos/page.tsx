@@ -7,14 +7,14 @@ const INTRO = {
   nl: {
     label:  'Gedeeld met jou',
     title:  'Ik adviseer niet alleen. Ik maak ook.',
-    body:   `Vanaf de zijlijn toekijken hoe AI mijn vak uitholt, leek me geen goed plan. Dus ben ik er headfirst ingedoken — met name via Claude. Die kennis zet ik in voor opdrachtgevers. Ik bouw de brug tussen bedrijfsdoelen, strategie en tastbare, inzetbare AI.\n\nDe afgelopen weken heb ik een reeks applicaties gebouwd — voor sectoren van pharma tot fitness, van cloud security tot M&A. Ze draaien allemaal op dezelfde architectuur. Ik deel ze zodat je zelf kunt bepalen of en hoe zoiets past bij jouw uitdaging.`,
-    sub:    'Zit er iets bij dat past bij jouw vraagstuk? Plan een gesprek.',
+    body:   `Vanaf dag één zag ik de impact die AI heeft en nog gaat krijgen. Afwachten leek me geen goed plan. Dus ben ik er headfirst ingedoken — met name (maar niet alleen) via Claude. Die kennis zet ik in voor opdrachtgevers. Ik bouw de brug tussen bedrijfsdoelen, strategie en tastbare, inzetbare AI.\n\nDe afgelopen weken heb ik een reeks applicaties gebouwd — voor sectoren van pharma tot fitness, van cloud security tot M&A. Ze draaien allemaal op dezelfde architectuur. Ik deel ze om te laten zien dat er snel tastbare middelen te ontwikkelen zijn. De meeste hiervan zijn eenvoudig van opzet maar heel effectief in te zetten. Je kunt bepalen of en hoe zoiets past bij jouw uitdaging.`,
+    sub:    'Zit er iets bij dat past bij jouw vraagstuk? Heb je een ander idee? Plan een gesprek.',
   },
   en: {
     label:  'Shared with you',
     title:  'I don\'t just advise. I build too.',
-    body:   `Watching AI hollow out my profession from the sidelines wasn't an option. So I went in headfirst — mainly through Claude. I apply that knowledge for clients. Building the bridge between business goals, strategy and tangible, deployable AI.\n\nOver the past few weeks I built a range of applications — across pharma, fitness, cloud security, M&A and more. They all run on the same architecture. I'm sharing them so you can see for yourself whether and how something like this fits your challenge.`,
-    sub:    'See something that fits your question? Let\'s talk.',
+    body:   `From day one I could see the impact AI has — and is going to have. Waiting it out didn't seem like a good plan. So I went in headfirst — mainly (but not only) through Claude. I apply that knowledge for clients. Building the bridge between business goals, strategy and tangible, deployable AI.\n\nOver the past few weeks I built a range of applications — across pharma, fitness, cloud security, M&A and more. They all run on the same architecture. I'm sharing them to show that tangible tools can be built quickly. Most of these are simple in concept but highly effective in practice. You can decide whether and how something like this fits your challenge.`,
+    sub:    'See something that fits your question? Have a different idea? Let\'s talk.',
   },
 }
 
