@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Crew — Your AI Team for Marketing & Sales</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Manrope:wght@600;700;800&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #07033E;
+            --teal: #84DCC6;
+            --magenta: #D0255E;
+            --white: #FFFFFF;
+            --light-gray: #F6F6F6;
+            --dark-gray: #2C2C2C;
+            --border-radius-card: 25px;
+            --border-radius-button: 10px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--dark-gray);
+            background-color: var(--white);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 700;
+        }
+
+        h1 { font-size: clamp(2.5rem, 8vw, 4rem); }
+        h2 { font-size: clamp(2rem, 6vw, 3rem); }
+        h3 { font-size: clamp(1.25rem, 4vw, 1.75rem); }
+
+        p {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        .label {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        button, .btn {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: var(--border-radius-button);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--magenta);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #B01D4A;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(208, 37, 94, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: var(--navy);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background-color: #0a0550;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--magenta);
+            border: 2px solid var(--magenta);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--magenta);
+            color: var(--white);
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--white);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #EFEFEF;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--navy);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--dark-gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--magenta);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+        }
+
+        /* Hero */
+        .hero {
+            padding: 6rem 2rem;
+            background: linear-gradient(135deg, var(--navy) 0%, rgba(7, 3, 62, 0.95) 100%);
+            color: var(--white);
+            text-align: center;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .hero h1 {
+            color: var(--teal);
+            margin-bottom: 0.5rem;
+            font-size: clamp(3rem, 10vw, 5rem);
+        }
+
+        .hero .subtitle {
+            font-size: clamp(1.25rem, 4vw, 1.75rem);
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-description {
+            max-width: 600px;
+            margin: 2rem auto;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.95);
+            line-height: 1.8;
+        }
+
+        .hero .btn-primary {
+            margin-top: 2rem;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Section structure */
+        section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            color: var(--navy);
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: var(--dark-gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* What is The Crew */
+        #what-is {
+            background-color: var(--light-gray);
+        }
+
+        .what-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .what-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--dark-gray);
+        }
+
+        .differentiator-box {
+            background: var(--navy);
+            color: var(--white);
+            padding: 2rem;
+            border-radius: var(--border-radius-card);
+            margin-top: 2rem;
+            border-left: 4px solid var(--magenta);
+        }
+
+        .differentiator-box p {
+            color: var(--white);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .what-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Three Phases */
+        #phases {
+            background-color: var(--white);
+        }
+
+        .phases-container {
+            margin-top: 3rem;
+        }
+
+        .phases-flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .phase-card {
+            background: var(--white);
+            border: 2px solid #E0E0E0;
+            border-radius: var(--border-radius-card);
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease-out backwards;
+        }
+
+        .phase-card:nth-child(1) { animation-delay: 0.2s; }
+        .phase-card:nth-child(2) { animation-delay: 0.3s; }
+        .phase-card:nth-child(3) { animation-delay: 0.4s; }
+
+        .phase-card:hover {
+            border-color: var(--magenta);
+            box-shadow: 0 12px 32px rgba(208, 37, 94, 0.12);
+            transform: translateY(-4px);
+        }
+
+        .phase-number {
+            display: inline-block;
+            background: var(--navy);
+            color: var(--teal);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .phase-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 0.5rem;
+        }
+
+        .phase-subtitle {
+            color: var(--dark-gray);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        .phase-agents {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            margin-top: 1rem;
+            border-top: 1px solid #E0E0E0;
+            padding-top: 1rem;
+        }
+
+        .phase-card.expanded .phase-agents {
+            max-height: 1000px;
+        }
+
+        .agent-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #EFEFEF;
+        }
+
+        .agent-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .agent-name {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 700;
+            color: var(--navy);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .agent-role {
+            font-size: 0.85rem;
+            color: var(--dark-gray);
+            margin-bottom: 0.5rem;
+            font-style: italic;
+        }
+
+        .agent-desc {
+            font-size: 0.85rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .expand-toggle {
+            background: none;
+            border: none;
+            color: var(--magenta);
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .expand-toggle:after {
+            content: " ↓";
+            transition: transform 0.3s ease;
+        }
+
+        .phase-card.expanded .expand-toggle:after {
+            transform: rotate(180deg);
+        }
+
+        .review-checkpoint {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            background: var(--light-gray);
+            border-radius: 10px;
+            margin: 0 2rem;
+            font-weight: 600;
+            color: var(--navy);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .review-checkpoint:before {
+            content: "🔍";
+            margin-right: 0.75rem;
+        }
+
+        .phases-flow-with-review {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr auto 1fr;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 1024px) {
+            .phases-flow-with-review {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            .review-checkpoint {
+                margin: 0;
+            }
+        }
+
+        /* Learning Curve */
+        #learning {
+            background-color: var(--light-gray);
+        }
+
+        .learning-timeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .learning-stage {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: var(--border-radius-card);
+            border-left: 4px solid var(--teal);
+            animation: fadeInUp 0.8s ease-out backwards;
+        }
+
+        .learning-stage:nth-child(1) { animation-delay: 0.2s; }
+        .learning-stage:nth-child(2) { animation-delay: 0.3s; border-left-color: var(--magenta); }
+        .learning-stage:nth-child(3) { animation-delay: 0.4s; border-left-color: var(--navy); }
+
+        .learning-stage h4 {
+            color: var(--navy);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .learning-stage p {
+            color: var(--dark-gray);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .learning-callout {
+            background: var(--navy);
+            color: var(--white);
+            padding: 2rem;
+            border-radius: var(--border-radius-card);
+            margin-top: 2rem;
+            text-align: center;
+            border: 2px solid var(--teal);
+        }
+
+        .learning-callout p {
+            color: var(--white);
+            font-size: 1.1rem;
+            font-weight: 500;
+            line-height: 1.7;
+        }
+
+        /* Entry Flows */
+        #entry-flows {
+            background-color: var(--white);
+        }
+
+        .flows-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .flow-card {
+            background: var(--white);
+            border: 2px solid #E0E0E0;
+            border-radius: var(--border-radius-card);
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease-out backwards;
+        }
+
+        .flow-card:nth-child(1) { animation-delay: 0.2s; }
+        .flow-card:nth-child(2) { animation-delay: 0.3s; }
+        .flow-card:nth-child(3) { animation-delay: 0.4s; }
+
+        .flow-card:hover {
+            border-color: var(--magenta);
+            box-shadow: 0 16px 40px rgba(208, 37, 94, 0.15);
+            transform: translateY(-6px);
+        }
+
+        .flow-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .flow-card h3 {
+            color: var(--navy);
+            margin-bottom: 1rem;
+        }
+
+        .flow-card p {
+            color: var(--dark-gray);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .flow-highlight {
+            background: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border-left: 3px solid var(--magenta);
+            margin: 1.5rem 0;
+        }
+
+        .flow-highlight p {
+            margin: 0;
+            font-weight: 500;
+            color: var(--navy);
+        }
+
+        /* Requirements / Tiers */
+        #requirements {
+            background-color: var(--light-gray);
+        }
+
+        .tiers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .tier-card {
+            background: var(--white);
+            border: 2px solid #E0E0E0;
+            border-radius: var(--border-radius-card);
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            animation: fadeInUp 0.8s ease-out backwards;
+        }
+
+        .tier-card:nth-child(1) { animation-delay: 0.2s; }
+        .tier-card:nth-child(2) { animation-delay: 0.3s; border: 2px solid var(--magenta); }
+        .tier-card:nth-child(3) { animation-delay: 0.4s; }
+
+        .tier-card:hover {
+            box-shadow: 0 16px 40px rgba(7, 3, 62, 0.15);
+            transform: translateY(-6px);
+        }
+
+        .tier-badge {
+            position: absolute;
+            top: -15px;
+            left: 2rem;
+            background: var(--navy);
+            color: var(--white);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .tier-card.featured .tier-badge {
+            background: var(--magenta);
+        }
+
+        .tier-card h3 {
+            color: var(--navy);
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tier-items {
+            margin: 1.5rem 0;
+        }
+
+        .tier-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+            font-size: 0.95rem;
+            color: var(--dark-gray);
+        }
+
+        .tier-item:before {
+            content: "✓";
+            color: var(--teal);
+            font-weight: 700;
+            flex-shrink: 0;
+            min-width: 20px;
+        }
+
+        .tier-outcome {
+            background: var(--light-gray);
+            padding: 1.25rem;
+            border-radius: 15px;
+            margin-top: 1.5rem;
+            border-left: 3px solid var(--teal);
+        }
+
+        .tier-outcome p {
+            margin: 0;
+            font-weight: 500;
+            color: var(--navy);
+            font-size: 0.95rem;
+        }
+
+        .tier-card.featured .tier-outcome {
+            background: rgba(208, 37, 94, 0.08);
+            border-left-color: var(--magenta);
+        }
+
+        /* CTA Section */
+        #cta {
+            background: linear-gradient(135deg, var(--navy) 0%, rgba(7, 3, 62, 0.95) 100%);
+            color: var(--white);
+            text-align: center;
+            padding: 5rem 2rem;
+        }
+
+        #cta h2 {
+            color: var(--teal);
+            margin-bottom: 1.5rem;
+        }
+
+        #cta p {
+            color: rgba(255, 255, 255, 0.95);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        #cta .btn-primary {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            margin: 0 1rem 2rem 0;
+        }
+
+        #cta .note {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-style: italic;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--white);
+            border-top: 1px solid #E0E0E0;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        footer p {
+            color: var(--dark-gray);
+            margin-bottom: 1rem;
+        }
+
+        .footer-brand {
+            font-weight: 600;
+            color: var(--navy);
+        }
+
+        .footer-link {
+            color: var(--magenta);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--navy);
+        }
+
+        footer .copyright {
+            font-size: 0.9rem;
+            color: #999;
+            margin-top: 2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            section {
+                padding: 3rem 1.5rem;
+            }
+
+            .hero {
+                padding: 4rem 1.5rem;
+            }
+
+            .phases-flow-with-review {
+                grid-template-columns: 1fr;
+            }
+
+            .review-checkpoint {
+                margin: 0;
+            }
+
+            #cta {
+                padding: 3rem 1.5rem;
+            }
+        }
+
+        /* Scroll animations */
+        .fade-in-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    
+  /* Language Switcher */
+  .lang-switch {
+    position: fixed;
+    top: 12px;
+    right: 16px;
+    z-index: 9999;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .lang-switch a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-family: 'Inter', 'Montserrat', 'Manrope', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .lang-switch a {
+    background: rgba(7,3,62,0.06);
+    border: 1px solid rgba(7,3,62,0.15);
+    color: #07033E;
+  }
+  .lang-switch a:hover {
+    background: rgba(7,3,62,0.12);
+    border-color: rgba(7,3,62,0.3);
+  }
+  .lang-switch a.active {
+    background: rgba(7,3,62,0.12);
+    border-color: rgba(7,3,62,0.3);
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div class="lang-switch">
+  <a href="/thecrew/en/pitch-standalone.html" class="active">EN</a>
+  <a href="/thecrew/nl/pitch-standalone.html">NL</a>
+</div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-brand">The Crew</div>
+        <ul class="nav-links">
+            <li><a href="#what-is">What is it</a></li>
+            <li><a href="#phases">How it works</a></li>
+            <li><a href="#entry-flows">Who it's for</a></li>
+            <li><a href="#requirements">Get started</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>The Crew</h1>
+        <div class="subtitle">Your AI team for marketing & sales</div>
+        <div class="hero-description">
+            <p>AI that works alongside your team, not instead of your team. Not a command center — a foundation that makes your marketers sharper, faster, and more focused.</p>
+        </div>
+        <button class="btn btn-primary">Discover how it works</button>
+    </section>
+
+    <!-- What is The Crew -->
+    <section id="what-is">
+        <div class="section-header">
+            <h2>What is The Crew</h2>
+            <p>Ten specialised AI agents, organised in 3 phases. Each with a role. Together they run your marketing from intelligence to execution to performance — with you in control at every critical moment.</p>
+        </div>
+
+        <div class="what-content">
+            <div>
+                <p>The Crew works the way a good agency would work if it never lost anyone, never got tired, and never lost tribal knowledge.</p>
+                <p style="margin-top: 1.5rem;">10 agents. 3 phases. You're always in control.</p>
+            </div>
+            <div>
+                <div class="differentiator-box">
+                    <p><strong>Most agencies run on email chains, spreadsheets and tribal knowledge.</strong> When someone leaves, the expertise walks out the door. The Crew captures that knowledge and builds on it.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Three Phases -->
+    <section id="phases">
+        <div class="section-header">
+            <h2>How it works</h2>
+            <p>Three phases. Two review checkpoints. You decide what's next.</p>
+        </div>
+
+        <div class="phases-container">
+            <div class="phases-flow-with-review">
+                <!-- Phase 1 -->
+                <div class="phase-card" data-phase="1">
+                    <div class="phase-number">1</div>
+                    <div class="phase-title">Intelligence</div>
+                    <div class="phase-subtitle">Understand your market before spending a single euro</div>
+                    <p style="font-size: 0.9rem; color: #666;">The Lookout, The Spyglass, The Navigator gather and synthesise data.</p>
+                    <button class="expand-toggle">Details</button>
+                    <div class="phase-agents">
+                        <div class="agent-item">
+                            <div class="agent-name">The Lookout / Client Intelligence</div>
+                            <div class="agent-role">Analyses your internal data</div>
+                            <div class="agent-desc">CRM, analytics, funnel → Delivers: ICP validation, funnel baselines, opportunity overview</div>
+                        </div>
+                        <div class="agent-item">
+                            <div class="agent-name">The Spyglass / Market & Competitors</div>
+                            <div class="agent-role">Researches your market</div>
+                            <div class="agent-desc">Competitors, buying signals, positioning → Delivers: competitive audit, buying triggers, positioning gaps</div>
+                        </div>
+                        <div class="agent-item">
+                            <div class="agent-name">The Navigator / Strategy</div>
+                            <div class="agent-role">Connects all data into strategy</div>
+                            <div class="agent-desc">Falsifiable positioning, channel priorities, creative direction</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Checkpoint 1 -->
+                <div class="review-checkpoint">YOUR<br>REVIEW</div>
+
+                <!-- Phase 2 -->
+                <div class="phase-card" data-phase="2">
+                    <div class="phase-number">2</div>
+                    <div class="phase-title">Execution</div>
+                    <div class="phase-subtitle">Strategy becomes campaign, content and media plan</div>
+                    <p style="font-size: 0.9rem; color: #666;">The Cartographer, The Scribe, The Quartermaster build.</p>
+                    <button class="expand-toggle">Details</button>
+                    <div class="phase-agents">
+                        <div class="agent-item">
+                            <div class="agent-name">The Cartographer / Campaign Architect</div>
+                            <div class="agent-role">Translates strategy into plan</div>
+                            <div class="agent-desc">Funnel map, content calendar, KPI targets</div>
+                        </div>
+                        <div class="agent-item">
+                            <div class="agent-name">The Scribe / Creative & Content</div>
+                            <div class="agent-role">Writes all content</div>
+                            <div class="agent-desc">Ad copy, email sequences, articles, landing pages</div>
+                        </div>
+                        <div class="agent-item">
+                            <div class="agent-name">The Quartermaster / Media & Budget</div>
+                            <div class="agent-role">Allocates and optimises budget</div>
+                            <div class="agent-desc">Campaign structure, budget allocation, optimisation rules</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Checkpoint 2 -->
+                <div class="review-checkpoint">YOUR<br>REVIEW</div>
+
+                <!-- Phase 3 -->
+                <div class="phase-card" data-phase="3">
+                    <div class="phase-number">3</div>
+                    <div class="phase-title">Performance</div>
+                    <div class="phase-subtitle">What worked, what didn't, and what's next</div>
+                    <p style="font-size: 0.9rem; color: #666;">The Chronometer, The Helmsman, The Ship's Log analyse and experiment.</p>
+                    <button class="expand-toggle">Details</button>
+                    <div class="phase-agents">
+                        <div class="agent-item">
+                            <div class="agent-name">The Chronometer / Data & Trends</div>
+                            <div class="agent-role">Reads and interprets results</div>
+                            <div class="agent-desc">Trend analysis, anomaly detection, hypothesis register</div>
+                        </div>
+                        <div class="agent-item">
+                            <div class="agent-name">The Helmsman / Growth & Experimentation</div>
+                            <div class="agent-role">Designs and prioritises experiments</div>
+                            <div class="agent-desc">ICE-scored experiments, scaling recommendations</div>
+                        </div>
+                        <div class="agent-item">
+                            <div class="agent-name">The Ship's Log / Reporting</div>
+                            <div class="agent-role">Creates executive summaries</div>
+                            <div class="agent-desc">QBR content, business impact narratives</div>
+                        </div>
+                        <div class="agent-item">
+                            <div class="agent-name">The Captain's Table / Coordination</div>
+                            <div class="agent-role">Orchestrates the entire process</div>
+                            <div class="agent-desc">Workflow management, handoff coordination, quality assurance</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Learning Curve -->
+    <section id="learning">
+        <div class="section-header">
+            <h2>How it gets smarter</h2>
+            <p>The Crew learns what you do. The more runs, the sharper the insights.</p>
+        </div>
+
+        <div class="learning-timeline">
+            <div class="learning-stage">
+                <h4>Run 1</h4>
+                <p>Runs on benchmarks. Spots where your budget leaks and which foundations need fixing first.</p>
+            </div>
+            <div class="learning-stage">
+                <h4>Run 3</h4>
+                <p>Runs on your data. Recognises patterns in your market, your customers, your way of working.</p>
+            </div>
+            <div class="learning-stage">
+                <h4>Run 10+</h4>
+                <p>Knows your business better than a new hire. Predicts what works before you test it.</p>
+            </div>
+        </div>
+
+        <div class="learning-callout">
+            <p>Knowledge in people's heads disappears.<br>Knowledge in a system accumulates.</p>
+        </div>
+    </section>
+
+    <!-- Entry Flows -->
+    <section id="entry-flows">
+        <div class="section-header">
+            <h2>Who it's for</h2>
+            <p>The Crew works at different scales. Choose your entry point.</p>
+        </div>
+
+        <div class="flows-grid">
+            <div class="flow-card">
+                <div class="flow-icon">🧭</div>
+                <h3>Strengthen your own team</h3>
+                <p>You have a marketing team but lack structure and speed.</p>
+                <div class="flow-highlight">
+                    <p>The Crew becomes your foundation: daily performance loop, better briefings, faster decisions.</p>
+                </div>
+            </div>
+
+            <div class="flow-card">
+                <div class="flow-icon">🤝</div>
+                <h3>Work smarter with your agency</h3>
+                <p>You work with an agency but want more control over the process.</p>
+                <div class="flow-highlight">
+                    <p>The Crew ensures your agency gets better briefs, faster feedback, and works more transparently.</p>
+                </div>
+            </div>
+
+            <div class="flow-card">
+                <div class="flow-icon">🚀</div>
+                <h3>Agency: strengthen your service</h3>
+                <p>You're an agency and want to offer your clients more with the same capacity.</p>
+                <div class="flow-highlight">
+                    <p>The Crew accelerates your operation: from 3 weeks to 3 days on analysis, from manual to structured.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Requirements / Onboarding Tiers -->
+    <section id="requirements">
+        <div class="section-header">
+            <h2>What you need</h2>
+            <p>Start where you are. Scale what you need.</p>
+        </div>
+
+        <div class="tiers-grid">
+            <div class="tier-card">
+                <span class="tier-badge">Quick</span>
+                <h3>Quick Start</h3>
+                <div class="tier-items">
+                    <div class="tier-item">A brief (who, what, budget, timeline)</div>
+                    <div class="tier-item">Brand guidelines or tone examples</div>
+                    <div class="tier-item">One marketing goal</div>
+                </div>
+                <div class="tier-outcome">
+                    <p>Enough to run Phase 1 and see what comes out.</p>
+                </div>
+            </div>
+
+            <div class="tier-card featured">
+                <span class="tier-badge">Most used</span>
+                <h3>Full Power</h3>
+                <div class="tier-items">
+                    <div class="tier-item">Everything from Quick Start, plus:</div>
+                    <div class="tier-item">CRM or analytics access</div>
+                    <div class="tier-item">Historical campaign data</div>
+                    <div class="tier-item">Ad account access</div>
+                    <div class="tier-item">Content examples (approved material)</div>
+                </div>
+                <div class="tier-outcome">
+                    <p>All 10 agents run at full power.</p>
+                </div>
+            </div>
+
+            <div class="tier-card">
+                <span class="tier-badge">Enterprise</span>
+                <h3>Scale Integration</h3>
+                <div class="tier-items">
+                    <div class="tier-item">Everything above, plus:</div>
+                    <div class="tier-item">API connections with ad platforms</div>
+                    <div class="tier-item">Automated data feeds</div>
+                    <div class="tier-item">Custom reporting templates</div>
+                    <div class="tier-item">Multi-client workspace</div>
+                </div>
+                <div class="tier-outcome">
+                    <p>Continuously learning system at scale.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="cta">
+        <h2>Ready to assemble your crew?</h2>
+        <p>Start with a brief. We'll show you what the system produces before you commit to anything.</p>
+        <div>
+            <button class="btn btn-primary">Schedule an introduction</button>
+        </div>
+        <p class="note">The first conversation is never a pitch — it's understanding where you're currently losing time.</p>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>
+            <span class="footer-brand">The Crew</span> — Built by <a href="#" class="footer-link">PWRD Media × Kirk & Blackbeard</a>
+        </p>
+        <p>
+            <a href="#" class="footer-link">brandpwrdmedia.com</a>
+        </p>
+        <p class="copyright">© 2026. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Phase card expansion
+        document.querySelectorAll('.phase-card').forEach(card => {
+            card.querySelector('.expand-toggle').addEventListener('click', (e) => {
+                e.preventDefault();
+                card.classList.toggle('expanded');
+            });
+        });
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Add fade-in class to elements
+        document.querySelectorAll('.what-content, .learning-timeline, .flows-grid, .tiers-grid').forEach(el => {
+            el.classList.add('fade-in-on-scroll');
+        });
+
+        // CTA button click handler
+        document.querySelectorAll('.btn-primary').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const target = this.textContent.includes('Discover') ? '#phases' : '#';
+                if (target !== '#') {
+                    document.querySelector(target).scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

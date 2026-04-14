@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K&B Command Center — Operationele Bureau-mapping</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+  :root {
+    --ocean: #0D1B2A; --ocean-mid: #152436; --ocean-l: #1E3347;
+    --paradise: #00DEFF; --red: #FF0066; --gold: #FFB400; --green: #00FF99; --purple: #9B6DFF;
+    --text-dim: rgba(255,255,255,0.38); --text-mid: rgba(255,255,255,0.65); --text: #fff;
+    --border: rgba(255,255,255,0.07);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--ocean); font-family: 'Inter', sans-serif; color: var(--text); padding: 48px 24px 80px; display: flex; flex-direction: column; align-items: center; }
+  .page { max-width: 1100px; width: 100%; }
+  .header { text-align: center; margin-bottom: 48px; }
+  .wm { font-size: 11px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 16px; }
+  .wm span { color: var(--red); }
+  .header h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; }
+  .header h1 em { color: var(--paradise); font-style: normal; }
+  .header .sub { font-size: 14px; color: var(--text-mid); margin-top: 10px; line-height: 1.6; }
+
+  .sl { font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 16px; }
+  .section { margin-bottom: 40px; }
+  .section h2 { font-size: 18px; font-weight: 800; margin-bottom: 12px; }
+  .section h2 em { color: var(--paradise); font-style: normal; }
+  .section p { font-size: 13.5px; color: var(--text-mid); line-height: 1.7; margin-bottom: 10px; }
+  .section p strong { color: var(--text); font-weight: 600; }
+
+  /* Main mapping table */
+  .map-table { width: 100%; border-collapse: separate; border-spacing: 0; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 32px; }
+  .map-table th { text-align: left; padding: 14px 16px; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border); }
+  .map-table td { padding: 14px 16px; font-size: 12.5px; color: var(--text-mid); border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.55; background: var(--ocean-mid); }
+  .map-table tr:last-child td { border-bottom: none; }
+  .map-table td:first-child { font-weight: 600; color: var(--text); white-space: nowrap; width: 170px; }
+
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 9px; font-weight: 700; letter-spacing: 0.06em; margin-right: 4px; margin-bottom: 3px; }
+  .tag-auto { background: rgba(0,255,153,0.1); color: var(--green); border: 1px solid rgba(0,255,153,0.2); }
+  .tag-assist { background: rgba(255,180,0,0.1); color: var(--gold); border: 1px solid rgba(255,180,0,0.2); }
+  .tag-human { background: rgba(255,0,102,0.08); color: #FF6699; border: 1px solid rgba(255,0,102,0.15); }
+  .tag-agent { background: rgba(0,222,255,0.08); color: var(--paradise); border: 1px solid rgba(0,222,255,0.2); }
+
+  .freq { font-size: 10px; color: var(--text-dim); font-weight: 600; }
+  .time-save { font-size: 11px; font-weight: 700; color: var(--green); }
+  .pain { font-size: 11px; color: #FF6699; }
+
+  /* Function header rows */
+  .fn-row td { background: rgba(0,222,255,0.04) !important; border-bottom: 1px solid rgba(0,222,255,0.1) !important; }
+  .fn-row td:first-child { color: var(--paradise) !important; font-size: 13px; font-weight: 800; letter-spacing: 0.04em; }
+
+  /* POC section */
+  .poc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+  .poc-card { background: var(--ocean-mid); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px; }
+  .poc-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .poc-card p { font-size: 12.5px; color: var(--text-mid); line-height: 1.6; margin-bottom: 0; }
+  .poc-card .week { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+
+  .highlight { background: rgba(0,222,255,0.04); border: 1px solid rgba(0,222,255,0.15); border-radius: 14px; padding: 24px 28px; margin-top: 16px; }
+  .highlight p { font-size: 13px; color: var(--text-mid); line-height: 1.7; margin-bottom: 0; }
+  .highlight strong { color: var(--paradise); }
+
+  .divider { height: 1px; background: var(--border); margin: 36px 0; }
+  .footer { text-align: center; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-dim); }
+
+  /* Legend */
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-dim); }
+
+  @media (max-width: 768px) { .poc-grid { grid-template-columns: 1fr; } .map-table td:first-child { white-space: normal; } }
+
+  /* Language Switcher */
+  .lang-switch {
+    position: fixed;
+    top: 12px;
+    right: 16px;
+    z-index: 9999;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .lang-switch a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-family: 'Inter', 'Montserrat', 'Manrope', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .lang-switch a {
+    background: rgba(0,222,255,0.08);
+    border: 1px solid rgba(0,222,255,0.2);
+    color: #00DEFF;
+  }
+  .lang-switch a:hover {
+    background: rgba(0,222,255,0.15);
+    border-color: rgba(0,222,255,0.4);
+  }
+  .lang-switch a.active {
+    background: rgba(0,222,255,0.15);
+    border-color: rgba(0,222,255,0.4);
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div class="lang-switch">
+  <a href="/thecrew/nl/agency-poc-mapping.html" class="active">NL</a>
+  <a href="/thecrew/en/agency-poc-mapping.html">EN</a>
+</div>
+
+<div class="page">
+
+  <div class="header">
+    <div class="wm">Kirk <span>&amp;</span> Blackbeard</div>
+    <h1>Bureau Operaties —<br><em>Wat het Command Center kan doen</em></h1>
+    <div class="sub">Dagelijkse bureautaken gekoppeld aan het 10-agent systeem. Wat wordt geautomatiseerd, wat wordt geassisteerd, wat blijft menselijk.</div>
+  </div>
+
+  <!-- ── Legend ── -->
+  <div class="legend">
+    <div class="legend-item"><span class="tag tag-auto">AUTOMATE</span> Systeem handelt volledig af</div>
+    <div class="legend-item"><span class="tag tag-assist">ASSIST</span> Systeem maakt concept, mens reviewt</div>
+    <div class="legend-item"><span class="tag tag-human">HUMAN</span> Blijft bij het team</div>
+    <div class="legend-item"><span class="tag tag-agent">AGENT</span> Welke K&B agent het afhandelt</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SECTION 1: THE FULL MAPPING TABLE
+       ══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="sl">01 · Operationele Mapping</div>
+  </div>
+
+  <table class="map-table">
+    <thead>
+      <tr>
+        <th>Bureautaak</th>
+        <th>Wat het inhoudt</th>
+        <th>Frequentie</th>
+        <th>Huidige tijd</th>
+        <th>Command Center</th>
+        <th>Agent</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!-- ── MEDIA PLANNING ── -->
+      <tr class="fn-row"><td colspan="6">Mediaplanning</td></tr>
+      <tr>
+        <td>Brief-intake &amp; structurering</td>
+        <td>Klantdoelen, KPI's, doelgroep en kanaalvoorkeuren verzamelen in gestructureerd document</td>
+        <td><span class="freq">Per campagne</span></td>
+        <td>2–4 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Orchestrator verwerkt brief, valideert verplichte velden, routeert naar Fase 1</td>
+        <td><span class="tag tag-agent">Captain's Table</span></td>
+      </tr>
+      <tr>
+        <td>Doelgroeponderzoek &amp; segmentatie</td>
+        <td>Historische data analyseren, segmenten identificeren, bereik/frequentie modelleren</td>
+        <td><span class="freq">Per campagne</span></td>
+        <td>4–8 hrs</td>
+        <td><span class="tag tag-assist">ASSIST</span> Levert ICP-validatie, segmentmaps, opportunity sizing. Mens valideert.</td>
+        <td><span class="tag tag-agent">Lookout</span> <span class="tag tag-agent">Spyglass</span></td>
+      </tr>
+      <tr>
+        <td>Budgetallocatie-modellering</td>
+        <td>Budget verdelen over kanalen op basis van CPM-aannames en historische benchmarks</td>
+        <td><span class="freq">Per campagne</span></td>
+        <td>4–8 hrs</td>
+        <td><span class="tag tag-assist">ASSIST</span> Genereert allocatiemodel met onderbouwing. Planner past aan bij PAUSE-checkpoint.</td>
+        <td><span class="tag tag-agent">Cartographer</span></td>
+      </tr>
+      <tr>
+        <td>Concurrentieanalyse</td>
+        <td>Concurrentie-spend, messaging, creative en positioneringsgaten bijhouden</td>
+        <td><span class="freq">Maandelijks</span></td>
+        <td>6–12 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Continue concurrentiemonitoring, positioneringsgap-analyse, white space rapport</td>
+        <td><span class="tag tag-agent">Spyglass</span></td>
+      </tr>
+      <tr>
+        <td>Contentkalender aanmaken</td>
+        <td>4-weken publicatieschema bouwen met platformspecifieke timing</td>
+        <td><span class="freq">Maandelijks</span></td>
+        <td>3–6 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Genereert volledige kalender met TOF/MOF/BOF-verdeling, platformcadans</td>
+        <td><span class="tag tag-agent">Cartographer</span></td>
+      </tr>
+
+      <!-- ── MEDIA BUYING ── -->
+      <tr class="fn-row"><td colspan="6">Media Buying &amp; Optimalisatie</td></tr>
+      <tr>
+        <td>Campagne-pacing review</td>
+        <td>Spendtempo vs. plan controleren; dagelijkse budgetlimieten aanpassen</td>
+        <td><span class="freq">Dagelijks</span></td>
+        <td>30–60 min/day</td>
+        <td><span class="tag tag-human">HUMAN</span> Vereist platformtoegang. Systeem kan pacing-regels instellen en afwijkingen signaleren.</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Bid-management</td>
+        <td>Winratios monitoren, biedingen per doelgroep/plaatsing aanpassen</td>
+        <td><span class="freq">Dagelijks</span></td>
+        <td>1–2 hrs/day</td>
+        <td><span class="tag tag-human">HUMAN</span> In-platform uitvoering. Systeem schrijft optimalisatieregels (harde pauze/schaaldrempels).</td>
+        <td><span class="tag tag-agent">Quartermaster</span> (rules only)</td>
+      </tr>
+      <tr>
+        <td>Optimalisatieregels &amp; drempels</td>
+        <td>Bepalen wanneer te pauzeren, schalen of testen op basis van CPA/ROAS-targets</td>
+        <td><span class="freq">Per campagne</span></td>
+        <td>2–4 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Schrijft harde regels: "als CPA > €X gedurende 3 dagen, pauzeer plaatsing." Mens keurt goed bij PAUSE 2.</td>
+        <td><span class="tag tag-agent">Quartermaster</span></td>
+      </tr>
+      <tr>
+        <td>Kanaalbudget-herverdeling</td>
+        <td>Budget verschuiven tussen social, display, video op basis van performance</td>
+        <td><span class="freq">Wekelijks</span></td>
+        <td>1–2 hrs</td>
+        <td><span class="tag tag-assist">ASSIST</span> Adviseert herverdeling met onderbouwing. Buyer voert uit in platform.</td>
+        <td><span class="tag tag-agent">Quartermaster</span> <span class="tag tag-agent">Chronometer</span></td>
+      </tr>
+
+      <!-- ── CAMPAIGN MANAGEMENT ── -->
+      <tr class="fn-row"><td colspan="6">Campagnemanagement &amp; QA</td></tr>
+      <tr>
+        <td>Creative-specificaties verzamelen</td>
+        <td>Advertentieformaten, afmetingen en bestandstypes per plaatsing verzamelen</td>
+        <td><span class="freq">Per campagne</span></td>
+        <td>2–3 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Genereert specificatiesheet vanuit campagneplan + platformvereisten</td>
+        <td><span class="tag tag-agent">Cartographer</span></td>
+      </tr>
+      <tr>
+        <td>QA-checklist uitvoering</td>
+        <td>Naamgeving, budgetten, data, targeting, frequentielimieten en tracking pixels verifiëren</td>
+        <td><span class="freq">Per lancering</span></td>
+        <td>4–8 hrs</td>
+        <td><span class="tag tag-assist">ASSIST</span> Genereert pre-flight checklist vanuit plan; signaleert afwijkingen. Mens tekent af.</td>
+        <td><span class="tag tag-agent">Captain's Table</span></td>
+      </tr>
+      <tr>
+        <td>Trafficking &amp; tag-management</td>
+        <td>Creatives uploaden naar ad server, line items configureren, tags testen</td>
+        <td><span class="freq">Per lancering</span></td>
+        <td>4–8 hrs</td>
+        <td><span class="tag tag-human">HUMAN</span> Vereist ad server-toegang. Systeem produceert het trafficking-sheet; ops-team voert uit.</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Dagelijks campaign health check</td>
+        <td>Impressies, CTR, frequentie monitoren; anomalieën signaleren</td>
+        <td><span class="freq">Dagelijks</span></td>
+        <td>1–2 hrs/day</td>
+        <td><span class="tag tag-assist">ASSIST</span> Schrijft trendverhalen, anomalie-signaleringen, hypotheselog. Mens beslist over actie.</td>
+        <td><span class="tag tag-agent">Chronometer</span></td>
+      </tr>
+
+      <!-- ── CREATIVE ── -->
+      <tr class="fn-row"><td colspan="6">Creative &amp; Ad Copy</td></tr>
+      <tr>
+        <td>Ad copy schrijven</td>
+        <td>Headlines, body copy, CTA's per platform en doelgroepsegment</td>
+        <td><span class="freq">Per campagne</span></td>
+        <td>6–12 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Genereert 15–25 varianten per brief, on-brand (stijlgeheugen van Navigator). Mens cureert.</td>
+        <td><span class="tag tag-agent">Scribe</span></td>
+      </tr>
+      <tr>
+        <td>E-mailsequentie schrijven</td>
+        <td>Multi-e-mail drip: onderwerpregels, body, CTA's, timing-logica</td>
+        <td><span class="freq">Per campagne</span></td>
+        <td>8–16 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Volledige sequentie met vertakkingslogica, timing, exit-condities. Mens reviewt.</td>
+        <td><span class="tag tag-agent">Scribe</span></td>
+      </tr>
+      <tr>
+        <td>Landingspagina-copy</td>
+        <td>Hero, waardepropositie, social proof, CTA — per campagne</td>
+        <td><span class="freq">Per campagne</span></td>
+        <td>4–8 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Produceert volledige pagina-copy met conversiestructuur. Mens + designer maken af.</td>
+        <td><span class="tag tag-agent">Scribe</span></td>
+      </tr>
+      <tr>
+        <td>Visuele creative-productie</td>
+        <td>Banners, video en rich media-assets ontwerpen</td>
+        <td><span class="freq">Per campagne</span></td>
+        <td>10–40 hrs</td>
+        <td><span class="tag tag-human">HUMAN</span> Creative-productie blijft bij designers. Systeem levert briefs + Canva-handoff.</td>
+        <td><span class="tag tag-agent">Scribe</span> (brief to Canva)</td>
+      </tr>
+      <tr>
+        <td>A/B-testontwerp</td>
+        <td>Hypothese, varianten, succescriteria en duur definiëren</td>
+        <td><span class="freq">Doorlopend</span></td>
+        <td>2–4 hrs/test</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> ICE-gescoorde test-backlog, hypothesedefinitie, stat sig-criteria. Mens keurt goed.</td>
+        <td><span class="tag tag-agent">Helmsman</span></td>
+      </tr>
+
+      <!-- ── ANALYTICS & REPORTING ── -->
+      <tr class="fn-row"><td colspan="6">Analytics &amp; Rapportage</td></tr>
+      <tr>
+        <td>Wekelijks performance report</td>
+        <td>Metrics over platforms verzamelen, trends samenvatten, anomalieën signaleren</td>
+        <td><span class="freq">Wekelijks</span></td>
+        <td>4–8 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Trendverhaal, anomalielog, hypotheseregister. Analist reviewt, bouwt niet.</td>
+        <td><span class="tag tag-agent">Chronometer</span></td>
+      </tr>
+      <tr>
+        <td>Maandelijks performance deck</td>
+        <td>5–10 slides met kanaalverdeling, inzichten en aanbevelingen</td>
+        <td><span class="freq">Maandelijks</span></td>
+        <td>8–12 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Volledig narratief rapport met business impact-framing. Mens bewerkt voor klanttoon.</td>
+        <td><span class="tag tag-agent">Ship's Log</span></td>
+      </tr>
+      <tr>
+        <td>QBR-voorbereiding</td>
+        <td>25–30 slide deck: performance vs. doelen, learnings, aanbevelingen</td>
+        <td><span class="freq">Per kwartaal</span></td>
+        <td>20–30 hrs</td>
+        <td><span class="tag tag-assist">ASSIST</span> Genereert narratieve structuur, datasynthese, aanbevelingen. Mens voegt context toe + presenteert.</td>
+        <td><span class="tag tag-agent">Ship's Log</span> <span class="tag tag-agent">Chronometer</span></td>
+      </tr>
+      <tr>
+        <td>Attributie &amp; datareconciliatie</td>
+        <td>Platformdata cross-checken (GA, Meta, ad server); discrepanties signaleren</td>
+        <td><span class="freq">Maandelijks</span></td>
+        <td>2–5 hrs</td>
+        <td><span class="tag tag-assist">ASSIST</span> Signaleert afwijkingen tussen bronnen, labelt als Hypothese of Bevestigd. Analist onderzoekt.</td>
+        <td><span class="tag tag-agent">Chronometer</span></td>
+      </tr>
+      <tr>
+        <td>Experimentresultaten &amp; schaalbeslissingen</td>
+        <td>A/B-testresultaten evalueren; schaal/stop/houd aanbevelen</td>
+        <td><span class="freq">Doorlopend</span></td>
+        <td>2–3 hrs/week</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Statistische evaluatie, schaalaanbeveling, learning gelogd in Data Vault</td>
+        <td><span class="tag tag-agent">Helmsman</span></td>
+      </tr>
+
+      <!-- ── STRATEGY & ACCOUNT ── -->
+      <tr class="fn-row"><td colspan="6">Strategie &amp; Accountmanagement</td></tr>
+      <tr>
+        <td>Strategiesynthese</td>
+        <td>Interne data + marktintelligentie samenvoegen tot positionerings- en messaging-framework</td>
+        <td><span class="freq">Per campagne</span></td>
+        <td>8–16 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Falsifieerbare positionering, contra-strategie, messaging-hiërarchie. Strateeg reviewt bij PAUSE 1.</td>
+        <td><span class="tag tag-agent">Navigator</span></td>
+      </tr>
+      <tr>
+        <td>Klantstatusupdates</td>
+        <td>Wekelijks call prep: pacing, optimisation actions, next steps</td>
+        <td><span class="freq">Wekelijks</span></td>
+        <td>2–3 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Genereert statussamenvatting uit laatste agentoutputs. AM personaliseert en verstuurt.</td>
+        <td><span class="tag tag-agent">Ship's Log</span></td>
+      </tr>
+      <tr>
+        <td>Klantrelatie &amp; stakeholdermanagement</td>
+        <td>Calls, onderhandelingen, verwachtingsmanagement, scopediscussies</td>
+        <td><span class="freq">Doorlopend</span></td>
+        <td>10–20 hrs/week</td>
+        <td><span class="tag tag-human">HUMAN</span> Relaties automatiseer je niet. Systeem geeft AM meer tijd om hier te focussen in plaats van rapporten.</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Briefschrijven voor goedkeuring klant</td>
+        <td>Strategie omzetten in gestructureerd briefdocument ter goedkeuring</td>
+        <td><span class="freq">Per campagne</span></td>
+        <td>3–5 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Genereert klantgerichte brief uit Fase 1-strategieoutput. AM reviewt en presenteert.</td>
+        <td><span class="tag tag-agent">Navigator</span> <span class="tag tag-agent">Scribe</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════════
+       SECTION 2: SUMMARY — WHAT STAYS HUMAN
+       ══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="sl">02 · Wat Menselijk Blijft</div>
+    <h2>Vijf dingen die het systeem <em>niet aanraakt</em></h2>
+    <p>Dit vereist platformtoegang, klantvertrouwen of creatief oordeel dat het systeem niet hoort te bezitten.</p>
+  </div>
+
+  <table class="map-table">
+    <thead><tr><th>Taak</th><th>Waarom het menselijk blijft</th></tr></thead>
+    <tbody>
+      <tr><td>Ad platform-uitvoering</td><td>Biedingswijzigingen, budgetaanpassingen en campagnepauses vinden plaats binnen DSP's/ad managers. Het systeem schrijft de regels en aanbevelingen; de buyer voert uit. Geen API-toegang tot klant-ad-accounts nodig tijdens POC.</td></tr>
+      <tr><td>Creative design &amp; productie</td><td>Visuele assets (banners, video, rich media) hebben designers nodig. Het systeem produceert de briefs, copy en spec sheets die het designproces voeden — maar Photoshop/Premiere blijft bij mensen.</td></tr>
+      <tr><td>Trafficking &amp; tag-management</td><td>Uploading tags to ad servers, configuring line items, and QA-testing live tags requires ad server access and ops expertise. System generates the trafficking sheet; ops team clicks the buttons.</td></tr>
+      <tr><td>Klantrelaties</td><td>Calls, onderhandelingen, vertrouwen opbouwen, scopediscussies. Het systeem bevrijdt accountmanagers van rapportage zodat ze meer tijd hieraan kunnen besteden — en dat is wat klanten behoudt.</td></tr>
+      <tr><td>Eindgoedkeuring bij checkpoints</td><td>Elke PAUSE-gate vereist een menselijke beslissing: goedkeuren, herzien of afwijzen. Het systeem verstuurt nooit iets zonder akkoord. Zo is het ontworpen.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════════
+       SECTION 3: TIME SAVINGS
+       ══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="sl">03 · Tijdsbesparing Per Campagnecyclus</div>
+    <h2>Waar de <em>uren terugkomen</em></h2>
+  </div>
+
+  <table class="map-table">
+    <thead><tr><th>Fase</th><th>Huidige arbeid</th><th>Met Command Center</th><th>Bespaard</th></tr></thead>
+    <tbody>
+      <tr><td>Planning &amp; Strategie</td><td>20–40 hrs</td><td>4–8 uur (review + goedkeuring)</td><td><span class="time-save">~75% reductie</span></td></tr>
+      <tr><td>Creative &amp; Copy</td><td>20–40 hrs</td><td>6–12 uur (curatie + design)</td><td><span class="time-save">~65% reductie</span></td></tr>
+      <tr><td>Rapportage &amp; Analyse</td><td>15–25 hrs/month</td><td>3–5 uur/maand (alleen review)</td><td><span class="time-save">~80% reductie</span></td></tr>
+      <tr><td>QBR-voorbereiding</td><td>20–30 hrs</td><td>4–6 uur (bewerken + presenteren)</td><td><span class="time-save">~80% reductie</span></td></tr>
+      <tr><td>Accountstatusupdates</td><td>8–12 hrs/month</td><td>2–3 uur/maand (personaliseren + versturen)</td><td><span class="time-save">~75% reductie</span></td></tr>
+      <tr><td style="color: var(--paradise); font-weight: 800;">Totaal per klant/maand</td><td style="font-weight: 700;">80–140 hrs</td><td style="font-weight: 700;">20–35 hrs</td><td><span class="time-save" style="font-size: 14px;">~75% reductie</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="highlight">
+    <p><strong>Vertaald voor een 10-klanten bureau:</strong> In plaats van 6–8 fulltime medewerkers op productie, rapportage en strategieopstelling — heb je 2–3 mensen nodig voor review, klantrelaties en platformuitvoering. De rest is systeemoutput.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════════
+       SECTION 4: POC DESIGN
+       ══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="sl">04 · POC-ontwerp — Hoe je het uitvoert</div>
+    <h2>4-weken pilot op <em>één echte klant</em></h2>
+    <p>Kies één bestaande klant waar het bureau al campagnes draait. Draai het Command Center parallel — dezelfde brief, dezelfde tijdlijn. Vergelijk outputkwaliteit, snelheid en variantvolume aan het eind.</p>
+  </div>
+
+  <div class="poc-grid">
+    <div class="poc-card">
+      <div class="week">Week 1 — Setup &amp; Intelligence</div>
+      <h3>Laad de klant, draai Fase 1</h3>
+      <p><strong>K&B doet:</strong> global_brand.json configureren met klantstem, ICP en verboden vocabulaire. Connectors aansluiten (Notion, Slack). The Lookout (interne data-analyse) + The Spyglass (concurrentie/marktaudit) parallel draaien. Beide voeden naar The Navigator voor strategiesynthese.</p>
+      <p style="margin-top: 8px;"><strong>Bureau levert:</strong> Klantbrief, brand guidelines, 6 maanden campagne-performancedata, doelgroepsegmentdefinities.</p>
+      <p style="margin-top: 8px;"><strong>Output:</strong> Falsifieerbare positioneringsverklaring, concurrentie-audit, doelgroep-kansenmap, messaging-hiërarchie.</p>
+    </div>
+    <div class="poc-card">
+      <div class="week">Week 2 — PAUSE 1 Review &amp; Start Uitvoering</div>
+      <h3>Strategiereview, dan Fase 2</h3>
+      <p><strong>PAUSE 1 checkpoint:</strong> Bureaustrateeg + accountmanager reviewen Fase 1-output. Goedkeuren, herzien of afwijzen. Niets gaat door zonder akkoord.</p>
+      <p style="margin-top: 8px;"><strong>Dan:</strong> The Cartographer produceert funnel-map, contentkalender, KPI-targets. Voedt naar The Scribe (ad copy, e-mailsequenties, landingspagina-copy) + The Quartermaster (budgetallocatie, optimalisatieregels) parallel.</p>
+      <p style="margin-top: 8px;"><strong>Output:</strong> Campagneplan, 15–25 ad copy-varianten, e-mailsequentie, mediaplan met harde pauze/schaalregels.</p>
+    </div>
+    <div class="poc-card">
+      <div class="week">Week 3 — PAUSE 2 Review &amp; Performance</div>
+      <h3>Creative review, dan Fase 3</h3>
+      <p><strong>PAUSE 2 checkpoint:</strong> Creative director + media buyer reviewen alle Fase 2-output. Selecteren beste varianten. Keuren mediaplan goed. Bureauteam voert uit in-platform (trafficking, lancering).</p>
+      <p style="margin-top: 8px;"><strong>Dan:</strong> The Chronometer leest vroege performancedata (als de campagne live is) of analyseert historische data voor trendverhalen. The Helmsman ontwerpt experiment-backlog.</p>
+      <p style="margin-top: 8px;"><strong>Output:</strong> Trendrapport, anomalielog, ICE-gescoorde experiment-backlog, schaalaanbevelingen.</p>
+    </div>
+    <div class="poc-card">
+      <div class="week">Week 4 — Rapport &amp; Vergelijking</div>
+      <h3>Eindrapport + vergelijking naast elkaar</h3>
+      <p><strong>The Ship's Log</strong> produceert de executive summary — business impact-verhaal, niet alleen metrics.</p>
+      <p style="margin-top: 8px;"><strong>Vergelijkingsrapport:</strong> Naast elkaar wat het bureauteam heeft geproduceerd vs. wat het Command Center heeft geproduceerd voor dezelfde brief. Behandelt: doorlooptijd, aantal varianten, diepte van analyse, kwaliteit van strategische onderbouwing.</p>
+      <p style="margin-top: 8px;"><strong>Beslismoment:</strong> Resultaten presenteren aan bureaudirectie. Als het verschil betekenisvol is → engagement-model bespreken (Managed, Embedded of White-Label).</p>
+    </div>
+  </div>
+
+  <div class="highlight">
+    <p><strong>Wat het bureau riskeert:</strong> €2.500 en één brief. <strong>Wat ze zien:</strong> Een volledige campagnecyclus — strategie tot en met performance — geproduceerd in 4 weken met dramatisch minder arbeid. De output spreekt voor zich.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════════
+       SECTION 5: WHAT TO MEASURE
+       ══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="sl">05 · POC-succescriteria</div>
+    <h2>Hoe beide partijen weten <em>dat het werkt</em></h2>
+  </div>
+
+  <table class="map-table">
+    <thead><tr><th>Metric</th><th>Wat "goed" eruitziet</th></tr></thead>
+    <tbody>
+      <tr><td>Tijd tot strategie</td><td>Fase 1-output in &lt;48 uur (vs. 1–2 weken bureauzijde)</td></tr>
+      <tr><td>Copy-variantvolume</td><td>15–25 on-brand varianten per brief (vs. 3–5 handmatig)</td></tr>
+      <tr><td>Strategiekwaliteit</td><td>Bureaustrateeg beoordeelt positionering als "gelijk of beter" vs. wat zij zouden produceren</td></tr>
+      <tr><td>Rapportagediepte</td><td>Hypotheseregister + anomalielog inbegrepen (vs. standaard metrics-only rapport)</td></tr>
+      <tr><td>Arbeidsuren</td><td>Bureauteam besteedt &lt;15 uur totaal aan review over 4 weken (vs. 60–100 om equivalent te produceren)</td></tr>
+      <tr><td>Experiment-backlog</td><td>ICE-gescoorde backlog van 8–12 testbare hypotheses opgeleverd (vs. doorgaans 0–2 ad hoc tests)</td></tr>
+      <tr><td>Merkconsistentie</td><td>Nul schendingen van verboden woorden. Toon komt overeen met brand guidelines in alle outputs.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════════
+       SECTION 6: THE PITCH TO THE AGENCY
+       ══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="sl">06 · Hoe je het gesprek opent</div>
+    <h2>Het <em>probleem</em> van het bureau, niet jouw technologie</h2>
+    <p>Begin niet met agents, AI of Claude. Begin met hun margeprobleem.</p>
+    <p><strong>Hun realiteit:</strong> Klanten willen meer varianten, snellere doorlooptijd en diepere analyse — voor hetzelfde budget. Team is uitgerekt. Rapportage vreet 30% van de analistentijd. Strategie wordt samengeperst in halvedagworkshops in plaats van degelijke onderzoekscycli. Junior medewerkers schrijven copy die 3 rondes revisie nodig heeft.</p>
+    <p><strong>Je openingszin:</strong> "Wat als je team zich kon richten op klantrelaties en creatief oordeel — en al het andere al klaarlag voordat ze gaan zitten?"</p>
+    <p><strong>Laat ze dan dit document zien.</strong> Loop door de mapping-tabel. Laat ze wijzen naar de taken die het meeste pijn doen. Dat is je POC-scope.</p>
+  </div>
+
+  <div class="footer">Kirk &amp; Blackbeard · Command Center · April 2026</div>
+
+</div>
+</body>
+</html>

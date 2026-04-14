@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Crew — Jouw AI Marketing Companion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Montserrat:wght@400;500;600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #07033E;
+            --teal: #84DCC6;
+            --magenta: #D0255E;
+            --white: #FFFFFF;
+            --light-gray: #F6F6F6;
+            --dark-gray: #2A2A2A;
+            --border-radius-card: 25px;
+            --border-radius-button: 10px;
+            --phase1-accent: #84DCC6;
+            --phase2-accent: #D0255E;
+            --phase3-accent: #6B5FB8;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--white);
+            color: var(--dark-gray);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 700;
+        }
+
+        .accent-text {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--white);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+            z-index: 100;
+        }
+
+        nav .logo {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--navy);
+        }
+
+        nav .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        nav .nav-links a {
+            text-decoration: none;
+            color: var(--dark-gray);
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav .nav-links a:hover {
+            color: var(--magenta);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 6rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, var(--navy) 0%, #1a0f5c 100%);
+            color: var(--white);
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--teal);
+            font-weight: 600;
+        }
+
+        .hero p {
+            max-width: 600px;
+            font-size: 1.1rem;
+            margin: 0 auto 2rem;
+            line-height: 1.8;
+            color: #e0e0e0;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--magenta);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: var(--border-radius-button);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .hero-cta:hover {
+            background: #b81f4e;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(208, 37, 94, 0.3);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Section Spacing */
+        section {
+            padding: 4rem 0;
+        }
+
+        section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--navy);
+        }
+
+        section .section-subtitle {
+            font-size: 1rem;
+            color: #888;
+            margin-bottom: 3rem;
+            font-weight: 500;
+        }
+
+        /* Phase Flow Section */
+        .phase-flow {
+            background: var(--light-gray);
+            padding: 4rem 0;
+        }
+
+        .phase-flow .phases-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .phase-card {
+            background: var(--white);
+            border-radius: var(--border-radius-card);
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .phase-card.phase-1 {
+            border-color: var(--phase1-accent);
+        }
+
+        .phase-card.phase-2 {
+            border-color: var(--phase2-accent);
+        }
+
+        .phase-card.phase-3 {
+            border-color: var(--phase3-accent);
+        }
+
+        .phase-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .phase-card.expanded {
+            grid-column: 1 / -1;
+        }
+
+        .phase-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .phase-number {
+            font-family: 'Manrope', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--navy);
+            opacity: 0.3;
+        }
+
+        .phase-title {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .phase-card.phase-1 .phase-title {
+            color: var(--phase1-accent);
+        }
+
+        .phase-card.phase-2 .phase-title {
+            color: var(--phase2-accent);
+        }
+
+        .phase-card.phase-3 .phase-title {
+            color: var(--phase3-accent);
+        }
+
+        .phase-agents {
+            display: none;
+            margin-top: 1.5rem;
+        }
+
+        .phase-agents.visible {
+            display: block;
+        }
+
+        .phase-agents-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .mini-agent {
+            padding: 1rem;
+            background: var(--light-gray);
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .mini-agent-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .mini-agent-name {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .mini-agent-role {
+            font-size: 0.8rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* Pause Indicator */
+        .pause-indicator {
+            text-align: center;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            background: #fff9e6;
+            border-left: 4px solid #ffc107;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #666;
+            display: none;
+        }
+
+        .pause-indicator.visible {
+            display: block;
+        }
+
+        .pause-indicator strong {
+            color: var(--navy);
+        }
+
+        /* Crew Grid Section */
+        .crew-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .agent-card {
+            background: var(--white);
+            border: 2px solid #e0e0e0;
+            border-radius: var(--border-radius-card);
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .agent-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--teal), var(--magenta));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .agent-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .agent-card:hover {
+            border-color: var(--magenta);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transform: translateY(-3px);
+        }
+
+        .agent-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .agent-phase-tag {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .agent-phase-tag.phase-1 {
+            background: rgba(132, 220, 198, 0.2);
+            color: #2a8f7a;
+        }
+
+        .agent-phase-tag.phase-2 {
+            background: rgba(208, 37, 94, 0.2);
+            color: #9d1b46;
+        }
+
+        .agent-phase-tag.phase-3 {
+            background: rgba(107, 95, 184, 0.2);
+            color: #5a4ba3;
+        }
+
+        .agent-callsign {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 0.3rem;
+        }
+
+        .agent-role {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--magenta);
+            margin-bottom: 1rem;
+        }
+
+        .agent-brief {
+            font-size: 0.95rem;
+            color: var(--dark-gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .agent-expanded {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.7;
+        }
+
+        .agent-card:hover .agent-expanded {
+            max-height: 200px;
+        }
+
+        /* Entry Flows Section */
+        .entry-flows {
+            background: var(--light-gray);
+            padding: 4rem 0;
+        }
+
+        .flows-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .flow-card {
+            background: var(--white);
+            border-radius: var(--border-radius-card);
+            padding: 2.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 5px solid var(--navy);
+        }
+
+        .flow-card:nth-child(2) {
+            border-left-color: var(--teal);
+        }
+
+        .flow-card:nth-child(3) {
+            border-left-color: var(--magenta);
+        }
+
+        .flow-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .flow-emoji {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .flow-title {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 0.8rem;
+        }
+
+        .flow-description {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .flow-agents {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .flow-agent-badge {
+            padding: 0.4rem 0.8rem;
+            background: var(--light-gray);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--navy);
+            transition: all 0.3s ease;
+        }
+
+        .flow-card:hover .flow-agent-badge {
+            background: var(--navy);
+            color: var(--white);
+        }
+
+        .flow-cta {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: var(--navy);
+            color: var(--white);
+            border-radius: var(--border-radius-button);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .flow-cta:hover {
+            background: var(--magenta);
+            transform: translateX(5px);
+        }
+
+        /* Sidebar Companion Section */
+        .sidebar-companion {
+            padding: 4rem 0;
+        }
+
+        .companion-mockup {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+            margin-top: 2rem;
+        }
+
+        .companion-visual {
+            background: linear-gradient(135deg, var(--navy) 0%, #1a0f5c 100%);
+            border-radius: var(--border-radius-card);
+            padding: 2rem;
+            color: var(--white);
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .companion-visual::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: var(--teal);
+            opacity: 0.1;
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.1; }
+            50% { transform: scale(1.2); opacity: 0.15; }
+        }
+
+        .companion-left, .companion-right {
+            position: relative;
+            z-index: 2;
+        }
+
+        .companion-left h3 {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--teal);
+            font-weight: 600;
+        }
+
+        .brief-mockup {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .brief-line {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            margin-bottom: 0.8rem;
+            border-radius: 4px;
+        }
+
+        .brief-line:last-child {
+            margin-bottom: 0;
+            width: 70%;
+        }
+
+        .companion-right h3 {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--magenta);
+            font-weight: 600;
+        }
+
+        .crew-panel {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+        }
+
+        .crew-agent-panel {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            font-size: 2rem;
+            animation: fadeIn 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        .crew-agent-panel:nth-child(1) { animation-delay: 0.1s; }
+        .crew-agent-panel:nth-child(2) { animation-delay: 0.2s; }
+        .crew-agent-panel:nth-child(3) { animation-delay: 0.3s; }
+        .crew-agent-panel:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .companion-text {
+            line-height: 1.8;
+            font-size: 0.95rem;
+            padding-left: 2rem;
+        }
+
+        .companion-text strong {
+            color: var(--teal);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.2rem;
+            }
+
+            section h2 {
+                font-size: 1.8rem;
+            }
+
+            .phases-container {
+                grid-template-columns: 1fr !important;
+            }
+
+            .phase-agents-list {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+
+            .crew-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .companion-mockup {
+                grid-template-columns: 1fr;
+            }
+
+            .companion-visual {
+                min-height: 300px;
+            }
+
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .container {
+                padding: 0 1.5rem;
+            }
+
+            section {
+                padding: 3rem 0;
+            }
+
+            .hero {
+                padding: 3rem 1.5rem;
+            }
+        }
+
+        /* Footer */
+        footer {
+            background: var(--navy);
+            color: var(--white);
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.9rem;
+            margin-top: 4rem;
+        }
+
+        footer a {
+            color: var(--teal);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Smooth scroll */
+        * {
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+    
+  /* Language Switcher */
+  .lang-switch {
+    position: fixed;
+    top: 12px;
+    right: 16px;
+    z-index: 9999;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .lang-switch a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-family: 'Inter', 'Montserrat', 'Manrope', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .lang-switch a {
+    background: rgba(7,3,62,0.06);
+    border: 1px solid rgba(7,3,62,0.15);
+    color: #07033E;
+  }
+  .lang-switch a:hover {
+    background: rgba(7,3,62,0.12);
+    border-color: rgba(7,3,62,0.3);
+  }
+  .lang-switch a.active {
+    background: rgba(7,3,62,0.12);
+    border-color: rgba(7,3,62,0.3);
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div class="lang-switch">
+  <a href="/thecrew/nl/concept-companion.html" class="active">NL</a>
+  <a href="/thecrew/en/concept-companion.html">EN</a>
+</div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">⚓ The Crew</div>
+        <ul class="nav-links">
+            <li><a href="#how-it-works">Hoe het werkt</a></li>
+            <li><a href="#meet-crew">Het Team</a></li>
+            <li><a href="#start-conversation">Aan de slag</a></li>
+            <li><a href="#companion">De Sidekick</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>The Crew</h1>
+        <p class="subtitle">Jouw AI-team voor marketing & sales</p>
+        <p>Tien specialist agents werken samen in drie fasen. Zij duiken in je data, scannen de markt, ontwerpen experimenten en rapporteren terug. De Crew is jouw volle marketing team dat naast jou werkt — niet in plaats van je team.</p>
+        <a href="#start-conversation" class="hero-cta">Laten we beginnen</a>
+    </section>
+
+    <!-- Phase Flow Section -->
+    <section class="phase-flow" id="how-it-works">
+        <div class="container">
+            <h2>Hoe het werkt</h2>
+            <p class="section-subtitle">Drie fasen, één pipeline. Jij stuurt bij op kritische momenten.</p>
+
+            <div class="phases-container">
+                <!-- Phase 1 -->
+                <div class="phase-card phase-1" data-phase="1">
+                    <div class="phase-header">
+                        <span class="phase-number">①</span>
+                        <div>
+                            <div class="phase-title">Inzicht & Strategie</div>
+                            <p style="font-size: 0.85rem; color: #666; margin-top: 0.3rem;">Data → Inzichten → Strategie</p>
+                        </div>
+                    </div>
+                    <p style="margin-bottom: 1rem; font-size: 0.9rem; color: #666; line-height: 1.6;">Je team duikt in je CRM, analyseert concurrenten en ontwerpt een strategie die falsifieerbaar is.</p>
+                    <div style="font-size: 0.8rem; color: #888;">Klik om meer te zien →</div>
+                    <div class="phase-agents">
+                        <div class="phase-agents-list">
+                            <div class="mini-agent">
+                                <div class="mini-agent-icon">🔍</div>
+                                <div class="mini-agent-name">The Lookout</div>
+                                <div class="mini-agent-role">Klant Intelligence</div>
+                            </div>
+                            <div class="mini-agent">
+                                <div class="mini-agent-icon">🔭</div>
+                                <div class="mini-agent-name">The Spyglass</div>
+                                <div class="mini-agent-role">Markt & Concurrentie</div>
+                            </div>
+                            <div class="mini-agent">
+                                <div class="mini-agent-icon">🧭</div>
+                                <div class="mini-agent-name">The Navigator</div>
+                                <div class="mini-agent-role">Strategie</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pause-indicator">
+                        <strong>⏸ PAUZE 1:</strong> Jij keurt de strategie goed voordat execution start.
+                    </div>
+                </div>
+
+                <!-- Phase 2 -->
+                <div class="phase-card phase-2" data-phase="2">
+                    <div class="phase-header">
+                        <span class="phase-number">②</span>
+                        <div>
+                            <div class="phase-title">Uitvoering</div>
+                            <p style="font-size: 0.85rem; color: #666; margin-top: 0.3rem;">Strategie → Content → Campagne</p>
+                        </div>
+                    </div>
+                    <p style="margin-bottom: 1rem; font-size: 0.9rem; color: #666; line-height: 1.6;">Copy, e-mails, ads en media planning — alles afgestemd op de strategie en je brand voice.</p>
+                    <div style="font-size: 0.8rem; color: #888;">Klik om meer te zien →</div>
+                    <div class="phase-agents">
+                        <div class="phase-agents-list">
+                            <div class="mini-agent">
+                                <div class="mini-agent-icon">🗺️</div>
+                                <div class="mini-agent-name">The Cartographer</div>
+                                <div class="mini-agent-role">Campagne Architect</div>
+                            </div>
+                            <div class="mini-agent">
+                                <div class="mini-agent-icon">✍️</div>
+                                <div class="mini-agent-name">The Scribe</div>
+                                <div class="mini-agent-role">Creatief & Content</div>
+                            </div>
+                            <div class="mini-agent">
+                                <div class="mini-agent-icon">⚙️</div>
+                                <div class="mini-agent-name">The Quartermaster</div>
+                                <div class="mini-agent-role">Media & Budget</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pause-indicator">
+                        <strong>⏸ PAUZE 2:</strong> Jij keurt creative en media plan goed.
+                    </div>
+                </div>
+
+                <!-- Phase 3 -->
+                <div class="phase-card phase-3" data-phase="3">
+                    <div class="phase-header">
+                        <span class="phase-number">③</span>
+                        <div>
+                            <div class="phase-title">Performance & Loop</div>
+                            <p style="font-size: 0.85rem; color: #666; margin-top: 0.3rem;">Trends → Tests → Scaling</p>
+                        </div>
+                    </div>
+                    <p style="margin-bottom: 1rem; font-size: 0.9rem; color: #666; line-height: 1.6;">Real-time monitoring, experiment ontwerp, en business impact rapportage. Wat werkt, wordt geschaald.</p>
+                    <div style="font-size: 0.8rem; color: #888;">Klik om meer te zien →</div>
+                    <div class="phase-agents">
+                        <div class="phase-agents-list">
+                            <div class="mini-agent">
+                                <div class="mini-agent-icon">📊</div>
+                                <div class="mini-agent-name">The Chronometer</div>
+                                <div class="mini-agent-role">Data & Trends</div>
+                            </div>
+                            <div class="mini-agent">
+                                <div class="mini-agent-icon">🚀</div>
+                                <div class="mini-agent-name">The Helmsman</div>
+                                <div class="mini-agent-role">Groei & Experimenten</div>
+                            </div>
+                            <div class="mini-agent">
+                                <div class="mini-agent-icon">📜</div>
+                                <div class="mini-agent-name">The Ship's Log</div>
+                                <div class="mini-agent-role">Rapportage</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: var(--white); border-radius: var(--border-radius-card); border-left: 5px solid var(--navy);">
+                <div style="font-family: 'Manrope', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--navy); margin-bottom: 0.5rem;">⚓ The Captain's Table</div>
+                <p style="color: #666; font-size: 0.95rem;">Coördinatie — regisseert het hele proces en bewaakt kwaliteit.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Meet The Crew Section -->
+    <section id="meet-crew">
+        <div class="container">
+            <h2>Meet the Crew</h2>
+            <p class="section-subtitle">Tien specialist agents, elk met hun eigen expertise.</p>
+
+            <div class="crew-grid">
+                <!-- Phase 1 Agents -->
+                <div class="agent-card" data-phase="1">
+                    <span class="agent-phase-tag phase-1">Fase 1</span>
+                    <div class="agent-icon">🔍</div>
+                    <div class="agent-callsign">The Lookout</div>
+                    <div class="agent-role">Klant Intelligence</div>
+                    <p class="agent-brief">Duikt in je CRM, analytics en funnel om te zien wat er echt werkt.</p>
+                    <div class="agent-expanded">
+                        Leest je interne data: conversie funnel, cohort analyse, lifetime value. Geeft je onweerlegbare feiten over je beste klanten en waar je lekkages hebt.
+                    </div>
+                </div>
+
+                <div class="agent-card" data-phase="1">
+                    <span class="agent-phase-tag phase-1">Fase 1</span>
+                    <div class="agent-icon">🔭</div>
+                    <div class="agent-callsign">The Spyglass</div>
+                    <div class="agent-role">Markt & Concurrentie</div>
+                    <p class="agent-brief">Scant de markt, koopsignalen en positioneringsgaten.</p>
+                    <div class="agent-expanded">
+                        External intel: concurrenten, buying triggers, messaging gaps. Vertelt je precies waar jij kunt winnen en wat je tegenstanders missen.
+                    </div>
+                </div>
+
+                <div class="agent-card" data-phase="1">
+                    <span class="agent-phase-tag phase-1">Fase 1</span>
+                    <div class="agent-icon">🧭</div>
+                    <div class="agent-callsign">The Navigator</div>
+                    <div class="agent-role">Strategie</div>
+                    <p class="agent-brief">Verbindt de data tot een scherpe, falsifieerbare strategie.</p>
+                    <div class="agent-expanded">
+                        Synthese. Naming, positioning, contra-strategie. Creëert een strategie die je daadwerkelijk kan testen en verbeteren. Voorbij gessingen.
+                    </div>
+                </div>
+
+                <!-- Phase 2 Agents -->
+                <div class="agent-card" data-phase="2">
+                    <span class="agent-phase-tag phase-2">Fase 2</span>
+                    <div class="agent-icon">🗺️</div>
+                    <div class="agent-callsign">The Cartographer</div>
+                    <div class="agent-role">Campagne Architect</div>
+                    <p class="agent-brief">Vertaalt strategie naar funnel, contentkalender en KPI-targets.</p>
+                    <div class="agent-expanded">
+                        Blueprints. Funnel mapping, content calendar, metrics. Geeft duidelijkheid: wie spreken we, wat zeggen we, waar, wanneer, en hoe meten we winst.
+                    </div>
+                </div>
+
+                <div class="agent-card" data-phase="2">
+                    <span class="agent-phase-tag phase-2">Fase 2</span>
+                    <div class="agent-icon">✍️</div>
+                    <div class="agent-callsign">The Scribe</div>
+                    <div class="agent-role">Creatief & Content</div>
+                    <p class="agent-brief">Schrijft ads, e-mails, artikelen en landingspagina's.</p>
+                    <div class="agent-expanded">
+                        Copy mastery. Headlines, body copy, calls-to-action. Afgestemd op brand voice, strategie, en wat je audience echt wil horen. Testig, iterated, winning.
+                    </div>
+                </div>
+
+                <div class="agent-card" data-phase="2">
+                    <span class="agent-phase-tag phase-2">Fase 2</span>
+                    <div class="agent-icon">⚙️</div>
+                    <div class="agent-callsign">The Quartermaster</div>
+                    <div class="agent-role">Media & Budget</div>
+                    <p class="agent-brief">Verdeelt budget, optimaliseert kanalen, bewaakt de spend.</p>
+                    <div class="agent-expanded">
+                        Budget maestro. Kanalgewicht, ad format specs, bid strategies. Zorgt dat elk euro hard werkt. Optimization rules, geen guesswork.
+                    </div>
+                </div>
+
+                <!-- Phase 3 Agents -->
+                <div class="agent-card" data-phase="3">
+                    <span class="agent-phase-tag phase-3">Fase 3</span>
+                    <div class="agent-icon">📊</div>
+                    <div class="agent-callsign">The Chronometer</div>
+                    <div class="agent-role">Data & Trends</div>
+                    <p class="agent-brief">Leest trends, signaleert anomalieën, houdt hypotheses bij.</p>
+                    <div class="agent-expanded">
+                        Trend narrator. Wat gaat goed, wat went slechter? Anomalies, correlations, hypothesis register. Real-time monitoring zonder noise.
+                    </div>
+                </div>
+
+                <div class="agent-card" data-phase="3">
+                    <span class="agent-phase-tag phase-3">Fase 3</span>
+                    <div class="agent-icon">🚀</div>
+                    <div class="agent-callsign">The Helmsman</div>
+                    <div class="agent-role">Groei & Experimenten</div>
+                    <p class="agent-brief">Ontwerpt experimenten, scoort kansen, schaalt wat werkt.</p>
+                    <div class="agent-expanded">
+                        Growth scientist. ICE scoring, experiment design, scaling recommendations. Zegt je precies waar je energie moet gaan en waarom.
+                    </div>
+                </div>
+
+                <div class="agent-card" data-phase="3">
+                    <span class="agent-phase-tag phase-3">Fase 3</span>
+                    <div class="agent-icon">📜</div>
+                    <div class="agent-callsign">The Ship's Log</div>
+                    <div class="agent-role">Rapportage</div>
+                    <p class="agent-brief">Maakt executive summaries, QBR's en business-impact verhalen.</p>
+                    <div class="agent-expanded">
+                        Storyteller. Executive summaries, quarterly reviews, business-impact narratives. Wat is gebeurd? Wat hebben we geleerd? Wat gaat volgen?
+                    </div>
+                </div>
+
+                <div class="agent-card" style="grid-column: span min(2, 1); justify-self: center; border-left: 5px solid var(--navy);">
+                    <span class="agent-phase-tag" style="background: rgba(7, 3, 62, 0.2); color: var(--navy);">Coördinatie</span>
+                    <div class="agent-icon">⚓</div>
+                    <div class="agent-callsign">The Captain's Table</div>
+                    <div class="agent-role">Orchestratie</div>
+                    <p class="agent-brief">Regisseert het hele proces en bewaakt de kwaliteit.</p>
+                    <div class="agent-expanded">
+                        De dirigent. Stuurt de workflow, zorgt dat informatie door alle fasen vloeit, begeleidt jouw team door review moments. Jij bent altijd in controle.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Start A Conversation Section -->
+    <section class="entry-flows" id="start-conversation">
+        <div class="container">
+            <h2>Aan de slag</h2>
+            <p class="section-subtitle">Kies je entry point. The Crew activates.</p>
+
+            <div class="flows-grid">
+                <!-- Flow 1 -->
+                <div class="flow-card">
+                    <div class="flow-emoji">📋</div>
+                    <div class="flow-title">Start een campagne</div>
+                    <p class="flow-description">Vul je brief in. The Crew duikt in je data, analyseert je markt en ontwerpt een strategie. Jij keurt goed, zij voeren uit.</p>
+                    <div class="flow-agents">
+                        <span class="flow-agent-badge">The Lookout</span>
+                        <span class="flow-agent-badge">The Spyglass</span>
+                        <span class="flow-agent-badge">The Navigator</span>
+                        <span class="flow-agent-badge">The Cartographer</span>
+                    </div>
+                    <a href="#" class="flow-cta">Brief invullen</a>
+                </div>
+
+                <!-- Flow 2 -->
+                <div class="flow-card">
+                    <div class="flow-emoji">📈</div>
+                    <div class="flow-title">Check mijn performance</div>
+                    <p class="flow-description">Koppel je analytics. The Crew leest trends, spottet anomalieën en geeft je testable hypotheses. Experimenten die je winnen.</p>
+                    <div class="flow-agents">
+                        <span class="flow-agent-badge">The Chronometer</span>
+                        <span class="flow-agent-badge">The Helmsman</span>
+                        <span class="flow-agent-badge">The Ship's Log</span>
+                    </div>
+                    <a href="#" class="flow-cta">Connect analytics</a>
+                </div>
+
+                <!-- Flow 3 -->
+                <div class="flow-card">
+                    <div class="flow-emoji">📝</div>
+                    <div class="flow-title">Verbeter mijn briefing</div>
+                    <p class="flow-description">Upload je huidige brief of campaign deck. The Crew geeft je blind feedback: gaps, kansen, risks. Geen bias — gewoon de waarheid.</p>
+                    <div class="flow-agents">
+                        <span class="flow-agent-badge">The Lookout</span>
+                        <span class="flow-agent-badge">The Spyglass</span>
+                        <span class="flow-agent-badge">The Navigator</span>
+                    </div>
+                    <a href="#" class="flow-cta">Upload document</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sidebar Companion Section -->
+    <section class="sidebar-companion" id="companion">
+        <div class="container">
+            <h2>The Sidebar Companion</h2>
+            <p class="section-subtitle">The Crew werkt NAAST jou, niet in plaats van jou.</p>
+
+            <div class="companion-mockup">
+                <div class="companion-visual">
+                    <div class="companion-left">
+                        <h3>Jouw Brief</h3>
+                        <div class="brief-mockup">
+                            <div class="brief-line"></div>
+                            <div class="brief-line"></div>
+                            <div class="brief-line" style="width: 90%;"></div>
+                            <div class="brief-line" style="width: 60%;"></div>
+                        </div>
+                        <div class="brief-mockup">
+                            <div class="brief-line"></div>
+                            <div class="brief-line"></div>
+                            <div class="brief-line" style="width: 85%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="companion-right">
+                        <h3>The Crew Panel</h3>
+                        <div class="crew-panel">
+                            <div class="crew-agent-panel">🔍</div>
+                            <div class="crew-agent-panel">🔭</div>
+                            <div class="crew-agent-panel">🧭</div>
+                            <div class="crew-agent-panel">✍️</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 style="font-family: 'Manrope', sans-serif; font-size: 1.3rem; color: var(--navy); margin-bottom: 1.5rem;">Hoe het verschil maakt</h3>
+                    <p class="companion-text">
+                        <strong>Je docent is dicht bij:</strong> Terwijl jij schrijft en strategiseert, zit The Crew in de sidebar — voeding met data, vragen, and winning copy variations. Geen context switch. Geen aparte tool.
+                    </p>
+                    <p class="companion-text" style="margin-top: 1.5rem;">
+                        <strong>Geen replacement:</strong> The Crew is jouw sparringpartner. Zij doen het zware werk (data duiken, trend analyse, copy production). Jij stuurt bij, keurt goed, neemt beslissingen.
+                    </p>
+                    <p class="companion-text" style="margin-top: 1.5rem;">
+                        <strong>Echte samenwerking:</strong> API integrations, live feedback loops, human checkpoints op elke grote stap. Jij bent nooit out of the loop.
+                    </p>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem; padding: 2rem; background: var(--light-gray); border-radius: var(--border-radius-card); border-left: 5px solid var(--teal);">
+                <p style="font-size: 0.95rem; color: var(--dark-gray); line-height: 1.8;">
+                    <strong>The Crew is een <em>companion</em>, geen <em>replacement</em>.</strong> Je agency team neemt de creatieve leiding. The Crew doet de zware lifting: data, content production, experiment design, performance storytelling. Wat zou jij liever doen: data in spreadsheets wassen of strategische beslissingen nemen?
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Kirk & Blackbeard. <strong>The Crew</strong> — jouw AI marketing companion.</p>
+        <p style="margin-top: 1rem; font-size: 0.85rem; color: #aaa;">Intelligent, reliable, human-first.</p>
+    </footer>
+
+    <script>
+        // Phase card expansion
+        const phaseCards = document.querySelectorAll('.phase-card');
+        phaseCards.forEach(card => {
+            card.addEventListener('click', function(e) {
+                e.preventDefault();
+                const isExpanded = this.classList.contains('expanded');
+                
+                // Close all other cards
+                phaseCards.forEach(c => {
+                    c.classList.remove('expanded');
+                    c.querySelector('.phase-agents').classList.remove('visible');
+                    const pauseIndicator = c.querySelector('.pause-indicator');
+                    if (pauseIndicator) pauseIndicator.classList.remove('visible');
+                });
+
+                // Toggle current card
+                if (!isExpanded) {
+                    this.classList.add('expanded');
+                    this.querySelector('.phase-agents').classList.add('visible');
+                    const pauseIndicator = this.querySelector('.pause-indicator');
+                    if (pauseIndicator) pauseIndicator.classList.add('visible');
+                }
+            });
+        });
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+
+        // Agent card hover details
+        const agentCards = document.querySelectorAll('.agent-card');
+        agentCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.cursor = 'pointer';
+            });
+        });
+
+        // Entry flow CTA
+        const flowCTAs = document.querySelectorAll('.flow-cta');
+        flowCTAs.forEach(cta => {
+            cta.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Entry point activated. Scenario flow would start here.');
+            });
+        });
+
+        // Responsive phase agents grid on mobile
+        if (window.innerWidth < 768) {
+            document.querySelectorAll('.phase-agents-list').forEach(list => {
+                list.style.gridTemplateColumns = 'repeat(2, 1fr)';
+            });
+        }
+
+        // Animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.agent-card, .flow-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

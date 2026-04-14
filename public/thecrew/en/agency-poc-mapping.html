@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K&B Command Center — Agency Operational Mapping</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+  :root {
+    --ocean: #0D1B2A; --ocean-mid: #152436; --ocean-l: #1E3347;
+    --paradise: #00DEFF; --red: #FF0066; --gold: #FFB400; --green: #00FF99; --purple: #9B6DFF;
+    --text-dim: rgba(255,255,255,0.38); --text-mid: rgba(255,255,255,0.65); --text: #fff;
+    --border: rgba(255,255,255,0.07);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--ocean); font-family: 'Inter', sans-serif; color: var(--text); padding: 48px 24px 80px; display: flex; flex-direction: column; align-items: center; }
+  .page { max-width: 1100px; width: 100%; }
+  .header { text-align: center; margin-bottom: 48px; }
+  .wm { font-size: 11px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 16px; }
+  .wm span { color: var(--red); }
+  .header h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; }
+  .header h1 em { color: var(--paradise); font-style: normal; }
+  .header .sub { font-size: 14px; color: var(--text-mid); margin-top: 10px; line-height: 1.6; }
+
+  .sl { font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 16px; }
+  .section { margin-bottom: 40px; }
+  .section h2 { font-size: 18px; font-weight: 800; margin-bottom: 12px; }
+  .section h2 em { color: var(--paradise); font-style: normal; }
+  .section p { font-size: 13.5px; color: var(--text-mid); line-height: 1.7; margin-bottom: 10px; }
+  .section p strong { color: var(--text); font-weight: 600; }
+
+  /* Main mapping table */
+  .map-table { width: 100%; border-collapse: separate; border-spacing: 0; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 32px; }
+  .map-table th { text-align: left; padding: 14px 16px; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border); }
+  .map-table td { padding: 14px 16px; font-size: 12.5px; color: var(--text-mid); border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.55; background: var(--ocean-mid); }
+  .map-table tr:last-child td { border-bottom: none; }
+  .map-table td:first-child { font-weight: 600; color: var(--text); white-space: nowrap; width: 170px; }
+
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 9px; font-weight: 700; letter-spacing: 0.06em; margin-right: 4px; margin-bottom: 3px; }
+  .tag-auto { background: rgba(0,255,153,0.1); color: var(--green); border: 1px solid rgba(0,255,153,0.2); }
+  .tag-assist { background: rgba(255,180,0,0.1); color: var(--gold); border: 1px solid rgba(255,180,0,0.2); }
+  .tag-human { background: rgba(255,0,102,0.08); color: #FF6699; border: 1px solid rgba(255,0,102,0.15); }
+  .tag-agent { background: rgba(0,222,255,0.08); color: var(--paradise); border: 1px solid rgba(0,222,255,0.2); }
+
+  .freq { font-size: 10px; color: var(--text-dim); font-weight: 600; }
+  .time-save { font-size: 11px; font-weight: 700; color: var(--green); }
+  .pain { font-size: 11px; color: #FF6699; }
+
+  /* Function header rows */
+  .fn-row td { background: rgba(0,222,255,0.04) !important; border-bottom: 1px solid rgba(0,222,255,0.1) !important; }
+  .fn-row td:first-child { color: var(--paradise) !important; font-size: 13px; font-weight: 800; letter-spacing: 0.04em; }
+
+  /* POC section */
+  .poc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+  .poc-card { background: var(--ocean-mid); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px; }
+  .poc-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .poc-card p { font-size: 12.5px; color: var(--text-mid); line-height: 1.6; margin-bottom: 0; }
+  .poc-card .week { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+
+  .highlight { background: rgba(0,222,255,0.04); border: 1px solid rgba(0,222,255,0.15); border-radius: 14px; padding: 24px 28px; margin-top: 16px; }
+  .highlight p { font-size: 13px; color: var(--text-mid); line-height: 1.7; margin-bottom: 0; }
+  .highlight strong { color: var(--paradise); }
+
+  .divider { height: 1px; background: var(--border); margin: 36px 0; }
+  .footer { text-align: center; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-dim); }
+
+  /* Legend */
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-dim); }
+
+  @media (max-width: 768px) { .poc-grid { grid-template-columns: 1fr; } .map-table td:first-child { white-space: normal; } }
+
+  /* Language Switcher */
+  .lang-switch {
+    position: fixed;
+    top: 12px;
+    right: 16px;
+    z-index: 9999;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .lang-switch a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-family: 'Inter', 'Montserrat', 'Manrope', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .lang-switch a {
+    background: rgba(0,222,255,0.08);
+    border: 1px solid rgba(0,222,255,0.2);
+    color: #00DEFF;
+  }
+  .lang-switch a:hover {
+    background: rgba(0,222,255,0.15);
+    border-color: rgba(0,222,255,0.4);
+  }
+  .lang-switch a.active {
+    background: rgba(0,222,255,0.15);
+    border-color: rgba(0,222,255,0.4);
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div class="lang-switch">
+  <a href="/thecrew/en/agency-poc-mapping.html" class="active">EN</a>
+  <a href="/thecrew/nl/agency-poc-mapping.html">NL</a>
+</div>
+
+<div class="page">
+
+  <div class="header">
+    <div class="wm">Kirk <span>&amp;</span> Blackbeard</div>
+    <h1>Media Agency Operations —<br><em>What the Command Center can do</em></h1>
+    <div class="sub">Day-to-day agency tasks mapped to the 10-agent system. What gets automated, what gets assisted, what stays human.</div>
+  </div>
+
+  <!-- ── Legend ── -->
+  <div class="legend">
+    <div class="legend-item"><span class="tag tag-auto">AUTOMATE</span> System handles end-to-end</div>
+    <div class="legend-item"><span class="tag tag-assist">ASSIST</span> System drafts, human reviews</div>
+    <div class="legend-item"><span class="tag tag-human">HUMAN</span> Stays with the team</div>
+    <div class="legend-item"><span class="tag tag-agent">AGENT</span> Which K&B agent handles it</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SECTION 1: THE FULL MAPPING TABLE
+       ══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="sl">01 · Operational Mapping</div>
+  </div>
+
+  <table class="map-table">
+    <thead>
+      <tr>
+        <th>Agency Task</th>
+        <th>What it involves</th>
+        <th>Frequency</th>
+        <th>Current time</th>
+        <th>Command Center</th>
+        <th>Agent</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!-- ── MEDIA PLANNING ── -->
+      <tr class="fn-row"><td colspan="6">Media Planning</td></tr>
+      <tr>
+        <td>Brief intake &amp; structuring</td>
+        <td>Gather client objectives, KPIs, audience, channel preferences into structured doc</td>
+        <td><span class="freq">Per campaign</span></td>
+        <td>2–4 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Orchestrator parses brief, validates required fields, routes to Phase 1</td>
+        <td><span class="tag tag-agent">Captain's Table</span></td>
+      </tr>
+      <tr>
+        <td>Audience research &amp; segmentation</td>
+        <td>Analyse historical data, identify segments, model reach/frequency</td>
+        <td><span class="freq">Per campaign</span></td>
+        <td>4–8 hrs</td>
+        <td><span class="tag tag-assist">ASSIST</span> Produces ICP validation, segment maps, opportunity sizing. Human validates.</td>
+        <td><span class="tag tag-agent">Lookout</span> <span class="tag tag-agent">Spyglass</span></td>
+      </tr>
+      <tr>
+        <td>Budget allocation modelling</td>
+        <td>Distribute budget across channels using CPM assumptions and historical benchmarks</td>
+        <td><span class="freq">Per campaign</span></td>
+        <td>4–8 hrs</td>
+        <td><span class="tag tag-assist">ASSIST</span> Generates allocation model with rationale. Planner adjusts at PAUSE checkpoint.</td>
+        <td><span class="tag tag-agent">Cartographer</span></td>
+      </tr>
+      <tr>
+        <td>Competitive analysis</td>
+        <td>Track competitor spend, messaging, creative, positioning gaps</td>
+        <td><span class="freq">Monthly</span></td>
+        <td>6–12 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Continuous competitor monitoring, positioning gap analysis, white space report</td>
+        <td><span class="tag tag-agent">Spyglass</span></td>
+      </tr>
+      <tr>
+        <td>Content calendar creation</td>
+        <td>Build 4-week publishing schedule with platform-specific timing</td>
+        <td><span class="freq">Monthly</span></td>
+        <td>3–6 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Generates full calendar with TOF/MOF/BOF distribution, platform cadence</td>
+        <td><span class="tag tag-agent">Cartographer</span></td>
+      </tr>
+
+      <!-- ── MEDIA BUYING ── -->
+      <tr class="fn-row"><td colspan="6">Media Buying &amp; Optimisation</td></tr>
+      <tr>
+        <td>Campaign pacing review</td>
+        <td>Check spend rate vs. plan; adjust daily budget caps</td>
+        <td><span class="freq">Daily</span></td>
+        <td>30–60 min/day</td>
+        <td><span class="tag tag-human">HUMAN</span> Requires platform access. System can set pacing rules and flag deviations.</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Bid management</td>
+        <td>Monitor win rates, adjust bids per audience/placement</td>
+        <td><span class="freq">Daily</span></td>
+        <td>1–2 hrs/day</td>
+        <td><span class="tag tag-human">HUMAN</span> In-platform execution. System writes optimisation rules (hard pause/scale thresholds).</td>
+        <td><span class="tag tag-agent">Quartermaster</span> (rules only)</td>
+      </tr>
+      <tr>
+        <td>Optimisation rules &amp; thresholds</td>
+        <td>Define when to pause, scale, or test based on CPA/ROAS targets</td>
+        <td><span class="freq">Per campaign</span></td>
+        <td>2–4 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Writes hard rules: "if CPA > €X for 3 days, pause placement." Human approves at PAUSE 2.</td>
+        <td><span class="tag tag-agent">Quartermaster</span></td>
+      </tr>
+      <tr>
+        <td>Channel budget reallocation</td>
+        <td>Shift budget between social, display, video based on performance</td>
+        <td><span class="freq">Weekly</span></td>
+        <td>1–2 hrs</td>
+        <td><span class="tag tag-assist">ASSIST</span> Recommends reallocation with evidence. Buyer executes in platform.</td>
+        <td><span class="tag tag-agent">Quartermaster</span> <span class="tag tag-agent">Chronometer</span></td>
+      </tr>
+
+      <!-- ── CAMPAIGN MANAGEMENT ── -->
+      <tr class="fn-row"><td colspan="6">Campaign Management &amp; QA</td></tr>
+      <tr>
+        <td>Creative spec gathering</td>
+        <td>Collect ad formats, sizes, file types per placement</td>
+        <td><span class="freq">Per campaign</span></td>
+        <td>2–3 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Generates spec sheet from campaign plan + platform requirements</td>
+        <td><span class="tag tag-agent">Cartographer</span></td>
+      </tr>
+      <tr>
+        <td>QA checklist execution</td>
+        <td>Verify naming, budgets, dates, targeting, frequency caps, tracking pixels</td>
+        <td><span class="freq">Per launch</span></td>
+        <td>4–8 hrs</td>
+        <td><span class="tag tag-assist">ASSIST</span> Generates pre-flight checklist from plan; flags mismatches. Human signs off.</td>
+        <td><span class="tag tag-agent">Captain's Table</span></td>
+      </tr>
+      <tr>
+        <td>Trafficking &amp; tag management</td>
+        <td>Upload creatives to ad server, configure line items, test tags</td>
+        <td><span class="freq">Per launch</span></td>
+        <td>4–8 hrs</td>
+        <td><span class="tag tag-human">HUMAN</span> Requires ad server access. System produces the trafficking sheet; ops team executes.</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Daily campaign health check</td>
+        <td>Monitor impressions, CTR, frequency; flag anomalies</td>
+        <td><span class="freq">Daily</span></td>
+        <td>1–2 hrs/day</td>
+        <td><span class="tag tag-assist">ASSIST</span> Writes trend narratives, anomaly flags, hypothesis log. Human decides action.</td>
+        <td><span class="tag tag-agent">Chronometer</span></td>
+      </tr>
+
+      <!-- ── CREATIVE ── -->
+      <tr class="fn-row"><td colspan="6">Creative &amp; Ad Copy</td></tr>
+      <tr>
+        <td>Ad copy writing</td>
+        <td>Headlines, body copy, CTAs per platform and audience segment</td>
+        <td><span class="freq">Per campaign</span></td>
+        <td>6–12 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Generates 15–25 variants per brief, on-brand (style memory from Navigator). Human curates.</td>
+        <td><span class="tag tag-agent">Scribe</span></td>
+      </tr>
+      <tr>
+        <td>Email sequence writing</td>
+        <td>Multi-email drip: subject lines, body, CTAs, timing logic</td>
+        <td><span class="freq">Per campaign</span></td>
+        <td>8–16 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Full sequence with branching logic, timing, exit conditions. Human reviews.</td>
+        <td><span class="tag tag-agent">Scribe</span></td>
+      </tr>
+      <tr>
+        <td>Landing page copy</td>
+        <td>Hero, value props, social proof, CTA — per campaign</td>
+        <td><span class="freq">Per campaign</span></td>
+        <td>4–8 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Produces full page copy with conversion structure. Human + designer finish.</td>
+        <td><span class="tag tag-agent">Scribe</span></td>
+      </tr>
+      <tr>
+        <td>Visual creative production</td>
+        <td>Design banners, video, rich media assets</td>
+        <td><span class="freq">Per campaign</span></td>
+        <td>10–40 hrs</td>
+        <td><span class="tag tag-human">HUMAN</span> Creative production stays with designers. System provides briefs + Canva handoff.</td>
+        <td><span class="tag tag-agent">Scribe</span> (brief to Canva)</td>
+      </tr>
+      <tr>
+        <td>A/B test design</td>
+        <td>Define hypothesis, variants, success criteria, duration</td>
+        <td><span class="freq">Ongoing</span></td>
+        <td>2–4 hrs/test</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> ICE-scored test backlog, hypothesis definition, stat sig criteria. Human approves.</td>
+        <td><span class="tag tag-agent">Helmsman</span></td>
+      </tr>
+
+      <!-- ── ANALYTICS & REPORTING ── -->
+      <tr class="fn-row"><td colspan="6">Analytics &amp; Reporting</td></tr>
+      <tr>
+        <td>Weekly performance report</td>
+        <td>Pull metrics across platforms, summarise trends, flag anomalies</td>
+        <td><span class="freq">Weekly</span></td>
+        <td>4–8 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Trend narrative, anomaly log, hypothesis register. Analyst reviews, doesn't build.</td>
+        <td><span class="tag tag-agent">Chronometer</span></td>
+      </tr>
+      <tr>
+        <td>Monthly performance deck</td>
+        <td>5–10 slides with channel breakdown, insights, recommendations</td>
+        <td><span class="freq">Monthly</span></td>
+        <td>8–12 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Full narrative report with business impact framing. Human edits for client tone.</td>
+        <td><span class="tag tag-agent">Ship's Log</span></td>
+      </tr>
+      <tr>
+        <td>QBR preparation</td>
+        <td>25–30 slide deck: performance vs. objectives, learnings, recommendations</td>
+        <td><span class="freq">Quarterly</span></td>
+        <td>20–30 hrs</td>
+        <td><span class="tag tag-assist">ASSIST</span> Generates narrative structure, data synthesis, recommendations. Human adds context + presents.</td>
+        <td><span class="tag tag-agent">Ship's Log</span> <span class="tag tag-agent">Chronometer</span></td>
+      </tr>
+      <tr>
+        <td>Attribution &amp; data reconciliation</td>
+        <td>Cross-check platform data (GA, Meta, ad server); flag discrepancies</td>
+        <td><span class="freq">Monthly</span></td>
+        <td>2–5 hrs</td>
+        <td><span class="tag tag-assist">ASSIST</span> Flags mismatches between sources, labels as Hypothesis or Confirmed. Analyst investigates.</td>
+        <td><span class="tag tag-agent">Chronometer</span></td>
+      </tr>
+      <tr>
+        <td>Experiment results &amp; scaling decisions</td>
+        <td>Evaluate A/B test results; recommend scale/kill/hold</td>
+        <td><span class="freq">Ongoing</span></td>
+        <td>2–3 hrs/week</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Statistical evaluation, scaling recommendation, learning logged to Data Vault</td>
+        <td><span class="tag tag-agent">Helmsman</span></td>
+      </tr>
+
+      <!-- ── STRATEGY & ACCOUNT ── -->
+      <tr class="fn-row"><td colspan="6">Strategy &amp; Account Management</td></tr>
+      <tr>
+        <td>Strategy synthesis</td>
+        <td>Merge internal data + market intel into positioning and messaging framework</td>
+        <td><span class="freq">Per campaign</span></td>
+        <td>8–16 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Falsifiable positioning, contra-strategy, messaging hierarchy. Strategist reviews at PAUSE 1.</td>
+        <td><span class="tag tag-agent">Navigator</span></td>
+      </tr>
+      <tr>
+        <td>Client status updates</td>
+        <td>Weekly call prep: pacing, optimisation actions, next steps</td>
+        <td><span class="freq">Weekly</span></td>
+        <td>2–3 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Generates status summary from latest agent outputs. AM personalises and sends.</td>
+        <td><span class="tag tag-agent">Ship's Log</span></td>
+      </tr>
+      <tr>
+        <td>Client relationship &amp; stakeholder mgmt</td>
+        <td>Calls, negotiations, expectation management, scope discussions</td>
+        <td><span class="freq">Ongoing</span></td>
+        <td>10–20 hrs/week</td>
+        <td><span class="tag tag-human">HUMAN</span> Relationships don't automate. System frees AM time to focus here instead of reports.</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Brief writing for client approval</td>
+        <td>Turn strategy into structured brief document for sign-off</td>
+        <td><span class="freq">Per campaign</span></td>
+        <td>3–5 hrs</td>
+        <td><span class="tag tag-auto">AUTOMATE</span> Generates client-facing brief from Phase 1 strategy output. AM reviews and presents.</td>
+        <td><span class="tag tag-agent">Navigator</span> <span class="tag tag-agent">Scribe</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════════
+       SECTION 2: SUMMARY — WHAT STAYS HUMAN
+       ══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="sl">02 · What Stays Human</div>
+    <h2>Five things the system <em>doesn't touch</em></h2>
+    <p>These require platform access, client trust, or creative judgment that the system shouldn't own.</p>
+  </div>
+
+  <table class="map-table">
+    <thead><tr><th>Task</th><th>Why it stays human</th></tr></thead>
+    <tbody>
+      <tr><td>Ad platform execution</td><td>Bid changes, budget adjustments, campaign pauses happen inside DSPs/ad managers. The system writes the rules and recommendations; the buyer executes. No API access to client ad accounts needed during POC.</td></tr>
+      <tr><td>Creative design &amp; production</td><td>Visual assets (banners, video, rich media) need designers. The system produces the briefs, copy, and spec sheets that feed the design process — but Photoshop/Premiere stays with humans.</td></tr>
+      <tr><td>Trafficking &amp; tag management</td><td>Uploading tags to ad servers, configuring line items, and QA-testing live tags requires ad server access and ops expertise. System generates the trafficking sheet; ops team clicks the buttons.</td></tr>
+      <tr><td>Client relationships</td><td>Calls, negotiations, trust-building, scope discussions. The system frees account managers from report-building so they can spend more time here — which is what retains clients.</td></tr>
+      <tr><td>Final approval at checkpoints</td><td>Every PAUSE gate requires a human decision: approve, revise, or reject. The system never ships anything without sign-off. That's the design.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════════
+       SECTION 3: TIME SAVINGS
+       ══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="sl">03 · Time Savings Per Campaign Cycle</div>
+    <h2>Where the <em>hours go back</em></h2>
+  </div>
+
+  <table class="map-table">
+    <thead><tr><th>Phase</th><th>Current labour</th><th>With Command Center</th><th>Saved</th></tr></thead>
+    <tbody>
+      <tr><td>Planning &amp; Strategy</td><td>20–40 hrs</td><td>4–8 hrs (review + approval)</td><td><span class="time-save">~75% reduction</span></td></tr>
+      <tr><td>Creative &amp; Copy</td><td>20–40 hrs</td><td>6–12 hrs (curation + design)</td><td><span class="time-save">~65% reduction</span></td></tr>
+      <tr><td>Reporting &amp; Analysis</td><td>15–25 hrs/month</td><td>3–5 hrs/month (review only)</td><td><span class="time-save">~80% reduction</span></td></tr>
+      <tr><td>QBR Preparation</td><td>20–30 hrs</td><td>4–6 hrs (editing + presenting)</td><td><span class="time-save">~80% reduction</span></td></tr>
+      <tr><td>Account Status Updates</td><td>8–12 hrs/month</td><td>2–3 hrs/month (personalise + send)</td><td><span class="time-save">~75% reduction</span></td></tr>
+      <tr><td style="color: var(--paradise); font-weight: 800;">Total per client/month</td><td style="font-weight: 700;">80–140 hrs</td><td style="font-weight: 700;">20–35 hrs</td><td><span class="time-save" style="font-size: 14px;">~75% reduction</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="highlight">
+    <p><strong>Translation for a 10-client agency:</strong> Instead of 6–8 full-time people on production, reporting, and strategy drafting — you need 2–3 people doing review, client relationships, and platform execution. The rest is system output.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════════
+       SECTION 4: POC DESIGN
+       ══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="sl">04 · POC Design — How to Run It</div>
+    <h2>4-week pilot on <em>one real client</em></h2>
+    <p>Pick one existing client where the agency is already running campaigns. Run the Command Center in parallel — same brief, same timeline. Compare output quality, speed, and variant volume at the end.</p>
+  </div>
+
+  <div class="poc-grid">
+    <div class="poc-card">
+      <div class="week">Week 1 — Setup &amp; Intelligence</div>
+      <h3>Load the client, run Phase 1</h3>
+      <p><strong>K&B does:</strong> Configure global_brand.json with client voice, ICP, and banned vocabulary. Wire connectors (Notion, Slack). Run The Lookout (internal data analysis) + The Spyglass (competitor/market audit) in parallel. Feed both into The Navigator for strategy synthesis.</p>
+      <p style="margin-top: 8px;"><strong>Agency provides:</strong> Client brief, brand guidelines, 6 months of campaign performance data, audience segment definitions.</p>
+      <p style="margin-top: 8px;"><strong>Output:</strong> Falsifiable positioning statement, competitor audit, audience opportunity map, messaging hierarchy.</p>
+    </div>
+    <div class="poc-card">
+      <div class="week">Week 2 — PAUSE 1 Review &amp; Execution Start</div>
+      <h3>Strategy review, then Phase 2</h3>
+      <p><strong>PAUSE 1 checkpoint:</strong> Agency strategist + account manager review Phase 1 output. Approve, revise, or reject. Nothing proceeds without sign-off.</p>
+      <p style="margin-top: 8px;"><strong>Then:</strong> The Cartographer produces funnel map, content calendar, KPI targets. Feeds into The Scribe (ad copy, email sequences, landing page copy) + The Quartermaster (budget allocation, optimisation rules) in parallel.</p>
+      <p style="margin-top: 8px;"><strong>Output:</strong> Campaign plan, 15–25 ad copy variants, email sequence, media plan with hard pause/scale rules.</p>
+    </div>
+    <div class="poc-card">
+      <div class="week">Week 3 — PAUSE 2 Review &amp; Performance</div>
+      <h3>Creative review, then Phase 3</h3>
+      <p><strong>PAUSE 2 checkpoint:</strong> Creative director + media buyer review all Phase 2 output. Select best variants. Approve media plan. Agency team executes in-platform (trafficking, launching).</p>
+      <p style="margin-top: 8px;"><strong>Then:</strong> The Chronometer reads early performance data (if campaign is live) or analyses historical data to produce trend narratives. The Helmsman designs experiment backlog.</p>
+      <p style="margin-top: 8px;"><strong>Output:</strong> Trend report, anomaly log, ICE-scored experiment backlog, scaling recommendations.</p>
+    </div>
+    <div class="poc-card">
+      <div class="week">Week 4 — Report &amp; Comparison</div>
+      <h3>Final report + side-by-side evaluation</h3>
+      <p><strong>The Ship's Log</strong> produces the executive summary — business impact narrative, not just metrics.</p>
+      <p style="margin-top: 8px;"><strong>Comparison report:</strong> Side-by-side of what the agency team produced vs. what the Command Center produced for the same brief. Cover: time taken, number of variants, depth of analysis, quality of strategic rationale.</p>
+      <p style="margin-top: 8px;"><strong>Decision meeting:</strong> Present results to agency leadership. If the delta is meaningful → discuss engagement model (Managed, Embedded, or White-Label).</p>
+    </div>
+  </div>
+
+  <div class="highlight">
+    <p><strong>What the agency risks:</strong> €2,500 and one brief. <strong>What they see:</strong> A full campaign cycle — strategy through performance — produced in 4 weeks with dramatically less labour. The output speaks for itself.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════════
+       SECTION 5: WHAT TO MEASURE
+       ══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="sl">05 · POC Success Criteria</div>
+    <h2>How both sides know <em>it worked</em></h2>
+  </div>
+
+  <table class="map-table">
+    <thead><tr><th>Metric</th><th>What "good" looks like</th></tr></thead>
+    <tbody>
+      <tr><td>Time to strategy</td><td>Phase 1 output in &lt;48 hours (vs. 1–2 weeks agency-side)</td></tr>
+      <tr><td>Copy variant volume</td><td>15–25 on-brand variants per brief (vs. 3–5 manually)</td></tr>
+      <tr><td>Strategy quality</td><td>Agency strategist rates positioning as "equal or better" vs. what they'd produce</td></tr>
+      <tr><td>Report depth</td><td>Hypothesis register + anomaly log included (vs. standard metrics-only report)</td></tr>
+      <tr><td>Labour hours</td><td>Agency team spends &lt;15 hours total on review across 4 weeks (vs. 60–100 to produce equivalent)</td></tr>
+      <tr><td>Experiment backlog</td><td>ICE-scored backlog of 8–12 testable hypotheses delivered (vs. typically 0–2 ad hoc tests)</td></tr>
+      <tr><td>Brand consistency</td><td>Zero banned-word violations. Tone matches brand guidelines across all outputs.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════════
+       SECTION 6: THE PITCH TO THE AGENCY
+       ══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="sl">06 · How to Open the Conversation</div>
+    <h2>The agency's <em>problem</em>, not your technology</h2>
+    <p>Don't lead with agents, AI, or Claude. Lead with their margin problem.</p>
+    <p><strong>Their reality:</strong> Clients want more variants, faster turnaround, and deeper analysis — for the same budget. Team is stretched. Reporting eats 30% of analyst time. Strategy gets squeezed into half-day workshops instead of proper research cycles. Junior staff write copy that needs 3 rounds of revision.</p>
+    <p><strong>Your opening line:</strong> "What if your team could focus on client relationships and creative judgment — and everything else was drafted before they sit down?"</p>
+    <p><strong>Then show them this document.</strong> Walk through the mapping table. Let them point at the tasks that hurt most. That's your POC scope.</p>
+  </div>
+
+  <div class="footer">Kirk &amp; Blackbeard · Command Center · April 2026</div>
+
+</div>
+</body>
+</html>

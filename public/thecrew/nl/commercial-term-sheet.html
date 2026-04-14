@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K&B Command Center — Commercieel Termsheet</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --ocean:     #0D1B2A;
+    --ocean-mid: #152436;
+    --ocean-l:   #1E3347;
+    --paradise:  #00DEFF;
+    --red:       #FF0066;
+    --gold:      #FFB400;
+    --green:     #00FF99;
+    --text-dim:  rgba(255,255,255,0.38);
+    --text-mid:  rgba(255,255,255,0.65);
+    --text:      #ffffff;
+    --border:    rgba(255,255,255,0.07);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--ocean);
+    font-family: 'Inter', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 48px 24px 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .page {
+    max-width: 820px;
+    width: 100%;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .wordmark {
+    font-size: 11px; font-weight: 800; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--text-dim); margin-bottom: 16px;
+  }
+  .wordmark span { color: var(--red); }
+  .header h1 {
+    font-size: 30px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2;
+  }
+  .header h1 em { color: var(--paradise); font-style: normal; }
+  .header .sub {
+    font-size: 14px; color: var(--text-mid); margin-top: 10px; line-height: 1.6;
+  }
+  .header .doc-type {
+    display: inline-block; margin-top: 16px; padding: 4px 14px;
+    border-radius: 999px; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    background: rgba(255,180,0,0.1); border: 1px solid rgba(255,180,0,0.25); color: var(--gold);
+  }
+
+  /* Section */
+  .section { margin-bottom: 36px; }
+  .section-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--text-dim); margin-bottom: 16px;
+  }
+  .section h2 {
+    font-size: 18px; font-weight: 800; margin-bottom: 12px;
+  }
+  .section h2 em { color: var(--paradise); font-style: normal; }
+  .section p {
+    font-size: 13.5px; color: var(--text-mid); line-height: 1.7; margin-bottom: 10px;
+  }
+  .section p strong { color: var(--text); font-weight: 600; }
+
+  /* Cards */
+  .card {
+    background: var(--ocean-mid); border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px 28px; margin-bottom: 14px;
+  }
+  .card h3 {
+    font-size: 15px; font-weight: 700; margin-bottom: 8px; color: var(--text);
+  }
+  .card p {
+    font-size: 13px; color: var(--text-mid); line-height: 1.65; margin-bottom: 0;
+  }
+  .card .price {
+    font-size: 22px; font-weight: 800; color: var(--paradise); margin-bottom: 4px;
+  }
+  .card .price-note {
+    font-size: 11px; color: var(--text-dim); font-weight: 500;
+  }
+
+  /* Phase indicator */
+  .phase-tag {
+    display: inline-block; padding: 3px 10px; border-radius: 999px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  .tag-pilot { background: rgba(0,222,255,0.1); color: var(--paradise); border: 1px solid rgba(0,222,255,0.2); }
+  .tag-scale { background: rgba(255,180,0,0.1); color: var(--gold); border: 1px solid rgba(255,180,0,0.2); }
+  .tag-usage { background: rgba(0,255,153,0.1); color: var(--green); border: 1px solid rgba(0,255,153,0.2); }
+
+  /* Grid */
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  /* Timeline */
+  .timeline {
+    display: flex; gap: 0; position: relative;
+    padding: 20px 0;
+  }
+  .timeline::before {
+    content: ''; position: absolute; top: 50%; left: 0; right: 0;
+    height: 2px; background: var(--border); transform: translateY(-50%);
+  }
+  .tl-step {
+    flex: 1; text-align: center; position: relative; z-index: 1;
+  }
+  .tl-dot {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; margin: 0 auto 8px;
+    border: 2px solid var(--border); background: var(--ocean-mid);
+  }
+  .tl-dot.active { border-color: var(--paradise); background: rgba(0,222,255,0.1); }
+  .tl-label {
+    font-size: 11px; font-weight: 700; color: var(--text-mid);
+  }
+  .tl-sub {
+    font-size: 10px; color: var(--text-dim); margin-top: 2px;
+  }
+
+  /* Table */
+  .spec-table {
+    width: 100%; border-collapse: collapse;
+    background: var(--ocean-mid); border-radius: 14px; overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .spec-table th {
+    text-align: left; padding: 12px 18px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,0.02);
+  }
+  .spec-table td {
+    padding: 12px 18px; font-size: 13px; color: var(--text-mid);
+    border-bottom: 1px solid var(--border); vertical-align: top;
+  }
+  .spec-table tr:last-child td { border-bottom: none; }
+  .spec-table td:first-child { font-weight: 600; color: var(--text); white-space: nowrap; }
+
+  /* Highlight box */
+  .highlight {
+    background: rgba(0,222,255,0.04); border: 1px solid rgba(0,222,255,0.15);
+    border-radius: 14px; padding: 24px 28px; margin-top: 12px;
+  }
+  .highlight p { font-size: 13px; color: var(--text-mid); line-height: 1.7; margin-bottom: 0; }
+  .highlight strong { color: var(--paradise); }
+
+  /* Divider */
+  .divider { height: 1px; background: var(--border); margin: 36px 0; }
+
+  /* Footer */
+  .footer {
+    text-align: center; margin-top: 48px; padding-top: 24px;
+    border-top: 1px solid var(--border); font-size: 11px; color: var(--text-dim);
+  }
+  .footer a { color: var(--paradise); text-decoration: none; }
+
+  @media (max-width: 768px) {
+    .grid-3 { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .timeline { flex-direction: column; gap: 16px; }
+    .timeline::before { display: none; }
+  }
+
+  /* Language Switcher */
+  .lang-switch {
+    position: fixed;
+    top: 12px;
+    right: 16px;
+    z-index: 9999;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .lang-switch a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-family: 'Inter', 'Montserrat', 'Manrope', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .lang-switch a {
+    background: rgba(0,222,255,0.08);
+    border: 1px solid rgba(0,222,255,0.2);
+    color: #00DEFF;
+  }
+  .lang-switch a:hover {
+    background: rgba(0,222,255,0.15);
+    border-color: rgba(0,222,255,0.4);
+  }
+  .lang-switch a.active {
+    background: rgba(0,222,255,0.15);
+    border-color: rgba(0,222,255,0.4);
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div class="lang-switch">
+  <a href="/thecrew/nl/commercial-term-sheet.html" class="active">NL</a>
+  <a href="/thecrew/en/commercial-term-sheet.html">EN</a>
+</div>
+
+
+<div class="page">
+
+  <!-- ── Header ── -->
+  <div class="header">
+    <div class="wordmark">Kirk <span>&amp;</span> Blackbeard</div>
+    <h1>Command Center —<br><em>Commerciële Voorwaarden</em></h1>
+    <div class="sub">Hoe je begint. Wat het kost. Wat er daarna gebeurt.</div>
+    <div class="doc-type">Termsheet · geen contract</div>
+  </div>
+
+  <!-- ── 1. What you're getting ── -->
+  <div class="section">
+    <div class="section-label">01 · Wat je krijgt</div>
+    <p>Een <strong>10-agent AI-marketingsysteem</strong> dat campagnes runt van brief tot business impact. Drie fasen (Intelligence → Execution → Performance), menselijke goedkeuring bij elke gate, merkgeheugen dat nooit afdwaalt. Je team doet het denken. Het systeem doet de productie en analyse. Jij behoudt de marge.</p>
+  </div>
+
+  <!-- ── 2. The Pilot ── -->
+  <div class="section">
+    <div class="section-label">02 · De Pilot</div>
+    <h2>4 weken. Eén klant. <em>Volledige ervaring.</em></h2>
+    <p>We nemen één brief van een van je bestaande klanten en halen die door de volledige Command Center-workflow — naast je normale proces. Dezelfde brief, dezelfde tijdlijn. Jij ziet het verschil.</p>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-step">
+      <div class="tl-dot active">W1</div>
+      <div class="tl-label">Setup</div>
+      <div class="tl-sub">Merk geladen, connectors aangesloten, brief verwerkt</div>
+    </div>
+    <div class="tl-step">
+      <div class="tl-dot active">W2</div>
+      <div class="tl-label">Fase 1</div>
+      <div class="tl-sub">Intel + Strategie → PAUSE 1 review</div>
+    </div>
+    <div class="tl-step">
+      <div class="tl-dot active">W3</div>
+      <div class="tl-label">Fase 2</div>
+      <div class="tl-sub">Campagneplan + creative + media → PAUSE 2 review</div>
+    </div>
+    <div class="tl-step">
+      <div class="tl-dot active">W4</div>
+      <div class="tl-label">Fase 3</div>
+      <div class="tl-sub">Performance-readout + experiment-backlog → Rapport</div>
+    </div>
+  </div>
+
+  <div class="card" style="border-color: rgba(0,222,255,0.2); margin-top: 20px;">
+    <div class="phase-tag tag-pilot">Pilot</div>
+    <div class="price">€2,500</div>
+    <div class="price-note">Eenmalig · dekt setup, maatwerk en alle 3 fasen voor één klantbrief</div>
+    <p style="margin-top: 12px;">Tokenkosten inbegrepen tijdens pilot. Als je binnen 30 dagen converteert naar een volledig engagement, wordt de €2.500 verrekend met de setup-fee.</p>
+  </div>
+
+  <div class="section" style="margin-top: 24px;">
+    <h2>Wat de pilot omvat</h2>
+  </div>
+
+  <table class="spec-table">
+    <tr><th>Onderdeel</th><th>Detail</th></tr>
+    <tr><td>Merk-onboarding</td><td>Merkstem, ICP en verboden vocabulaire geladen in global_brand.json</td></tr>
+    <tr><td>Connector-setup</td><td>Notion, Slack, Gmail, Google Calendar aangesloten voor de pilotklant</td></tr>
+    <tr><td>Volledige 3-fasen run</td><td>Brief → Intelligence → Strategie (PAUSE) → Campagneplan → Creative + Media (PAUSE) → Performance → Rapport</td></tr>
+    <tr><td>Menselijke checkpoints</td><td>2 reviewsessies (PAUSE 1 + PAUSE 2) waar je team goedkeurt voordat het systeem doorgaat</td></tr>
+    <tr><td>Deliverables</td><td>Strategiedocument, contentkalender, ad copy-varianten, mediaplan, performance-rapport, experiment-backlog</td></tr>
+    <tr><td>Vergelijkingsrapport</td><td>Naast elkaar: wat je team heeft geproduceerd vs. wat het Command Center heeft geproduceerd, met tijd/kosten-verschil</td></tr>
+  </table>
+
+  <div class="highlight" style="margin-top: 20px;">
+    <p><strong>Risico voor jou: bijna nul.</strong> Je investeert één brief en €2.500. Als de output niet merkbaar beter of sneller is dan je huidige proces, schudden we handen en loop je weg met de deliverables.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── 3. After the Pilot ── -->
+  <div class="section">
+    <div class="section-label">03 · Na de Pilot — Prijsmodel</div>
+    <h2>Drie lagen. <em>Helder en voorspelbaar.</em></h2>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="phase-tag tag-pilot">Eenmalig</div>
+      <h3>Setup Fee</h3>
+      <div class="price">€5,000–€15,000</div>
+      <div class="price-note">per klant onboard</div>
+      <p style="margin-top: 10px;">Brand voice geconfigureerd, connectors aangesloten, historische data geladen, kanaalmix gekalibreerd, team getraind op review-workflow. Complexiteit bepaalt waar in de range.</p>
+    </div>
+
+    <div class="card">
+      <div class="phase-tag tag-scale">Monthly</div>
+      <h3>Platform Fee</h3>
+      <div class="price">€500–€1,500</div>
+      <div class="price-note">per klant per maand</div>
+      <p style="margin-top: 10px;">Infrastructuur (hosting, database, API-baseline), systeemonderhoud, modelupdates, doorlopende ondersteuning. Inclusief tokenbudget dat standaard campagnevolume dekt.</p>
+    </div>
+
+    <div class="card">
+      <div class="phase-tag tag-usage">Gebruik</div>
+      <h3>Overage</h3>
+      <div class="price">Cost + 35%</div>
+      <div class="price-note">boven maandelijks tokenbudget</div>
+      <p style="margin-top: 10px;">Transparante doorberekening van Claude API-tokenkosten met een vaste marge. Drukke maanden (lanceringen, multi-variant testen) kosten meer. Rustige maanden kosten minder. Je ziet altijd de breakdown.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── 4. Unit economics ── -->
+  <div class="section">
+    <div class="section-label">04 · De Marge-berekening</div>
+    <h2>Waarom dit <em>voor jou werkt</em></h2>
+    <p>De commerciële case voor het bureau gaat niet over de technologie — het gaat over wat het doet met je marge.</p>
+  </div>
+
+  <table class="spec-table">
+    <tr><th>Scenario</th><th>Zonder Command Center</th><th>Met Command Center</th></tr>
+    <tr>
+      <td>Campagne-opzettijd</td>
+      <td>3–5 dagen (strateeg + copywriter + mediaplanner)</td>
+      <td>4–8 uur (systeem + één reviewsessie)</td>
+    </tr>
+    <tr>
+      <td>Copy-varianten per cyclus</td>
+      <td>3–5 (waar de copywriter tijd voor heeft)</td>
+      <td>15–25 (systeem genereert, mens cureert)</td>
+    </tr>
+    <tr>
+      <td>Performance-analyse</td>
+      <td>Wekelijks handmatig ophalen, analist schrijft verhaal</td>
+      <td>Geautomatiseerd trendverhaal + hypotheseregister, analist reviewt</td>
+    </tr>
+    <tr>
+      <td>Maandelijkse klantkosten</td>
+      <td>€8.000–€15.000 (teamuren)</td>
+      <td>€8.000–€15.000 (zelfde prijs voor klant)</td>
+    </tr>
+    <tr>
+      <td>Je leveringskosten</td>
+      <td>€6.000–€12.000 (salarissen, overhead)</td>
+      <td>€2.000–€4.000 (platform + reviewtijd)</td>
+    </tr>
+    <tr>
+      <td style="color: var(--green); font-weight: 800;">Bruto marge</td>
+      <td>25–35%</td>
+      <td style="color: var(--green); font-weight: 700;">60–75%</td>
+    </tr>
+  </table>
+
+  <div class="highlight" style="margin-top: 20px;">
+    <p>Je mensen stoppen met productie. Ze gaan cureren en klantrelaties onderhouden — de onderdelen die daadwerkelijk accounts behouden. Het Command Center handelt het zware werk af.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── 5. What you provide ── -->
+  <div class="section">
+    <div class="section-label">05 · Wat We Van Je Nodig Hebben</div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>Voor de pilot</h3>
+      <p>Eén klantbrief, brand guidelines, toegang tot historische campagnedata van de klant (performance-metrics, eerder creative, doelgroepsegmenten) en één contactpersoon voor de twee reviewsessies.</p>
+    </div>
+    <div class="card">
+      <h3>Voor doorlopend</h3>
+      <p>Connectortoegang (Notion workspace, Slack-kanaal, Google Calendar), klant-brandbestanden per onboarding en commitment aan de reviewcadans — het systeem pauzeert voor menselijke goedkeuring, dus reactietijd beïnvloedt de doorvoer.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── 6. What stays yours ── -->
+  <div class="section">
+    <div class="section-label">06 · Eigendom &amp; Data</div>
+  </div>
+
+  <table class="spec-table">
+    <tr><th>Asset</th><th>Eigendom</th></tr>
+    <tr><td>Campagne-outputs</td><td>Van jou. Elk strategiedocument, advertentievariant, mediaplan en rapport is eigendom van het bureau en zijn klanten.</td></tr>
+    <tr><td>Klantdata</td><td>Van jou. Verlaat nooit je infrastructuur. Het systeem leest het, slaat het nooit op na de actieve run.</td></tr>
+    <tr><td>Merkconfiguraties</td><td>Van jou. De global_brand.json en alle klant-brandbestanden zijn jouw IP.</td></tr>
+    <tr><td>Het systeem zelf</td><td>Kirk &amp; Blackbeard. Agentarchitectuur, skilldefinities, orkestratie-logica en productroadmap blijven K&B intellectueel eigendom.</td></tr>
+    <tr><td>Performancedata</td><td>Gedeeld. Geanonimiseerde, geaggregeerde systeemperformancedata (geen klantdata) mag worden gebruikt om het platform te verbeteren.</td></tr>
+  </table>
+
+  <div class="divider"></div>
+
+  <!-- ── 7. Engagement models ── -->
+  <div class="section">
+    <div class="section-label">07 · Drie Manieren om Samen te Werken</div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card" style="border-color: rgba(0,222,255,0.2);">
+      <div class="phase-tag tag-pilot">Model A</div>
+      <h3>Managed Service</h3>
+      <p style="margin-top: 8px;">K&B draait het Command Center namens jou. Je stuurt briefs, wij draaien het systeem, jij reviewt bij checkpoints. Minste inspanning voor jou. Hoogste per-klant fee.</p>
+      <p style="margin-top: 8px; font-size: 11px; color: var(--text-dim);">Best voor: bureaus die het model testen met 1–3 klanten voordat ze teamcapaciteit committeren.</p>
+    </div>
+    <div class="card" style="border-color: rgba(255,180,0,0.2);">
+      <div class="phase-tag tag-scale">Model B</div>
+      <h3>Embedded Partnership</h3>
+      <p style="margin-top: 8px;">Je team leert het systeem te bedienen. K&B regelt setup, training en doorlopende ondersteuning. Jij draait dagelijks. Lagere per-klant kosten. Je team bouwt de capability op.</p>
+      <p style="margin-top: 8px; font-size: 11px; color: var(--text-dim);">Best voor: bureaus die opschalen naar 5–15 klanten en de competentie in-house willen.</p>
+    </div>
+    <div class="card" style="border-color: rgba(0,255,153,0.2);">
+      <div class="phase-tag tag-usage">Model C</div>
+      <h3>White-Label</h3>
+      <p style="margin-top: 8px;">Het Command Center draait onder jouw merk. Je klanten zien jouw naam, jouw portaal, jouw workflow. K&B levert de infrastructuur en doorlopende ontwikkeling. Revenue share-model.</p>
+      <p style="margin-top: 8px; font-size: 11px; color: var(--text-dim);">Best voor: bureaus die AI in hun kernpropositie bouwen bij 15+ klanten.</p>
+    </div>
+  </div>
+
+  <div class="highlight" style="margin-top: 20px;">
+    <p><strong>Elk engagement begint met de pilot.</strong> Model A, B of C is een gesprek dat we voeren nadat je het systeem hebt zien werken op een echte brief. De pilot is ontworpen om je het bewijs te geven voor die beslissing.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── 8. Next step ── -->
+  <div class="section">
+    <div class="section-label">08 · Volgende Stap</div>
+    <p style="font-size: 15px;">Kies één klant. Stuur ons de brief. We hebben de pilot geschoped en ingepland binnen 48 uur.</p>
+    <p style="margin-top: 12px;">
+      <strong>Mark de Kock</strong><br>
+      <span style="color: var(--text-dim);">mark@brandpwrdmedia.com · +31 65 587 00 78</span><br>
+      <span style="color: var(--text-dim);">Kirk &amp; Blackbeard — Captains of Done</span>
+    </p>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    Kirk &amp; Blackbeard · Command Center · April 2026<br>
+    <span style="font-size: 10px; color: var(--text-dim);">Dit is een termsheet, geen bindende overeenkomst. Definitieve voorwaarden in onderling overleg.</span>
+  </div>
+
+</div>
+
+</body>
+</html>

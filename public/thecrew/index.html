@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Crew — AI Marketing Command Center</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --ocean:     #0D1B2A;
+    --ocean-mid: #152436;
+    --paradise:  #00DEFF;
+    --red:       #FF0066;
+    --text-dim:  rgba(255,255,255,0.38);
+    --text-mid:  rgba(255,255,255,0.65);
+    --text:      #ffffff;
+    --border:    rgba(255,255,255,0.07);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--ocean);
+    font-family: 'Inter', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+  }
+
+  .container {
+    text-align: center;
+    max-width: 480px;
+  }
+
+  .wordmark {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+  }
+  .wordmark span { color: var(--red); }
+
+  h1 {
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: var(--text-mid);
+    font-weight: 500;
+    margin-bottom: 48px;
+    line-height: 1.5;
+  }
+
+  .lang-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+  }
+
+  .lang-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 40px;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(0,222,255,0.25);
+    background: rgba(0,222,255,0.06);
+    color: var(--paradise);
+  }
+
+  .lang-btn:hover {
+    background: rgba(0,222,255,0.12);
+    border-color: rgba(0,222,255,0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,222,255,0.15);
+  }
+
+  .footer {
+    margin-top: 64px;
+    font-size: 11px;
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="wordmark">Kirk <span>&amp;</span> Blackbeard</div>
+  <h1>The Crew</h1>
+  <div class="subtitle">AI Marketing Command Center</div>
+
+  <div class="lang-buttons">
+    <a href="/thecrew/en/" class="lang-btn">English</a>
+    <a href="/thecrew/nl/" class="lang-btn">Nederlands</a>
+  </div>
+
+  <div class="footer">Kirk &amp; Blackbeard &mdash; Captains of Done</div>
+</div>
+
+</body>
+</html>
