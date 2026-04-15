@@ -3,45 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/svg+xml" href="/thecrew/favicon.svg">
-<link rel="icon" type="image/png" sizes="32x32" href="/thecrew/favicon-32.png">
-<link rel="apple-touch-icon" href="/thecrew/apple-touch-icon.png">
-<title>The Crew — AI Marketing &amp; Sales Command Center | markdekock.com</title>
-<meta name="description" content="Ten specialised AI agents that support your team — not replace it. From market research and strategy to creative, media and reporting. Available in English and Nederlands.">
-<meta name="robots" content="index,follow">
-<link rel="canonical" href="https://markdekock.com/thecrew/">
-<link rel="alternate" hreflang="en" href="https://markdekock.com/thecrew/en/">
-<link rel="alternate" hreflang="nl" href="https://markdekock.com/thecrew/nl/">
-<link rel="alternate" hreflang="x-default" href="https://markdekock.com/thecrew/">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="markdekock.com">
-<meta property="og:title" content="The Crew — AI Marketing &amp; Sales Command Center">
-<meta property="og:description" content="Ten specialised AI agents across three phases — Intelligence, Execution, Performance. AI that supports your team — not replaces it.">
-<meta property="og:url" content="https://markdekock.com/thecrew/">
-<meta property="og:image" content="https://markdekock.com/thecrew/og-image.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The Crew — AI Marketing & Sales Command Center by Mark de Kock">
-<meta property="og:locale" content="en_US">
-<meta property="og:locale:alternate" content="nl_NL">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="The Crew — AI Marketing &amp; Sales Command Center">
-<meta name="twitter:description" content="Ten AI agents. Three phases. AI that supports your team — not replaces it. markdekock.com / the crew.">
-<meta name="twitter:image" content="https://markdekock.com/thecrew/og-image.png">
-<script type="application/ld+json">
-{"@context":"https://schema.org","@graph":[
-  {"@type":"WebSite","@id":"https://markdekock.com/thecrew/#website","url":"https://markdekock.com/thecrew/","name":"The Crew — markdekock.com","inLanguage":["en","nl"],"publisher":{"@type":"Person","name":"Mark de Kock","url":"https://markdekock.com/"}},
-  {"@type":"Person","@id":"https://markdekock.com/#person","name":"Mark de Kock","url":"https://markdekock.com/","jobTitle":"AI mentor and strategist","description":"AI mentor and strategist. Builder of The Crew, a ten-agent AI marketing & sales command center."}
-]}
-</script>
+<title>The Crew — AI Marketing Command Center</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
   :root {
     --ocean:     #0D1B2A;
     --ocean-mid: #152436;
+    --ocean-l:   #1E3347;
+    --ocean-ll:  #243D56;
     --paradise:  #00DEFF;
     --red:       #FF0066;
+    --gold:      #FFB400;
+    --green:     #00FF99;
+    --purple:    #9B6DFF;
     --text-dim:  rgba(255,255,255,0.38);
     --text-mid:  rgba(255,255,255,0.65);
     --text:      #ffffff;
@@ -55,123 +30,1847 @@
     font-family: 'Inter', sans-serif;
     color: var(--text);
     min-height: 100vh;
+  }
+
+  /* ── Navigation ─────────────────────────── */
+  .tab-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(13,27,42,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0;
+    padding: 0 24px;
+  }
+
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .nav-breadcrumb {
+    font-size: 12px;
+    color: var(--text-mid);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-breadcrumb:hover { color: var(--paradise); }
+
+  .nav-center {
+    display: flex;
+    gap: 0;
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .nav-cta {
+    font-size: 12px;
+    color: var(--paradise);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+  }
+  .nav-cta:hover { color: var(--text); }
+
+  .tab-btn {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 16px 28px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .tab-btn:hover { color: var(--text-mid); }
+  .tab-btn.active { color: var(--paradise); border-bottom-color: var(--paradise); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ══════════════════════════════════════════
+     TAB 1 — THE CREW
+     ══════════════════════════════════════════ */
+  .crew {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 56px 24px 80px;
+  }
+
+  .crew-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .crew-label {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+  }
+  .crew-header h1 {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .crew-header .subtitle {
+    font-size: 16px;
+    color: var(--text-mid);
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  .crew-section {
+    margin-bottom: 48px;
+  }
+  .crew-section h2 {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+  .crew-section p {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.75;
+    margin-bottom: 14px;
+  }
+  .crew-section p strong { color: var(--text); font-weight: 600; }
+
+  /* Callout box */
+  .crew-callout {
+    background: rgba(0,222,255,0.04);
+    border: 1px solid rgba(0,222,255,0.15);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin: 24px 0;
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.7;
+    font-weight: 500;
+  }
+  .crew-callout strong { color: var(--paradise); font-weight: 600; }
+
+  /* Three phases cards */
+  .phases-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin: 28px 0;
+  }
+  .phase-card {
+    background: var(--ocean-mid);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .phase-card-num {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .phase-card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .phase-card-desc {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+  .phase-card-example {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(0,222,255,0.1);
+  }
+
+  /* Scenario cards */
+  .scenarios-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin: 28px 0;
+  }
+  .scenario-card {
+    background: var(--ocean-mid);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .scenario-card h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .scenario-card p {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.6;
+    margin-bottom: 0;
+  }
+  .scenario-link {
+    font-size: 12px;
+    color: var(--paradise);
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .scenario-link:hover { color: var(--text); }
+
+  /* Learn more cards */
+  .learn-more-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 28px 0;
+  }
+  .learn-more-card {
+    background: var(--ocean-mid);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px 20px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .learn-more-card:hover { border-color: rgba(0,222,255,0.4); }
+  .learn-more-card h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--paradise);
+    margin-bottom: 8px;
+  }
+  .learn-more-card p {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.6;
+    margin-bottom: 0;
+  }
+
+  /* Timeline */
+  .timeline {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin: 28px 0;
+  }
+  .timeline-card {
+    background: var(--ocean-mid);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 22px;
+  }
+  .timeline-run {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .timeline-text {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+
+  /* Standalone agents */
+  .standalone-agents {
+    background: rgba(155,109,255,0.04);
+    border: 1px solid rgba(155,109,255,0.12);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin: 32px 0;
+  }
+  .standalone-agents h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  .standalone-agents p {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.65;
+    margin-bottom: 16px;
+  }
+  .standalone-examples {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .example-card {
+    background: rgba(155,109,255,0.08);
+    border: 1px solid rgba(155,109,255,0.15);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .example-card-icon {
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+  .example-card-text {
+    font-size: 12px;
+    color: var(--text-mid);
+    line-height: 1.5;
+  }
+
+  /* Connection section */
+  .connection-section {
+    background: rgba(255,0,102,0.05);
+    border: 1px solid rgba(255,0,102,0.12);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin: 32px 0;
+  }
+  .connection-section h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  .connection-section p {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.65;
+    margin-bottom: 20px;
+  }
+  .connection-links {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+  .connection-link-card {
+    background: rgba(255,0,102,0.08);
+    border: 1px solid rgba(255,0,102,0.15);
+    border-radius: 12px;
+    padding: 14px 16px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .connection-link-card:hover { border-color: rgba(255,0,102,0.4); }
+  .connection-link-card p {
+    font-size: 12px;
+    color: var(--text-mid);
+    line-height: 1.5;
+    margin-bottom: 0;
+  }
+
+  /* CTA block */
+  .crew-cta {
+    text-align: center;
+    margin-top: 48px;
+    padding: 36px 32px;
+    background: rgba(0,222,255,0.05);
+    border: 1px solid rgba(0,222,255,0.15);
+    border-radius: 16px;
+  }
+  .crew-cta h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  .crew-cta p {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.7;
+    margin-bottom: 8px;
+  }
+  .crew-cta .cta-button {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 12px 28px;
+    background: var(--paradise);
+    color: var(--ocean);
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .crew-cta .cta-button:hover { background: rgba(0,222,255,0.8); }
+  .crew-cta .note {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 16px;
+    font-weight: 500;
+  }
+
+  /* ── Use-case selector ── */
+  .usecase-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .usecase-btn {
+    background: var(--ocean-mid);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+  }
+  .usecase-btn:hover { border-color: rgba(255,255,255,0.15); }
+  .usecase-btn.active { border-color: var(--paradise); background: rgba(0,222,255,0.06); }
+  .usecase-icon { font-size: 28px; margin-bottom: 10px; }
+  .usecase-label { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .usecase-sub { font-size: 11.5px; color: var(--text-dim); line-height: 1.5; }
+
+  .usecase-content { display: none; }
+  .usecase-content.active { display: block; }
+
+  .phase-pause {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: var(--gold);
+    padding: 8px 0;
+  }
+
+  .key-agents-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+  }
+  .key-agent {
+    background: var(--ocean-mid);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 12px;
+    color: var(--text-mid);
+    line-height: 1.5;
+  }
+  .key-agent strong { color: var(--text); font-size: 13px; }
+  .key-agent span { color: var(--text-dim); }
+
+  @media (max-width: 768px) {
+    .usecase-selector { grid-template-columns: 1fr; }
+    .key-agents-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ══════════════════════════════════════════
+     TAB 2 — ARCHITECTURE (The System)
+     ══════════════════════════════════════════ */
+  .arch {
+    padding: 48px 24px 80px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 48px 24px;
   }
 
-  .container {
+  .page-header {
     text-align: center;
-    max-width: 480px;
+    margin-bottom: 56px;
+    max-width: 720px;
   }
-
   .wordmark {
     font-size: 11px;
     font-weight: 800;
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--text-dim);
-    margin-bottom: 24px;
+    margin-bottom: 16px;
   }
   .wordmark span { color: var(--red); }
-
-  h1 {
-    font-size: 48px;
+  .page-header h1 {
+    font-size: 30px;
     font-weight: 800;
     letter-spacing: -0.02em;
-    margin-bottom: 12px;
+    line-height: 1.15;
   }
-
-  .subtitle {
-    font-size: 16px;
+  .page-header h1 em { color: var(--paradise); font-style: normal; }
+  .page-header p {
+    margin-top: 10px;
+    font-size: 14px;
     color: var(--text-mid);
-    font-weight: 500;
-    margin-bottom: 48px;
-    line-height: 1.5;
+    line-height: 1.6;
   }
 
-  .lang-buttons {
+  .main {
+    width: 100%;
+    max-width: 960px;
     display: flex;
-    gap: 16px;
-    justify-content: center;
+    flex-direction: column;
+    gap: 24px;
   }
 
-  .lang-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px 40px;
-    border-radius: 12px;
-    font-family: 'Inter', sans-serif;
-    font-size: 15px;
+  .section-label {
+    font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.02em;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    border: 1px solid rgba(0,222,255,0.25);
-    background: rgba(0,222,255,0.06);
-    color: var(--paradise);
-  }
-
-  .lang-btn:hover {
-    background: rgba(0,222,255,0.12);
-    border-color: rgba(0,222,255,0.5);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0,222,255,0.15);
-  }
-
-  .footer {
-    margin-top: 64px;
-    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
     color: var(--text-dim);
-    font-weight: 500;
+    margin-bottom: 12px;
+    padding-left: 4px;
+  }
+
+  /* Hub */
+  .hub-row { display: flex; gap: 16px; align-items: stretch; }
+  .hub-card {
+    flex: 0 0 260px;
+    background: var(--ocean-mid);
+    border: 1px solid rgba(0,222,255,0.25);
+    border-radius: 20px;
+    padding: 28px 24px;
+    position: relative;
+    overflow: hidden;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .hub-card::before {
+    content: '';
+    position: absolute; top: -60px; left: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(0,222,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hub-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    background: rgba(0,222,255,0.1); border: 1px solid rgba(0,222,255,0.2);
+    display: flex; align-items: center; justify-content: center; font-size: 24px;
+  }
+  .hub-name { font-size: 18px; font-weight: 800; letter-spacing: -0.01em; color: var(--paradise); }
+  .hub-sub { font-size: 12px; color: var(--text-dim); font-weight: 500; margin-top: 2px; }
+  .model-badge {
+    display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px;
+    border-radius: 999px; font-size: 11px; font-weight: 700;
+    background: rgba(0,222,255,0.08); border: 1px solid rgba(0,222,255,0.15);
+    color: var(--paradise); width: fit-content;
+  }
+  .model-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--paradise); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+  .hub-stats { display: flex; flex-direction: column; gap: 6px; padding-top: 4px; border-top: 1px solid var(--border); margin-top: auto; }
+  .hub-stat { display: flex; justify-content: space-between; font-size: 11.5px; }
+  .hub-stat-label { color: var(--text-dim); }
+  .hub-stat-value { color: var(--text-mid); font-weight: 600; }
+
+  /* Agent cards */
+  .agents-container { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+  .agents-phase { display: flex; flex-direction: column; gap: 12px; }
+  .phase-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .agent-card {
+    background: var(--ocean-mid); border: 1px solid var(--border);
+    border-radius: 14px; padding: 16px 18px; transition: border-color 0.2s;
+  }
+  .agent-card:hover { border-color: rgba(255,255,255,0.16); }
+  .agent-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .agent-icon {
+    width: 34px; height: 34px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;
+  }
+  .agent-name { font-size: 13px; font-weight: 700; color: var(--text); }
+  .agent-callsign { font-size: 10px; font-weight: 600; color: var(--text-dim); margin-top: 1px; }
+  .agent-desc { font-size: 11.5px; color: var(--text-dim); line-height: 1.55; margin-bottom: 8px; }
+  .agent-tag {
+    display: inline-block; padding: 2px 8px; border-radius: 999px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
+  }
+
+  /* Memory */
+  .memory-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .memory-card {
+    background: rgba(255,0,102,0.06); border: 1px solid rgba(255,0,102,0.15);
+    border-radius: 14px; padding: 18px 20px;
+  }
+  .memory-card-icon { font-size: 18px; margin-bottom: 8px; }
+  .memory-card-name { font-size: 13px; font-weight: 700; color: #FF6699; margin-bottom: 4px; }
+  .memory-card-desc { font-size: 11.5px; color: var(--text-dim); line-height: 1.5; }
+  .memory-card-meta { margin-top: 8px; font-size: 10.5px; color: rgba(255,102,153,0.6); font-weight: 600; }
+
+  /* Agents training table */
+  .agents-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin: 24px 0;
+  }
+  .agents-table th {
+    text-align: left;
+    padding: 14px 16px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+  }
+  .agents-table td {
+    padding: 14px 16px;
+    font-size: 12.5px;
+    color: var(--text-mid);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.55;
+    background: var(--ocean-mid);
+  }
+  .agents-table tr:last-child td { border-bottom: none; }
+  .agents-table td:first-child { font-weight: 600; color: var(--text); width: 160px; }
+  .agents-table strong { color: var(--text); font-weight: 600; }
+
+  /* Connections */
+  .connections-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .conn-card {
+    background: var(--ocean-mid); border-radius: 14px; padding: 16px 16px 14px;
+    border: 1px solid var(--border); position: relative;
+  }
+  .conn-status {
+    position: absolute; top: 12px; right: 12px;
+    display: flex; align-items: center; gap: 4px;
+    font-size: 9.5px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 2px 7px; border-radius: 999px;
+  }
+  .status-live   { background: rgba(0,255,153,0.1); color: var(--green); }
+  .status-next   { background: rgba(255,180,0,0.1); color: var(--gold); }
+  .status-future { background: rgba(255,255,255,0.05); color: var(--text-dim); }
+  .status-dot { width: 5px; height: 5px; border-radius: 50%; }
+  .dot-live   { background: var(--green); animation: pulse 2s infinite; }
+  .dot-next   { background: var(--gold); }
+  .dot-future { background: var(--text-dim); }
+  .conn-icon { font-size: 22px; margin-bottom: 8px; }
+  .conn-name { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .conn-type { font-size: 10px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+  .conn-desc { font-size: 11px; color: var(--text-dim); line-height: 1.5; }
+  .conn-caps { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 4px; }
+  .conn-cap {
+    font-size: 10px; padding: 2px 7px; border-radius: 999px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: var(--text-dim);
+  }
+
+  /* Workspace files */
+  .files-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .file-card {
+    background: var(--ocean-mid); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 16px; display: flex; align-items: flex-start; gap: 10px;
+  }
+  .file-ext {
+    width: 32px; height: 36px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 800; letter-spacing: 0.04em; flex-shrink: 0;
+  }
+  .ext-json  { background: rgba(255,180,0,0.12); color: var(--gold); }
+  .ext-md    { background: rgba(0,222,255,0.1);  color: var(--paradise); }
+  .ext-docx  { background: rgba(100,100,255,0.1); color: #8888FF; }
+  .ext-html  { background: rgba(255,0,102,0.1);  color: #FF6699; }
+  .file-info { flex: 1; min-width: 0; }
+  .file-name { font-size: 11.5px; font-weight: 700; color: var(--text-mid); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .file-desc { font-size: 10.5px; color: var(--text-dim); line-height: 1.4; margin-top: 3px; }
+  .file-version { font-size: 9.5px; font-weight: 600; color: var(--text-dim); margin-top: 4px; }
+
+  /* Flow */
+  .flow-row { background: var(--ocean-mid); border: 1px solid var(--border); border-radius: 16px; padding: 24px 28px; }
+  .flow-inner { display: flex; align-items: center; gap: 0; flex-wrap: wrap; justify-content: center; }
+  .flow-node { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .flow-bubble {
+    width: 52px; height: 52px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+    border: 1px solid rgba(255,255,255,0.1); background: var(--ocean-l);
+  }
+  .flow-bubble.phase1 { background: rgba(0,222,255,0.1); border-color: rgba(0,222,255,0.3); }
+  .flow-bubble.phase2 { background: rgba(255,180,0,0.1); border-color: rgba(255,180,0,0.3); }
+  .flow-bubble.phase3 { background: rgba(0,255,153,0.1); border-color: rgba(0,255,153,0.3); }
+  .flow-bubble.pause  { background: rgba(255,180,0,0.15); border-color: rgba(255,180,0,0.4); }
+  .flow-node-label {
+    font-size: 10px; font-weight: 700; color: var(--text-dim);
+    text-align: center; letter-spacing: 0.04em; max-width: 56px; line-height: 1.3;
+  }
+  .flow-arrow { padding: 0 8px; margin-bottom: 20px; }
+  .flow-arrow-line { display: flex; align-items: center; gap: 2px; color: rgba(0,222,255,0.3); font-size: 18px; }
+  .flow-arrow-label {
+    font-size: 9px; color: var(--text-dim); text-align: center;
+    letter-spacing: 0.06em; text-transform: uppercase; max-width: 60px; line-height: 1.3; margin-top: 2px;
+  }
+
+  /* Status lights */
+  .status-row {
+    display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;
+    padding: 20px 24px; background: var(--ocean-mid); border: 1px solid var(--border); border-radius: 14px;
+  }
+  .status-light { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; }
+  .status-light-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-executing { background: var(--green); animation: pulse 1s infinite; }
+  .dot-review { background: var(--gold); }
+  .dot-gap { background: #FF8800; }
+  .dot-halted { background: var(--red); }
+
+  /* Legend */
+  .legend {
+    display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;
+    margin-top: 40px; padding: 16px 24px; border-radius: 12px;
+    border: 1px solid var(--border); background: rgba(255,255,255,0.02);
+  }
+  .legend-item { display: flex; align-items: center; gap: 7px; font-size: 11px; color: var(--text-dim); font-weight: 500; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* Footer */
+  .footer {
+    text-align: center; margin-top: 48px; padding-top: 24px;
+    border-top: 1px solid var(--border); font-size: 11px; color: var(--text-dim); font-weight: 500;
+  }
+
+  /* ── Operations tab ─────────────────────── */
+  .ops { padding: 48px 24px 80px; display: flex; flex-direction: column; align-items: center; }
+  .ops-inner { max-width: 1100px; width: 100%; }
+  .ops-intro { max-width: 780px; margin-bottom: 32px; }
+  .ops-intro p { font-size: 13.5px; color: var(--text-mid); line-height: 1.7; margin-bottom: 10px; }
+  .ops-intro p strong { color: var(--text); font-weight: 600; }
+
+  .map-table { width: 100%; border-collapse: separate; border-spacing: 0; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 32px; }
+  .map-table th { text-align: left; padding: 14px 16px; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border); }
+  .map-table td { padding: 14px 16px; font-size: 12.5px; color: var(--text-mid); border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.55; background: var(--ocean-mid); }
+  .map-table tr:last-child td { border-bottom: none; }
+  .map-table td:first-child { font-weight: 600; color: var(--text); width: 170px; }
+
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 9px; font-weight: 700; letter-spacing: 0.06em; margin-right: 4px; margin-bottom: 3px; }
+  .tag-auto { background: rgba(0,255,153,0.1); color: var(--green); border: 1px solid rgba(0,255,153,0.2); }
+  .tag-assist { background: rgba(255,180,0,0.1); color: var(--gold); border: 1px solid rgba(255,180,0,0.2); }
+  .tag-human { background: rgba(255,0,102,0.08); color: #FF6699; border: 1px solid rgba(255,0,102,0.15); }
+  .tag-agent { background: rgba(0,222,255,0.08); color: var(--paradise); border: 1px solid rgba(0,222,255,0.2); }
+  .fn-row td { background: rgba(0,222,255,0.04) !important; border-bottom: 1px solid rgba(0,222,255,0.1) !important; }
+  .fn-row td:first-child { color: var(--paradise) !important; font-size: 13px; font-weight: 800; letter-spacing: 0.04em; }
+  .time-save { font-size: 11px; font-weight: 700; color: var(--green); }
+  .freq { font-size: 10px; color: var(--text-dim); font-weight: 600; }
+  .ops-highlight { background: rgba(0,222,255,0.04); border: 1px solid rgba(0,222,255,0.15); border-radius: 14px; padding: 24px 28px; margin-top: 16px; margin-bottom: 32px; }
+  .ops-highlight p { font-size: 13px; color: var(--text-mid); line-height: 1.7; margin-bottom: 0; }
+  .ops-highlight strong { color: var(--paradise); }
+  .ops-divider { height: 1px; background: var(--border); margin: 36px 0; }
+  .ops-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+  .ops-legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-dim); }
+  .poc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+  .poc-card { background: var(--ocean-mid); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px; }
+  .poc-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+  .poc-card p { font-size: 12.5px; color: var(--text-mid); line-height: 1.6; margin-bottom: 0; }
+  .poc-card .week { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .tab-nav { flex-direction: column; gap: 12px; padding: 12px 24px; }
+    .nav-left { width: 100%; }
+    .nav-center { width: 100%; justify-content: center; }
+    .nav-right { width: 100%; justify-content: center; }
+    .hub-row { flex-direction: column; }
+    .phase-grid { grid-template-columns: 1fr; }
+    .memory-row { grid-template-columns: 1fr; }
+    .connections-grid { grid-template-columns: repeat(2, 1fr); }
+    .files-row { grid-template-columns: repeat(2, 1fr); }
+    .phases-container { grid-template-columns: 1fr; }
+    .scenarios-container { grid-template-columns: 1fr; }
+    .learn-more-container { grid-template-columns: 1fr; }
+    .connection-links { grid-template-columns: 1fr; }
+    .timeline { grid-template-columns: 1fr; }
+    .standalone-examples { grid-template-columns: 1fr; }
+    .poc-grid { grid-template-columns: 1fr; }
+    .map-table td:first-child { white-space: normal; }
   }
 </style>
 </head>
 <body>
 
-<!-- markdekock.com back-link -->
-<a class="mdk-back-home" href="/" title="Back to markdekock.com">
-  <span aria-hidden="true">←</span>&nbsp;markdekock.com
-</a>
-<style>
-  .mdk-back-home {
-    position: fixed; top: 12px; left: 16px; z-index: 9998;
-    display: inline-flex; align-items: center; gap: 2px;
-    padding: 6px 14px; border-radius: 8px;
-    font-family: 'Inter', sans-serif;
-    font-size: 12px; font-weight: 700; letter-spacing: 0.04em;
-    text-decoration: none; color: rgba(255,255,255,0.85);
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.18);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    transition: all 0.15s ease;
-  }
-  .mdk-back-home:hover {
-    background: rgba(0,222,255,0.08);
-    border-color: rgba(0,222,255,0.5);
-    color: #00DEFF;
-  }
-  @media (max-width: 500px) {
-    .mdk-back-home { font-size: 11px; padding: 5px 10px; }
-  }
-</style>
+<!-- ── Tab navigation ── -->
+<nav class="tab-nav">
+  <div class="nav-left">
+    <a href="https://markdekock.com" class="nav-breadcrumb">← markdekock.com</a>
+  </div>
+  <div class="nav-center">
+    <button class="tab-btn active" onclick="showTab('crew')">The Crew</button>
+    <button class="tab-btn" onclick="showTab('architecture')">Het Systeem</button>
+    <button class="tab-btn" onclick="showTab('operations')">Bureau Operaties</button>
+  </div>
+  <div class="nav-right">
+    <a href="https://markdekock.com#contact" class="nav-cta">Plan een gesprek →</a>
+  </div>
+</nav>
 
-<div class="container">
-  <div class="wordmark">markdekock.com / the crew</div>
-  <h1>The Crew</h1>
-  <div class="subtitle">AI that supports your team &mdash; not replaces it</div>
+<!-- ══════════════════════════════════════════════════
+     TAB 1 — THE CREW (REWRITTEN)
+     ══════════════════════════════════════════════════ -->
+<div id="tab-crew" class="tab-content active">
+<div class="crew">
 
-  <div class="lang-buttons">
-    <a href="/thecrew/en/" class="lang-btn">English</a>
-    <a href="/thecrew/nl/" class="lang-btn">Nederlands</a>
+  <div class="crew-header">
+    <div class="crew-label">markdekock.com / the crew</div>
+    <h1>The Crew</h1>
+    <div class="subtitle">AI die meewerkt met je team — niet ervoor in de plaats</div>
   </div>
 
-  <div class="footer">markdekock.com &middot; Agent Architecture</div>
+  <!-- Use-case selector -->
+  <div class="crew-section">
+    <h2>Herken je dit?</h2>
+    <p style="color: var(--text-dim); margin-bottom: 20px;">Kies wat het dichtst bij jouw situatie past. De rest van de pagina past zich aan.</p>
+  </div>
+
+  <div class="usecase-selector">
+    <div class="usecase-btn active" onclick="selectUsecase('agency')">
+      <div class="usecase-icon">🏢</div>
+      <div class="usecase-label">Ik ben een bureau</div>
+      <div class="usecase-sub">Meer leveren, sneller schakelen, marge verbeteren</div>
+    </div>
+    <div class="usecase-btn" onclick="selectUsecase('enterprise')">
+      <div class="usecase-icon">💊</div>
+      <div class="usecase-label">Complexe organisatie</div>
+      <div class="usecase-sub">GTM-strategieën testen, stakeholders alignen, sneller lanceren</div>
+    </div>
+    <div class="usecase-btn" onclick="selectUsecase('team')">
+      <div class="usecase-icon">📈</div>
+      <div class="usecase-label">Marketing & sales team</div>
+      <div class="usecase-sub">Grip op performance, bureau-aansturing, AI in je dagelijks werk</div>
+    </div>
+  </div>
+
+  <!-- AGENCY path -->
+  <div class="usecase-content active" id="uc-agency">
+    <div class="crew-section">
+      <h2>Je team draait op volle kracht — maar de uren zijn op</h2>
+      <p>Je klanten verwachten meer. Snellere analyses, scherpere campagnes, dagelijkse optimalisatie. Maar je team heeft 60-uur weken en handmatig werk is de bottleneck. Elke nieuwe klant kost meer capaciteit die je niet hebt.</p>
+      <p>Ondertussen zit de expertise in de hoofden van je beste mensen. Als iemand vertrekt, begint de opbouw opnieuw.</p>
+    </div>
+    <div class="crew-section">
+      <h2>The Crew als operationele versneller</h2>
+      <p>10 AI-agents die de repetitieve kern van bureauwerk overnemen: concurrentie-analyse, contentproductie, media-allocatie, rapportage. Niet als vervanging van je team — als fundament eronder. Je mensen richten zich op strategie en klantrelaties. Het systeem doet het zware tilwerk.</p>
+    </div>
+    <div class="crew-callout">
+      <strong>80–120 uur besparing per campagnecyclus.</strong> Dat is geen efficiëntiewinst — dat is een nieuw businessmodel. Meer klanten, betere marge, zelfde team.
+      <div style="margin-top: 12px;"><a onclick="showTab('operations')" style="color: var(--paradise); cursor: pointer; font-size: 13px;">Bekijk de volledige operationele mapping → 24 taken, tijdsbesparing per taak</a></div>
+    </div>
+  </div>
+
+  <!-- ENTERPRISE path -->
+  <div class="usecase-content" id="uc-enterprise">
+    <div class="crew-section">
+      <h2>Je beslissingen kosten maanden — en je test ze pas in de markt</h2>
+      <p>Een nieuwe productlancering. Een GTM-strategie voor een nieuw segment. Een herpositionering na een overname. De analyse duurt weken. Het alignment-proces met stakeholders duurt maanden. En pas als je live gaat, ontdek je of je aannames klopten.</p>
+      <p>Ondertussen verandert de markt sneller dan je besluitvorming.</p>
+    </div>
+    <div class="crew-section">
+      <h2>The Crew als strategisch sparringteam</h2>
+      <p>10 AI-agents die je strategische scenario's toetsen voordat je ze in de markt brengt. De Lookout analyseert je interne data. De Spyglass scant de concurrentie. De Navigator bouwt een falsifieerbare positionering — inclusief het sterkste tegenargument. Je stakeholders krijgen geen presentaties, maar uitgedaagde strategieën.</p>
+    </div>
+    <div class="crew-callout">
+      <strong>Test je GTM-strategie in dagen, niet in kwartalen.</strong> Elke agent verdedigt één perspectief. Samen dwingen ze je tot scherpere keuzes voordat er een euro naar de markt gaat.
+    </div>
+  </div>
+
+  <!-- TEAM path -->
+  <div class="usecase-content" id="uc-team">
+    <div class="crew-section">
+      <h2>Je hebt een bureau, een team, en te weinig zicht op wat werkt</h2>
+      <p>Je bureau stuurt maandelijkse rapporten maar je wilt dagelijks weten wat er speelt. Je hebt data in vijf platforms maar niemand die het verbindt. En je briefings naar het bureau zijn gebaseerd op onderbuikgevoel, niet op inzicht.</p>
+      <p>Het resultaat: je betaalt voor een proces waar je geen grip op hebt.</p>
+    </div>
+    <div class="crew-section">
+      <h2>The Crew als dagelijks fundament</h2>
+      <p>10 AI-agents die je dagelijks bijpraten, je briefings versterken, en je bureau scherp houden. De Chronometer levert elke ochtend een performance-update. De Navigator zorgt dat je briefing onderbouwd is met data. De Ship's Log maakt van ruwe cijfers een verhaal dat je board begrijpt.</p>
+    </div>
+    <div class="crew-callout">
+      <strong>Van reactief naar proactief.</strong> Je wacht niet meer op het rapport van je bureau. Je stuurt het gesprek — met data, richting en concrete vragen. Dat verandert de relatie.
+    </div>
+  </div>
+
+  <!-- Three phases — examples adapt per use case -->
+  <div class="crew-section">
+    <h2>Drie fasen — jij beslist tussen elke stap</h2>
+  </div>
+
+  <div class="phases-container">
+    <div class="phase-card">
+      <div class="phase-card-num">Phase 1</div>
+      <div class="phase-card-title">Intelligence</div>
+      <div class="phase-card-desc">Begrijp je markt voordat je een euro uitgeeft</div>
+      <div class="phase-card-example uc-ex agency-ex">Concurrentie-audit voor 3 klanten tegelijk in één ochtend. Met positioneringsgaten en kooptriggers.</div>
+      <div class="phase-card-example uc-ex enterprise-ex" style="display:none">GTM-analyse voor een nieuw segment: marktgrootte, concurrenten, positioneringsopties — in uren, niet weken.</div>
+      <div class="phase-card-example uc-ex team-ex" style="display:none">Je funnel doorgelicht: waar lekt budget, welke kanalen presteren, wat doet de concurrentie anders.</div>
+    </div>
+    <div class="phase-pause">⏸ Jij keurt goed</div>
+    <div class="phase-card">
+      <div class="phase-card-num">Phase 2</div>
+      <div class="phase-card-title">Execution</div>
+      <div class="phase-card-desc">Strategie wordt campagne, content en mediaplan</div>
+      <div class="phase-card-example uc-ex agency-ex">Volledige campagne-output per klant: contentkalender, 25 ad copy varianten, mediaplan met budgetverdeling.</div>
+      <div class="phase-card-example uc-ex enterprise-ex" style="display:none">Drie scenario's uitgewerkt tot concrete campagneplannen. Stakeholders kiezen op basis van data, niet slides.</div>
+      <div class="phase-card-example uc-ex team-ex" style="display:none">Je briefing naar het bureau — maar nu onderbouwd met data, positionering en concrete KPI-targets.</div>
+    </div>
+    <div class="phase-pause">⏸ Jij keurt goed</div>
+    <div class="phase-card">
+      <div class="phase-card-num">Phase 3</div>
+      <div class="phase-card-title">Performance</div>
+      <div class="phase-card-desc">Wat werkte, wat niet, en wat nu</div>
+      <div class="phase-card-example uc-ex agency-ex">Dagelijks per klant: anomalieën, optimalisatiekansen, experiment-adviezen. Je team start de dag met richting.</div>
+      <div class="phase-card-example uc-ex enterprise-ex" style="display:none">Launch-resultaten binnen een week geanalyseerd. Hypotheses getoetst. Volgende stap helder vóór de board het vraagt.</div>
+      <div class="phase-card-example uc-ex team-ex" style="display:none">Elke maandag een performance-rapport dat je bureau niet maakt. Met vragen die zij moeten beantwoorden.</div>
+    </div>
+  </div>
+
+  <!-- Key agents per use case -->
+  <div class="crew-section">
+    <h2>De agents die voor jou werken</h2>
+  </div>
+
+  <div class="usecase-content active" id="uc-agents-agency" style="margin-bottom: 28px;">
+    <div class="key-agents-grid">
+      <div class="key-agent">🗺️ <strong>Cartographer</strong><br><span>Plant je campagnes per klant</span></div>
+      <div class="key-agent">✍️ <strong>Scribe</strong><br><span>25 ad copy varianten per briefing</span></div>
+      <div class="key-agent">💰 <strong>Quartermaster</strong><br><span>Budget en kanaalverdeling</span></div>
+      <div class="key-agent">📊 <strong>Chronometer</strong><br><span>Dagelijkse performance per klant</span></div>
+      <div class="key-agent">🧪 <strong>Helmsman</strong><br><span>Test-backlog en schaaladviezen</span></div>
+      <div class="key-agent">📋 <strong>Ship's Log</strong><br><span>Klantrapportages in minuten</span></div>
+    </div>
+    <p style="font-size: 12px; color: var(--text-dim); margin-top: 12px;"><a onclick="showTab('architecture')" style="color: var(--paradise); cursor: pointer;">Bekijk alle 10 agents in detail →</a></p>
+  </div>
+
+  <div class="usecase-content" id="uc-agents-enterprise" style="margin-bottom: 28px;">
+    <div class="key-agents-grid">
+      <div class="key-agent">🔍 <strong>Lookout</strong><br><span>Interne data doorlichten</span></div>
+      <div class="key-agent">🌍 <strong>Spyglass</strong><br><span>Markt en concurrentie scannen</span></div>
+      <div class="key-agent">🧭 <strong>Navigator</strong><br><span>Falsifieerbare strategie bouwen</span></div>
+      <div class="key-agent">📋 <strong>Ship's Log</strong><br><span>Stakeholder-rapportage</span></div>
+      <div class="key-agent">✍️ <strong>Scribe</strong><br><span>Positioneringsdocumenten</span></div>
+      <div class="key-agent">🧪 <strong>Helmsman</strong><br><span>Scenario's testen en vergelijken</span></div>
+    </div>
+    <p style="font-size: 12px; color: var(--text-dim); margin-top: 12px;"><a onclick="showTab('architecture')" style="color: var(--paradise); cursor: pointer;">Bekijk alle 10 agents in detail →</a></p>
+  </div>
+
+  <div class="usecase-content" id="uc-agents-team" style="margin-bottom: 28px;">
+    <div class="key-agents-grid">
+      <div class="key-agent">📊 <strong>Chronometer</strong><br><span>Dagelijkse performance-updates</span></div>
+      <div class="key-agent">🧭 <strong>Navigator</strong><br><span>Briefings onderbouwen met data</span></div>
+      <div class="key-agent">🧪 <strong>Helmsman</strong><br><span>Experimenteren en optimaliseren</span></div>
+      <div class="key-agent">📋 <strong>Ship's Log</strong><br><span>Executive summaries voor de board</span></div>
+      <div class="key-agent">🔍 <strong>Lookout</strong><br><span>Je funnel en conversies volgen</span></div>
+      <div class="key-agent">🌍 <strong>Spyglass</strong><br><span>Concurrentie monitoren</span></div>
+    </div>
+    <p style="font-size: 12px; color: var(--text-dim); margin-top: 12px;"><a onclick="showTab('architecture')" style="color: var(--paradise); cursor: pointer;">Bekijk alle 10 agents in detail →</a></p>
+  </div>
+
+  <!-- How it gets smarter -->
+  <div class="crew-section">
+    <h2>Hoe het slimmer wordt</h2>
+    <p style="margin-bottom: 20px;">Kennis accumuleert met elke run. Je systeem leert van je data en jouw antwoorden.</p>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-card">
+      <div class="timeline-run">Run 1</div>
+      <div class="timeline-text">Draait op benchmarks. Ziet waar je budget weglekt.</div>
+    </div>
+    <div class="timeline-card">
+      <div class="timeline-run">Run 3</div>
+      <div class="timeline-text">Draait op jouw data. Herkent jouw patronen.</div>
+    </div>
+    <div class="timeline-card">
+      <div class="timeline-run">Run 10</div>
+      <div class="timeline-text">Kent je business beter dan een nieuwe hire.</div>
+    </div>
+  </div>
+
+  <!-- Standalone agents -->
+  <div class="standalone-agents">
+    <h3>Zelfstandige Agents</h3>
+    <p>Niet elk vraagstuk heeft het volledige systeem nodig. Individuele agents draaien ook zelfstandig — als scheduled tasks die dagelijks, wekelijks of op aanvraag hun werk doen.</p>
+    <div class="standalone-examples">
+      <div class="example-card">
+        <div class="example-card-icon">📊</div>
+        <div class="example-card-text"><strong>Dagelijkse performance review</strong><br>Chronometer draait elke ochtend je campagnedata door en levert een rapport met anomalieën en aanbevelingen</div>
+      </div>
+      <div class="example-card">
+        <div class="example-card-icon">🔍</div>
+        <div class="example-card-text"><strong>Wekelijkse concurrentie-scan</strong><br>Spyglass monitort je concurrenten en signaleert veranderingen in positionering en spend</div>
+      </div>
+      <div class="example-card">
+        <div class="example-card-icon">✍️</div>
+        <div class="example-card-text"><strong>Content review op aanvraag</strong><br>Scribe checkt elk stuk content tegen je brand voice en positionering</div>
+      </div>
+      <div class="example-card">
+        <div class="example-card-icon">📋</div>
+        <div class="example-card-text"><strong>Maandelijkse executive summary</strong><br>Ship's Log genereert een management-samenvatting van alle campagne-activiteit</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Connection with markdekock.com -->
+  <div class="connection-section">
+    <h3>Hoe dit past in mijn werk</h3>
+    <p>The Crew is onderdeel van hoe ik met organisaties werk aan AI-adoptie. Als mentor en strateeg help ik teams om van AI-ambitie naar werkende realiteit te komen. The Crew is daar het bewijs van — een systeem dat ik zelf gebouwd heb en dagelijks inzet.</p>
+    <div class="connection-links">
+      <a href="https://markdekock.com#aiscan" class="connection-link-card">
+        <p><strong>Gratis AI-scan</strong><br>Ontdek in 5 minuten waar jouw organisatie staat</p>
+      </a>
+      <a href="https://markdekock.com" class="connection-link-card">
+        <p><strong>Mentoring</strong><br>Persoonlijke begeleiding bij AI-adoptie, strategie en implementatie</p>
+      </a>
+      <a href="https://markdekock.com#contact" class="connection-link-card">
+        <p><strong>Plan een gesprek</strong><br>Het eerste gesprek is nooit een pitch</p>
+      </a>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="crew-cta">
+    <h3>Klaar om je crew samen te stellen?</h3>
+    <p>Begin met een brief. We laten zien wat het systeem produceert voordat je ergens aan vastlegt.</p>
+    <a href="https://markdekock.com#contact" class="cta-button">Plan een kennismaking</a>
+    <div class="note">Of doe eerst de gratis <a href="https://markdekock.com#aiscan" style="color: var(--paradise); text-decoration: none;">AI-scan →</a></div>
+  </div>
+
+  <!-- Learn more section -->
+  <div class="crew-section" style="margin-top: 56px;">
+    <h2>Meer weten?</h2>
+  </div>
+
+  <div class="learn-more-container">
+    <div class="learn-more-card" onclick="showTab('architecture')">
+      <h3>Het Systeem →</h3>
+      <p>Architectuur, agents, connectors en workflow in detail</p>
+    </div>
+    <div class="learn-more-card" onclick="showTab('operations')">
+      <h3>Bureau Operaties →</h3>
+      <p>24 taken, tijdsbesparing en 4-weken POC plan</p>
+    </div>
+  </div>
+
 </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     TAB 2 — ARCHITECTURE (Het Systeem)
+     ══════════════════════════════════════════════════ -->
+<div id="tab-architecture" class="tab-content">
+<div class="arch">
+
+  <div class="page-header">
+    <div class="wordmark">markdekock.com · Agent Architecture</div>
+    <h1>Het Systeem —<br><em>agents, memory &amp; connections</em></h1>
+    <p>Hoe de 10 agents samenwerken — van brief tot rapport</p>
+  </div>
+
+  <div class="main">
+
+    <!-- 1. Orchestrator -->
+    <div class="section-label">01 · Core Agent</div>
+    <div class="hub-row">
+      <div class="hub-card">
+        <div><div class="hub-icon">⚙️</div></div>
+        <div>
+          <div class="hub-name">Claude (Cowork)</div>
+          <div class="hub-sub">Orchestrating agent · K&B Command Center</div>
+        </div>
+        <div class="model-badge"><div class="model-dot"></div>claude-opus-4.6 · live</div>
+        <div class="hub-stats">
+          <div class="hub-stat"><span class="hub-stat-label">Mode</span><span class="hub-stat-value">Cowork (desktop)</span></div>
+          <div class="hub-stat"><span class="hub-stat-label">Memory</span><span class="hub-stat-value">global_brand.json v1.2</span></div>
+          <div class="hub-stat"><span class="hub-stat-label">Workspace</span><span class="hub-stat-value">KB agents Marketing</span></div>
+          <div class="hub-stat"><span class="hub-stat-label">Active connectors</span><span class="hub-stat-value">7 live</span></div>
+          <div class="hub-stat"><span class="hub-stat-label">Agents</span><span class="hub-stat-value">10 specialists</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Phase 1 Agents -->
+    <div class="section-label">02 · Phase 1 — Intelligence &amp; Strategy</div>
+    <div class="agents-phase">
+      <div class="phase-grid">
+        <div class="agent-card">
+          <div class="agent-header">
+            <div class="agent-icon">🔍</div>
+            <div>
+              <div class="agent-name">The Lookout</div>
+              <div class="agent-callsign">Client Intelligence</div>
+            </div>
+          </div>
+          <div class="agent-desc">Ingests CRM, analytics &amp; funnel data. Validates ICP, identifies conversion baselines, maps opportunities by segment.</div>
+        </div>
+        <div class="agent-card">
+          <div class="agent-header">
+            <div class="agent-icon">🔭</div>
+            <div>
+              <div class="agent-name">The Spyglass</div>
+              <div class="agent-callsign">Market &amp; Competitors</div>
+            </div>
+          </div>
+          <div class="agent-desc">Audits competitors, identifies buying triggers, maps positioning gaps, monitors market shifts in real-time.</div>
+        </div>
+        <div class="agent-card">
+          <div class="agent-header">
+            <div class="agent-icon">🧭</div>
+            <div>
+              <div class="agent-name">The Navigator</div>
+              <div class="agent-callsign">Strategy &amp; Positioning</div>
+            </div>
+          </div>
+          <div class="agent-desc">Synthesizes intel into falsifiable positioning, contra-strategy, channel priorities &amp; creative direction. Human-approved before handoff.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Agents training table (moved to Tab 2) -->
+    <div class="section-label" style="margin-top: 32px;">03 · Wat Elke Agent Nodig Heeft</div>
+    <p style="margin-bottom: 16px; font-size: 13px; color: var(--text-mid); max-width: 960px;">Elke agent heeft duidelijk ingevoerde gegevens, een gedefinieerde output, en handoff-protocollen. Hier zie je wat je hun geeft, en wat je terugkrijgt:</p>
+
+    <table class="agents-table">
+      <thead>
+        <tr>
+          <th>Agent</th>
+          <th>Wat Ze Doen</th>
+          <th>Wat Ze Nodig Hebben</th>
+          <th>Wat Je Terugkrijgt</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>The Lookout</strong> / Klant Intelligence</td>
+          <td>Analyseert je interne data</td>
+          <td>CRM exports, analytics, funnel data</td>
+          <td>ICP-validatie, funnel-baselines, kansenoverzicht</td>
+        </tr>
+        <tr>
+          <td><strong>The Spyglass</strong> / Markt &amp; Concurrentie</td>
+          <td>Onderzoekt je markt</td>
+          <td>Concurrentielijst, doelgroep-brief</td>
+          <td>Concurrentie-audit, kooptriggers, positioneringsgaten</td>
+        </tr>
+        <tr>
+          <td><strong>The Navigator</strong> / Strategie</td>
+          <td>Bouwt je strategie</td>
+          <td>Bedrijfsdoelen, constraints, brand guidelines</td>
+          <td>Falsifieerbare positionering, kanaalprioriteiten, creatieve richting</td>
+        </tr>
+        <tr>
+          <td><strong>The Cartographer</strong> / Campagne Architect</td>
+          <td>Plant je campagnes</td>
+          <td>Budget, tijdlijn, kanaalvoorkeuren</td>
+          <td>Funnel-map, contentkalender, KPI-targets</td>
+        </tr>
+        <tr>
+          <td><strong>The Scribe</strong> / Creatief &amp; Content</td>
+          <td>Schrijft je content</td>
+          <td>Brand voice guide, goedgekeurde voorbeelden, toonvoorkeuren</td>
+          <td>Ad copy, e-mailsequenties, artikelen, landingspagina's</td>
+        </tr>
+        <tr>
+          <td><strong>The Quartermaster</strong> / Media &amp; Budget</td>
+          <td>Beheert je media-spend</td>
+          <td>Ad account access, budget, historische performance</td>
+          <td>Campagnestructuur, budgetverdeling, optimalisatieregels</td>
+        </tr>
+        <tr>
+          <td><strong>The Chronometer</strong> / Data &amp; Trends</td>
+          <td>Analyseert je resultaten</td>
+          <td>Campagne performance data, platform exports</td>
+          <td>Trendanalyse, anomaliedetectie, hypothese-register</td>
+        </tr>
+        <tr>
+          <td><strong>The Helmsman</strong> / Groei &amp; Experimenten</td>
+          <td>Ontwerpt je experimenten</td>
+          <td>Huidige testresultaten, groeivraagstukken</td>
+          <td>ICE-scored experiment backlog, schaaladviezen</td>
+        </tr>
+        <tr>
+          <td><strong>The Ship's Log</strong> / Rapportage</td>
+          <td>Rapporteert aan je leadership</td>
+          <td>Rapportagevoorkeuren, business KPIs</td>
+          <td>Executive summaries, QBR-content, aanbevelingen</td>
+        </tr>
+        <tr>
+          <td><strong>The Captain's Table</strong> / Coördinatie</td>
+          <td>Coördineert alles</td>
+          <td>Een brief om te starten</td>
+          <td>Workflow-management, statustracking, handoff-coördinatie</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 3. Phase 2 Agents -->
+    <div class="section-label">04 · Phase 2 — Execution &amp; Production</div>
+    <div class="agents-phase">
+      <div class="phase-grid">
+        <div class="agent-card">
+          <div class="agent-header">
+            <div class="agent-icon">🗺️</div>
+            <div>
+              <div class="agent-name">The Cartographer</div>
+              <div class="agent-callsign">Campaign Architect</div>
+            </div>
+          </div>
+          <div class="agent-desc">Maps funnels, designs content calendars, sets KPI targets &amp; success metrics aligned to strategy.</div>
+        </div>
+        <div class="agent-card">
+          <div class="agent-header">
+            <div class="agent-icon">✍️</div>
+            <div>
+              <div class="agent-name">The Scribe</div>
+              <div class="agent-callsign">Creative &amp; Content</div>
+            </div>
+          </div>
+          <div class="agent-desc">Generates ad copy variants, email sequences, articles &amp; landing pages. All reviewed against brand voice before publishing.</div>
+        </div>
+        <div class="agent-card">
+          <div class="agent-header">
+            <div class="agent-icon">💰</div>
+            <div>
+              <div class="agent-name">The Quartermaster</div>
+              <div class="agent-callsign">Media &amp; Budget</div>
+            </div>
+          </div>
+          <div class="agent-desc">Manages media spend, designs campaign structure, allocates budget by channel, defines optimization rules.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Phase 3 Agents -->
+    <div class="section-label">05 · Phase 3 — Performance &amp; Optimization</div>
+    <div class="agents-phase">
+      <div class="phase-grid">
+        <div class="agent-card">
+          <div class="agent-header">
+            <div class="agent-icon">⏱️</div>
+            <div>
+              <div class="agent-name">The Chronometer</div>
+              <div class="agent-callsign">Data &amp; Trends</div>
+            </div>
+          </div>
+          <div class="agent-desc">Analyzes campaign data daily, detects anomalies, maintains hypothesis register. Labels correlation vs. confirmed findings.</div>
+        </div>
+        <div class="agent-card">
+          <div class="agent-header">
+            <div class="agent-icon">📈</div>
+            <div>
+              <div class="agent-name">The Helmsman</div>
+              <div class="agent-callsign">Growth &amp; Experimentation</div>
+            </div>
+          </div>
+          <div class="agent-desc">Designs ICE-scored experiments, defines statistical significance criteria, produces scaling recommendations.</div>
+        </div>
+        <div class="agent-card">
+          <div class="agent-header">
+            <div class="agent-icon">📖</div>
+            <div>
+              <div class="agent-name">The Ship's Log</div>
+              <div class="agent-callsign">Reporting &amp; Insights</div>
+            </div>
+          </div>
+          <div class="agent-desc">Synthesizes findings into executive summaries, QBRs &amp; business impact narratives for leadership.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Memory &amp; Context -->
+    <div class="section-label">06 · Memory &amp; Context</div>
+    <div class="memory-row">
+      <div class="memory-card">
+        <div class="memory-card-icon">📋</div>
+        <div class="memory-card-name">global_brand.json</div>
+        <div class="memory-card-desc">Brand identity, tone of voice, ICP definition, channel profiles, competitor context, banned vocabulary. Single source of truth.</div>
+        <div class="memory-card-meta">v1.2 · Updated weekly</div>
+      </div>
+      <div class="memory-card">
+        <div class="memory-card-icon">🎯</div>
+        <div class="memory-card-name">Brand Context</div>
+        <div class="memory-card-desc">Positioning statement, strategic priorities, campaign constraints, success metrics framework.</div>
+        <div class="memory-card-meta">Loaded per run</div>
+      </div>
+      <div class="memory-card">
+        <div class="memory-card-icon">🗄️</div>
+        <div class="memory-card-name">Data Vault</div>
+        <div class="memory-card-desc">Campaign outputs, performance logs, hypothesis register, experiment results. Growing knowledge base per cycle.</div>
+        <div class="memory-card-meta">Persistent · Versioned</div>
+      </div>
+    </div>
+
+    <!-- 6. Connectors -->
+    <div class="section-label">07 · Connectors &amp; Data Sources</div>
+    <div class="connections-grid">
+      <div class="conn-card">
+        <div class="conn-status status-live"><div class="status-dot dot-live"></div>Live</div>
+        <div class="conn-icon">📝</div>
+        <div class="conn-name">Notion</div>
+        <div class="conn-type">MCP</div>
+        <div class="conn-desc">Briefs, content calendar, review inbox, task management.</div>
+        <div class="conn-caps"><span class="conn-cap">Read</span><span class="conn-cap">Write</span></div>
+      </div>
+      <div class="conn-card">
+        <div class="conn-status status-live"><div class="status-dot dot-live"></div>Live</div>
+        <div class="conn-icon">✉️</div>
+        <div class="conn-name">Gmail</div>
+        <div class="conn-type">MCP</div>
+        <div class="conn-desc">Client comms, brief delivery, team coordination.</div>
+        <div class="conn-caps"><span class="conn-cap">Read</span><span class="conn-cap">Send</span></div>
+      </div>
+      <div class="conn-card">
+        <div class="conn-status status-live"><div class="status-dot dot-live"></div>Live</div>
+        <div class="conn-icon">📅</div>
+        <div class="conn-name">Google Calendar</div>
+        <div class="conn-type">MCP</div>
+        <div class="conn-desc">Publish dates, review slots, milestone tracking.</div>
+        <div class="conn-caps"><span class="conn-cap">Read</span><span class="conn-cap">Create</span></div>
+      </div>
+      <div class="conn-card">
+        <div class="conn-status status-live"><div class="status-dot dot-live"></div>Live</div>
+        <div class="conn-icon">🎨</div>
+        <div class="conn-name">Canva</div>
+        <div class="conn-type">MCP</div>
+        <div class="conn-desc">Visual production from approved copy &amp; briefs.</div>
+        <div class="conn-caps"><span class="conn-cap">Create</span><span class="conn-cap">Edit</span></div>
+      </div>
+      <div class="conn-card">
+        <div class="conn-status status-live"><div class="status-dot dot-live"></div>Live</div>
+        <div class="conn-icon">💬</div>
+        <div class="conn-name">Slack</div>
+        <div class="conn-type">MCP</div>
+        <div class="conn-desc">Team notifications, status updates, daily briefings.</div>
+        <div class="conn-caps"><span class="conn-cap">Post</span><span class="conn-cap">Read</span></div>
+      </div>
+      <div class="conn-card">
+        <div class="conn-status status-live"><div class="status-dot dot-live"></div>Live</div>
+        <div class="conn-icon">🎭</div>
+        <div class="conn-name">Figma</div>
+        <div class="conn-type">MCP</div>
+        <div class="conn-desc">Design system reference, component audit, visual specs.</div>
+        <div class="conn-caps"><span class="conn-cap">Read</span></div>
+      </div>
+      <div class="conn-card">
+        <div class="conn-status status-live"><div class="status-dot dot-live"></div>Live</div>
+        <div class="conn-icon">🌐</div>
+        <div class="conn-name">Claude in Chrome</div>
+        <div class="conn-type">MCP</div>
+        <div class="conn-desc">Web research, competitor analysis, site QC.</div>
+        <div class="conn-caps"><span class="conn-cap">Browse</span><span class="conn-cap">Analyze</span></div>
+      </div>
+      <div class="conn-card">
+        <div class="conn-status status-next"><div class="status-dot dot-next"></div>Phase 2</div>
+        <div class="conn-icon">📊</div>
+        <div class="conn-name">Google Analytics</div>
+        <div class="conn-type">API</div>
+        <div class="conn-desc">Campaign performance, funnel metrics, audience behavior.</div>
+        <div class="conn-caps"><span class="conn-cap">Read</span></div>
+      </div>
+    </div>
+
+    <!-- 7. Workflow -->
+    <div class="section-label">08 · Workflow &amp; Handoff</div>
+    <div class="flow-row">
+      <div class="flow-inner">
+        <div class="flow-node">
+          <div class="flow-bubble phase1">📬</div>
+          <div class="flow-node-label">Brief</div>
+        </div>
+        <div class="flow-arrow"><div class="flow-arrow-line">→ → →</div><div class="flow-arrow-label">Ingest</div></div>
+        <div class="flow-node">
+          <div class="flow-bubble phase1">⚙️</div>
+          <div class="flow-node-label">Captain</div>
+        </div>
+        <div class="flow-arrow"><div class="flow-arrow-line">→ → →</div><div class="flow-arrow-label">Route</div></div>
+        <div class="flow-node">
+          <div class="flow-bubble phase1">🔍</div>
+          <div class="flow-node-label">Lookout +<br>Spyglass</div>
+        </div>
+        <div class="flow-arrow"><div class="flow-arrow-line">→ → →</div><div class="flow-arrow-label">Parallel</div></div>
+        <div class="flow-node">
+          <div class="flow-bubble phase1">🧭</div>
+          <div class="flow-node-label">Navigator</div>
+        </div>
+      </div>
+      <div style="margin-top: 20px; text-align: center; color: var(--gold); font-size: 12px; font-weight: 700;">⏸ PAUSE 1 — Human Review</div>
+      <div class="flow-inner" style="margin-top: 20px;">
+        <div class="flow-node">
+          <div class="flow-bubble phase2">🗺️</div>
+          <div class="flow-node-label">Cartographer</div>
+        </div>
+        <div class="flow-arrow"><div class="flow-arrow-line">→ → →</div><div class="flow-arrow-label">Feed</div></div>
+        <div class="flow-node">
+          <div class="flow-bubble phase2">✍️</div>
+          <div class="flow-node-label">Scribe +<br>Quartermaster</div>
+        </div>
+        <div class="flow-arrow"><div class="flow-arrow-line">→ → →</div><div class="flow-arrow-label">Parallel</div></div>
+        <div class="flow-node">
+          <div class="flow-bubble phase2">🚀</div>
+          <div class="flow-node-label">Deploy</div>
+        </div>
+      </div>
+      <div style="margin-top: 20px; text-align: center; color: var(--gold); font-size: 12px; font-weight: 700;">⏸ PAUSE 2 — Human Review</div>
+      <div class="flow-inner" style="margin-top: 20px;">
+        <div class="flow-node">
+          <div class="flow-bubble phase3">⏱️</div>
+          <div class="flow-node-label">Chronometer</div>
+        </div>
+        <div class="flow-arrow"><div class="flow-arrow-line">→ → →</div><div class="flow-arrow-label">Feed</div></div>
+        <div class="flow-node">
+          <div class="flow-bubble phase3">📈</div>
+          <div class="flow-node-label">Helmsman</div>
+        </div>
+        <div class="flow-arrow"><div class="flow-arrow-line">→ → →</div><div class="flow-arrow-label">Feed</div></div>
+        <div class="flow-node">
+          <div class="flow-bubble phase3">📖</div>
+          <div class="flow-node-label">Ship's Log</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">© 2026 Mark de Kock · <a href="https://markdekock.com" style="color: var(--text-dim); text-decoration: none;">markdekock.com</a> | <a href="https://markdekock.com#aiscan" style="color: var(--text-dim); text-decoration: none;">AI-scan</a> | <a href="https://markdekock.com#contact" style="color: var(--text-dim); text-decoration: none;">Contact</a></div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     TAB 3 — OPERATIONS
+     ══════════════════════════════════════════════════ -->
+<div id="tab-operations" class="tab-content">
+<div class="ops">
+<div class="ops-inner">
+
+  <div style="text-align: center; margin-bottom: 48px;">
+    <h1 style="font-size: 30px; font-weight: 800; margin-bottom: 8px; color: var(--text);">Bureau Operaties</h1>
+    <p style="font-size: 14px; color: var(--text-mid);">Hoe The Crew je team structureert en je klanten sneller bedient</p>
+  </div>
+
+  <div class="ops-intro">
+    <p>Een bureau dat zonder The Crew werkt, verliest <strong>weken per campagnecyclus</strong> aan repetitief werk: data verzamelen, analyses formatteren, copy drafts heen en weer mailen, spreadsheets bijwerken, rapporten samenstellen.</p>
+    <p style="margin-top: 20px;">The Crew versnelt alles van onderzoek tot launch tot rapportage. Onderstaande kaart toont alle 24 taken die we zien in bureaus — en waar The Crew tijd vrijmaakt.</p>
+  </div>
+
+  <!-- Operations table -->
+  <table class="map-table">
+    <thead>
+      <tr>
+        <th>Task</th>
+        <th>Beschrijving</th>
+        <th>Input</th>
+        <th>Mode</th>
+        <th>Owner</th>
+        <th>Besparing</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="fn-row">
+        <td colspan="6">MARKET RESEARCH &amp; STRATEGY</td>
+      </tr>
+      <tr>
+        <td>Market sizing</td>
+        <td>Estimate TAM, SAM, SOM for the market</td>
+        <td>Company goals, industry benchmarks</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-human"></span></td>
+        <td>Navigator + Spyglass</td>
+        <td class="time-save">↓ 6-8h</td>
+      </tr>
+      <tr>
+        <td>Competitive audit</td>
+        <td>Map competitor positioning, messaging, pricing, features</td>
+        <td>Competitor list, win/loss data</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-assist"></span></td>
+        <td>Spyglass</td>
+        <td class="time-save">↓ 8-12h</td>
+      </tr>
+      <tr>
+        <td>ICP validation</td>
+        <td>Refine ideal customer profile from sales data</td>
+        <td>CRM exports, customer interviews</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-human"></span></td>
+        <td>Lookout + Navigator</td>
+        <td class="time-save">↓ 4-6h</td>
+      </tr>
+      <tr>
+        <td>Positioning strategy</td>
+        <td>Build defensible positioning &amp; messaging pillars</td>
+        <td>Market intel, brand brief, competitive gaps</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-human"></span></td>
+        <td>Navigator</td>
+        <td class="time-save">↓ 8-12h</td>
+      </tr>
+      <tr>
+        <td>Channel strategy</td>
+        <td>Determine primary &amp; supporting channels, budget allocation</td>
+        <td>Company goals, audience behavior, budget constraints</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-human"></span></td>
+        <td>Spyglass + Quartermaster</td>
+        <td class="time-save">↓ 4-6h</td>
+      </tr>
+      <tr class="fn-row">
+        <td colspan="6">CAMPAIGN PLANNING &amp; ARCHITECTURE</td>
+      </tr>
+      <tr>
+        <td>Campaign brief</td>
+        <td>Structure campaign goal, audience, offer, success metrics</td>
+        <td>Strategy, business objectives, timeline</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-assist"></span></td>
+        <td>Cartographer</td>
+        <td class="time-save">↓ 2-3h</td>
+      </tr>
+      <tr>
+        <td>Funnel mapping</td>
+        <td>Define conversion funnel by channel &amp; stage</td>
+        <td>Customer journey data, channel capabilities</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-human"></span></td>
+        <td>Cartographer</td>
+        <td class="time-save">↓ 3-4h</td>
+      </tr>
+      <tr>
+        <td>KPI &amp; targets</td>
+        <td>Set campaign KPIs, weekly targets, success thresholds</td>
+        <td>Historical performance, business goals</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-human"></span></td>
+        <td>Chronometer + Cartographer</td>
+        <td class="time-save">↓ 2-3h</td>
+      </tr>
+      <tr>
+        <td>Budget allocation</td>
+        <td>Distribute total budget across channels &amp; campaigns</td>
+        <td>Total budget, channel performance, strategic priorities</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-assist"></span></td>
+        <td>Quartermaster</td>
+        <td class="time-save">↓ 2-3h</td>
+      </tr>
+      <tr>
+        <td>Content calendar</td>
+        <td>Plan content themes, publish schedule, key dates</td>
+        <td>Strategy, campaign timeline, content types</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-assist"></span></td>
+        <td>Cartographer + Scribe</td>
+        <td class="time-save">↓ 4-6h</td>
+      </tr>
+      <tr class="fn-row">
+        <td colspan="6">MEDIA BUYING &amp; OPTIMIZATION</td>
+      </tr>
+      <tr>
+        <td>Campaign setup</td>
+        <td>Structure ad campaigns, ad groups, targeting, bids</td>
+        <td>Creative briefs, budget allocation, audience specs</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-assist"></span></td>
+        <td>Quartermaster</td>
+        <td class="time-save">↓ 3-4h</td>
+      </tr>
+      <tr>
+        <td>Ad copy creation</td>
+        <td>Generate &amp; test ad copy variants (headlines, descriptions)</td>
+        <td>Brand voice, positioning, target audience</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-assist"></span></td>
+        <td>Scribe + Quartermaster</td>
+        <td class="time-save">↓ 5-8h</td>
+      </tr>
+      <tr>
+        <td>Bid strategy</td>
+        <td>Set automated bidding rules, CPA/ROAS targets</td>
+        <td>Budget, KPI targets, platform recommendations</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-assist"></span></td>
+        <td>Quartermaster</td>
+        <td class="time-save">↓ 2-3h</td>
+      </tr>
+      <tr>
+        <td>Weekly optimization</td>
+        <td>Review daily data, adjust bids/budgets, pause underperformers</td>
+        <td>Daily campaign performance, platform data</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-human"></span></td>
+        <td>Chronometer + Quartermaster</td>
+        <td class="time-save">↓ 3-5h/week</td>
+      </tr>
+      <tr class="fn-row">
+        <td colspan="6">CAMPAIGN MANAGEMENT &amp; QA</td>
+      </tr>
+      <tr>
+        <td>Daily monitoring</td>
+        <td>Ingest daily metrics, flag anomalies, log observations</td>
+        <td>Platform exports (GA, Meta, LinkedIn, etc.)</td>
+        <td><span class="tag tag-auto"></span></td>
+        <td>Chronometer (scheduled task)</td>
+        <td class="time-save">↓ 30m/day</td>
+      </tr>
+      <tr>
+        <td>Performance alerts</td>
+        <td>Detect anomalies (sudden drops, budget burn, high CPC)</td>
+        <td>Real-time campaign data</td>
+        <td><span class="tag tag-auto"></span></td>
+        <td>Chronometer (automated)</td>
+        <td class="time-save">↓ 1-2h/week</td>
+      </tr>
+      <tr>
+        <td>Creative testing</td>
+        <td>Design A/B tests, manage variants, track results</td>
+        <td>Creative hypotheses, campaign structure</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-human"></span></td>
+        <td>Helmsman + Scribe</td>
+        <td class="time-save">↓ 2-3h/test</td>
+      </tr>
+      <tr>
+        <td>Quality checklist</td>
+        <td>Verify landing page load, form submission, pixel firing</td>
+        <td>Campaign links, conversion pixels</td>
+        <td><span class="tag tag-human"></span><span class="tag tag-assist"></span></td>
+        <td>Human QA + Claude in Chrome</td>
+        <td class="time-save">↓ 1-2h</td>
+      </tr>
+      <tr class="fn-row">
+        <td colspan="6">CREATIVE &amp; AD COPY</td>
+      </tr>
+      <tr>
+        <td>Ad copy drafting</td>
+        <td>Generate headlines, descriptions, CTAs per channel</td>
+        <td>Brand voice, positioning, audience insights</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-assist"></span></td>
+        <td>Scribe</td>
+        <td class="time-save">↓ 5-8h</td>
+      </tr>
+      <tr>
+        <td>Copy review &amp; iteration</td>
+        <td>Check against brand guidelines, refine, approve</td>
+        <td>Draft copy, brand standards</td>
+        <td><span class="tag tag-human"></span><span class="tag tag-agent"></span></td>
+        <td>Human (Navigator inputs)</td>
+        <td class="time-save">↓ 2-3h</td>
+      </tr>
+      <tr>
+        <td>Email sequence design</td>
+        <td>Structure email flows (welcome, nurture, re-engage)</td>
+        <td>Customer journey, conversion goals</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-assist"></span></td>
+        <td>Scribe</td>
+        <td class="time-save">↓ 8-12h</td>
+      </tr>
+      <tr>
+        <td>Landing page copy</td>
+        <td>Write headlines, body, CTAs for campaign landing pages</td>
+        <td>Campaign brief, value prop, audience</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-assist"></span></td>
+        <td>Scribe</td>
+        <td class="time-save">↓ 6-8h</td>
+      </tr>
+      <tr>
+        <td>Brand voice audit</td>
+        <td>Scan all copy against tone &amp; messaging standards</td>
+        <td>All active copy, brand voice guide</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-assist"></span></td>
+        <td>Scribe (on-demand)</td>
+        <td class="time-save">↓ 2-3h</td>
+      </tr>
+      <tr class="fn-row">
+        <td colspan="6">ANALYTICS &amp; REPORTING</td>
+      </tr>
+      <tr>
+        <td>Weekly dashboard update</td>
+        <td>Pull data, update charts, highlight trends &amp; anomalies</td>
+        <td>Campaign performance data</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-assist"></span></td>
+        <td>Chronometer</td>
+        <td class="time-save">↓ 2-3h/week</td>
+      </tr>
+      <tr>
+        <td>Monthly attribution</td>
+        <td>Calculate channel attribution, model customer journey</td>
+        <td>GA data, conversion logs, touchpoints</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-human"></span></td>
+        <td>Chronometer + Helmsman</td>
+        <td class="time-save">↓ 4-6h</td>
+      </tr>
+      <tr>
+        <td>Trend analysis</td>
+        <td>Identify patterns, hypothesis testing, anomaly logging</td>
+        <td>Historical performance, current data</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-assist"></span></td>
+        <td>Chronometer</td>
+        <td class="time-save">↓ 3-5h/month</td>
+      </tr>
+      <tr>
+        <td>QBR preparation</td>
+        <td>Synthesize monthly findings into executive narrative</td>
+        <td>All performance data, business context</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-assist"></span></td>
+        <td>Ship's Log</td>
+        <td class="time-save">↓ 5-8h</td>
+      </tr>
+      <tr class="fn-row">
+        <td colspan="6">STRATEGY &amp; CLIENT SERVICE</td>
+      </tr>
+      <tr>
+        <td>Strategy development</td>
+        <td>Build positioning, channel mix, messaging pillars</td>
+        <td>Market intel, competitive analysis, business goals</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-human"></span></td>
+        <td>Navigator</td>
+        <td class="time-save">↓ 8-12h</td>
+      </tr>
+      <tr>
+        <td>Client presentations</td>
+        <td>Prepare strategy decks, performance reviews, recommendations</td>
+        <td>Strategy, performance data, business impact</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-human"></span></td>
+        <td>Ship's Log (draft) + Human</td>
+        <td class="time-save">↓ 3-5h</td>
+      </tr>
+      <tr>
+        <td>Market opportunity identification</td>
+        <td>Spot gaps in competitor positioning, new audience segments</td>
+        <td>Competitive intel, market data, campaign history</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-assist"></span></td>
+        <td>Spyglass + Navigator</td>
+        <td class="time-save">↓ 4-6h</td>
+      </tr>
+      <tr>
+        <td>Campaign post-mortem</td>
+        <td>Analyze what worked, what didn't, lessons learned</td>
+        <td>Campaign results, performance data, team notes</td>
+        <td><span class="tag tag-agent"></span><span class="tag tag-assist"></span></td>
+        <td>Chronometer + Helmsman</td>
+        <td class="time-save">↓ 3-4h</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Time savings summary -->
+  <div class="ops-highlight">
+    <p><strong>Total estimated time savings per campaign cycle:</strong> 80-120 hours of repetitive work (research, copy drafting, spreadsheet updates, QA, analysis).</p>
+    <p style="margin-top: 12px;"><strong>What this frees up:</strong> Your team focuses on strategy, client relationships, and creative decision-making. Not data entry and copy formatting.</p>
+  </div>
+
+  <!-- POC Design -->
+  <div style="margin-bottom: 40px;">
+    <h2 style="font-size: 18px; font-weight: 800; margin-bottom: 16px; color: var(--text);">4-Week Proof of Concept</h2>
+    <div class="poc-grid">
+      <div class="poc-card">
+        <div class="week">Week 1</div>
+        <h3>Onboarding &amp; Context</h3>
+        <p>Load brand guidelines, CRM data, analytics export, competitor list. The Lookout &amp; Spyglass run baseline analysis. Outputs: baseline performance map &amp; competitive positioning gap analysis.</p>
+      </div>
+      <div class="poc-card">
+        <div class="week">Week 2</div>
+        <h3>Strategy Sprint</h3>
+        <p>Navigator synthesizes intel into positioning + channel mix + creative direction. Output: falsifiable strategy document + 3 content calendar templates (each channel). Human review &amp; refinement.</p>
+      </div>
+      <div class="poc-card">
+        <div class="week">Week 3</div>
+        <h3>First Execution</h3>
+        <p>Cartographer maps funnel. Scribe + Quartermaster produce first campaign (ad copy, email sequence, media plan). All pieces QA'd. Output: live campaign + performance baseline.</p>
+      </div>
+      <div class="poc-card">
+        <div class="week">Week 4</div>
+        <h3>Proof &amp; Handoff</h3>
+        <p>Chronometer &amp; Helmsman analyze week 1 results. Ship's Log delivers first performance narrative. Output: proof of ROI + scaling roadmap + agent training summary for your team.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- What stays human -->
+  <div style="margin-bottom: 40px;">
+    <h2 style="font-size: 18px; font-weight: 800; margin-bottom: 16px; color: var(--text);">Wat Menselijk Blijft</h2>
+    <table class="map-table" style="margin-bottom: 0;">
+      <thead>
+        <tr>
+          <th>Decision Type</th>
+          <th>Why</th>
+          <th>Who Decides</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Strategic positioning</strong></td>
+          <td>Requires context, brand history, market intuition — AI can synthesize, but humans must approve the "story"</td>
+          <td>Chief Strategist / C-level</td>
+        </tr>
+        <tr>
+          <td><strong>Budget allocation</strong></td>
+          <td>Business priorities &amp; constraints (cash flow, organizational goals) — beyond data</td>
+          <td>Finance / VP Marketing</td>
+        </tr>
+        <tr>
+          <td><strong>Creative direction</strong></td>
+          <td>Brand voice, tone shifts, cultural sensitivity — AI can draft, but humans own brand expression</td>
+          <td>Creative Director / Content Lead</td>
+        </tr>
+        <tr>
+          <td><strong>Experiment design</strong></td>
+          <td>Statistical rigor &amp; business sense together — what to test &amp; how to interpret</td>
+          <td>Growth Lead + Data Analyst</td>
+        </tr>
+        <tr>
+          <td><strong>Client communication</strong></td>
+          <td>Relationships, trust, nuance — AI supports narrative, humans deliver</td>
+          <td>Account Manager / Director</td>
+        </tr>
+        <tr>
+          <td><strong>Crisis response</strong></td>
+          <td>Real-time judgment, stakeholder alignment — AI can flag, humans decide action</td>
+          <td>Leadership / Client Management</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">© 2026 Mark de Kock · <a href="https://markdekock.com" style="color: var(--text-dim); text-decoration: none;">markdekock.com</a> | <a href="https://markdekock.com#aiscan" style="color: var(--text-dim); text-decoration: none;">AI-scan</a> | <a href="https://markdekock.com#contact" style="color: var(--text-dim); text-decoration: none;">Contact</a></div>
+
+</div>
+</div>
+</div>
+
+<script>
+function showTab(tabName) {
+  const tabs = document.querySelectorAll('.tab-content');
+  const buttons = document.querySelectorAll('.tab-btn');
+
+  tabs.forEach(tab => tab.classList.remove('active'));
+  buttons.forEach(btn => btn.classList.remove('active'));
+
+  document.getElementById('tab-' + tabName).classList.add('active');
+
+  // Find and activate the corresponding button
+  buttons.forEach(btn => {
+    if (btn.onclick.toString().includes("'" + tabName + "'")) {
+      btn.classList.add('active');
+    }
+  });
+}
+
+// Use-case selector
+function selectUsecase(uc) {
+  // Toggle selector buttons
+  document.querySelectorAll('.usecase-btn').forEach(btn => btn.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+
+  // Toggle main content blocks
+  ['agency', 'enterprise', 'team'].forEach(id => {
+    const el = document.getElementById('uc-' + id);
+    if (el) el.classList.toggle('active', id === uc);
+    const agents = document.getElementById('uc-agents-' + id);
+    if (agents) agents.classList.toggle('active', id === uc);
+  });
+
+  // Toggle phase examples
+  document.querySelectorAll('.uc-ex').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.' + uc + '-ex').forEach(el => el.style.display = 'block');
+}
+</script>
 
 </body>
 </html>
