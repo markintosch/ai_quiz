@@ -43,7 +43,7 @@ const T = {
     // ── The Crew spotlight ──────────────────────────────────────────────
     crewLabel:   'markdekock.com / the crew',
     crewKicker:  'NIEUW — AI agents voor marketing & sales',
-    crewTitle:   'AI die meewerkt met je team — niet ervoor in de plaats.',
+    crewTitle:   'AI die je team ondersteunt — niet vervangt.',
     crewBody:    'Tien gespecialiseerde AI-agents die je marketing structureren van intelligence tot executie tot performance. Elke agent heeft één domein. Samen vormen ze het fundament onder je team — of onder de samenwerking met je bureau. Waar tribale kennis nu bij iemand vertrekt, legt The Crew die vast en bouwt erop door.',
     crewPhases:  [
       { num: '01', name: 'Intelligence', desc: 'Begrijp je markt voordat er één euro wordt uitgegeven' },
@@ -140,7 +140,7 @@ const T = {
     // ── The Crew spotlight ──────────────────────────────────────────────
     crewLabel:   'markdekock.com / the crew',
     crewKicker:  'NEW — AI agents for marketing & sales',
-    crewTitle:   'AI that works alongside your team — not in place of it.',
+    crewTitle:   'AI that supports your team — not replaces it.',
     crewBody:    'Ten specialised AI agents that structure marketing from intelligence to execution to performance. Each agent owns one domain. Together they form the foundation underneath your team — or underneath your agency relationship. Where tribal knowledge walks out the door when someone leaves, The Crew captures it and builds on it.',
     crewPhases:  [
       { num: '01', name: 'Intelligence', desc: 'Understand your market before spending a single euro' },
