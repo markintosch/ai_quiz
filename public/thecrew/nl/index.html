@@ -352,6 +352,63 @@
     line-height: 1.6;
   }
 
+  /* Safety & data */
+  .safety-section {
+    background: rgba(0,255,153,0.04);
+    border: 1px solid rgba(0,255,153,0.16);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin: 32px 0;
+  }
+  .safety-section h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .safety-section h3 .badge {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--green);
+    background: rgba(0,255,153,0.1);
+    border: 1px solid rgba(0,255,153,0.25);
+    padding: 3px 8px;
+    border-radius: 999px;
+  }
+  .safety-section .lede {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.65;
+    margin-bottom: 18px;
+  }
+  .safety-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .safety-card {
+    background: rgba(0,255,153,0.06);
+    border: 1px solid rgba(0,255,153,0.15);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .safety-card-icon {
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+  .safety-card-text {
+    font-size: 12px;
+    color: var(--text-mid);
+    line-height: 1.5;
+  }
+  .safety-card-text strong { color: var(--text); font-weight: 700; }
+  @media (max-width: 640px) { .safety-grid { grid-template-columns: 1fr; } }
+
   /* Standalone agents */
   .standalone-agents {
     background: rgba(155,109,255,0.04);
@@ -916,6 +973,30 @@
     <div class="timeline-card">
       <div class="timeline-run">Run 10</div>
       <div class="timeline-text">Kent je business beter dan een nieuwe hire.</div>
+    </div>
+  </div>
+
+  <!-- Safety & data -->
+  <div class="safety-section">
+    <h3>Veilig &mdash; en getraind op jouw data <span class="badge">Standalone</span></h3>
+    <p class="lede">The Crew draait niet op een gedeeld instance. Je krijgt een eigen, afgeschermde versie die getraind wordt op jouw merk, jouw markt en jouw eigen data &mdash; en daar blijft.</p>
+    <div class="safety-grid">
+      <div class="safety-card">
+        <div class="safety-card-icon">&#x1F512;</div>
+        <div class="safety-card-text"><strong>Eigen omgeving</strong><br>Draait in jouw cloud of tenant. Niet gedeeld met andere klanten. Volledige controle over toegang en logging.</div>
+      </div>
+      <div class="safety-card">
+        <div class="safety-card-icon">&#x1F510;</div>
+        <div class="safety-card-text"><strong>Jouw data blijft van jou</strong><br>Geen training van foundation-modellen op jouw inhoud. Geen commingling met andere accounts. Verwijderbaar op aanvraag.</div>
+      </div>
+      <div class="safety-card">
+        <div class="safety-card-icon">&#x1F3AF;</div>
+        <div class="safety-card-text"><strong>Getraind op jouw context</strong><br>Brand voice, ICP, historische campagnes, eigen taxonomie. De agents leren wat voor j&oacute;u werkt &mdash; geen generieke best practices.</div>
+      </div>
+      <div class="safety-card">
+        <div class="safety-card-icon">&#x1F4C1;</div>
+        <div class="safety-card-text"><strong>Per project geschaald</strong><br>E&eacute;n crew per merk, markt of workstream. Datamuren waar ze horen, samenwerking waar het waarde toevoegt.</div>
+      </div>
     </div>
   </div>
 

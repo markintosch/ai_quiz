@@ -352,6 +352,63 @@
     line-height: 1.6;
   }
 
+  /* Safety & data */
+  .safety-section {
+    background: rgba(0,255,153,0.04);
+    border: 1px solid rgba(0,255,153,0.16);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin: 32px 0;
+  }
+  .safety-section h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .safety-section h3 .badge {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--green);
+    background: rgba(0,255,153,0.1);
+    border: 1px solid rgba(0,255,153,0.25);
+    padding: 3px 8px;
+    border-radius: 999px;
+  }
+  .safety-section .lede {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.65;
+    margin-bottom: 18px;
+  }
+  .safety-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .safety-card {
+    background: rgba(0,255,153,0.06);
+    border: 1px solid rgba(0,255,153,0.15);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .safety-card-icon {
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+  .safety-card-text {
+    font-size: 12px;
+    color: var(--text-mid);
+    line-height: 1.5;
+  }
+  .safety-card-text strong { color: var(--text); font-weight: 700; }
+  @media (max-width: 640px) { .safety-grid { grid-template-columns: 1fr; } }
+
   /* Standalone agents */
   .standalone-agents {
     background: rgba(155,109,255,0.04);
@@ -916,6 +973,30 @@
     <div class="timeline-card">
       <div class="timeline-run">Run 10</div>
       <div class="timeline-text">Knows your business better than a new hire.</div>
+    </div>
+  </div>
+
+  <!-- Safety & data -->
+  <div class="safety-section">
+    <h3>Safe &mdash; and trained on your data <span class="badge">Standalone</span></h3>
+    <p class="lede">The Crew doesn't run on a shared instance. You get your own ring-fenced version &mdash; trained on your brand, your market and your own data, and that's where it stays.</p>
+    <div class="safety-grid">
+      <div class="safety-card">
+        <div class="safety-card-icon">&#x1F512;</div>
+        <div class="safety-card-text"><strong>Your own environment</strong><br>Runs in your cloud or tenant. Never shared with other customers. Full control over access and logging.</div>
+      </div>
+      <div class="safety-card">
+        <div class="safety-card-icon">&#x1F510;</div>
+        <div class="safety-card-text"><strong>Your data stays yours</strong><br>No foundation-model training on your content. No commingling with other accounts. Removable on request.</div>
+      </div>
+      <div class="safety-card">
+        <div class="safety-card-icon">&#x1F3AF;</div>
+        <div class="safety-card-text"><strong>Trained on your context</strong><br>Brand voice, ICP, historical campaigns, your own taxonomy. Agents learn what works for <em>you</em> &mdash; not generic best practices.</div>
+      </div>
+      <div class="safety-card">
+        <div class="safety-card-icon">&#x1F4C1;</div>
+        <div class="safety-card-text"><strong>Scoped per project</strong><br>One crew per brand, market or workstream. Data walls where they belong, collaboration where it adds value.</div>
+      </div>
     </div>
   </div>
 
