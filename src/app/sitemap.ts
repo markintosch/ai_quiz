@@ -24,7 +24,7 @@ const UTILITY_PAGES = [
   { path: '/voorwaarden', priority: 0.3, changeFrequency: 'yearly' as const },
 ]
 
-// ── The Crew (markdekock.com — AI Marketing Command Center) ──────────────────
+// ── The Crew (markdekock.com — AI Marketing & Sales Command Center) ──────────
 // Static HTML under /public/thecrew; each page has an EN↔NL pair.
 const THECREW_PAGES: Array<{ en: string; nl: string; priority: number; changeFrequency: 'weekly' | 'monthly' }> = [
   { en: '/thecrew/en/',                           nl: '/thecrew/nl/',                           priority: 0.8, changeFrequency: 'monthly' },
