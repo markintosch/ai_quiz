@@ -17,7 +17,6 @@ const BORDER     = '#E2E8F0'
 const OCEAN     = '#0D1B2A'
 const OCEAN_MID = '#152436'
 const PARADISE  = '#00DEFF'
-const CREW_RED  = '#FF0066'
 
 const CALENDLY_INTAKE = 'https://calendly.com/markiesbpm/ai-intro-meeting-mark-de-kock'
 
@@ -42,10 +41,10 @@ const T = {
     heroBody:   'De meeste adviseurs praten over AI. Ik gebruik het om dingen te bouwen die werken. Samen met Claude heb ik een platform ontwikkeld dat nu acht diagnostische producten draait — voor sectoren van pharma tot M&A, van klantervaringsmanagement tot cloud readiness. Productieomgeving. Meerdere talen. Één architectuur.',
 
     // ── The Crew spotlight ──────────────────────────────────────────────
-    crewLabel:   'The Crew · Kirk & Blackbeard',
-    crewKicker:  'NIEUW — AI agency agents',
-    crewTitle:   'Een vaste AI-bemanning voor marketing & sales.',
-    crewBody:    'Tien gespecialiseerde AI-agents die marketing van begin tot eind runnen — van klantintelligentie en marktonderzoek tot strategie, creatie, media en rapportage. Niet om jouw team of bureau te vervangen, maar als fundament eronder. Waar tribale kennis nu bij iemand vertrekt, legt The Crew die vast en bouwt erop door.',
+    crewLabel:   'markdekock.com / the crew',
+    crewKicker:  'NIEUW — AI agents voor marketing & sales',
+    crewTitle:   'AI die meewerkt met je team — niet ervoor in de plaats.',
+    crewBody:    'Tien gespecialiseerde AI-agents die je marketing structureren van intelligence tot executie tot performance. Elke agent heeft één domein. Samen vormen ze het fundament onder je team — of onder de samenwerking met je bureau. Waar tribale kennis nu bij iemand vertrekt, legt The Crew die vast en bouwt erop door.',
     crewPhases:  [
       { num: '01', name: 'Intelligence', desc: 'Begrijp je markt voordat er één euro wordt uitgegeven' },
       { num: '02', name: 'Execution',    desc: 'Strategie wordt campagne, content en mediaplan' },
@@ -139,10 +138,10 @@ const T = {
     heroBody:   'Most advisors talk about AI. I use it to build things that work. Together with Claude I\'ve developed a platform that now runs eight diagnostic products — across pharma, M&A, customer experience and cloud readiness. Production environment. Multiple languages. One architecture.',
 
     // ── The Crew spotlight ──────────────────────────────────────────────
-    crewLabel:   'The Crew · Kirk & Blackbeard',
-    crewKicker:  'NEW — AI agency agents',
-    crewTitle:   'A full-time AI crew for marketing & sales.',
-    crewBody:    'Ten specialised AI agents that run marketing end to end — from client intelligence and market research to strategy, creative, media and reporting. Not to replace your team or agency, but the foundation underneath. Where tribal knowledge walks out the door when someone leaves, The Crew captures it and builds on it.',
+    crewLabel:   'markdekock.com / the crew',
+    crewKicker:  'NEW — AI agents for marketing & sales',
+    crewTitle:   'AI that works alongside your team — not in place of it.',
+    crewBody:    'Ten specialised AI agents that structure marketing from intelligence to execution to performance. Each agent owns one domain. Together they form the foundation underneath your team — or underneath your agency relationship. Where tribal knowledge walks out the door when someone leaves, The Crew captures it and builds on it.',
     crewPhases:  [
       { num: '01', name: 'Intelligence', desc: 'Understand your market before spending a single euro' },
       { num: '02', name: 'Execution',    desc: 'Strategy becomes campaign, content and media plan' },
@@ -280,7 +279,7 @@ export default function WerkPage() {
         </div>
       </section>
 
-      {/* The Crew spotlight — AI agency agents, Kirk & Blackbeard */}
+      {/* The Crew spotlight — AI agents for marketing & sales */}
       <section style={{ background: `linear-gradient(180deg, ${OCEAN} 0%, ${OCEAN_MID} 100%)`, padding: '80px 24px', borderBottom: `1px solid rgba(0,222,255,0.08)` }}>
         <div className="max-w-4xl mx-auto">
           <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-60px' }}>
@@ -295,7 +294,7 @@ export default function WerkPage() {
 
             {/* Wordmark */}
             <motion.p variants={fadeUp} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', marginBottom: 14 }}>
-              Kirk <span style={{ color: CREW_RED }}>&amp;</span> Blackbeard
+              {t.crewLabel}
             </motion.p>
 
             {/* Title */}
