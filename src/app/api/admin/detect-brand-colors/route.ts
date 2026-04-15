@@ -12,8 +12,10 @@ export interface DetectedColor {
   confidence: number // 0–100
 }
 
-// Block private/local addresses (SSRF protection)
-const PRIVATE_HOST = /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|::1|0\.0\.0\.0|169\.254\.)/i
+// Block private/local/reserved addresses (SSRF protection).
+// Covers: loopback, RFC-1918, APIPA/link-local, CGNAT (100.64/10),
+// IPv6 ULA (fc00::/7), cloud metadata endpoints, and class-A reserved.
+const PRIVATE_HOST = /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|169\.254\.|100\.(6[4-9]|[7-9]\d|1[01]\d|12[0-7])\.|0\.|::1|[fFdD][cCdD][0-9a-fA-F]{2}:|metadata\.google\.internal|metadata\.azure\.com)/i
 
 export async function POST(req: NextRequest) {
   if (!(await isAuthorised())) {

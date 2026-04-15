@@ -6,9 +6,10 @@
  * - On login we derive a session token via HMAC-SHA256(secret, 'admin-session-v1').
  * - The cookie holds only the derived token. Rotating ADMIN_SECRET invalidates all sessions.
  * - All admin API routes call isAuthorised() before touching any data.
+ * - Token comparison uses timingSafeEqual to prevent timing-based enumeration attacks.
  */
 
-import { createHmac } from 'crypto'
+import { createHmac, timingSafeEqual } from 'crypto'
 import { cookies } from 'next/headers'
 
 /**
@@ -30,18 +31,26 @@ export function adminCookieOptions(maxAge = 60 * 60 * 8): Parameters<Awaited<Ret
     path: '/',
     maxAge,                                              // 8 hours default
     sameSite: 'strict',
-    secure: process.env.NODE_ENV === 'production',
+    secure: true,                                        // always secure — admin must use HTTPS
   }
 }
 
 /**
  * Returns true if the current request carries a valid admin session cookie.
  * All admin API route handlers must call this at the top.
+ * Uses timing-safe comparison to prevent token enumeration via timing attacks.
  */
 export async function isAuthorised(): Promise<boolean> {
   const cookieStore = await cookies()
   const token = cookieStore.get('admin_token')?.value
   const secret = process.env.ADMIN_SECRET ?? process.env.ADMIN_PASSWORD
   if (!secret || !token) return false
-  return token === deriveSessionToken(secret)
+  try {
+    const expected = deriveSessionToken(secret)
+    // Both are 64-char hex strings from SHA-256 — same length guaranteed
+    return timingSafeEqual(Buffer.from(token, 'hex'), Buffer.from(expected, 'hex'))
+  } catch {
+    // Buffer.from with invalid hex throws — treat as invalid token
+    return false
+  }
 }
