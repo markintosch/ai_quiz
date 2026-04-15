@@ -13,6 +13,12 @@ const BODY       = '#374151'
 const MUTED      = '#94A3B8'
 const BORDER     = '#E2E8F0'
 
+// The Crew palette — mirrors /thecrew styling so the spotlight reads as continuous with it
+const OCEAN     = '#0D1B2A'
+const OCEAN_MID = '#152436'
+const PARADISE  = '#00DEFF'
+const CREW_RED  = '#FF0066'
+
 const CALENDLY_INTAKE = 'https://calendly.com/markiesbpm/ai-intro-meeting-mark-de-kock'
 
 const fadeUp: Variants = {
@@ -34,6 +40,20 @@ const T = {
     heroLabel:  'Wat ik maak',
     heroTitle:  'Ik adviseer niet alleen. Ik maak ook.',
     heroBody:   'De meeste adviseurs praten over AI. Ik gebruik het om dingen te bouwen die werken. Samen met Claude heb ik een platform ontwikkeld dat nu acht diagnostische producten draait — voor sectoren van pharma tot M&A, van klantervaringsmanagement tot cloud readiness. Productieomgeving. Meerdere talen. Één architectuur.',
+
+    // ── The Crew spotlight ──────────────────────────────────────────────
+    crewLabel:   'The Crew · Kirk & Blackbeard',
+    crewKicker:  'NIEUW — AI agency agents',
+    crewTitle:   'Een vaste AI-bemanning voor marketing & sales.',
+    crewBody:    'Tien gespecialiseerde AI-agents die marketing van begin tot eind runnen — van klantintelligentie en marktonderzoek tot strategie, creatie, media en rapportage. Niet om jouw team of bureau te vervangen, maar als fundament eronder. Waar tribale kennis nu bij iemand vertrekt, legt The Crew die vast en bouwt erop door.',
+    crewPhases:  [
+      { num: '01', name: 'Intelligence', desc: 'Begrijp je markt voordat er één euro wordt uitgegeven' },
+      { num: '02', name: 'Execution',    desc: 'Strategie wordt campagne, content en mediaplan' },
+      { num: '03', name: 'Performance',  desc: 'Wat werkte, wat niet, en wat nu' },
+    ],
+    crewAgents:  ['The Lookout', 'The Spyglass', 'The Navigator', 'The Cartographer', 'The Scribe', 'The Quartermaster', 'The Chronometer', 'The Helmsman', "The Ship's Log", "The Captain's Table"],
+    crewCta:     'Ontdek The Crew →',
+    crewMeta:    '10 agents · 3 fases · NL & EN',
 
     platformLabel: 'Het platform',
     platformTitle: 'Één codebase. Acht producten. Zeven klantcontexten.',
@@ -117,6 +137,20 @@ const T = {
     heroLabel:  'What I build',
     heroTitle:  'I don\'t just advise. I build too.',
     heroBody:   'Most advisors talk about AI. I use it to build things that work. Together with Claude I\'ve developed a platform that now runs eight diagnostic products — across pharma, M&A, customer experience and cloud readiness. Production environment. Multiple languages. One architecture.',
+
+    // ── The Crew spotlight ──────────────────────────────────────────────
+    crewLabel:   'The Crew · Kirk & Blackbeard',
+    crewKicker:  'NEW — AI agency agents',
+    crewTitle:   'A full-time AI crew for marketing & sales.',
+    crewBody:    'Ten specialised AI agents that run marketing end to end — from client intelligence and market research to strategy, creative, media and reporting. Not to replace your team or agency, but the foundation underneath. Where tribal knowledge walks out the door when someone leaves, The Crew captures it and builds on it.',
+    crewPhases:  [
+      { num: '01', name: 'Intelligence', desc: 'Understand your market before spending a single euro' },
+      { num: '02', name: 'Execution',    desc: 'Strategy becomes campaign, content and media plan' },
+      { num: '03', name: 'Performance',  desc: 'What worked, what didn\'t, and what\'s next' },
+    ],
+    crewAgents:  ['The Lookout', 'The Spyglass', 'The Navigator', 'The Cartographer', 'The Scribe', 'The Quartermaster', 'The Chronometer', 'The Helmsman', "The Ship's Log", "The Captain's Table"],
+    crewCta:     'Explore The Crew →',
+    crewMeta:    '10 agents · 3 phases · EN & NL',
 
     platformLabel: 'The platform',
     platformTitle: 'One codebase. Eight products. Seven client contexts.',
@@ -242,6 +276,80 @@ export default function WerkPage() {
             <motion.p variants={fadeUp} style={{ fontSize: 17, color: MUTED, lineHeight: 1.7, maxWidth: 540, margin: '0 auto' }}>
               {t.heroBody}
             </motion.p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* The Crew spotlight — AI agency agents, Kirk & Blackbeard */}
+      <section style={{ background: `linear-gradient(180deg, ${OCEAN} 0%, ${OCEAN_MID} 100%)`, padding: '80px 24px', borderBottom: `1px solid rgba(0,222,255,0.08)` }}>
+        <div className="max-w-4xl mx-auto">
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-60px' }}>
+
+            {/* Kicker */}
+            <motion.div variants={fadeUp} style={{ display: 'flex', justifyContent: 'center', marginBottom: 18 }}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 11, fontWeight: 800, letterSpacing: '0.18em', color: PARADISE, background: 'rgba(0,222,255,0.08)', border: `1px solid rgba(0,222,255,0.25)`, borderRadius: 100, padding: '6px 14px', textTransform: 'uppercase' }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: PARADISE, boxShadow: `0 0 12px ${PARADISE}` }} />
+                {t.crewKicker}
+              </span>
+            </motion.div>
+
+            {/* Wordmark */}
+            <motion.p variants={fadeUp} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', marginBottom: 14 }}>
+              Kirk <span style={{ color: CREW_RED }}>&amp;</span> Blackbeard
+            </motion.p>
+
+            {/* Title */}
+            <motion.h2 variants={fadeUp} style={{ textAlign: 'center', fontSize: 'clamp(26px, 4vw, 42px)', fontWeight: 900, color: WHITE, lineHeight: 1.15, marginBottom: 22, letterSpacing: '-0.01em' }}>
+              {t.crewTitle}
+            </motion.h2>
+
+            {/* Body */}
+            <motion.p variants={fadeUp} style={{ textAlign: 'center', fontSize: 16, color: 'rgba(255,255,255,0.72)', lineHeight: 1.75, maxWidth: 640, margin: '0 auto 40px' }}>
+              {t.crewBody}
+            </motion.p>
+
+            {/* Three phases */}
+            <motion.div variants={fadeUp} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14, marginBottom: 36 }}>
+              {t.crewPhases.map((phase, i) => (
+                <div key={i} style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid rgba(0,222,255,0.14)`, borderRadius: 14, padding: '20px 22px' }}>
+                  <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.15em', color: PARADISE, marginBottom: 8 }}>{phase.num}</p>
+                  <p style={{ fontSize: 15, fontWeight: 800, color: WHITE, marginBottom: 6 }}>{phase.name}</p>
+                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.60)', lineHeight: 1.55 }}>{phase.desc}</p>
+                </div>
+              ))}
+            </motion.div>
+
+            {/* Agent chips */}
+            <motion.div variants={fadeUp} style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8, marginBottom: 40 }}>
+              {t.crewAgents.map((agent, i) => (
+                <span key={i} style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.82)', background: 'rgba(0,222,255,0.05)', border: `1px solid rgba(0,222,255,0.22)`, borderRadius: 100, padding: '5px 12px' }}>
+                  {agent}
+                </span>
+              ))}
+            </motion.div>
+
+            {/* CTA */}
+            <motion.div variants={fadeUp} style={{ textAlign: 'center' }}>
+              <a
+                href={`/thecrew/${lang === 'nl' ? 'nl' : 'en'}/`}
+                style={{
+                  display: 'inline-block',
+                  background: PARADISE,
+                  color: OCEAN,
+                  fontWeight: 800,
+                  fontSize: 15,
+                  padding: '14px 32px',
+                  borderRadius: 100,
+                  textDecoration: 'none',
+                  boxShadow: `0 8px 28px rgba(0,222,255,0.30)`,
+                  letterSpacing: '0.01em',
+                }}
+              >
+                {t.crewCta}
+              </a>
+              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', marginTop: 14, letterSpacing: '0.04em' }}>{t.crewMeta}</p>
+            </motion.div>
+
           </motion.div>
         </div>
       </section>
