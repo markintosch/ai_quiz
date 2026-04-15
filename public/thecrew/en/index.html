@@ -916,6 +916,7 @@
     <button class="tab-btn active" onclick="showTab('crew')">The Crew</button>
     <button class="tab-btn" onclick="showTab('architecture')">The System</button>
     <button class="tab-btn" onclick="showTab('operations')">Agency Operations</button>
+    <button class="tab-btn" onclick="showTab('bridge')">⚓ The Bridge</button>
   </div>
   <div class="nav-right">
     <div class="lang-switch">
@@ -1194,7 +1195,7 @@
       <h3>Agency Operations →</h3>
       <p>24 tasks, time savings and a 4-week PoC plan</p>
     </div>
-    <div class="learn-more-card" onclick="window.location.href='/thecrew/bridge/'">
+    <div class="learn-more-card" onclick="showTab('bridge')">
       <h3>⚓ The Bridge →</h3>
       <p>Live command center — fleet status, agent health, reports and outcomes</p>
     </div>
@@ -1957,6 +1958,544 @@
 </div>
 </div>
 
+<!-- ══════════════════════════════════════════════════
+     TAB 4 — THE BRIDGE (Command Center)
+     ══════════════════════════════════════════════════ -->
+<div id="tab-bridge" class="tab-content">
+<style>
+  /* Bridge tab styles — bt- prefix to avoid conflicts */
+  .bt-wrap { padding: 40px 24px 80px; max-width: 1100px; margin: 0 auto; }
+  .bt-section { margin-bottom: 48px; }
+  .bt-section-label {
+    font-size: 10px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--text-dim); padding-bottom: 10px; margin-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .bt-section-label span { color: var(--paradise); }
+  .bt-demo-bar {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.18);
+    border-radius: 10px; padding: 10px 16px; margin-bottom: 28px;
+    font-size: 12px; color: rgba(255,180,0,0.8);
+  }
+  .bt-demo-bar strong { color: var(--gold); }
+
+  /* KPI strip */
+  .bt-kpis { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; }
+  .bt-kpi {
+    background: var(--ocean-mid); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px; padding: 16px 18px;
+  }
+  .bt-kpi-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; }
+  .bt-kpi-val { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; line-height: 1; }
+  .bt-kpi-val.p { color: var(--paradise); }
+  .bt-kpi-val.g { color: var(--green); }
+  .bt-kpi-val.a { color: var(--gold); }
+  .bt-kpi-sub { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+
+  /* Projects */
+  .bt-projects { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+  .bt-proj {
+    background: var(--ocean-mid); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px; padding: 20px; transition: border-color .2s;
+  }
+  .bt-proj:hover { border-color: rgba(0,222,255,0.18); }
+  .bt-proj.pending { border-color: rgba(255,180,0,0.28); }
+  .bt-proj-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .bt-client { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 3px; }
+  .bt-name { font-size: 15px; font-weight: 700; color: var(--text); }
+  .bt-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 700; padding: 4px 9px; border-radius: 20px; white-space: nowrap; }
+  .bt-pill.run { background: rgba(0,255,153,0.1); color: var(--green); border: 1px solid rgba(0,255,153,0.2); }
+  .bt-pill.wait { background: rgba(255,180,0,0.1); color: var(--gold); border: 1px solid rgba(255,180,0,0.22); }
+  .bt-pdot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; animation: bpulse 2s infinite; }
+  @keyframes bpulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+  .bt-phase { display: inline-block; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 4px; background: rgba(0,222,255,0.06); color: rgba(0,222,255,.75); margin-bottom: 10px; }
+  .bt-pips { display: flex; gap: 5px; margin: 8px 0; }
+  .bt-pip { font-size: 14px; padding: 3px 6px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.06); border-radius: 6px; }
+  .bt-pfooter { font-size: 11px; color: var(--text-dim); border-top: 1px solid rgba(255,255,255,.06); margin-top: 10px; padding-top: 8px; }
+  .bt-pfooter .acc { color: var(--green); }
+  .bt-pfooter .wrn { color: var(--gold); }
+
+  /* Agents */
+  .bt-agents { display: grid; grid-template-columns: repeat(5,1fr); gap: 10px; }
+  .bt-agent {
+    background: var(--ocean-mid); border: 1px solid rgba(255,255,255,.06);
+    border-radius: 12px; padding: 14px; cursor: pointer; transition: all .2s;
+  }
+  .bt-agent:hover { border-color: rgba(0,222,255,.2); }
+  .bt-agent.open { border-color: rgba(0,222,255,.3); background: rgba(0,222,255,.03); }
+  .bt-aicon { font-size: 20px; margin-bottom: 6px; }
+  .bt-aname { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 1px; }
+  .bt-arole { font-size: 10px; color: var(--text-dim); margin-bottom: 8px; }
+  .bt-ameta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+  .bt-run { font-size: 10px; font-weight: 600; background: rgba(0,222,255,.06); color: rgba(0,222,255,.7); border-radius: 4px; padding: 1px 6px; }
+  .bt-alast { font-size: 10px; color: var(--text-dim); margin-top: 4px; }
+  .bt-hbar-wrap { margin-top: 8px; }
+  .bt-hbar-label { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-dim); margin-bottom: 3px; }
+  .bt-hbar { height: 3px; background: rgba(255,255,255,.07); border-radius: 2px; overflow: hidden; }
+  .bt-hfill { height: 100%; border-radius: 2px; }
+  .bt-hfill.g { background: var(--green); }
+  .bt-hfill.a { background: var(--gold); }
+  .bt-expand { font-size: 10px; color: var(--text-dim); text-align: right; margin-top: 6px; }
+  .bt-detail { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.05); }
+  .bt-detail.open { display: block; }
+  .bt-dr { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: 11px; border-bottom: 1px solid rgba(255,255,255,.04); }
+  .bt-dr:last-child { border-bottom: none; }
+  .bt-dk { color: var(--text-dim); }
+  .bt-dv { font-weight: 600; color: var(--text); }
+  .bt-dv.g { color: var(--green); }
+  .bt-dv.a { color: var(--gold); }
+
+  /* Log */
+  .bt-log-filters { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+  .bt-lbtn { font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,.06); background: transparent; color: var(--text-dim); cursor: pointer; transition: all .2s; }
+  .bt-lbtn.active,.bt-lbtn:hover { background: rgba(0,222,255,.08); border-color: rgba(0,222,255,.2); color: var(--paradise); }
+  .bt-feed { display: flex; flex-direction: column; gap: 8px; }
+  .bt-entry { background: var(--ocean-mid); border: 1px solid rgba(255,255,255,.06); border-left: 3px solid rgba(255,255,255,.06); border-radius: 0 10px 10px 0; padding: 14px 16px; display: grid; grid-template-columns: 28px 1fr auto; gap: 12px; align-items: start; }
+  .bt-e-chron  { border-left-color: #00DEFF; }
+  .bt-e-helm   { border-left-color: #FFB400; }
+  .bt-e-look   { border-left-color: #00FF99; }
+  .bt-e-spy    { border-left-color: #9B6DFF; }
+  .bt-e-nav    { border-left-color: #FF6B6B; }
+  .bt-e-slog   { border-left-color: #54C5D0; }
+  .bt-eicon { font-size: 18px; margin-top: 1px; }
+  .bt-emeta { font-size: 10px; color: var(--text-dim); margin-bottom: 3px; }
+  .bt-etitle { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .bt-etext { font-size: 12px; color: var(--text-mid); line-height: 1.55; }
+  .bt-elinks { display: flex; gap: 6px; margin-top: 8px; }
+  .bt-elink { font-size: 10px; font-weight: 600; color: var(--paradise); padding: 3px 8px; border: 1px solid rgba(0,222,255,.2); border-radius: 4px; cursor: pointer; }
+  .bt-ecost { font-size: 10px; color: var(--text-dim); text-align: right; white-space: nowrap; }
+
+  /* Savings */
+  .bt-savings { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+  .bt-sp { background: var(--ocean-mid); border: 1px solid rgba(255,255,255,.06); border-radius: 14px; padding: 22px; }
+  .bt-sp-title { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 14px; }
+  .bt-hero { font-size: 40px; font-weight: 800; letter-spacing: -.03em; line-height: 1; color: var(--paradise); margin-bottom: 3px; }
+  .bt-hero.g { color: var(--green); }
+  .bt-sublabel { font-size: 12px; color: var(--text-dim); margin-bottom: 16px; }
+  .bt-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding: 3px 0; }
+  .bt-rk { color: var(--text-dim); }
+  .bt-rv { font-weight: 700; color: var(--text); }
+  .bt-rv.g { color: var(--green); }
+  .bt-rv.p { color: var(--paradise); }
+  .bt-bar-wrap { margin: 3px 0 6px; }
+  .bt-bar { height: 4px; background: rgba(255,255,255,.06); border-radius: 2px; overflow: hidden; }
+  .bt-bfill { height: 100%; border-radius: 2px; }
+  .bt-divider { border-top: 1px solid rgba(255,255,255,.06); margin: 10px 0; }
+  .bt-btrack { height: 8px; background: rgba(255,255,255,.06); border-radius: 4px; overflow: hidden; margin-bottom: 16px; }
+  .bt-btrack-fill { height: 100%; background: linear-gradient(90deg,var(--paradise),rgba(0,222,255,.4)); border-radius: 4px; }
+  .bt-bheader { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-dim); margin-bottom: 4px; }
+  .bt-okgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .bt-okpi { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.06); border-radius: 8px; padding: 10px; }
+  .bt-oklabel { font-size: 10px; color: var(--text-dim); margin-bottom: 2px; }
+  .bt-okval { font-size: 20px; font-weight: 800; letter-spacing: -.02em; color: var(--text); }
+  .bt-okval.g { color: var(--green); }
+  .bt-oktarget { font-size: 10px; color: var(--text-dim); margin-top: 1px; }
+  .bt-ratio { margin-top: 12px; padding: 10px 12px; background: rgba(0,255,153,.06); border: 1px solid rgba(0,255,153,.15); border-radius: 8px; font-size: 11px; color: var(--text-mid); line-height: 1.55; }
+  .bt-ratio strong { color: var(--green); }
+
+  /* Approval */
+  .bt-approval { background: rgba(255,180,0,.04); border: 1px solid rgba(255,180,0,.22); border-radius: 14px; padding: 22px 24px; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; }
+  .bt-gate { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; color: var(--gold); background: rgba(255,180,0,.1); padding: 4px 10px; border-radius: 20px; margin-bottom: 8px; }
+  .bt-atitle { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .bt-adesc { font-size: 12px; color: var(--text-mid); margin-bottom: 10px; }
+  .bt-aitems { display: flex; gap: 6px; flex-wrap: wrap; }
+  .bt-aitem { font-size: 10px; font-weight: 600; padding: 3px 8px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.06); border-radius: 4px; color: var(--text-mid); }
+  .bt-await { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--gold); margin-top: 10px; }
+  .bt-aactions { display: flex; flex-direction: column; gap: 8px; min-width: 148px; }
+  .bt-go { padding: 11px 18px; background: var(--green); color: var(--ocean); font-weight: 800; font-size: 13px; border: none; border-radius: 8px; cursor: pointer; text-align: center; transition: opacity .2s; }
+  .bt-go:hover { opacity: .85; }
+  .bt-ghost { padding: 9px 18px; background: transparent; color: var(--text-dim); font-weight: 600; font-size: 12px; border: 1px solid rgba(255,255,255,.06); border-radius: 8px; cursor: pointer; text-align: center; transition: all .2s; }
+  .bt-ghost:hover { border-color: rgba(255,255,255,.18); color: var(--text); }
+
+  /* Responsive */
+  @media(max-width:900px){
+    .bt-kpis { grid-template-columns: repeat(3,1fr); }
+    .bt-projects { grid-template-columns: 1fr; }
+    .bt-agents { grid-template-columns: repeat(3,1fr); }
+    .bt-savings { grid-template-columns: 1fr; }
+    .bt-approval { grid-template-columns: 1fr; }
+  }
+  @media(max-width:600px){
+    .bt-kpis { grid-template-columns: 1fr 1fr; }
+    .bt-agents { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+
+<div class="bt-wrap">
+
+  <!-- Demo notice -->
+  <div class="bt-demo-bar">
+    ⚓ <span><strong>The Bridge — Demo mode.</strong> This shows what your command center looks like with a live Crew deployment. Every number, every agent, every report — real in production.</span>
+  </div>
+
+  <!-- ── MODULE 1: FLEET STATUS ── -->
+  <div class="bt-section">
+    <div class="bt-kpis" style="margin-bottom:28px;">
+      <div class="bt-kpi"><div class="bt-kpi-label">Active Projects</div><div class="bt-kpi-val p">3</div><div class="bt-kpi-sub">+1 completed this month</div></div>
+      <div class="bt-kpi"><div class="bt-kpi-label">Awaiting Approval</div><div class="bt-kpi-val a">1</div><div class="bt-kpi-sub">TechFlow · 14h waiting</div></div>
+      <div class="bt-kpi"><div class="bt-kpi-label">Hours Saved · Q2</div><div class="bt-kpi-val g">480h</div><div class="bt-kpi-sub">€48,000 FTE equivalent</div></div>
+      <div class="bt-kpi"><div class="bt-kpi-label">Reports Filed · Week</div><div class="bt-kpi-val">12</div><div class="bt-kpi-sub">Last: Chronometer 09:14</div></div>
+      <div class="bt-kpi"><div class="bt-kpi-label">AI Budget · Month</div><div class="bt-kpi-val">€340</div><div class="bt-kpi-sub">of €500 · 68% used</div></div>
+    </div>
+
+    <div class="bt-section-label"><span>01</span> · Fleet Status — Active Projects</div>
+    <div class="bt-projects">
+      <div class="bt-proj">
+        <div class="bt-proj-head">
+          <div><div class="bt-client">Acme B2B</div><div class="bt-name">Q2 Performance Campaign</div></div>
+          <span class="bt-pill run"><span class="bt-pdot"></span>Running</span>
+        </div>
+        <div class="bt-phase">Phase 3 · Performance</div>
+        <div class="bt-pips"><span class="bt-pip">⏱️</span><span class="bt-pip">📈</span><span class="bt-pip">📖</span></div>
+        <div class="bt-pfooter">⏱️ Chronometer · Daily report · 2h ago · <span class="acc">4.2× ROAS</span></div>
+      </div>
+      <div class="bt-proj pending">
+        <div class="bt-proj-head">
+          <div><div class="bt-client">TechFlow SaaS</div><div class="bt-name">Product Launch — EMEA</div></div>
+          <span class="bt-pill wait"><span class="bt-pdot"></span>Awaiting ⏸</span>
+        </div>
+        <div class="bt-phase">Phase Gate 2 · Execution → Performance</div>
+        <div class="bt-pips"><span class="bt-pip">🗺️</span><span class="bt-pip">✍️</span><span class="bt-pip">💰</span></div>
+        <div class="bt-pfooter">🧭 Navigator · Positioning delivered · 14h ago · <span class="wrn">Approval needed</span></div>
+      </div>
+      <div class="bt-proj">
+        <div class="bt-proj-head">
+          <div><div class="bt-client">Breda Consulting</div><div class="bt-name">EMEA Market Entry</div></div>
+          <span class="bt-pill run"><span class="bt-pdot"></span>Running</span>
+        </div>
+        <div class="bt-phase">Phase 1 · Intelligence</div>
+        <div class="bt-pips"><span class="bt-pip">🔍</span><span class="bt-pip">🔭</span><span class="bt-pip">🧭</span></div>
+        <div class="bt-pfooter">🔭 Spyglass · Competitor scan · 45m ago · 6 markets mapped</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MODULE 2+3: MUSTER ROLL + AGENT HEALTH ── -->
+  <div class="bt-section">
+    <div class="bt-section-label"><span>02</span> · The Muster Roll — All Agents <small style="font-weight:400;color:var(--text-dim);font-size:10px;letter-spacing:0"> · Click any card for health profile</small></div>
+    <div class="bt-agents">
+
+      <div class="bt-agent" onclick="btToggle(this)">
+        <div class="bt-aicon">🔍</div><div class="bt-aname">The Lookout</div><div class="bt-arole">Client Intelligence</div>
+        <div class="bt-ameta"><span class="bt-pill run" style="font-size:9px;padding:2px 7px"><span class="bt-pdot"></span>Active</span><span class="bt-run">Run 4</span></div>
+        <div class="bt-alast">Breda EMEA · 45m ago</div>
+        <div class="bt-hbar-wrap"><div class="bt-hbar-label"><span>Health</span><span>82</span></div><div class="bt-hbar"><div class="bt-hfill g" style="width:82%"></div></div></div>
+        <div class="bt-detail">
+          <div class="bt-dr"><span class="bt-dk">Training level</span><span class="bt-dv g">Run 4 · Pattern recognition</span></div>
+          <div class="bt-dr"><span class="bt-dk">Context freshness</span><span class="bt-dv g">Fresh · 45m ago</span></div>
+          <div class="bt-dr"><span class="bt-dk">Data sources</span><span class="bt-dv">CRM · GA4 · Notion</span></div>
+          <div class="bt-dr"><span class="bt-dk">Records ingested</span><span class="bt-dv">2,840 this cycle</span></div>
+          <div class="bt-dr"><span class="bt-dk">Confidence</span><span class="bt-dv g">4.1 / 5</span></div>
+          <div class="bt-dr"><span class="bt-dk">Tokens · month</span><span class="bt-dv">48,200 · €1.54</span></div>
+          <div class="bt-dr"><span class="bt-dk">Output trend</span><span class="bt-dv g">Improving ↑</span></div>
+        </div>
+        <div class="bt-expand">↕ Health profile</div>
+      </div>
+
+      <div class="bt-agent" onclick="btToggle(this)">
+        <div class="bt-aicon">🔭</div><div class="bt-aname">The Spyglass</div><div class="bt-arole">Market &amp; Competitors</div>
+        <div class="bt-ameta"><span class="bt-pill run" style="font-size:9px;padding:2px 7px"><span class="bt-pdot"></span>Active</span><span class="bt-run">Run 4</span></div>
+        <div class="bt-alast">Breda EMEA · 45m ago</div>
+        <div class="bt-hbar-wrap"><div class="bt-hbar-label"><span>Health</span><span>78</span></div><div class="bt-hbar"><div class="bt-hfill g" style="width:78%"></div></div></div>
+        <div class="bt-detail">
+          <div class="bt-dr"><span class="bt-dk">Training level</span><span class="bt-dv g">Run 4 · Pattern recognition</span></div>
+          <div class="bt-dr"><span class="bt-dk">Context freshness</span><span class="bt-dv g">Fresh · 45m ago</span></div>
+          <div class="bt-dr"><span class="bt-dk">Data sources</span><span class="bt-dv">Web · LinkedIn · SimilarWeb</span></div>
+          <div class="bt-dr"><span class="bt-dk">Competitors tracked</span><span class="bt-dv">18 across 3 projects</span></div>
+          <div class="bt-dr"><span class="bt-dk">Confidence</span><span class="bt-dv g">3.9 / 5</span></div>
+          <div class="bt-dr"><span class="bt-dk">Tokens · month</span><span class="bt-dv">62,400 · €1.99</span></div>
+          <div class="bt-dr"><span class="bt-dk">Output trend</span><span class="bt-dv g">Stable →</span></div>
+        </div>
+        <div class="bt-expand">↕ Health profile</div>
+      </div>
+
+      <div class="bt-agent" onclick="btToggle(this)">
+        <div class="bt-aicon">🧭</div><div class="bt-aname">The Navigator</div><div class="bt-arole">Strategy &amp; Positioning</div>
+        <div class="bt-ameta"><span style="font-size:9px;padding:2px 7px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:var(--text-dim);border-radius:20px;display:inline-flex;align-items:center;gap:4px;"><span style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block"></span>Idle</span><span class="bt-run">Run 6</span></div>
+        <div class="bt-alast">TechFlow · Positioning · 14h ago</div>
+        <div class="bt-hbar-wrap"><div class="bt-hbar-label"><span>Health</span><span>85</span></div><div class="bt-hbar"><div class="bt-hfill g" style="width:85%"></div></div></div>
+        <div class="bt-detail">
+          <div class="bt-dr"><span class="bt-dk">Training level</span><span class="bt-dv g">Run 6 · Deep brand knowledge</span></div>
+          <div class="bt-dr"><span class="bt-dk">Context freshness</span><span class="bt-dv a">Stale · 14h ago</span></div>
+          <div class="bt-dr"><span class="bt-dk">Strategies delivered</span><span class="bt-dv">6 (all with contra-argument)</span></div>
+          <div class="bt-dr"><span class="bt-dk">Confidence</span><span class="bt-dv g">4.3 / 5</span></div>
+          <div class="bt-dr"><span class="bt-dk">Tokens · month</span><span class="bt-dv">84,200 · €2.69</span></div>
+          <div class="bt-dr"><span class="bt-dk">Output trend</span><span class="bt-dv g">Improving ↑</span></div>
+        </div>
+        <div class="bt-expand">↕ Health profile</div>
+      </div>
+
+      <div class="bt-agent" onclick="btToggle(this)">
+        <div class="bt-aicon">🗺️</div><div class="bt-aname">The Cartographer</div><div class="bt-arole">Campaign Architect</div>
+        <div class="bt-ameta"><span class="bt-pill wait" style="font-size:9px;padding:2px 7px"><span class="bt-pdot"></span>Awaiting ⏸</span><span class="bt-run">Run 6</span></div>
+        <div class="bt-alast">TechFlow · Phase Gate 2</div>
+        <div class="bt-hbar-wrap"><div class="bt-hbar-label"><span>Health</span><span>88</span></div><div class="bt-hbar"><div class="bt-hfill g" style="width:88%"></div></div></div>
+        <div class="bt-detail">
+          <div class="bt-dr"><span class="bt-dk">Training level</span><span class="bt-dv g">Run 6 · Deep brand knowledge</span></div>
+          <div class="bt-dr"><span class="bt-dk">Campaigns planned</span><span class="bt-dv">6 full campaigns</span></div>
+          <div class="bt-dr"><span class="bt-dk">Avg. funnels mapped</span><span class="bt-dv">4.2 per campaign</span></div>
+          <div class="bt-dr"><span class="bt-dk">Confidence</span><span class="bt-dv g">4.4 / 5</span></div>
+          <div class="bt-dr"><span class="bt-dk">Tokens · month</span><span class="bt-dv">56,800 · €1.81</span></div>
+          <div class="bt-dr"><span class="bt-dk">Output trend</span><span class="bt-dv g">Stable →</span></div>
+        </div>
+        <div class="bt-expand">↕ Health profile</div>
+      </div>
+
+      <div class="bt-agent" onclick="btToggle(this)">
+        <div class="bt-aicon">✍️</div><div class="bt-aname">The Scribe</div><div class="bt-arole">Creative &amp; Content</div>
+        <div class="bt-ameta"><span class="bt-pill wait" style="font-size:9px;padding:2px 7px"><span class="bt-pdot"></span>Awaiting ⏸</span><span class="bt-run">Run 8</span></div>
+        <div class="bt-alast">TechFlow · 120 assets ready</div>
+        <div class="bt-hbar-wrap"><div class="bt-hbar-label"><span>Health</span><span>91</span></div><div class="bt-hbar"><div class="bt-hfill g" style="width:91%"></div></div></div>
+        <div class="bt-detail">
+          <div class="bt-dr"><span class="bt-dk">Training level</span><span class="bt-dv g">Run 8 · Brand voice mastery</span></div>
+          <div class="bt-dr"><span class="bt-dk">Total copy pieces</span><span class="bt-dv">340 across all projects</span></div>
+          <div class="bt-dr"><span class="bt-dk">Brand voice score</span><span class="bt-dv g">4.6 / 5 · Consistent</span></div>
+          <div class="bt-dr"><span class="bt-dk">1st-draft approve rate</span><span class="bt-dv g">89%</span></div>
+          <div class="bt-dr"><span class="bt-dk">Tokens · month</span><span class="bt-dv">112,400 · €3.60</span></div>
+          <div class="bt-dr"><span class="bt-dk">Output trend</span><span class="bt-dv g">Improving ↑</span></div>
+        </div>
+        <div class="bt-expand">↕ Health profile</div>
+      </div>
+
+      <div class="bt-agent" onclick="btToggle(this)">
+        <div class="bt-aicon">💰</div><div class="bt-aname">The Quartermaster</div><div class="bt-arole">Media &amp; Budget</div>
+        <div class="bt-ameta"><span class="bt-pill wait" style="font-size:9px;padding:2px 7px"><span class="bt-pdot"></span>Awaiting ⏸</span><span class="bt-run">Run 6</span></div>
+        <div class="bt-alast">TechFlow · €80k plan ready</div>
+        <div class="bt-hbar-wrap"><div class="bt-hbar-label"><span>Health</span><span>84</span></div><div class="bt-hbar"><div class="bt-hfill g" style="width:84%"></div></div></div>
+        <div class="bt-detail">
+          <div class="bt-dr"><span class="bt-dk">Training level</span><span class="bt-dv g">Run 6 · Deep brand knowledge</span></div>
+          <div class="bt-dr"><span class="bt-dk">Total budget managed</span><span class="bt-dv">€225,000 / 4 campaigns</span></div>
+          <div class="bt-dr"><span class="bt-dk">Avg. ROAS delivered</span><span class="bt-dv g">3.8× (target 3.0×)</span></div>
+          <div class="bt-dr"><span class="bt-dk">Confidence</span><span class="bt-dv g">4.2 / 5</span></div>
+          <div class="bt-dr"><span class="bt-dk">Tokens · month</span><span class="bt-dv">44,600 · €1.43</span></div>
+          <div class="bt-dr"><span class="bt-dk">Output trend</span><span class="bt-dv g">Improving ↑</span></div>
+        </div>
+        <div class="bt-expand">↕ Health profile</div>
+      </div>
+
+      <div class="bt-agent" onclick="btToggle(this)">
+        <div class="bt-aicon">⏱️</div><div class="bt-aname">The Chronometer</div><div class="bt-arole">Data &amp; Trends</div>
+        <div class="bt-ameta"><span class="bt-pill run" style="font-size:9px;padding:2px 7px"><span class="bt-pdot"></span>Active</span><span class="bt-run">Run 10</span></div>
+        <div class="bt-alast">Acme Q2 · Daily report · 2h ago</div>
+        <div class="bt-hbar-wrap"><div class="bt-hbar-label"><span>Health</span><span>94</span></div><div class="bt-hbar"><div class="bt-hfill g" style="width:94%"></div></div></div>
+        <div class="bt-detail">
+          <div class="bt-dr"><span class="bt-dk">Training level</span><span class="bt-dv g">Run 10 · Full mastery</span></div>
+          <div class="bt-dr"><span class="bt-dk">Context freshness</span><span class="bt-dv g">Fresh · 2h · daily cadence</span></div>
+          <div class="bt-dr"><span class="bt-dk">Data sources</span><span class="bt-dv">GA4 · Meta · LinkedIn · CRM</span></div>
+          <div class="bt-dr"><span class="bt-dk">Anomalies detected</span><span class="bt-dv">14 this month (12 actioned)</span></div>
+          <div class="bt-dr"><span class="bt-dk">Confidence</span><span class="bt-dv g">4.7 / 5</span></div>
+          <div class="bt-dr"><span class="bt-dk">Tokens · month</span><span class="bt-dv">128,600 · €4.11</span></div>
+          <div class="bt-dr"><span class="bt-dk">Output trend</span><span class="bt-dv g">Stable →</span></div>
+        </div>
+        <div class="bt-expand">↕ Health profile</div>
+      </div>
+
+      <div class="bt-agent" onclick="btToggle(this)">
+        <div class="bt-aicon">📈</div><div class="bt-aname">The Helmsman</div><div class="bt-arole">Growth &amp; Experimentation</div>
+        <div class="bt-ameta"><span class="bt-pill run" style="font-size:9px;padding:2px 7px"><span class="bt-pdot"></span>Active</span><span class="bt-run">Run 5</span></div>
+        <div class="bt-alast">Acme Q2 · Experiments · 3h ago</div>
+        <div class="bt-hbar-wrap"><div class="bt-hbar-label"><span>Health</span><span>79</span></div><div class="bt-hbar"><div class="bt-hfill g" style="width:79%"></div></div></div>
+        <div class="bt-detail">
+          <div class="bt-dr"><span class="bt-dk">Training level</span><span class="bt-dv g">Run 5 · Stat. confidence building</span></div>
+          <div class="bt-dr"><span class="bt-dk">Active experiments</span><span class="bt-dv">4 (2 near significance)</span></div>
+          <div class="bt-dr"><span class="bt-dk">Win rate</span><span class="bt-dv g">62% of closed tests</span></div>
+          <div class="bt-dr"><span class="bt-dk">ICE backlog</span><span class="bt-dv">11 ideas scored &amp; queued</span></div>
+          <div class="bt-dr"><span class="bt-dk">Tokens · month</span><span class="bt-dv">38,200 · €1.22</span></div>
+          <div class="bt-dr"><span class="bt-dk">Output trend</span><span class="bt-dv g">Improving ↑</span></div>
+        </div>
+        <div class="bt-expand">↕ Health profile</div>
+      </div>
+
+      <div class="bt-agent" onclick="btToggle(this)">
+        <div class="bt-aicon">📖</div><div class="bt-aname">The Ship's Log</div><div class="bt-arole">Reporting &amp; Insights</div>
+        <div class="bt-ameta"><span style="font-size:9px;padding:2px 7px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:var(--text-dim);border-radius:20px;display:inline-flex;align-items:center;gap:4px;"><span style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block"></span>Idle</span><span class="bt-run">Run 7</span></div>
+        <div class="bt-alast">Acme Q2 · Weekly summary · 2d ago</div>
+        <div class="bt-hbar-wrap"><div class="bt-hbar-label"><span>Health</span><span>87</span></div><div class="bt-hbar"><div class="bt-hfill g" style="width:87%"></div></div></div>
+        <div class="bt-detail">
+          <div class="bt-dr"><span class="bt-dk">Training level</span><span class="bt-dv g">Run 7 · Executive narrative</span></div>
+          <div class="bt-dr"><span class="bt-dk">Reports generated</span><span class="bt-dv">7 weeklies + 2 QBRs</span></div>
+          <div class="bt-dr"><span class="bt-dk">Board approval rate</span><span class="bt-dv g">100% — no rewrites needed</span></div>
+          <div class="bt-dr"><span class="bt-dk">Confidence</span><span class="bt-dv g">4.4 / 5</span></div>
+          <div class="bt-dr"><span class="bt-dk">Tokens · month</span><span class="bt-dv">72,800 · €2.33</span></div>
+          <div class="bt-dr"><span class="bt-dk">Output trend</span><span class="bt-dv g">Stable →</span></div>
+        </div>
+        <div class="bt-expand">↕ Health profile</div>
+      </div>
+
+      <div class="bt-agent" onclick="btToggle(this)">
+        <div class="bt-aicon">⚙️</div><div class="bt-aname">Captain's Table</div><div class="bt-arole">Coordination Hub</div>
+        <div class="bt-ameta"><span class="bt-pill run" style="font-size:9px;padding:2px 7px"><span class="bt-pdot"></span>Active</span><span class="bt-run">Run 10+</span></div>
+        <div class="bt-alast">All 3 projects · Coordinating</div>
+        <div class="bt-hbar-wrap"><div class="bt-hbar-label"><span>Health</span><span>96</span></div><div class="bt-hbar"><div class="bt-hfill g" style="width:96%"></div></div></div>
+        <div class="bt-detail">
+          <div class="bt-dr"><span class="bt-dk">Training level</span><span class="bt-dv g">Run 10+ · Full system mastery</span></div>
+          <div class="bt-dr"><span class="bt-dk">Projects coordinated</span><span class="bt-dv">3 active · 4 completed</span></div>
+          <div class="bt-dr"><span class="bt-dk">Handoff accuracy</span><span class="bt-dv g">98% — 1 manual correction</span></div>
+          <div class="bt-dr"><span class="bt-dk">Avg. Phase 1–3 cycle</span><span class="bt-dv">6.2 days</span></div>
+          <div class="bt-dr"><span class="bt-dk">Tokens · month</span><span class="bt-dv">32,400 · €1.04</span></div>
+          <div class="bt-dr"><span class="bt-dk">Output trend</span><span class="bt-dv g">Stable →</span></div>
+        </div>
+        <div class="bt-expand">↕ Health profile</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── MODULE 4: THE LOG ── -->
+  <div class="bt-section">
+    <div class="bt-section-label"><span>03</span> · The Log — Agent Reports</div>
+    <div class="bt-log-filters">
+      <button class="bt-lbtn active">All reports</button>
+      <button class="bt-lbtn">Performance</button>
+      <button class="bt-lbtn">Strategy</button>
+      <button class="bt-lbtn">Intelligence</button>
+    </div>
+    <div class="bt-feed">
+      <div class="bt-entry bt-e-chron">
+        <div class="bt-eicon">⏱️</div>
+        <div>
+          <div class="bt-emeta">Chronometer · Today 09:14 · Acme B2B Q2 · Daily Performance</div>
+          <div class="bt-etitle">Daily Performance Report — Week 8</div>
+          <div class="bt-etext">"CTR on LinkedIn dropped 18% vs. 7-day avg. Anomaly flagged. Hypothesis: creative variant C underperforming vs. control. Recommend A/B hold 72h. ROAS stable at 4.2×. CPA €28 — 20% below target."</div>
+          <div class="bt-elinks"><span class="bt-elink">Read full report</span><span class="bt-elink">View data</span></div>
+        </div>
+        <div class="bt-ecost">3,840 tokens<br>€0.12</div>
+      </div>
+      <div class="bt-entry bt-e-helm">
+        <div class="bt-eicon">📈</div>
+        <div>
+          <div class="bt-emeta">Helmsman · Today 08:52 · Acme B2B Q2 · Experiment Update</div>
+          <div class="bt-etitle">Experiment Backlog — 4 Active Tests</div>
+          <div class="bt-etext">"Test #3 (headline variant) at 87% confidence — recommend 48h hold before scaling. Test #1 (audience expansion) closed: negative result, revert. Top ICE priority: landing page CTA copy (score 7.8)."</div>
+          <div class="bt-elinks"><span class="bt-elink">View backlog</span><span class="bt-elink">ICE scores</span></div>
+        </div>
+        <div class="bt-ecost">2,100 tokens<br>€0.07</div>
+      </div>
+      <div class="bt-entry bt-e-look">
+        <div class="bt-eicon">🔍</div>
+        <div>
+          <div class="bt-emeta">Lookout · Today 07:30 · Breda Consulting EMEA · Internal Data</div>
+          <div class="bt-etitle">ICP Validation — EMEA Market Entry</div>
+          <div class="bt-etext">"CRM analysis: 340 accounts reviewed. Primary ICP confirmed: mid-market manufacturing, 200–800 employees, procurement-led. Secondary segment: logistics operators with digital transformation mandate. Baseline: 3.2% MQL→SQL."</div>
+          <div class="bt-elinks"><span class="bt-elink">ICP report</span><span class="bt-elink">Opportunity map</span></div>
+        </div>
+        <div class="bt-ecost">4,200 tokens<br>€0.13</div>
+      </div>
+      <div class="bt-entry bt-e-spy">
+        <div class="bt-eicon">🔭</div>
+        <div>
+          <div class="bt-emeta">Spyglass · Today 06:55 · Breda Consulting EMEA · Market Intel</div>
+          <div class="bt-etitle">Competitive Scan — 6 EMEA Markets</div>
+          <div class="bt-etext">"18 competitors mapped. Category leader pulling back from DACH paid channels — share opportunity. 3 positioning gaps identified: speed-to-deployment, mid-market pricing, local-language support."</div>
+          <div class="bt-elinks"><span class="bt-elink">Competitor map</span><span class="bt-elink">Gap analysis</span></div>
+        </div>
+        <div class="bt-ecost">5,600 tokens<br>€0.17</div>
+      </div>
+      <div class="bt-entry bt-e-nav">
+        <div class="bt-eicon">🧭</div>
+        <div>
+          <div class="bt-emeta">Navigator · Yesterday 16:40 · TechFlow SaaS EMEA · Strategy</div>
+          <div class="bt-etitle">Positioning Delivered — 3 Options + Contra-Argument</div>
+          <div class="bt-etext">"Recommended: 'The only platform that deploys in 48h — or your first quarter is free.' Contra-argument: claim vulnerable if onboarding SLAs slip. Requires legal sign-off before activating."</div>
+          <div class="bt-elinks"><span class="bt-elink">Strategy brief</span><span class="bt-elink">Stakeholder deck</span></div>
+        </div>
+        <div class="bt-ecost">8,400 tokens<br>€0.27</div>
+      </div>
+      <div class="bt-entry bt-e-slog">
+        <div class="bt-eicon">📖</div>
+        <div>
+          <div class="bt-emeta">Ship's Log · 2 days ago · Acme B2B Q2 · Weekly Executive Summary</div>
+          <div class="bt-etitle">Week 7 Executive Summary — Board Ready</div>
+          <div class="bt-etext">"Week 7: 108% of target pace. ROAS 4.1×. 1,640 leads YTD. Key win: content velocity doubled — 40 pieces in 5 days vs. 3 weeks previously. Recommendation: increase Meta budget €5k for final 3 weeks."</div>
+          <div class="bt-elinks"><span class="bt-elink">Full summary</span><span class="bt-elink">Board deck</span></div>
+        </div>
+        <div class="bt-ecost">6,200 tokens<br>€0.20</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MODULE 5: SAVINGS & RETURN ── -->
+  <div class="bt-section">
+    <div class="bt-section-label"><span>04</span> · Time Savings &amp; Return</div>
+    <div class="bt-savings">
+      <div class="bt-sp">
+        <div class="bt-sp-title">Time Savings</div>
+        <div class="bt-hero">480h</div>
+        <div class="bt-sublabel">saved this quarter · Q2 2025</div>
+        <div class="bt-row"><span class="bt-rk">FTE equivalent</span><span class="bt-rv p">€48,000</span></div>
+        <div class="bt-divider"></div>
+        <div class="bt-row"><span class="bt-rk">Content &amp; Creative</span><span class="bt-rv">142h</span></div>
+        <div class="bt-bar-wrap"><div class="bt-bar"><div class="bt-bfill" style="width:30%;background:var(--purple)"></div></div></div>
+        <div class="bt-row"><span class="bt-rk">Research &amp; Intelligence</span><span class="bt-rv">128h</span></div>
+        <div class="bt-bar-wrap"><div class="bt-bar"><div class="bt-bfill" style="width:27%;background:var(--green)"></div></div></div>
+        <div class="bt-row"><span class="bt-rk">Analytics &amp; Reporting</span><span class="bt-rv">106h</span></div>
+        <div class="bt-bar-wrap"><div class="bt-bar"><div class="bt-bfill" style="width:22%;background:var(--paradise)"></div></div></div>
+        <div class="bt-row"><span class="bt-rk">Strategy &amp; Planning</span><span class="bt-rv">84h</span></div>
+        <div class="bt-bar-wrap"><div class="bt-bar"><div class="bt-bfill" style="width:18%;background:var(--gold)"></div></div></div>
+        <div class="bt-divider"></div>
+        <div class="bt-row"><span class="bt-rk">This month</span><span class="bt-rv p">86h saved</span></div>
+      </div>
+      <div class="bt-sp">
+        <div class="bt-sp-title">AI Spend vs. Budget</div>
+        <div class="bt-hero">€340</div>
+        <div class="bt-sublabel">of €500 monthly budget · 68% used</div>
+        <div class="bt-bheader"><span>Spent this month</span><span>€160 remaining</span></div>
+        <div class="bt-btrack"><div class="bt-btrack-fill" style="width:68%"></div></div>
+        <div class="bt-row"><span class="bt-rk">Acme B2B Q2</span><span class="bt-rv">€142</span></div>
+        <div class="bt-bar-wrap"><div class="bt-bar"><div class="bt-bfill" style="width:42%;background:var(--paradise)"></div></div></div>
+        <div class="bt-row"><span class="bt-rk">TechFlow EMEA Launch</span><span class="bt-rv">€118</span></div>
+        <div class="bt-bar-wrap"><div class="bt-bar"><div class="bt-bfill" style="width:35%;background:var(--purple)"></div></div></div>
+        <div class="bt-row"><span class="bt-rk">Breda EMEA Entry</span><span class="bt-rv">€80</span></div>
+        <div class="bt-bar-wrap"><div class="bt-bar"><div class="bt-bfill" style="width:24%;background:var(--green)"></div></div></div>
+        <div class="bt-divider"></div>
+        <div class="bt-row"><span class="bt-rk">Cost per deliverable (avg.)</span><span class="bt-rv g">€0.19</span></div>
+        <div class="bt-row"><span class="bt-rk">AI cost as % of FTE saved</span><span class="bt-rv g">0.71%</span></div>
+      </div>
+      <div class="bt-sp">
+        <div class="bt-sp-title">Campaign Outcomes · Acme B2B Q2</div>
+        <div class="bt-hero g">€189k</div>
+        <div class="bt-sublabel">revenue attributed this campaign</div>
+        <div class="bt-okgrid">
+          <div class="bt-okpi"><div class="bt-oklabel">ROAS</div><div class="bt-okval g">4.2×</div><div class="bt-oktarget">Target 3.5× ✓</div></div>
+          <div class="bt-okpi"><div class="bt-oklabel">CPA</div><div class="bt-okval g">€28</div><div class="bt-oktarget">Target €35 ✓</div></div>
+          <div class="bt-okpi"><div class="bt-oklabel">Leads</div><div class="bt-okval">1,840</div><div class="bt-oktarget">Target 1,500 ✓</div></div>
+          <div class="bt-okpi"><div class="bt-oklabel">Media spend</div><div class="bt-okval">€45k</div><div class="bt-oktarget">On budget ✓</div></div>
+        </div>
+        <div class="bt-ratio"><strong>AI cost as % of media budget: 0.31%</strong><br>€142 in AI spend managed €45,000 in media and delivered €189,000 in attributed revenue. Every €1 of AI cost returned €1,331 in outcome.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MODULE 6: PENDING APPROVALS ── -->
+  <div class="bt-section">
+    <div class="bt-section-label"><span>05</span> · Captain's Orders — Pending Approvals</div>
+    <div class="bt-approval">
+      <div>
+        <div class="bt-gate">⏸ Phase Gate 2</div>
+        <div class="bt-atitle">TechFlow SaaS — EMEA Product Launch</div>
+        <div class="bt-adesc">Phase 2 Execution deliverables complete. Ready to proceed to Phase 3 (Performance).</div>
+        <div class="bt-aitems">
+          <span class="bt-aitem">✓ Campaign brief</span>
+          <span class="bt-aitem">✓ Content calendar (120 pieces)</span>
+          <span class="bt-aitem">✓ Ad copy — 75 variants</span>
+          <span class="bt-aitem">✓ Media plan (€80k budget)</span>
+          <span class="bt-aitem">✓ KPI targets set</span>
+          <span class="bt-aitem">✓ Positioning — 3 options</span>
+        </div>
+        <div class="bt-await">⏱ Awaiting 14 hours — Phase 3 ready to launch on approval</div>
+      </div>
+      <div class="bt-aactions">
+        <div class="bt-go">Approve → Launch</div>
+        <div class="bt-ghost">Request revision</div>
+        <div class="bt-ghost">Put on hold</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
 <script>
 function showTab(tabName) {
   const tabs = document.querySelectorAll('.tab-content');
@@ -1988,6 +2527,15 @@ function showTab(tabName) {
       btn.classList.add('active');
     }
   });
+}
+
+function btToggle(card) {
+  const panel = card.querySelector('.bt-detail');
+  const hint  = card.querySelector('.bt-expand');
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open', !isOpen);
+  card.classList.toggle('open', !isOpen);
+  hint.textContent = isOpen ? '↕ Health profile' : '↑ Close';
 }
 
 function selectUsecase(type) {
