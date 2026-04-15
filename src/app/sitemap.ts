@@ -24,6 +24,16 @@ const UTILITY_PAGES = [
   { path: '/voorwaarden', priority: 0.3, changeFrequency: 'yearly' as const },
 ]
 
+// ── The Crew (Kirk & Blackbeard — AI Marketing & Sales Command Center) ────────
+// Static HTML under /public/thecrew; each page has an EN↔NL pair.
+const THECREW_PAGES: Array<{ en: string; nl: string; priority: number; changeFrequency: 'weekly' | 'monthly' }> = [
+  { en: '/thecrew/en/',                           nl: '/thecrew/nl/',                           priority: 0.8, changeFrequency: 'monthly' },
+  { en: '/thecrew/en/pitch-standalone.html',      nl: '/thecrew/nl/pitch-standalone.html',      priority: 0.6, changeFrequency: 'monthly' },
+  { en: '/thecrew/en/concept-companion.html',     nl: '/thecrew/nl/concept-companion.html',     priority: 0.6, changeFrequency: 'monthly' },
+  { en: '/thecrew/en/agency-poc-mapping.html',    nl: '/thecrew/nl/agency-poc-mapping.html',    priority: 0.5, changeFrequency: 'monthly' },
+  { en: '/thecrew/en/commercial-term-sheet.html', nl: '/thecrew/nl/commercial-term-sheet.html', priority: 0.5, changeFrequency: 'monthly' },
+]
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = []
 
@@ -70,6 +80,33 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority,
     })
   }
+
+  // The Crew — each page listed once per locale, with hreflang pairing
+  for (const page of THECREW_PAGES) {
+    for (const lang of ['en', 'nl'] as const) {
+      entries.push({
+        url:             `${BASE_URL}${page[lang]}`,
+        lastModified:    new Date(),
+        changeFrequency: page.changeFrequency,
+        priority:        page.priority,
+        alternates: {
+          languages: {
+            en:          `${BASE_URL}${page.en}`,
+            nl:          `${BASE_URL}${page.nl}`,
+            'x-default': `${BASE_URL}${page.en}`,
+          },
+        },
+      })
+    }
+  }
+
+  // The Crew picker (language chooser at /thecrew/)
+  entries.push({
+    url:             `${BASE_URL}/thecrew/`,
+    lastModified:    new Date(),
+    changeFrequency: 'monthly',
+    priority:        0.7,
+  })
 
   return entries
 }
