@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Bridge — Command Center · The Crew</title>
+  <meta name="description" content="The Crew Command Center — live fleet status, agent health, reports and outcomes for AI-powered marketing operations.">
+  <style>
+    :root {
+      --ocean:       #060E1A;
+      --ocean-mid:   #0D1F35;
+      --paradise:    #00DEFF;
+      --gold:        #F5A820;
+      --green:       #10B981;
+      --amber:       #F59E0B;
+      --red:         #EF4444;
+      --purple:      #A78BFA;
+      --text:        rgba(255,255,255,0.92);
+      --text-mid:    rgba(255,255,255,0.62);
+      --text-dim:    rgba(255,255,255,0.36);
+      --border:      rgba(0,222,255,0.1);
+      --border-sub:  rgba(255,255,255,0.06);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--ocean);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    a { text-decoration: none; }
+
+    /* ── NAV ── */
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(6,14,26,0.96);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      height: 56px;
+      display: flex; align-items: center;
+      padding: 0 28px;
+      gap: 24px;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none;
+    }
+    .nav-anchor { font-size: 22px; }
+    .nav-title {
+      font-size: 13px; font-weight: 800;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--paradise);
+    }
+    .nav-sub {
+      font-size: 10px; color: var(--text-dim);
+      margin-top: 1px; letter-spacing: 0.05em;
+    }
+    .nav-links {
+      display: flex; gap: 2px; margin-left: 8px;
+    }
+    .nav-link {
+      font-size: 12px; font-weight: 600;
+      color: var(--text-dim); padding: 6px 12px;
+      border-radius: 6px; cursor: pointer;
+      transition: all 0.2s; text-decoration: none;
+    }
+    .nav-link:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+    .nav-right {
+      margin-left: auto; display: flex; align-items: center; gap: 12px;
+    }
+    .demo-badge {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--amber); background: rgba(245,158,11,0.1);
+      border: 1px solid rgba(245,158,11,0.2);
+      padding: 3px 9px; border-radius: 20px;
+    }
+    .live-status {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 11px; color: var(--text-dim);
+    }
+    .live-dot {
+      width: 6px; height: 6px;
+      background: var(--green); border-radius: 50%;
+      animation: blink 2s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.35} }
+
+    /* ── LAYOUT ── */
+    .main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 36px 24px 96px;
+    }
+    .section-label {
+      font-size: 10px; font-weight: 800;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-sub);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-label span { color: var(--paradise); }
+    .section-gap { margin-bottom: 48px; }
+
+    /* ── KPI STRIP ── */
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .kpi {
+      background: var(--ocean-mid);
+      border: 1px solid var(--border-sub);
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+    .kpi-label {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: 6px;
+    }
+    .kpi-val {
+      font-size: 28px; font-weight: 800;
+      letter-spacing: -0.02em; line-height: 1;
+    }
+    .kpi-val.c-paradise { color: var(--paradise); }
+    .kpi-val.c-green    { color: var(--green); }
+    .kpi-val.c-amber    { color: var(--amber); }
+    .kpi-sub {
+      font-size: 11px; color: var(--text-dim); margin-top: 4px;
+    }
+
+    /* ── PROJECT CARDS ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .project-card {
+      background: var(--ocean-mid);
+      border: 1px solid var(--border-sub);
+      border-radius: 14px; padding: 20px;
+      transition: border-color 0.2s;
+    }
+    .project-card:hover { border-color: rgba(0,222,255,0.18); }
+    .project-card.awaiting { border-color: rgba(245,158,11,0.28); }
+    .project-header {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; margin-bottom: 10px;
+    }
+    .project-client {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: 3px;
+    }
+    .project-name {
+      font-size: 15px; font-weight: 700; color: var(--text);
+    }
+    .pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 10px; font-weight: 700;
+      padding: 4px 9px; border-radius: 20px;
+      white-space: nowrap;
+    }
+    .pill.running  { background: rgba(16,185,129,0.1);  color: var(--green);   border: 1px solid rgba(16,185,129,0.2); }
+    .pill.awaiting { background: rgba(245,158,11,0.1);  color: var(--amber);   border: 1px solid rgba(245,158,11,0.22); }
+    .pill.done     { background: rgba(0,222,255,0.07);  color: var(--paradise);border: 1px solid rgba(0,222,255,0.15); }
+    .pill-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+    .running .pill-dot { animation: blink 2s infinite; }
+    .phase-tag {
+      display: inline-block; font-size: 10px; font-weight: 600;
+      padding: 3px 8px; border-radius: 4px;
+      background: rgba(0,222,255,0.06); color: rgba(0,222,255,0.75);
+      margin-bottom: 10px;
+    }
+    .agent-row {
+      display: flex; gap: 5px; margin: 8px 0;
+    }
+    .agent-pip {
+      font-size: 14px; padding: 3px 6px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border-sub);
+      border-radius: 6px;
+    }
+    .project-footer {
+      font-size: 11px; color: var(--text-dim);
+      border-top: 1px solid var(--border-sub);
+      margin-top: 10px; padding-top: 8px;
+    }
+    .project-footer .accent { color: var(--green); }
+    .project-footer .warn   { color: var(--amber); }
+
+    /* ── MUSTER ROLL ── */
+    .agents-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+    .agent-card {
+      background: var(--ocean-mid);
+      border: 1px solid var(--border-sub);
+      border-radius: 12px; padding: 14px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .agent-card:hover { border-color: rgba(0,222,255,0.2); }
+    .agent-card.open  { border-color: rgba(0,222,255,0.3); background: rgba(0,222,255,0.03); }
+    .agent-icon { font-size: 20px; margin-bottom: 6px; }
+    .agent-name { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 1px; }
+    .agent-role { font-size: 10px; color: var(--text-dim); margin-bottom: 8px; }
+    .agent-meta-row {
+      display: flex; align-items: center;
+      justify-content: space-between; margin-bottom: 4px;
+    }
+    .run-badge {
+      font-size: 10px; font-weight: 600;
+      background: rgba(0,222,255,0.06);
+      color: rgba(0,222,255,0.7);
+      border-radius: 4px; padding: 1px 6px;
+    }
+    .agent-last { font-size: 10px; color: var(--text-dim); margin-top: 4px; }
+    .health-wrap { margin-top: 8px; }
+    .health-row-label {
+      display: flex; justify-content: space-between;
+      font-size: 10px; color: var(--text-dim); margin-bottom: 3px;
+    }
+    .health-bar {
+      height: 3px; background: rgba(255,255,255,0.07);
+      border-radius: 2px; overflow: hidden;
+    }
+    .health-fill { height: 100%; border-radius: 2px; transition: width 0.6s; }
+    .health-fill.g { background: var(--green); }
+    .health-fill.a { background: var(--amber); }
+    .health-fill.r { background: var(--red); }
+    .expand-hint {
+      font-size: 10px; color: var(--text-dim);
+      text-align: right; margin-top: 6px;
+    }
+    /* Health detail panel */
+    .health-detail {
+      display: none; margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-sub);
+    }
+    .health-detail.open { display: block; }
+    .hd-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 4px 0; font-size: 11px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .hd-row:last-child { border-bottom: none; }
+    .hd-key { color: var(--text-dim); }
+    .hd-val { font-weight: 600; color: var(--text); }
+    .hd-val.g { color: var(--green); }
+    .hd-val.a { color: var(--amber); }
+
+    /* ── LOG ── */
+    .log-filters {
+      display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap;
+    }
+    .log-btn {
+      font-size: 11px; font-weight: 600;
+      padding: 4px 12px; border-radius: 20px;
+      border: 1px solid var(--border-sub);
+      background: transparent; color: var(--text-dim);
+      cursor: pointer; transition: all 0.2s;
+    }
+    .log-btn.active, .log-btn:hover {
+      background: rgba(0,222,255,0.08);
+      border-color: rgba(0,222,255,0.2);
+      color: var(--paradise);
+    }
+    .log-feed { display: flex; flex-direction: column; gap: 8px; }
+    .log-entry {
+      background: var(--ocean-mid);
+      border: 1px solid var(--border-sub);
+      border-left: 3px solid var(--border-sub);
+      border-radius: 0 10px 10px 0;
+      padding: 14px 16px;
+      display: grid;
+      grid-template-columns: 28px 1fr auto;
+      gap: 12px; align-items: start;
+    }
+    .le-chronometer { border-left-color: #00DEFF; }
+    .le-helmsman    { border-left-color: #F5A820; }
+    .le-lookout     { border-left-color: #10B981; }
+    .le-spyglass    { border-left-color: #9B6DFF; }
+    .le-navigator   { border-left-color: #FF6B6B; }
+    .le-shipslog    { border-left-color: #54C5D0; }
+    .le-scribe      { border-left-color: var(--purple); }
+    .log-icon { font-size: 18px; margin-top: 1px; }
+    .log-meta { font-size: 10px; color: var(--text-dim); margin-bottom: 3px; }
+    .log-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .log-excerpt { font-size: 12px; color: var(--text-mid); line-height: 1.55; }
+    .log-links { display: flex; gap: 6px; margin-top: 8px; }
+    .log-link {
+      font-size: 10px; font-weight: 600; color: var(--paradise);
+      padding: 3px 8px; border: 1px solid rgba(0,222,255,0.2);
+      border-radius: 4px; cursor: pointer; transition: all 0.2s;
+    }
+    .log-link:hover { background: rgba(0,222,255,0.08); }
+    .log-cost { font-size: 10px; color: var(--text-dim); text-align: right; white-space: nowrap; }
+
+    /* ── SAVINGS PANELS ── */
+    .savings-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .sp {
+      background: var(--ocean-mid);
+      border: 1px solid var(--border-sub);
+      border-radius: 14px; padding: 22px;
+    }
+    .sp-title {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: 14px;
+    }
+    .sp-hero {
+      font-size: 42px; font-weight: 800;
+      letter-spacing: -0.03em; line-height: 1;
+      color: var(--paradise); margin-bottom: 3px;
+    }
+    .sp-hero.g { color: var(--green); }
+    .sp-sublabel { font-size: 12px; color: var(--text-dim); margin-bottom: 16px; }
+    .sp-row {
+      display: flex; justify-content: space-between;
+      align-items: center; font-size: 12px; padding: 3px 0;
+    }
+    .sp-key { color: var(--text-dim); }
+    .sp-val { font-weight: 700; color: var(--text); }
+    .sp-val.g { color: var(--green); }
+    .sp-val.p { color: var(--paradise); }
+    .sp-bar-wrap { margin: 3px 0 6px; }
+    .sp-bar {
+      height: 4px; background: rgba(255,255,255,0.06);
+      border-radius: 2px; overflow: hidden;
+    }
+    .sp-bar-fill { height: 100%; border-radius: 2px; }
+    .budget-bar-header {
+      display: flex; justify-content: space-between;
+      font-size: 10px; color: var(--text-dim); margin-bottom: 4px;
+    }
+    .budget-track {
+      height: 8px; background: rgba(255,255,255,0.06);
+      border-radius: 4px; overflow: hidden; margin-bottom: 16px;
+    }
+    .budget-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--paradise), rgba(0,222,255,0.45));
+      border-radius: 4px;
+    }
+    .divider { border-top: 1px solid var(--border-sub); margin: 10px 0; }
+    /* Outcome KPIs */
+    .outcome-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 8px; margin-top: 12px;
+    }
+    .okpi {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-sub);
+      border-radius: 8px; padding: 10px;
+    }
+    .okpi-label { font-size: 10px; color: var(--text-dim); margin-bottom: 2px; }
+    .okpi-val {
+      font-size: 22px; font-weight: 800;
+      letter-spacing: -0.02em; color: var(--text);
+    }
+    .okpi-val.g { color: var(--green); }
+    .okpi-target { font-size: 10px; color: var(--text-dim); margin-top: 1px; }
+    .ratio-box {
+      margin-top: 12px; padding: 10px 12px;
+      background: rgba(16,185,129,0.06);
+      border: 1px solid rgba(16,185,129,0.15);
+      border-radius: 8px; font-size: 11px;
+      color: var(--text-mid); line-height: 1.55;
+    }
+    .ratio-box strong { color: var(--green); }
+
+    /* ── APPROVALS ── */
+    .approval-card {
+      background: rgba(245,158,11,0.04);
+      border: 1px solid rgba(245,158,11,0.24);
+      border-radius: 14px; padding: 22px 24px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px; align-items: center;
+    }
+    .gate-label {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 700; color: var(--amber);
+      background: rgba(245,158,11,0.1);
+      padding: 4px 10px; border-radius: 20px;
+      margin-bottom: 8px;
+    }
+    .approval-title { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .approval-desc  { font-size: 12px; color: var(--text-mid); margin-bottom: 10px; }
+    .approval-items { display: flex; gap: 6px; flex-wrap: wrap; }
+    .aitem {
+      font-size: 10px; font-weight: 600;
+      padding: 3px 8px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border-sub);
+      border-radius: 4px; color: var(--text-mid);
+    }
+    .approval-wait {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 11px; color: var(--amber); margin-top: 10px;
+    }
+    .approval-actions { display: flex; flex-direction: column; gap: 8px; min-width: 148px; }
+    .btn-go {
+      padding: 11px 18px;
+      background: var(--green); color: #060E1A;
+      font-weight: 800; font-size: 13px;
+      border: none; border-radius: 8px;
+      cursor: pointer; text-align: center;
+      transition: opacity 0.2s;
+    }
+    .btn-go:hover { opacity: 0.85; }
+    .btn-ghost {
+      padding: 9px 18px;
+      background: transparent; color: var(--text-dim);
+      font-weight: 600; font-size: 12px;
+      border: 1px solid var(--border-sub);
+      border-radius: 8px; cursor: pointer; text-align: center;
+      transition: all 0.2s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.18); color: var(--text); }
+
+    /* ── BACK CTA ── */
+    .back-cta {
+      margin-top: 56px; text-align: center;
+      padding: 36px 28px;
+      background: rgba(0,222,255,0.04);
+      border: 1px solid rgba(0,222,255,0.12);
+      border-radius: 16px;
+    }
+    .back-cta h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .back-cta p  { font-size: 13px; color: var(--text-mid); margin-bottom: 16px; line-height: 1.7; }
+    .back-cta-btn {
+      display: inline-block;
+      padding: 12px 28px;
+      background: var(--paradise); color: var(--ocean);
+      font-weight: 700; font-size: 13px;
+      border-radius: 8px; text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .back-cta-btn:hover { opacity: 0.82; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 960px) {
+      .kpi-strip        { grid-template-columns: repeat(3,1fr); }
+      .projects-grid    { grid-template-columns: 1fr; }
+      .agents-grid      { grid-template-columns: repeat(3,1fr); }
+      .savings-grid     { grid-template-columns: 1fr; }
+      .nav-links        { display: none; }
+    }
+    @media (max-width: 640px) {
+      .kpi-strip        { grid-template-columns: 1fr 1fr; }
+      .agents-grid      { grid-template-columns: 1fr 1fr; }
+      .approval-card    { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav class="nav">
+  <a class="nav-brand" href="/thecrew/en/">
+    <div class="nav-anchor">⚓</div>
+    <div>
+      <div class="nav-title">The Bridge</div>
+      <div class="nav-sub">markdekock.com · Command Center</div>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="#fleet">Fleet</a>
+    <a class="nav-link" href="#muster">Agents</a>
+    <a class="nav-link" href="#log">Log</a>
+    <a class="nav-link" href="#savings">Savings</a>
+    <a class="nav-link" href="#approvals">Approvals</a>
+  </div>
+  <div class="nav-right">
+    <span class="demo-badge">Demo</span>
+    <div class="live-status"><div class="live-dot"></div>3 projects active</div>
+  </div>
+</nav>
+
+<div class="main">
+
+  <!-- ══════════════════════════════════════════
+       MODULE 1 — FLEET STATUS
+  ══════════════════════════════════════════ -->
+  <section id="fleet" class="section-gap">
+
+    <!-- KPI strip -->
+    <div class="kpi-strip">
+      <div class="kpi">
+        <div class="kpi-label">Active Projects</div>
+        <div class="kpi-val c-paradise">3</div>
+        <div class="kpi-sub">+1 completed this month</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Awaiting Approval</div>
+        <div class="kpi-val c-amber">1</div>
+        <div class="kpi-sub">TechFlow · 14h waiting</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Hours Saved · Q2</div>
+        <div class="kpi-val c-green">480h</div>
+        <div class="kpi-sub">€48,000 FTE equivalent</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Reports Filed · Week</div>
+        <div class="kpi-val">12</div>
+        <div class="kpi-sub">Last: Chronometer 09:14</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">AI Budget · Month</div>
+        <div class="kpi-val">€340</div>
+        <div class="kpi-sub">of €500 · 68% used</div>
+      </div>
+    </div>
+
+    <div class="section-label"><span>01</span> · Fleet Status — Active Projects</div>
+
+    <div class="projects-grid">
+
+      <!-- Project 1: Acme — Phase 3 -->
+      <div class="project-card">
+        <div class="project-header">
+          <div>
+            <div class="project-client">Acme B2B</div>
+            <div class="project-name">Q2 Performance Campaign</div>
+          </div>
+          <span class="pill running"><span class="pill-dot"></span>Running</span>
+        </div>
+        <div class="phase-tag">Phase 3 · Performance</div>
+        <div class="agent-row">
+          <span class="agent-pip">⏱️</span>
+          <span class="agent-pip">📈</span>
+          <span class="agent-pip">📖</span>
+        </div>
+        <div class="project-footer">
+          ⏱️ Chronometer · Daily report · 2h ago ·
+          <span class="accent">4.2× ROAS</span>
+        </div>
+      </div>
+
+      <!-- Project 2: TechFlow — Awaiting Phase Gate 2 -->
+      <div class="project-card awaiting">
+        <div class="project-header">
+          <div>
+            <div class="project-client">TechFlow SaaS</div>
+            <div class="project-name">Product Launch — EMEA</div>
+          </div>
+          <span class="pill awaiting"><span class="pill-dot"></span>Awaiting ⏸</span>
+        </div>
+        <div class="phase-tag">Phase Gate 2 · Execution → Performance</div>
+        <div class="agent-row">
+          <span class="agent-pip">🗺️</span>
+          <span class="agent-pip">✍️</span>
+          <span class="agent-pip">💰</span>
+        </div>
+        <div class="project-footer">
+          🧭 Navigator · Positioning delivered · 14h ago ·
+          <span class="warn">Approval needed</span>
+        </div>
+      </div>
+
+      <!-- Project 3: Breda — Phase 1 -->
+      <div class="project-card">
+        <div class="project-header">
+          <div>
+            <div class="project-client">Breda Consulting</div>
+            <div class="project-name">EMEA Market Entry</div>
+          </div>
+          <span class="pill running"><span class="pill-dot"></span>Running</span>
+        </div>
+        <div class="phase-tag">Phase 1 · Intelligence</div>
+        <div class="agent-row">
+          <span class="agent-pip">🔍</span>
+          <span class="agent-pip">🔭</span>
+          <span class="agent-pip">🧭</span>
+        </div>
+        <div class="project-footer">
+          🔭 Spyglass · Competitor scan · 45m ago · 6 markets mapped
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       MODULE 2+3 — MUSTER ROLL + AGENT HEALTH
+  ══════════════════════════════════════════ -->
+  <section id="muster" class="section-gap">
+    <div class="section-label"><span>02</span> · The Muster Roll — All Agents <small style="font-weight:400;color:var(--text-dim);font-size:10px;letter-spacing:0;">Click any agent for health profile</small></div>
+    <div class="agents-grid">
+
+      <!-- Lookout -->
+      <div class="agent-card" onclick="toggleAgent(this)">
+        <div class="agent-icon">🔍</div>
+        <div class="agent-name">The Lookout</div>
+        <div class="agent-role">Client Intelligence</div>
+        <div class="agent-meta-row">
+          <span class="pill running" style="font-size:9px;padding:2px 7px;"><span class="pill-dot"></span>Active</span>
+          <span class="run-badge">Run 4</span>
+        </div>
+        <div class="agent-last">Breda EMEA · 45m ago</div>
+        <div class="health-wrap">
+          <div class="health-row-label"><span>Health</span><span>82</span></div>
+          <div class="health-bar"><div class="health-fill g" style="width:82%"></div></div>
+        </div>
+        <div class="health-detail">
+          <div class="hd-row"><span class="hd-key">Training level</span><span class="hd-val g">Run 4 · Pattern recognition</span></div>
+          <div class="hd-row"><span class="hd-key">Context freshness</span><span class="hd-val g">Fresh · 45m ago</span></div>
+          <div class="hd-row"><span class="hd-key">Data sources</span><span class="hd-val">CRM · GA4 · Notion</span></div>
+          <div class="hd-row"><span class="hd-key">Records ingested</span><span class="hd-val">2,840 this cycle</span></div>
+          <div class="hd-row"><span class="hd-key">Confidence</span><span class="hd-val g">4.1 / 5</span></div>
+          <div class="hd-row"><span class="hd-key">Tokens · month</span><span class="hd-val">48,200 · €1.54</span></div>
+          <div class="hd-row"><span class="hd-key">Output trend</span><span class="hd-val g">Improving ↑</span></div>
+        </div>
+        <div class="expand-hint">↕ Health profile</div>
+      </div>
+
+      <!-- Spyglass -->
+      <div class="agent-card" onclick="toggleAgent(this)">
+        <div class="agent-icon">🔭</div>
+        <div class="agent-name">The Spyglass</div>
+        <div class="agent-role">Market & Competitors</div>
+        <div class="agent-meta-row">
+          <span class="pill running" style="font-size:9px;padding:2px 7px;"><span class="pill-dot"></span>Active</span>
+          <span class="run-badge">Run 4</span>
+        </div>
+        <div class="agent-last">Breda EMEA · 45m ago</div>
+        <div class="health-wrap">
+          <div class="health-row-label"><span>Health</span><span>78</span></div>
+          <div class="health-bar"><div class="health-fill g" style="width:78%"></div></div>
+        </div>
+        <div class="health-detail">
+          <div class="hd-row"><span class="hd-key">Training level</span><span class="hd-val g">Run 4 · Pattern recognition</span></div>
+          <div class="hd-row"><span class="hd-key">Context freshness</span><span class="hd-val g">Fresh · 45m ago</span></div>
+          <div class="hd-row"><span class="hd-key">Data sources</span><span class="hd-val">Web · LinkedIn · SimilarWeb</span></div>
+          <div class="hd-row"><span class="hd-key">Competitors tracked</span><span class="hd-val">18 across 3 projects</span></div>
+          <div class="hd-row"><span class="hd-key">Confidence</span><span class="hd-val g">3.9 / 5</span></div>
+          <div class="hd-row"><span class="hd-key">Tokens · month</span><span class="hd-val">62,400 · €1.99</span></div>
+          <div class="hd-row"><span class="hd-key">Output trend</span><span class="hd-val g">Stable →</span></div>
+        </div>
+        <div class="expand-hint">↕ Health profile</div>
+      </div>
+
+      <!-- Navigator -->
+      <div class="agent-card" onclick="toggleAgent(this)">
+        <div class="agent-icon">🧭</div>
+        <div class="agent-name">The Navigator</div>
+        <div class="agent-role">Strategy & Positioning</div>
+        <div class="agent-meta-row">
+          <span class="pill" style="font-size:9px;padding:2px 7px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:var(--text-dim);">
+            <span class="pill-dot" style="background:var(--text-dim)"></span>Idle
+          </span>
+          <span class="run-badge">Run 6</span>
+        </div>
+        <div class="agent-last">TechFlow · Positioning · 14h ago</div>
+        <div class="health-wrap">
+          <div class="health-row-label"><span>Health</span><span>85</span></div>
+          <div class="health-bar"><div class="health-fill g" style="width:85%"></div></div>
+        </div>
+        <div class="health-detail">
+          <div class="hd-row"><span class="hd-key">Training level</span><span class="hd-val g">Run 6 · Deep brand knowledge</span></div>
+          <div class="hd-row"><span class="hd-key">Context freshness</span><span class="hd-val a">Stale · 14h ago</span></div>
+          <div class="hd-row"><span class="hd-key">Strategies delivered</span><span class="hd-val">6 (all with contra-argument)</span></div>
+          <div class="hd-row"><span class="hd-key">Confidence</span><span class="hd-val g">4.3 / 5</span></div>
+          <div class="hd-row"><span class="hd-key">Tokens · month</span><span class="hd-val">84,200 · €2.69</span></div>
+          <div class="hd-row"><span class="hd-key">Output trend</span><span class="hd-val g">Improving ↑</span></div>
+        </div>
+        <div class="expand-hint">↕ Health profile</div>
+      </div>
+
+      <!-- Cartographer -->
+      <div class="agent-card" onclick="toggleAgent(this)">
+        <div class="agent-icon">🗺️</div>
+        <div class="agent-name">The Cartographer</div>
+        <div class="agent-role">Campaign Architect</div>
+        <div class="agent-meta-row">
+          <span class="pill awaiting" style="font-size:9px;padding:2px 7px;"><span class="pill-dot"></span>Awaiting ⏸</span>
+          <span class="run-badge">Run 6</span>
+        </div>
+        <div class="agent-last">TechFlow · Phase Gate 2</div>
+        <div class="health-wrap">
+          <div class="health-row-label"><span>Health</span><span>88</span></div>
+          <div class="health-bar"><div class="health-fill g" style="width:88%"></div></div>
+        </div>
+        <div class="health-detail">
+          <div class="hd-row"><span class="hd-key">Training level</span><span class="hd-val g">Run 6 · Deep brand knowledge</span></div>
+          <div class="hd-row"><span class="hd-key">Campaigns planned</span><span class="hd-val">6 full campaigns</span></div>
+          <div class="hd-row"><span class="hd-key">Avg. funnels mapped</span><span class="hd-val">4.2 per campaign</span></div>
+          <div class="hd-row"><span class="hd-key">Confidence</span><span class="hd-val g">4.4 / 5</span></div>
+          <div class="hd-row"><span class="hd-key">Tokens · month</span><span class="hd-val">56,800 · €1.81</span></div>
+          <div class="hd-row"><span class="hd-key">Output trend</span><span class="hd-val g">Stable →</span></div>
+        </div>
+        <div class="expand-hint">↕ Health profile</div>
+      </div>
+
+      <!-- Scribe -->
+      <div class="agent-card" onclick="toggleAgent(this)">
+        <div class="agent-icon">✍️</div>
+        <div class="agent-name">The Scribe</div>
+        <div class="agent-role">Creative & Content</div>
+        <div class="agent-meta-row">
+          <span class="pill awaiting" style="font-size:9px;padding:2px 7px;"><span class="pill-dot"></span>Awaiting ⏸</span>
+          <span class="run-badge">Run 8</span>
+        </div>
+        <div class="agent-last">TechFlow · 120 assets ready</div>
+        <div class="health-wrap">
+          <div class="health-row-label"><span>Health</span><span>91</span></div>
+          <div class="health-bar"><div class="health-fill g" style="width:91%"></div></div>
+        </div>
+        <div class="health-detail">
+          <div class="hd-row"><span class="hd-key">Training level</span><span class="hd-val g">Run 8 · Brand voice mastery</span></div>
+          <div class="hd-row"><span class="hd-key">Total copy pieces</span><span class="hd-val">340 across all projects</span></div>
+          <div class="hd-row"><span class="hd-key">Brand voice score</span><span class="hd-val g">4.6 / 5 · Consistent</span></div>
+          <div class="hd-row"><span class="hd-key">1st-draft approve rate</span><span class="hd-val g">89%</span></div>
+          <div class="hd-row"><span class="hd-key">Tokens · month</span><span class="hd-val">112,400 · €3.60</span></div>
+          <div class="hd-row"><span class="hd-key">Output trend</span><span class="hd-val g">Improving ↑</span></div>
+        </div>
+        <div class="expand-hint">↕ Health profile</div>
+      </div>
+
+      <!-- Quartermaster -->
+      <div class="agent-card" onclick="toggleAgent(this)">
+        <div class="agent-icon">💰</div>
+        <div class="agent-name">The Quartermaster</div>
+        <div class="agent-role">Media & Budget</div>
+        <div class="agent-meta-row">
+          <span class="pill awaiting" style="font-size:9px;padding:2px 7px;"><span class="pill-dot"></span>Awaiting ⏸</span>
+          <span class="run-badge">Run 6</span>
+        </div>
+        <div class="agent-last">TechFlow · €80k plan ready</div>
+        <div class="health-wrap">
+          <div class="health-row-label"><span>Health</span><span>84</span></div>
+          <div class="health-bar"><div class="health-fill g" style="width:84%"></div></div>
+        </div>
+        <div class="health-detail">
+          <div class="hd-row"><span class="hd-key">Training level</span><span class="hd-val g">Run 6 · Deep brand knowledge</span></div>
+          <div class="hd-row"><span class="hd-key">Total budget managed</span><span class="hd-val">€225,000 / 4 campaigns</span></div>
+          <div class="hd-row"><span class="hd-key">Avg. ROAS delivered</span><span class="hd-val g">3.8× (target 3.0×)</span></div>
+          <div class="hd-row"><span class="hd-key">Confidence</span><span class="hd-val g">4.2 / 5</span></div>
+          <div class="hd-row"><span class="hd-key">Tokens · month</span><span class="hd-val">44,600 · €1.43</span></div>
+          <div class="hd-row"><span class="hd-key">Output trend</span><span class="hd-val g">Improving ↑</span></div>
+        </div>
+        <div class="expand-hint">↕ Health profile</div>
+      </div>
+
+      <!-- Chronometer -->
+      <div class="agent-card" onclick="toggleAgent(this)">
+        <div class="agent-icon">⏱️</div>
+        <div class="agent-name">The Chronometer</div>
+        <div class="agent-role">Data & Trends</div>
+        <div class="agent-meta-row">
+          <span class="pill running" style="font-size:9px;padding:2px 7px;"><span class="pill-dot"></span>Active</span>
+          <span class="run-badge">Run 10</span>
+        </div>
+        <div class="agent-last">Acme Q2 · Daily report · 2h ago</div>
+        <div class="health-wrap">
+          <div class="health-row-label"><span>Health</span><span>94</span></div>
+          <div class="health-bar"><div class="health-fill g" style="width:94%"></div></div>
+        </div>
+        <div class="health-detail">
+          <div class="hd-row"><span class="hd-key">Training level</span><span class="hd-val g">Run 10 · Full mastery</span></div>
+          <div class="hd-row"><span class="hd-key">Context freshness</span><span class="hd-val g">Fresh · 2h · daily cadence</span></div>
+          <div class="hd-row"><span class="hd-key">Data sources</span><span class="hd-val">GA4 · Meta · LinkedIn · CRM</span></div>
+          <div class="hd-row"><span class="hd-key">Anomalies detected</span><span class="hd-val">14 this month (12 actioned)</span></div>
+          <div class="hd-row"><span class="hd-key">Confidence</span><span class="hd-val g">4.7 / 5</span></div>
+          <div class="hd-row"><span class="hd-key">Tokens · month</span><span class="hd-val">128,600 · €4.11</span></div>
+          <div class="hd-row"><span class="hd-key">Output trend</span><span class="hd-val g">Stable →</span></div>
+        </div>
+        <div class="expand-hint">↕ Health profile</div>
+      </div>
+
+      <!-- Helmsman -->
+      <div class="agent-card" onclick="toggleAgent(this)">
+        <div class="agent-icon">📈</div>
+        <div class="agent-name">The Helmsman</div>
+        <div class="agent-role">Growth & Experimentation</div>
+        <div class="agent-meta-row">
+          <span class="pill running" style="font-size:9px;padding:2px 7px;"><span class="pill-dot"></span>Active</span>
+          <span class="run-badge">Run 5</span>
+        </div>
+        <div class="agent-last">Acme Q2 · Experiments · 3h ago</div>
+        <div class="health-wrap">
+          <div class="health-row-label"><span>Health</span><span>79</span></div>
+          <div class="health-bar"><div class="health-fill g" style="width:79%"></div></div>
+        </div>
+        <div class="health-detail">
+          <div class="hd-row"><span class="hd-key">Training level</span><span class="hd-val g">Run 5 · Stat. confidence building</span></div>
+          <div class="hd-row"><span class="hd-key">Active experiments</span><span class="hd-val">4 (2 near significance)</span></div>
+          <div class="hd-row"><span class="hd-key">Win rate</span><span class="hd-val g">62% of closed tests</span></div>
+          <div class="hd-row"><span class="hd-key">ICE backlog</span><span class="hd-val">11 ideas scored &amp; queued</span></div>
+          <div class="hd-row"><span class="hd-key">Tokens · month</span><span class="hd-val">38,200 · €1.22</span></div>
+          <div class="hd-row"><span class="hd-key">Output trend</span><span class="hd-val g">Improving ↑</span></div>
+        </div>
+        <div class="expand-hint">↕ Health profile</div>
+      </div>
+
+      <!-- Ship's Log -->
+      <div class="agent-card" onclick="toggleAgent(this)">
+        <div class="agent-icon">📖</div>
+        <div class="agent-name">The Ship's Log</div>
+        <div class="agent-role">Reporting & Insights</div>
+        <div class="agent-meta-row">
+          <span class="pill" style="font-size:9px;padding:2px 7px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:var(--text-dim);">
+            <span class="pill-dot" style="background:var(--text-dim)"></span>Idle
+          </span>
+          <span class="run-badge">Run 7</span>
+        </div>
+        <div class="agent-last">Acme Q2 · Weekly summary · 2d ago</div>
+        <div class="health-wrap">
+          <div class="health-row-label"><span>Health</span><span>87</span></div>
+          <div class="health-bar"><div class="health-fill g" style="width:87%"></div></div>
+        </div>
+        <div class="health-detail">
+          <div class="hd-row"><span class="hd-key">Training level</span><span class="hd-val g">Run 7 · Executive narrative</span></div>
+          <div class="hd-row"><span class="hd-key">Reports generated</span><span class="hd-val">7 weeklies + 2 QBRs</span></div>
+          <div class="hd-row"><span class="hd-key">Board approval rate</span><span class="hd-val g">100% — no rewrites needed</span></div>
+          <div class="hd-row"><span class="hd-key">Confidence</span><span class="hd-val g">4.4 / 5</span></div>
+          <div class="hd-row"><span class="hd-key">Tokens · month</span><span class="hd-val">72,800 · €2.33</span></div>
+          <div class="hd-row"><span class="hd-key">Output trend</span><span class="hd-val g">Stable →</span></div>
+        </div>
+        <div class="expand-hint">↕ Health profile</div>
+      </div>
+
+      <!-- Captain's Table -->
+      <div class="agent-card" onclick="toggleAgent(this)">
+        <div class="agent-icon">⚙️</div>
+        <div class="agent-name">Captain's Table</div>
+        <div class="agent-role">Coordination Hub</div>
+        <div class="agent-meta-row">
+          <span class="pill running" style="font-size:9px;padding:2px 7px;"><span class="pill-dot"></span>Active</span>
+          <span class="run-badge">Run 10+</span>
+        </div>
+        <div class="agent-last">All 3 projects · Coordinating</div>
+        <div class="health-wrap">
+          <div class="health-row-label"><span>Health</span><span>96</span></div>
+          <div class="health-bar"><div class="health-fill g" style="width:96%"></div></div>
+        </div>
+        <div class="health-detail">
+          <div class="hd-row"><span class="hd-key">Training level</span><span class="hd-val g">Run 10+ · Full system mastery</span></div>
+          <div class="hd-row"><span class="hd-key">Projects coordinated</span><span class="hd-val">3 active · 4 completed</span></div>
+          <div class="hd-row"><span class="hd-key">Handoff accuracy</span><span class="hd-val g">98% — 1 manual correction</span></div>
+          <div class="hd-row"><span class="hd-key">Avg. Phase 1–3 cycle</span><span class="hd-val">6.2 days</span></div>
+          <div class="hd-row"><span class="hd-key">Tokens · month</span><span class="hd-val">32,400 · €1.04</span></div>
+          <div class="hd-row"><span class="hd-key">Output trend</span><span class="hd-val g">Stable →</span></div>
+        </div>
+        <div class="expand-hint">↕ Health profile</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       MODULE 4 — THE LOG
+  ══════════════════════════════════════════ -->
+  <section id="log" class="section-gap">
+    <div class="section-label"><span>03</span> · The Log — Agent Reports</div>
+    <div class="log-filters">
+      <button class="log-btn active">All reports</button>
+      <button class="log-btn">Performance</button>
+      <button class="log-btn">Strategy</button>
+      <button class="log-btn">Intelligence</button>
+      <button class="log-btn">Experiments</button>
+    </div>
+    <div class="log-feed">
+
+      <div class="log-entry le-chronometer">
+        <div class="log-icon">⏱️</div>
+        <div>
+          <div class="log-meta">Chronometer · Today 09:14 · Acme B2B Q2 · Daily Performance</div>
+          <div class="log-title">Daily Performance Report — Week 8</div>
+          <div class="log-excerpt">"CTR on LinkedIn dropped 18% vs. 7-day avg. Anomaly flagged. Root hypothesis: creative variant C underperforming vs. control. Recommend A/B hold for 72h pending statistical significance. ROAS stable at 4.2×. CPA €28 — 20% below target. Meta performing above benchmark."</div>
+          <div class="log-links">
+            <a class="log-link">Read full report</a>
+            <a class="log-link">View data</a>
+          </div>
+        </div>
+        <div class="log-cost">3,840 tokens<br>€0.12</div>
+      </div>
+
+      <div class="log-entry le-helmsman">
+        <div class="log-icon">📈</div>
+        <div>
+          <div class="log-meta">Helmsman · Today 08:52 · Acme B2B Q2 · Experiment Update</div>
+          <div class="log-title">Experiment Backlog — 4 Active Tests</div>
+          <div class="log-excerpt">"Test #3 (headline variant) at 87% confidence — recommend 48h hold before scaling. Test #1 (audience expansion) closed: negative result, revert recommended. ICE-scored 3 new hypotheses from Chronometer anomaly: top priority is landing page CTA copy (ICE 7.8)."</div>
+          <div class="log-links">
+            <a class="log-link">View backlog</a>
+            <a class="log-link">ICE scores</a>
+          </div>
+        </div>
+        <div class="log-cost">2,100 tokens<br>€0.07</div>
+      </div>
+
+      <div class="log-entry le-lookout">
+        <div class="log-icon">🔍</div>
+        <div>
+          <div class="log-meta">Lookout · Today 07:30 · Breda Consulting EMEA · Internal Data Analysis</div>
+          <div class="log-title">ICP Validation — EMEA Market Entry</div>
+          <div class="log-excerpt">"CRM analysis complete: 340 accounts reviewed. Primary ICP confirmed: mid-market manufacturing, 200–800 employees, procurement-led. Secondary segment identified: logistics operators with digital transformation mandate. Conversion baseline: 3.2% MQL→SQL. 6 opportunity clusters mapped by region."</div>
+          <div class="log-links">
+            <a class="log-link">ICP report</a>
+            <a class="log-link">Opportunity map</a>
+          </div>
+        </div>
+        <div class="log-cost">4,200 tokens<br>€0.13</div>
+      </div>
+
+      <div class="log-entry le-spyglass">
+        <div class="log-icon">🔭</div>
+        <div>
+          <div class="log-meta">Spyglass · Today 06:55 · Breda Consulting EMEA · Market Intelligence</div>
+          <div class="log-title">Competitive Scan — 6 EMEA Markets</div>
+          <div class="log-excerpt">"6-market audit complete: 18 competitors mapped. Key finding: category leader pulling back from DACH paid channels — potential share opportunity. 3 positioning gaps identified: speed-to-deployment, mid-market pricing, local-language support. Buying triggers confirm procurement calendar peaks Q3."</div>
+          <div class="log-links">
+            <a class="log-link">Competitor map</a>
+            <a class="log-link">Gap analysis</a>
+          </div>
+        </div>
+        <div class="log-cost">5,600 tokens<br>€0.17</div>
+      </div>
+
+      <div class="log-entry le-navigator">
+        <div class="log-icon">🧭</div>
+        <div>
+          <div class="log-meta">Navigator · Yesterday 16:40 · TechFlow SaaS EMEA · Strategy</div>
+          <div class="log-title">Positioning Delivered — 3 Options + Contra-Argument</div>
+          <div class="log-excerpt">"Three falsifiable positioning options delivered. Recommended: 'The only platform that deploys in 48h — or your first quarter is free.' Contra-argument: claim is vulnerable if onboarding SLAs slip. Requires legal sign-off on SLA guarantee + CS capacity check before activating. Stakeholder deck ready."</div>
+          <div class="log-links">
+            <a class="log-link">Strategy brief</a>
+            <a class="log-link">Stakeholder deck</a>
+          </div>
+        </div>
+        <div class="log-cost">8,400 tokens<br>€0.27</div>
+      </div>
+
+      <div class="log-entry le-shipslog">
+        <div class="log-icon">📖</div>
+        <div>
+          <div class="log-meta">Ship's Log · 2 days ago · Acme B2B Q2 · Weekly Executive Summary</div>
+          <div class="log-title">Week 7 Executive Summary — Board Ready</div>
+          <div class="log-excerpt">"Week 7: campaign pacing at 108% of target. ROAS 4.1× (target 3.5×). 1,640 leads generated YTD. Key win: content velocity doubled after Scribe integration — 40 pieces in 5 days vs. 40 pieces in 3 weeks previously. Recommendation: increase Meta budget allocation by €5k for final 3 weeks."</div>
+          <div class="log-links">
+            <a class="log-link">Full summary</a>
+            <a class="log-link">Board deck</a>
+          </div>
+        </div>
+        <div class="log-cost">6,200 tokens<br>€0.20</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       MODULE 5 — SAVINGS & RETURN
+  ══════════════════════════════════════════ -->
+  <section id="savings" class="section-gap">
+    <div class="section-label"><span>04</span> · Time Savings &amp; Return</div>
+    <div class="savings-grid">
+
+      <!-- 5a: Time savings -->
+      <div class="sp">
+        <div class="sp-title">Time Savings</div>
+        <div class="sp-hero">480h</div>
+        <div class="sp-sublabel">saved this quarter · Q2 2025</div>
+        <div class="sp-row">
+          <span class="sp-key">FTE equivalent</span>
+          <span class="sp-val p">€48,000</span>
+        </div>
+        <div class="divider"></div>
+        <div class="sp-row"><span class="sp-key">Content &amp; Creative</span><span class="sp-val">142h</span></div>
+        <div class="sp-bar-wrap">
+          <div class="sp-bar"><div class="sp-bar-fill" style="width:30%;background:var(--purple)"></div></div>
+        </div>
+        <div class="sp-row"><span class="sp-key">Research &amp; Intelligence</span><span class="sp-val">128h</span></div>
+        <div class="sp-bar-wrap">
+          <div class="sp-bar"><div class="sp-bar-fill" style="width:27%;background:var(--green)"></div></div>
+        </div>
+        <div class="sp-row"><span class="sp-key">Analytics &amp; Reporting</span><span class="sp-val">106h</span></div>
+        <div class="sp-bar-wrap">
+          <div class="sp-bar"><div class="sp-bar-fill" style="width:22%;background:var(--paradise)"></div></div>
+        </div>
+        <div class="sp-row"><span class="sp-key">Strategy &amp; Planning</span><span class="sp-val">84h</span></div>
+        <div class="sp-bar-wrap">
+          <div class="sp-bar"><div class="sp-bar-fill" style="width:18%;background:var(--gold)"></div></div>
+        </div>
+        <div class="sp-row" style="margin-top:10px;">
+          <span class="sp-key">This month</span>
+          <span class="sp-val p">86h saved</span>
+        </div>
+      </div>
+
+      <!-- 5b: AI spend -->
+      <div class="sp">
+        <div class="sp-title">AI Spend vs. Budget</div>
+        <div class="sp-hero">€340</div>
+        <div class="sp-sublabel">of €500 monthly budget · 68% used</div>
+        <div class="budget-bar-header"><span>Spent this month</span><span>€160 remaining</span></div>
+        <div class="budget-track">
+          <div class="budget-fill" style="width:68%"></div>
+        </div>
+        <div class="sp-row"><span class="sp-key">Acme B2B Q2</span><span class="sp-val">€142</span></div>
+        <div class="sp-bar-wrap">
+          <div class="sp-bar"><div class="sp-bar-fill" style="width:42%;background:var(--paradise)"></div></div>
+        </div>
+        <div class="sp-row"><span class="sp-key">TechFlow EMEA Launch</span><span class="sp-val">€118</span></div>
+        <div class="sp-bar-wrap">
+          <div class="sp-bar"><div class="sp-bar-fill" style="width:35%;background:var(--purple)"></div></div>
+        </div>
+        <div class="sp-row"><span class="sp-key">Breda EMEA Entry</span><span class="sp-val">€80</span></div>
+        <div class="sp-bar-wrap">
+          <div class="sp-bar"><div class="sp-bar-fill" style="width:24%;background:var(--green)"></div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="sp-row">
+          <span class="sp-key">Cost per deliverable (avg.)</span>
+          <span class="sp-val g">€0.19</span>
+        </div>
+        <div class="sp-row">
+          <span class="sp-key">AI cost as % of FTE saved</span>
+          <span class="sp-val g">0.71%</span>
+        </div>
+      </div>
+
+      <!-- 5c: Campaign outcomes -->
+      <div class="sp">
+        <div class="sp-title">Campaign Outcomes · Acme B2B Q2</div>
+        <div class="sp-hero g">€189k</div>
+        <div class="sp-sublabel">revenue attributed this campaign</div>
+        <div class="outcome-grid">
+          <div class="okpi">
+            <div class="okpi-label">ROAS</div>
+            <div class="okpi-val g">4.2×</div>
+            <div class="okpi-target">Target 3.5× ✓</div>
+          </div>
+          <div class="okpi">
+            <div class="okpi-label">CPA</div>
+            <div class="okpi-val g">€28</div>
+            <div class="okpi-target">Target €35 ✓</div>
+          </div>
+          <div class="okpi">
+            <div class="okpi-label">Leads</div>
+            <div class="okpi-val">1,840</div>
+            <div class="okpi-target">Target 1,500 ✓</div>
+          </div>
+          <div class="okpi">
+            <div class="okpi-label">Media spend</div>
+            <div class="okpi-val">€45k</div>
+            <div class="okpi-target">On budget ✓</div>
+          </div>
+        </div>
+        <div class="ratio-box">
+          <strong>AI cost as % of media budget: 0.31%</strong><br>
+          €142 in AI spend managed €45,000 in media and delivered €189,000 in attributed revenue. Every €1 of AI cost returned €1,331 in outcome.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       MODULE 6 — PENDING APPROVALS
+  ══════════════════════════════════════════ -->
+  <section id="approvals" class="section-gap">
+    <div class="section-label"><span>05</span> · Captain's Orders — Pending Approvals</div>
+    <div class="approval-card">
+      <div>
+        <div class="gate-label">⏸ Phase Gate 2</div>
+        <div class="approval-title">TechFlow SaaS — EMEA Product Launch</div>
+        <div class="approval-desc">Phase 2 Execution deliverables complete. Ready to proceed to Phase 3 (Performance).</div>
+        <div class="approval-items">
+          <span class="aitem">✓ Campaign brief</span>
+          <span class="aitem">✓ Content calendar (120 pieces)</span>
+          <span class="aitem">✓ Ad copy — 75 variants</span>
+          <span class="aitem">✓ Media plan (€80k budget)</span>
+          <span class="aitem">✓ KPI targets set</span>
+          <span class="aitem">✓ Positioning — 3 options</span>
+        </div>
+        <div class="approval-wait">⏱ Awaiting 14 hours — Phase 3 ready to launch on approval</div>
+      </div>
+      <div class="approval-actions">
+        <div class="btn-go">Approve → Launch</div>
+        <div class="btn-ghost">Request revision</div>
+        <div class="btn-ghost">Put on hold</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Back CTA -->
+  <div class="back-cta">
+    <h3>This is what your command center looks like</h3>
+    <p>The Bridge is included with every Crew deployment. Your projects, your agents, your outcomes — in one place. Ready to start your own fleet?</p>
+    <a class="back-cta-btn" href="https://markdekock.com#contact">Book a call →</a>
+  </div>
+
+</div>
+
+<script>
+function toggleAgent(card) {
+  const panel = card.querySelector('.health-detail');
+  const hint  = card.querySelector('.expand-hint');
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open', !isOpen);
+  card.classList.toggle('open', !isOpen);
+  hint.textContent = isOpen ? '↕ Health profile' : '↑ Close';
+}
+</script>
+
+</body>
+</html>
