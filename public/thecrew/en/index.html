@@ -534,6 +534,59 @@
     font-weight: 500;
   }
 
+  /* ── Use-case selector ── */
+  .usecase-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .usecase-btn {
+    background: var(--ocean-mid);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+  }
+  .usecase-btn:hover { border-color: rgba(255,255,255,0.15); }
+  .usecase-btn.active { border-color: var(--paradise); background: rgba(0,222,255,0.06); }
+  .usecase-icon { font-size: 28px; margin-bottom: 10px; }
+  .usecase-label { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .usecase-sub { font-size: 11.5px; color: var(--text-dim); line-height: 1.5; }
+
+  .usecase-content { display: none; }
+  .usecase-content.active { display: block; }
+
+  .phase-pause {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: var(--gold);
+    padding: 8px 0;
+  }
+
+  .key-agents-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+  }
+  .key-agent {
+    background: var(--ocean-mid);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 12px;
+    color: var(--text-mid);
+    line-height: 1.5;
+  }
+  .key-agent strong { color: var(--text); font-size: 13px; }
+  .key-agent span { color: var(--text-dim); }
+
+  @media (max-width: 768px) {
+    .usecase-selector { grid-template-columns: 1fr; }
+    .key-agents-grid { grid-template-columns: 1fr 1fr; }
+  }
+
   /* ══════════════════════════════════════════
      TAB 2 — ARCHITECTURE (The System)
      ══════════════════════════════════════════ */
@@ -885,30 +938,82 @@
     <div class="subtitle">AI that supports your team — not replaces it</div>
   </div>
 
-  <!-- Problem section -->
+  <!-- Use-case selector -->
   <div class="crew-section">
-    <h2>The problem you already know</h2>
+    <h2>Does this sound familiar?</h2>
+    <p style="color: var(--text-dim); margin-bottom: 20px;">Choose what's closest to your situation. The rest of the page adapts.</p>
   </div>
 
-  <div class="crew-section" style="margin-bottom: 28px;">
-    <p>Your team spends weeks on analyses that are out of date the moment they're done. Campaign data comes in late. Competitive insight is always from last month.</p>
-    <p>Your agency delivers good work, but the process is slow. Briefs go back and forth. Results are hard to compare. No one sees the full picture.</p>
-    <p>And every time someone leaves — a marketer, an analyst, an account manager — the knowledge build-up starts over. Everything sits in people's heads, not in systems.</p>
+  <div class="usecase-selector">
+    <div class="usecase-btn active" onclick="selectUsecase('agency')">
+      <div class="usecase-icon">🏢</div>
+      <div class="usecase-label">I run an agency</div>
+      <div class="usecase-sub">Deliver more, move faster, protect your margin</div>
+    </div>
+    <div class="usecase-btn" onclick="selectUsecase('enterprise')">
+      <div class="usecase-icon">💊</div>
+      <div class="usecase-label">Complex organisation</div>
+      <div class="usecase-sub">Test GTM strategies, align stakeholders, launch faster</div>
+    </div>
+    <div class="usecase-btn" onclick="selectUsecase('team')">
+      <div class="usecase-icon">📈</div>
+      <div class="usecase-label">Marketing &amp; sales team</div>
+      <div class="usecase-sub">Grip on performance, agency management, AI in daily work</div>
+    </div>
   </div>
 
-  <!-- Solution section -->
+  <!-- AGENCY path -->
+  <div class="usecase-content active" id="uc-agency">
+    <div class="crew-section">
+      <h2>Your team is running at full capacity — but the hours are gone</h2>
+      <p>Your clients expect more. Faster analyses, sharper campaigns, daily optimisation. But your team is already at 60-hour weeks and manual work is the bottleneck. Every new client costs capacity you don't have.</p>
+      <p>Meanwhile, all the expertise sits in your best people's heads. When someone leaves, the knowledge build-up starts over.</p>
+    </div>
+    <div class="crew-section">
+      <h2>The Crew as operational accelerator</h2>
+      <p>10 AI agents that take over the repetitive core of agency work: competitor analysis, content production, media allocation, reporting. Not as a replacement for your team — as the foundation underneath it. Your people focus on strategy and client relationships. The system does the heavy lifting.</p>
+    </div>
+    <div class="crew-callout">
+      <strong>80–120 hours saved per campaign cycle.</strong> That's not an efficiency gain — that's a new business model. More clients, better margin, same team.
+      <div style="margin-top: 12px;"><a onclick="showTab('operations')" style="color: var(--paradise); cursor: pointer; font-size: 13px;">See the full operational mapping → 24 tasks, time saved per task</a></div>
+    </div>
+  </div>
+
+  <!-- ENTERPRISE path -->
+  <div class="usecase-content" id="uc-enterprise">
+    <div class="crew-section">
+      <h2>Your decisions take months — and you only test them in the market</h2>
+      <p>A new product launch. A GTM strategy for a new segment. A repositioning after an acquisition. The analysis takes weeks. The stakeholder alignment takes months. And only when you go live do you find out whether your assumptions were right.</p>
+      <p>Meanwhile, the market moves faster than your decision-making.</p>
+    </div>
+    <div class="crew-section">
+      <h2>The Crew as strategic sparring team</h2>
+      <p>10 AI agents that stress-test your strategic scenarios before you take them to market. The Lookout analyses your internal data. The Spyglass scans the competition. The Navigator builds a falsifiable positioning — including the strongest counter-argument. Your stakeholders don't get presentations. They get challenged strategies.</p>
+    </div>
+    <div class="crew-callout">
+      <strong>Test your GTM strategy in days, not quarters.</strong> Each agent defends one perspective. Together they force sharper choices before a single euro goes to market.
+    </div>
+  </div>
+
+  <!-- TEAM path -->
+  <div class="usecase-content" id="uc-team">
+    <div class="crew-section">
+      <h2>You have an agency, a team, and not enough visibility into what's working</h2>
+      <p>Your agency sends monthly reports but you want to know daily what's happening. You have data in five platforms but no one connecting it. And your briefs to the agency are based on gut feeling, not insight.</p>
+      <p>The result: you're paying for a process you have no grip on.</p>
+    </div>
+    <div class="crew-section">
+      <h2>The Crew as your daily foundation</h2>
+      <p>10 AI agents that keep you informed daily, sharpen your briefs, and keep your agency accountable. The Chronometer delivers a performance update every morning. The Navigator makes sure your brief is backed by data. The Ship's Log turns raw numbers into a story your board understands.</p>
+    </div>
+    <div class="crew-callout">
+      <strong>From reactive to proactive.</strong> You stop waiting for your agency's report. You drive the conversation — with data, direction and concrete questions. That changes the relationship.
+    </div>
+  </div>
+
+  <!-- Three phases — examples adapt per use case -->
   <div class="crew-section">
-    <h2>What The Crew does</h2>
-    <p>The Crew is a team of 10 AI agents that structures your marketing and sales. From market research to campaign execution to performance reporting. Every agent owns one domain. Together they form the foundation underneath your team — or underneath your agency relationship.</p>
-  </div>
-
-  <div class="crew-callout">
-    <strong>Knowledge that lives in heads disappears. Knowledge that lives in a system compounds.</strong> Every run of The Crew builds a sharper foundation for better decisions.
-  </div>
-
-  <!-- Three phases -->
-  <div class="crew-section">
-    <h2>Three phases</h2>
+    <h2>Three phases — you decide between every step</h2>
   </div>
 
   <div class="phases-container">
@@ -916,43 +1021,69 @@
       <div class="phase-card-num">Phase 1</div>
       <div class="phase-card-title">Intelligence</div>
       <div class="phase-card-desc">Understand your market before you spend a euro</div>
-      <div class="phase-card-example">Competitor analysis that normally takes two weeks, in two hours. With sources and positioning gaps.</div>
+      <div class="phase-card-example uc-ex agency-ex">Competitor audit for 3 clients at once in a single morning. With positioning gaps and buying triggers.</div>
+      <div class="phase-card-example uc-ex enterprise-ex" style="display:none">GTM analysis for a new segment: market size, competitors, positioning options — in hours, not weeks.</div>
+      <div class="phase-card-example uc-ex team-ex" style="display:none">Your funnel examined: where budget leaks, which channels perform, what competitors do differently.</div>
     </div>
+    <div class="phase-pause">⏸ YOU APPROVE</div>
     <div class="phase-card">
       <div class="phase-card-num">Phase 2</div>
       <div class="phase-card-title">Execution</div>
       <div class="phase-card-desc">Strategy becomes campaign, content and media plan</div>
-      <div class="phase-card-example">From brief to full content calendar, ad copy and media plan in days, not weeks.</div>
+      <div class="phase-card-example uc-ex agency-ex">Full campaign output per client: content calendar, 25 ad copy variants, media plan with budget split.</div>
+      <div class="phase-card-example uc-ex enterprise-ex" style="display:none">Three scenarios developed into concrete campaign plans. Stakeholders choose based on data, not slides.</div>
+      <div class="phase-card-example uc-ex team-ex" style="display:none">Your brief to the agency — but now backed by data, positioning and concrete KPI targets.</div>
     </div>
+    <div class="phase-pause">⏸ YOU APPROVE</div>
     <div class="phase-card">
       <div class="phase-card-num">Phase 3</div>
       <div class="phase-card-title">Performance</div>
       <div class="phase-card-desc">What worked, what didn't, and what now</div>
-      <div class="phase-card-example">Daily performance alerts instead of monthly reports that arrive too late.</div>
+      <div class="phase-card-example uc-ex agency-ex">Daily per client: anomalies, optimisation opportunities, experiment recommendations. Your team starts the day with direction.</div>
+      <div class="phase-card-example uc-ex enterprise-ex" style="display:none">Launch results analysed within a week. Hypotheses tested. Next step clear before the board asks.</div>
+      <div class="phase-card-example uc-ex team-ex" style="display:none">Every Monday a performance report your agency doesn't produce. With questions they need to answer.</div>
     </div>
   </div>
 
-  <div style="text-align: center; font-size: 12px; color: var(--text-dim); margin: 20px 0;">⏸ PAUSE after every phase — you approve before the next one begins</div>
-
-  <!-- Scenarios section -->
+  <!-- Key agents per use case -->
   <div class="crew-section">
-    <h2>How organisations use this</h2>
+    <h2>The agents working for you</h2>
   </div>
 
-  <div class="scenarios-container">
-    <div class="scenario-card">
-      <h3>Strengthen your own team</h3>
-      <p>You have a marketing team but lack structure and speed. The Crew becomes your foundation: daily performance loops, better briefs, faster decisions. Your team stays in charge — the system does the thinking work.</p>
+  <div class="usecase-content active" id="uc-agents-agency" style="margin-bottom: 28px;">
+    <div class="key-agents-grid">
+      <div class="key-agent">🗺️ <strong>Cartographer</strong><br><span>Plans your campaigns per client</span></div>
+      <div class="key-agent">✍️ <strong>Scribe</strong><br><span>25 ad copy variants per brief</span></div>
+      <div class="key-agent">💰 <strong>Quartermaster</strong><br><span>Budget and channel allocation</span></div>
+      <div class="key-agent">📊 <strong>Chronometer</strong><br><span>Daily performance per client</span></div>
+      <div class="key-agent">🧪 <strong>Helmsman</strong><br><span>Test backlog and scaling advice</span></div>
+      <div class="key-agent">📋 <strong>Ship's Log</strong><br><span>Client reports in minutes</span></div>
     </div>
-    <div class="scenario-card">
-      <h3>Work smarter with your agency</h3>
-      <p>You work with an agency but want more grip on the process. The Crew makes sure your agency is better briefed, gets faster feedback, and operates more transparently. You see what's happening, when, and why.</p>
+    <p style="font-size: 12px; color: var(--text-dim); margin-top: 12px;"><a onclick="showTab('architecture')" style="color: var(--paradise); cursor: pointer;">See all 10 agents in detail →</a></p>
+  </div>
+
+  <div class="usecase-content" id="uc-agents-enterprise" style="margin-bottom: 28px;">
+    <div class="key-agents-grid">
+      <div class="key-agent">🔍 <strong>Lookout</strong><br><span>Analyse internal data</span></div>
+      <div class="key-agent">🌍 <strong>Spyglass</strong><br><span>Scan market and competition</span></div>
+      <div class="key-agent">🧭 <strong>Navigator</strong><br><span>Build falsifiable strategy</span></div>
+      <div class="key-agent">📋 <strong>Ship's Log</strong><br><span>Stakeholder reporting</span></div>
+      <div class="key-agent">✍️ <strong>Scribe</strong><br><span>Positioning documents</span></div>
+      <div class="key-agent">🧪 <strong>Helmsman</strong><br><span>Test and compare scenarios</span></div>
     </div>
-    <div class="scenario-card">
-      <h3>Agency: upgrade your service</h3>
-      <p>You're an agency and want to offer your clients more with the same capacity. The Crew accelerates your operation from weeks to days.</p>
-      <p><a onclick="showTab('operations')" class="scenario-link" style="display: block; margin-top: 8px;">See the full operational mapping →</a></p>
+    <p style="font-size: 12px; color: var(--text-dim); margin-top: 12px;"><a onclick="showTab('architecture')" style="color: var(--paradise); cursor: pointer;">See all 10 agents in detail →</a></p>
+  </div>
+
+  <div class="usecase-content" id="uc-agents-team" style="margin-bottom: 28px;">
+    <div class="key-agents-grid">
+      <div class="key-agent">📊 <strong>Chronometer</strong><br><span>Daily performance updates</span></div>
+      <div class="key-agent">🧭 <strong>Navigator</strong><br><span>Back briefs with data</span></div>
+      <div class="key-agent">🧪 <strong>Helmsman</strong><br><span>Experiment and optimise</span></div>
+      <div class="key-agent">📋 <strong>Ship's Log</strong><br><span>Executive summaries for the board</span></div>
+      <div class="key-agent">🔍 <strong>Lookout</strong><br><span>Track your funnel and conversions</span></div>
+      <div class="key-agent">🌍 <strong>Spyglass</strong><br><span>Monitor the competition</span></div>
     </div>
+    <p style="font-size: 12px; color: var(--text-dim); margin-top: 12px;"><a onclick="showTab('architecture')" style="color: var(--paradise); cursor: pointer;">See all 10 agents in detail →</a></p>
   </div>
 
   <!-- How it gets smarter -->
@@ -1853,6 +1984,23 @@ function showTab(tabName) {
       btn.classList.add('active');
     }
   });
+}
+
+function selectUsecase(type) {
+  // Toggle selector buttons
+  document.querySelectorAll('.usecase-btn').forEach(btn => btn.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+
+  // Show/hide content paths
+  document.querySelectorAll('.usecase-content').forEach(el => el.classList.remove('active'));
+  const uc = document.getElementById('uc-' + type);
+  if (uc) uc.classList.add('active');
+  const agents = document.getElementById('uc-agents-' + type);
+  if (agents) agents.classList.add('active');
+
+  // Swap phase card examples
+  document.querySelectorAll('.uc-ex').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.' + type + '-ex').forEach(el => el.style.display = '');
 }
 </script>
 
