@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { getLocale } from 'next-intl/server'
 import Script from 'next/script'
+import CookieConsent from '@/components/CookieConsent'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -57,6 +58,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             gtag('config', '${GA_ID}', { page_path: window.location.pathname });
           `}
         </Script>
+
+        {/* ── Cookie consent banner (GDPR) ── */}
+        <CookieConsent />
 
         {/* ── LinkedIn Insight Tag — suspended pending consent mechanism ── */}
         {/* LinkedIn has no consent mode equivalent (no cookieless fallback).       */}
