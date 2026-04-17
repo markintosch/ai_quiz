@@ -37,6 +37,10 @@ export function trackEvent(
 /**
  * Grant full analytics consent (call from a cookie banner "accept" handler).
  * Upgrades GA4 from cookieless to full tracking and activates LinkedIn pixel.
+ *
+ * IMPORTANT: The initial page_view fired before consent was granted, so it
+ * was sent redacted and not attributed to any user. We re-fire page_view
+ * here so this session is counted as a real (new) user in GA4.
  */
 export function grantAnalyticsConsent() {
   if (typeof window === 'undefined') return
@@ -47,6 +51,14 @@ export function grantAnalyticsConsent() {
       ad_storage:         'granted',
       ad_user_data:       'granted',
       ad_personalization: 'granted',
+    })
+
+    // Fire a fresh page_view now that consent is granted — the original
+    // one was sent redacted before the user could click Accept.
+    window.gtag('event', 'page_view', {
+      page_path:     window.location.pathname,
+      page_title:    document.title,
+      page_location: window.location.href,
     })
   }
 
