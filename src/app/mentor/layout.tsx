@@ -147,6 +147,19 @@ const jsonLd = serializeJsonLd([
 export default function MentorLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
+      {/* Perf: establish early connections for third-party origins we use
+          (Calendly booking flow opens in a new tab; pre-warming the TLS
+          handshake shaves ~100–200ms off first interaction on cold sessions). */}
+      <link rel="preconnect" href="https://calendly.com" crossOrigin="anonymous" />
+      <link rel="dns-prefetch" href="https://assets.calendly.com" />
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      <link
+        rel="alternate"
+        type="application/rss+xml"
+        title="Mark de Kock — Insights"
+        href={`${BASE}/feed.xml`}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLd }}

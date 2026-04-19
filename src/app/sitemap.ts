@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next'
+import { getAllPosts } from '@/lib/insights/posts'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://markdekock.com'
 const LOCALES  = ['en', 'nl', 'fr'] as const
@@ -115,6 +116,41 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: 'yearly',
     priority:        0.5,
   })
+
+  // ── Insights (blog) ─────────────────────────────────────────────────────────
+  entries.push({
+    url:             `${BASE_URL}/insights`,
+    lastModified:    new Date(),
+    changeFrequency: 'weekly',
+    priority:        0.9,
+    alternates: {
+      languages: {
+        nl:          `${BASE_URL}/insights`,
+        en:          `${BASE_URL}/insights?lang=en`,
+        'x-default': `${BASE_URL}/insights`,
+      },
+    },
+  })
+
+  for (const post of getAllPosts()) {
+    const url = `${BASE_URL}/insights/${post.slug}${post.locale === 'en' ? '?lang=en' : ''}`
+    const altLanguages: Record<string, string> = {}
+    if (post.locale === 'nl') altLanguages.nl = url
+    if (post.locale === 'en') altLanguages.en = url
+    if (post.translation) {
+      const altUrl = `${BASE_URL}/insights/${post.translation.slug}${post.translation.locale === 'en' ? '?lang=en' : ''}`
+      altLanguages[post.translation.locale] = altUrl
+    }
+    altLanguages['x-default'] = altLanguages.nl ?? altLanguages.en ?? url
+
+    entries.push({
+      url,
+      lastModified:    new Date(post.updated ?? post.published),
+      changeFrequency: 'monthly',
+      priority:        0.7,
+      alternates: { languages: altLanguages },
+    })
+  }
 
   return entries
 }

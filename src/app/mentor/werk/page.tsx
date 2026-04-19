@@ -347,6 +347,17 @@ export default function WerkPage() {
                 {t.crewCta}
               </a>
               <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', marginTop: 14, letterSpacing: '0.04em' }}>{t.crewMeta}</p>
+              {lang === 'nl' && (
+                <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', marginTop: 10 }}>
+                  {'Lees ook het essay: '}
+                  <a
+                    href="/thecrew/nl/artikel.html"
+                    style={{ color: PARADISE, textDecoration: 'none', borderBottom: '1px solid rgba(0,222,255,0.4)' }}
+                  >
+                    Waarom je marketingexpertise niet in hoofden moet zitten
+                  </a>
+                </p>
+              )}
             </motion.div>
 
           </motion.div>

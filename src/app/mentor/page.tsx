@@ -145,9 +145,25 @@ const T = {
     spotsCta2:   'Doe eerst de gratis AI-scan',
     spotsTrust:  'Gratis intake · Geen verplichting · We bekijken samen of er een match is',
 
+    insightsLabel: 'Lezen',
+    insightsTitle: 'Mijn denkwerk, opgeschreven.',
+    insightsBody:  'Artikelen over AI-strategie, Shadow AI, governance en executie. Geen hype, geen tool reviews — alleen wat in de praktijk werkt.',
+    insightsCta:   'Lees de artikelen →',
+    insightsPost1Title: 'AI-strategie voor leiders: van ambitie naar iets wat werkt',
+    insightsPost1Href:  '/insights/ai-strategie-voor-leiders',
+    insightsPost2Title: 'Shadow AI: het signaal dat je organisatie klaar is, maar je strategie nog niet',
+    insightsPost2Href:  '/insights/shadow-ai-in-organisaties',
+
+    shareLabel:    'Ken je iemand die hier wat aan heeft?',
+    shareLinkedIn: 'Deel op LinkedIn',
+    shareMail:     'Mail een collega',
+
     footerCopy:  'Strategisch mentor voor AI & executie',
     footerSub:   'markdekock.com',
     footerWerk:  'Wat ik maak →',
+    footerAanpak: 'Hoe ik werk →',
+    footerInsights: 'Insights →',
+    footerCrew:  'The Crew →',
   },
   en: {
     navName:    'Mark de Kock',
@@ -260,9 +276,25 @@ const T = {
     spotsCta2:   'Take the free AI scan first',
     spotsTrust:  'Free intake · No obligations · We\'ll see if there\'s a fit',
 
+    insightsLabel: 'Reading',
+    insightsTitle: 'My thinking, written down.',
+    insightsBody:  'Articles on AI strategy, Shadow AI, governance and execution. No hype, no tool reviews — only what I see work in practice.',
+    insightsCta:   'Read the articles →',
+    insightsPost1Title: 'AI strategy for leaders: from ambition to something that works',
+    insightsPost1Href:  '/insights/ai-strategy-for-leaders?lang=en',
+    insightsPost2Title: 'Shadow AI: the signal that your organisation is ready, but your strategy is not',
+    insightsPost2Href:  '/insights/shadow-ai-in-organisations?lang=en',
+
+    shareLabel:    'Know someone this could help?',
+    shareLinkedIn: 'Share on LinkedIn',
+    shareMail:     'Email a colleague',
+
     footerCopy:  'Strategic mentor for AI & execution',
     footerSub:   'markdekock.com',
     footerWerk:  'What I build →',
+    footerAanpak: 'How I work →',
+    footerInsights: 'Insights →',
+    footerCrew:  'The Crew →',
   },
   de: {
     navName:    'Mark de Kock',
@@ -363,9 +395,25 @@ const T = {
     spotsCta2:   'Zuerst den kostenlosen KI-Scan machen',
     spotsTrust:  'Kostenloses Erstgespräch · Keine Verpflichtung · Wir schauen gemeinsam, ob es passt',
 
+    insightsLabel: 'Lesen',
+    insightsTitle: 'Mein Denken, aufgeschrieben.',
+    insightsBody:  'Artikel über KI-Strategie, Shadow AI, Governance und Umsetzung. Kein Hype, keine Tool-Reviews — nur was in der Praxis funktioniert.',
+    insightsCta:   'Artikel lesen →',
+    insightsPost1Title: 'AI-Strategie für Führungskräfte: von Ambition zu etwas, das funktioniert',
+    insightsPost1Href:  '/insights/ai-strategy-for-leaders?lang=en',
+    insightsPost2Title: 'Shadow AI: das Signal, dass deine Organisation bereit ist, aber deine Strategie nicht',
+    insightsPost2Href:  '/insights/shadow-ai-in-organisations?lang=en',
+
+    shareLabel:    'Kennst du jemanden, dem das helfen könnte?',
+    shareLinkedIn: 'Auf LinkedIn teilen',
+    shareMail:     'E-Mail an Kollegen',
+
     footerCopy:  'Strategischer Mentor für KI & Umsetzung',
     footerSub:   'markdekock.com',
     footerWerk:  'Was ich baue →',
+    footerAanpak: 'Wie ich arbeite →',
+    footerInsights: 'Einblicke →',
+    footerCrew:  'The Crew →',
   },
 }
 
@@ -889,6 +937,57 @@ function MentorPageInner() {
         </div>
       </section>
 
+      {/* ── Insights teaser ── */}
+      <section style={{ background: WHITE, padding: '80px 24px', borderTop: `1px solid ${BORDER}` }}>
+        <div className="max-w-4xl mx-auto">
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
+            <motion.p variants={fadeUp} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: WARM, marginBottom: 10 }}>
+              {t.insightsLabel}
+            </motion.p>
+            <motion.h2 variants={fadeUp} style={{ textAlign: 'center', fontSize: 'clamp(22px, 3vw, 32px)', fontWeight: 800, marginBottom: 12, color: INK, lineHeight: 1.25 }}>
+              {t.insightsTitle}
+            </motion.h2>
+            <motion.p variants={fadeUp} style={{ textAlign: 'center', fontSize: 16, color: BODY, maxWidth: 560, margin: '0 auto 36px', lineHeight: 1.7 }}>
+              {t.insightsBody}
+            </motion.p>
+            <div className="grid sm:grid-cols-2 gap-4" style={{ marginBottom: 28 }}>
+              {[
+                { href: t.insightsPost1Href, title: t.insightsPost1Title },
+                { href: t.insightsPost2Href, title: t.insightsPost2Title },
+              ].map((post, i) => (
+                <motion.a
+                  key={i}
+                  href={post.href}
+                  variants={fadeUp}
+                  onClick={() => trackEvent('mentor_insights_post_clicked', { position: i + 1 })}
+                  style={{
+                    display: 'block', background: LIGHT, borderRadius: 16, padding: '22px 24px',
+                    border: `1px solid ${BORDER}`, textDecoration: 'none',
+                  }}
+                >
+                  <p style={{ fontSize: 15, fontWeight: 700, color: INK, lineHeight: 1.4, marginBottom: 8 }}>{post.title}</p>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: ACCENT }}>
+                    {lang === 'en' ? 'Read →' : lang === 'de' ? 'Lesen →' : 'Lees →'}
+                  </span>
+                </motion.a>
+              ))}
+            </div>
+            <motion.div variants={fadeUp} style={{ textAlign: 'center' }}>
+              <a
+                href={`/insights${lang === 'en' ? '?lang=en' : ''}`}
+                onClick={() => trackEvent('mentor_insights_index_clicked')}
+                style={{
+                  fontSize: 14, fontWeight: 600, color: ACCENT, textDecoration: 'none',
+                  borderBottom: `1px solid ${ACCENT}`, paddingBottom: 2,
+                }}
+              >
+                {t.insightsCta}
+              </a>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* ── Spots + CTA ── */}
       <section style={{ background: INK, padding: '100px 24px' }}>
         <div className="max-w-xl mx-auto text-center">
@@ -935,6 +1034,38 @@ function MentorPageInner() {
             <motion.p variants={fadeUp} style={{ fontSize: 13, color: '#475569', marginTop: 24 }}>
               {t.spotsTrust}
             </motion.p>
+
+            {/* Share block — word-of-mouth multiplier for mentor page. */}
+            <motion.div variants={fadeUp} style={{ marginTop: 56, paddingTop: 32, borderTop: '1px solid #1E293B' }}>
+              <p style={{ fontSize: 12, color: '#64748B', marginBottom: 16, letterSpacing: '0.05em' }}>
+                {t.shareLabel}
+              </p>
+              <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
+                <a
+                  href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fmarkdekock.com%2Fmentor"
+                  target="_blank" rel="noopener noreferrer"
+                  onClick={() => trackEvent('mentor_share_linkedin_clicked')}
+                  style={{
+                    fontSize: 13, fontWeight: 600, padding: '10px 20px', borderRadius: 100,
+                    border: '1px solid #334155', color: '#94A3B8', textDecoration: 'none',
+                    background: 'transparent',
+                  }}
+                >
+                  {t.shareLinkedIn}
+                </a>
+                <a
+                  href={`mailto:?subject=${encodeURIComponent('markdekock.com')}&body=${encodeURIComponent('https://markdekock.com/mentor')}`}
+                  onClick={() => trackEvent('mentor_share_email_clicked')}
+                  style={{
+                    fontSize: 13, fontWeight: 600, padding: '10px 20px', borderRadius: 100,
+                    border: '1px solid #334155', color: '#94A3B8', textDecoration: 'none',
+                    background: 'transparent',
+                  }}
+                >
+                  {t.shareMail}
+                </a>
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
@@ -946,8 +1077,11 @@ function MentorPageInner() {
             <div style={{ width: 24, height: 24, borderRadius: 6, background: INK, border: '1px solid #1E293B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: WHITE, fontFamily: 'serif' }}>M</div>
             <span style={{ fontSize: 13, color: '#475569' }}>{t.navName} — {t.footerCopy}</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+            <a href="/mentor/aanpak" onClick={() => trackEvent('mentor_footer_aanpak_clicked')} style={{ fontSize: 12, color: '#64748B', textDecoration: 'none' }}>{t.footerAanpak}</a>
             <a href="/werk" onClick={() => trackEvent('mentor_footer_projects_clicked')} style={{ fontSize: 12, color: '#64748B', textDecoration: 'none' }}>{t.footerWerk}</a>
+            <a href={`/insights${lang === 'en' ? '?lang=en' : ''}`} onClick={() => trackEvent('mentor_footer_insights_clicked')} style={{ fontSize: 12, color: '#64748B', textDecoration: 'none' }}>{t.footerInsights}</a>
+            <a href={`/thecrew/${lang === 'en' ? 'en' : 'nl'}/`} onClick={() => trackEvent('mentor_footer_crew_clicked')} style={{ fontSize: 12, color: '#64748B', textDecoration: 'none' }}>{t.footerCrew}</a>
             <p style={{ fontSize: 12, color: '#334155', margin: 0 }}>{t.footerSub} · {new Date().getFullYear()}</p>
           </div>
         </div>
