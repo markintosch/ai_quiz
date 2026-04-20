@@ -9,6 +9,7 @@ const NAV_LINKS = [
   { href: '/admin/cohorts', label: 'Cohorts' },
   { href: '/admin/benchmark', label: 'Benchmark' },
   { href: '/admin/stats', label: 'Statistics' },
+  { href: '/admin/traffic', label: 'Traffic' },
   { href: '/admin/privacy', label: 'Privacy & Data' },
   { href: '/admin/content', label: 'Homepage copy' },
   { href: '/admin/products', label: 'Products' },
