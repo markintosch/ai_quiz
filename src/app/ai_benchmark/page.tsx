@@ -157,6 +157,47 @@ function AiBenchmarkLandingInner() {
         </div>
       </section>
 
+      {/* ── Personal quote (Mark) ───────────────────────────────────────── */}
+      <section style={{
+        background: '#FFFBEB', padding: '64px 24px',
+        borderTop: `1px solid ${BORDER}`, borderBottom: `1px solid ${WARM}33`,
+      }}>
+        <div style={{ maxWidth: 720, margin: '0 auto' }}>
+          <h2 style={{
+            fontSize: 11, fontWeight: 700, letterSpacing: '0.18em',
+            textTransform: 'uppercase', color: WARM, marginBottom: 22,
+          }}>
+            {t.quoteLabel}
+          </h2>
+
+          <div style={{ position: 'relative', paddingLeft: 4 }}>
+            <span aria-hidden style={{
+              position: 'absolute', top: -38, left: -10,
+              fontSize: 96, lineHeight: 1, color: WARM,
+              opacity: 0.22, fontFamily: 'Georgia, "Times New Roman", serif',
+              fontWeight: 700,
+            }}>
+              &ldquo;
+            </span>
+            <p style={{
+              fontSize: 'clamp(18px, 2.2vw, 22px)', color: INK, lineHeight: 1.55,
+              fontWeight: 500, letterSpacing: '-0.005em', position: 'relative',
+              margin: 0,
+            }}>
+              {t.quoteBody}
+            </p>
+          </div>
+
+          <div style={{ marginTop: 28, display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div style={{ width: 36, height: 2, background: WARM, flexShrink: 0 }} />
+            <div>
+              <p style={{ fontSize: 14, fontWeight: 800, color: INK, margin: 0 }}>{t.quoteAuthor}</p>
+              <p style={{ fontSize: 12, color: BODY, margin: '2px 0 0' }}>{t.quoteRole}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── Proof / community ───────────────────────────────────────────── */}
       <section style={{
         background: INK, color: '#fff', padding: '40px 24px',

@@ -34,6 +34,12 @@ export type LangContent = {
   heroCta2:    string
   trustLine:   string
 
+  // personal quote (Mark)
+  quoteLabel:  string
+  quoteBody:   string
+  quoteAuthor: string
+  quoteRole:   string
+
   // proof / community
   proofN:        string  // template, {n} replaced at render
   proofSubtitle: string
@@ -70,6 +76,11 @@ const NL: LangContent = {
   heroCta1:   'Start de benchmark →',
   heroCta2:   'Hoe het werkt',
   trustLine:  '18 vragen · ~6 minuten · Gratis · Persoonlijk dashboard direct na invullen',
+
+  quoteLabel:  'Waarom ik dit doe',
+  quoteBody:   'Ik geloof in de kracht van mijn vakgenoten die mij de weg wijzen naar slimmere keuzes in het gebruik van AI-tools. Om die inzichten op te halen en gelijk te delen met de mensen die er zelf aan bijdragen, lijkt mij de beste manier om iedereen verder te helpen in één van de snelst innoverende fases van mijn werkend bestaan.',
+  quoteAuthor: 'Mark de Kock',
+  quoteRole:   'Mentor · markdekock.com',
 
   proofN:        '{n} marketeers en sellers hebben al meegedaan',
   proofSubtitle: 'Jouw antwoorden bouwen mee aan het grootste onafhankelijke beeld van AI-gebruik in BeNeLux.',
