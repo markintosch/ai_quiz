@@ -33,8 +33,22 @@ function scoreQuestion(q: Question, answer: Answers[string]): number | null {
         && a !== 'none'
         && !a.startsWith('other_detail:')
       )
-      // If user picked "none" → 0. If they only added an Other-detail → 1 selection.
       const otherCount = arr.filter(a => typeof a === 'string' && a.startsWith('other_detail:')).length
+
+      // If options carry weights, score by the highest selected weight.
+      // (e.g. picking "agents" should land at agent-level even if "standalone"
+      //  is also picked — selections compound, max wins.)
+      const hasWeights = q.options.some(o => o.weight !== undefined)
+      if (hasWeights) {
+        if (meaningful.length === 0) return 0
+        const selectedWeights = meaningful
+          .map(id => q.options.find(o => o.id === id)?.weight ?? 0)
+        const maxSelected = Math.max(...selectedWeights, 0)
+        const maxPossible = Math.max(...q.options.map(o => o.weight ?? 0), 4)
+        return maxPossible === 0 ? 0 : Math.round((maxSelected / maxPossible) * 100)
+      }
+
+      // Otherwise score by saturation: count of meaningful selections / saturation.
       const count = meaningful.length + (otherCount > 0 ? 1 : 0)
       const saturation = q.saturation ?? 3
       if (count === 0) return 0

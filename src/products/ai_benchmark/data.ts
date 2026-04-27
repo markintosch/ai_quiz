@@ -371,8 +371,9 @@ const SHARED_CORE: Question[] = [
     ],
   },
   {
-    id: 'q5', type: 'weighted_mc', dimension: 'workflow',
+    id: 'q5', type: 'multiselect', dimension: 'workflow',
     text: 'Hoe zit AI in je workflow?',
+    hint: 'Meerdere antwoorden mogelijk — kies wat geldt.',
     options: [
       { id: 'standalone', label: 'Losstaande tools / browser-tabs',    weight: 1 },
       { id: 'integrated', label: 'Geïntegreerd in CRM / CMS / inbox',  weight: 2 },
@@ -412,7 +413,8 @@ const SHARED_CORE: Question[] = [
   },
   {
     id: 'q9', type: 'multiselect', dimension: 'data', saturation: 3,
-    text: 'Welke "AI-voer" heb je gedocumenteerd?',
+    text: 'Wat heb je gedocumenteerd dat AI kan gebruiken?',
+    hint: 'Documenten of kennis die AI als context kan inzetten.',
     options: [
       { id: 'icp',         label: 'ICP / persona\'s'              },
       { id: 'voice',       label: 'Brand voice / tone'            },
