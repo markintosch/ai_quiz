@@ -497,7 +497,7 @@ const ROLE_MARKETING: Question[] = [
     ],
   },
   {
-    id: 'q15m', type: 'multiselect', dimension: 'adoption', saturation: 3,
+    id: 'q15m', type: 'multiselect', dimension: 'adoption', saturation: 3, hasOther: true,
     text: 'Welke marketing-taken doe je nu met AI?',
     options: [
       { id: 'copy',          label: 'Copywriting'                 },
@@ -514,7 +514,8 @@ const ROLE_MARKETING: Question[] = [
   },
   {
     id: 'q16m', type: 'frequency', dimension: 'workflow',
-    text: 'Welk percentage van je creatieve iteraties begint nu in AI?',
+    text: 'Welk deel van je creatieve werk begint nu met AI?',
+    hint: 'Drafts, ideeën, eerste versies — voordat jij of je team het verder uitwerkt.',
     options: FREQ_PCT,
   },
 ]
