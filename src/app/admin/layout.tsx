@@ -16,6 +16,7 @@ const NAV_LINKS = [
   { href: '/admin/interests', label: 'Interests' },
   { href: '/admin/games', label: '🎮 Games' },
   { href: '/admin/pulse', label: 'Pulse' },
+  { href: '/admin/ai_benchmark', label: 'AI-benchmark' },
 ]
 
 export default function AdminLayout({

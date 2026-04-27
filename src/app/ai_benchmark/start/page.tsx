@@ -1,9 +1,11 @@
 'use client'
 
-import { Suspense, useState } from 'react'
+import { Suspense, useMemo, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { type Lang } from '@/products/ai_benchmark/data'
+import {
+  getContent, getQuestions, type Lang, type Role, type Question,
+} from '@/products/ai_benchmark/data'
 
 // ── Mentor brand tokens ──────────────────────────────────────────────────────
 const INK        = '#0F172A'
@@ -23,35 +25,9 @@ const LANG_LABELS: { key: Lang; label: string }[] = [
   { key: 'de', label: 'DE' },
 ]
 
-// Minimal copy for /start. Translation pass unifies into data.ts later.
-const COPY = {
-  navName:      'AI-benchmark',
-  navTagline:   'voor marketing & sales',
-  navBack:      '← Terug',
+type Step = 'intro' | 'questions'
 
-  badge:        'Komt eraan · launch in mei',
-  h1a:          'We zijn de laatste hand',
-  h1b:          'aan het leggen.',
-  body:         'De benchmark gaat binnen enkele weken live. Laat je naam en e-mail achter en je krijgt persoonlijk een seintje zodra je hem kunt invullen — als eerste, vóór de bredere lancering.',
-
-  fieldName:    'Je naam',
-  fieldEmail:   'E-mailadres',
-  fieldNameP:   'Voornaam',
-  fieldEmailP:  'jij@bedrijf.nl',
-  submit:       'Zet me op de lijst →',
-  submitting:   'Bezig…',
-  successH:     'Top — we hebben je toegevoegd.',
-  successBody:  'Je krijgt persoonlijk bericht zodra de AI-benchmark openstaat. Tot snel.',
-  successCta:   '← Terug naar de intro',
-  errorMsg:     'Er ging iets mis. Probeer het later nog eens of mail mark@brandpwrdmedia.com.',
-
-  altLabel:     'Liever direct contact?',
-  altLine:      'Mail Mark op',
-  altLink:      'mark@brandpwrdmedia.com',
-
-  reportLine:   'Aggregaat-rapport: State of AI in Marketing & Sales 2026',
-  footerLine:   'Gehost door Mark de Kock · markdekock.com',
-}
+type Answers = Record<string, string | string[] | undefined>
 
 // ── Inner ────────────────────────────────────────────────────────────────────
 function StartInner() {
@@ -60,223 +36,481 @@ function StartInner() {
   const rawLang      = searchParams.get('lang') || 'nl'
   const lang         = (['nl', 'en', 'fr', 'de'].includes(rawLang) ? rawLang : 'nl') as Lang
 
+  const t = getContent(lang)
+
+  // Intro form
+  const [name,        setName]         = useState('')
+  const [email,       setEmail]        = useState('')
+  const [role,        setRole]         = useState<Role | ''>('')
+  const [seniority,   setSeniority]    = useState('')
+  const [industry,    setIndustry]     = useState('')
+  const [companySize, setCompanySize]  = useState('')
+  const [region,      setRegion]       = useState('')
+  const [consent,     setConsent]      = useState(true)
+
+  const [step,        setStep]         = useState<Step>('intro')
+  const [answers,     setAnswers]      = useState<Answers>({})
+  const [submitting,  setSubmitting]   = useState(false)
+  const [error,       setError]        = useState<string | null>(null)
+
   const switchLang = (key: Lang) => router.replace(`/ai_benchmark/start?lang=${key}`)
-  const homeHref   = `/ai_benchmark?lang=${lang}`
 
-  const [name,    setName]    = useState('')
-  const [email,   setEmail]   = useState('')
-  const [status,  setStatus]  = useState<'idle' | 'submitting' | 'ok' | 'error'>('idle')
-  const [errMsg,  setErrMsg]  = useState<string>('')
+  const questions = useMemo<Question[]>(() => role ? getQuestions(role) : [], [role])
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (status === 'submitting') return
-    setStatus('submitting')
-    setErrMsg('')
+  const introValid = !!(role && email.includes('@') && name.trim() && seniority && industry && companySize && region)
+
+  const allAnswered = questions.every(q => {
+    const a = answers[q.id]
+    if (a === undefined) return false
+    if (Array.isArray(a)) return a.length > 0
+    return typeof a === 'string' && a.length > 0
+  })
+
+  // ── Multiselect answer toggle (with "none" exclusivity) ───────────────────
+  function toggleMulti(qId: string, optId: string) {
+    setAnswers(prev => {
+      const cur = Array.isArray(prev[qId]) ? prev[qId] as string[] : []
+      let next: string[]
+      if (optId === 'none') {
+        next = cur.includes('none') ? [] : ['none']
+      } else {
+        const without = cur.filter(x => x !== 'none')
+        next = without.includes(optId)
+          ? without.filter(x => x !== optId)
+          : [...without, optId]
+      }
+      return { ...prev, [qId]: next }
+    })
+  }
+
+  function setOtherDetail(qId: string, value: string) {
+    setAnswers(prev => {
+      const cur = Array.isArray(prev[qId]) ? prev[qId] as string[] : []
+      const without = cur.filter(x => !x.startsWith('other_detail:'))
+      const next = value.trim() ? [...without, `other_detail:${value.trim()}`] : without
+      return { ...prev, [qId]: next }
+    })
+  }
+
+  function getOtherDetail(qId: string): string {
+    const cur = Array.isArray(answers[qId]) ? answers[qId] as string[] : []
+    const found = cur.find(x => x.startsWith('other_detail:'))
+    return found ? found.slice('other_detail:'.length) : ''
+  }
+
+  function setSingle(qId: string, optId: string) {
+    setAnswers(prev => ({ ...prev, [qId]: optId }))
+  }
+
+  // ── Submit ───────────────────────────────────────────────────────────────
+  async function handleSubmit() {
+    if (submitting) return
+    setSubmitting(true); setError(null)
     try {
-      const res = await fetch('/api/ai_benchmark/waitlist', {
+      const res = await fetch('/api/ai_benchmark/submit', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ name: name.trim(), email: email.trim(), lang }),
+        body:    JSON.stringify({
+          name, email, lang, role, seniority, industry, companySize, region,
+          marketingConsent: consent, answers,
+        }),
       })
-      if (!res.ok) {
-        setStatus('error'); setErrMsg(COPY.errorMsg); return
-      }
-      setStatus('ok')
-    } catch {
-      setStatus('error'); setErrMsg(COPY.errorMsg)
+      const json = await res.json()
+      if (!res.ok || !json?.id) throw new Error(json?.error || 'Submit failed')
+      router.push(`/ai_benchmark/results/${json.id}?lang=${lang}`)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Submit failed')
+      setSubmitting(false)
     }
   }
 
-  return (
-    <div style={{ minHeight: '100vh', background: '#fff', color: INK, fontFamily: FONT, display: 'flex', flexDirection: 'column' }}>
+  // ── UI: shared chrome ────────────────────────────────────────────────────
+  function Chrome({ children }: { children: React.ReactNode }) {
+    return (
+      <div style={{ minHeight: '100vh', background: '#fff', color: INK, fontFamily: FONT, display: 'flex', flexDirection: 'column' }}>
+        <nav style={{ background: '#fff', borderBottom: `1px solid ${BORDER}`, position: 'sticky', top: 0, zIndex: 50 }}>
+          <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Link href={`/ai_benchmark?lang=${lang}`} style={{ display: 'flex', alignItems: 'baseline', gap: 8, textDecoration: 'none' }}>
+              <span style={{ color: INK, fontWeight: 800, fontSize: 16, letterSpacing: '-0.01em' }}>
+                {t.navName}
+              </span>
+              <span style={{ color: MUTED, fontSize: 13, fontWeight: 500 }}>
+                {t.navTagline}
+              </span>
+            </Link>
 
-      {/* ── Nav ─────────────────────────────────────────────────────────── */}
-      <nav style={{
-        background: '#fff', borderBottom: `1px solid ${BORDER}`,
-        position: 'sticky', top: 0, zIndex: 50,
-      }}>
-        <div style={{
-          maxWidth: 1100, margin: '0 auto', padding: '0 24px', height: 64,
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+              <div style={{ display: 'flex', gap: 4 }}>
+                {LANG_LABELS.map(({ key, label }) => (
+                  <button
+                    key={key}
+                    onClick={() => switchLang(key)}
+                    style={{
+                      padding: '4px 10px', borderRadius: 100, fontSize: 11, fontWeight: 700,
+                      border: `1px solid ${lang === key ? ACCENT : BORDER}`,
+                      background: 'transparent',
+                      color: lang === key ? ACCENT : MUTED,
+                      cursor: 'pointer', fontFamily: FONT,
+                    }}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </nav>
+
+        <main style={{ flex: 1, padding: '56px 24px 64px', background: LIGHT }}>
+          <div style={{ maxWidth: 720, margin: '0 auto' }}>
+            {children}
+          </div>
+        </main>
+
+        <footer style={{ background: INK, padding: '28px 24px' }}>
+          <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+            <span style={{ color: '#fff', fontWeight: 800, fontSize: 13, letterSpacing: '-0.01em' }}>
+              {t.footerLine}
+            </span>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)' }}>
+              {t.reportLine}
+            </p>
+          </div>
+        </footer>
+      </div>
+    )
+  }
+
+  // ── Intro step ───────────────────────────────────────────────────────────
+  if (step === 'intro') {
+    return (
+      <Chrome>
+        <span style={{
+          display: 'inline-block', fontSize: 11, fontWeight: 700,
+          letterSpacing: '0.16em', textTransform: 'uppercase',
+          color: WARM, background: WARM_LIGHT,
+          padding: '5px 14px', borderRadius: 100, marginBottom: 18,
         }}>
-          <Link href={homeHref} style={{ display: 'flex', alignItems: 'baseline', gap: 8, textDecoration: 'none' }}>
-            <span style={{ color: INK, fontWeight: 800, fontSize: 16, letterSpacing: '-0.01em' }}>
-              {COPY.navName}
-            </span>
-            <span style={{ color: MUTED, fontSize: 13, fontWeight: 500 }}>
-              {COPY.navTagline}
-            </span>
-          </Link>
+          {t.startBadge}
+        </span>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <div style={{ display: 'flex', gap: 4 }}>
-              {LANG_LABELS.map(({ key, label }) => (
+        <h1 style={{ fontSize: 'clamp(28px, 4.5vw, 42px)', fontWeight: 900, lineHeight: 1.15, marginBottom: 16, color: INK, letterSpacing: '-0.02em' }}>
+          {t.startH1}
+        </h1>
+        <p style={{ fontSize: 16, color: BODY, lineHeight: 1.65, marginBottom: 32 }}>
+          {t.startBody}
+        </p>
+
+        <form
+          onSubmit={e => { e.preventDefault(); if (introValid) setStep('questions') }}
+          style={{ background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 12, padding: '24px 24px' }}
+        >
+          {/* Role pills */}
+          <div style={{ marginBottom: 18 }}>
+            <Label>{t.startRoleLabel}</Label>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 8 }}>
+              {t.ROLES.map(r => (
                 <button
-                  key={key}
-                  onClick={() => switchLang(key)}
+                  type="button"
+                  key={r.id}
+                  onClick={() => setRole(r.id)}
                   style={{
-                    padding: '4px 10px', borderRadius: 100, fontSize: 11, fontWeight: 700,
-                    border: `1px solid ${lang === key ? ACCENT : BORDER}`,
-                    background: 'transparent',
-                    color: lang === key ? ACCENT : MUTED,
+                    flex: '1 1 180px', minWidth: 180,
+                    padding: '14px 16px', borderRadius: 10, textAlign: 'left',
+                    border: `2px solid ${role === r.id ? ACCENT : BORDER}`,
+                    background: role === r.id ? `${ACCENT}0d` : '#fff',
                     cursor: 'pointer', fontFamily: FONT,
                   }}
                 >
-                  {label}
+                  <div style={{ fontSize: 14, fontWeight: 800, color: INK, marginBottom: 3 }}>{r.label}</div>
+                  <div style={{ fontSize: 12, color: BODY, lineHeight: 1.5 }}>{r.description}</div>
                 </button>
               ))}
             </div>
-
-            <Link href={homeHref} style={{
-              color: ACCENT, fontSize: 13, fontWeight: 700,
-              padding: '8px 14px', borderRadius: 6, textDecoration: 'none',
-              border: `1px solid ${BORDER}`,
-            }}>
-              {COPY.navBack}
-            </Link>
           </div>
-        </div>
-      </nav>
 
-      {/* ── Main ────────────────────────────────────────────────────────── */}
-      <main style={{ flex: 1, padding: '88px 24px 48px', background: LIGHT }}>
-        <div style={{ maxWidth: 580, margin: '0 auto' }}>
+          <Row>
+            <Field label={t.startSeniorityLbl}>
+              <Select value={seniority} onChange={setSeniority} options={t.SENIORITIES} />
+            </Field>
+            <Field label={t.startRegionLbl}>
+              <Select value={region} onChange={setRegion} options={t.REGIONS} />
+            </Field>
+          </Row>
 
-          <span style={{
-            display: 'inline-block', fontSize: 11, fontWeight: 700,
-            letterSpacing: '0.16em', textTransform: 'uppercase',
-            color: WARM, background: WARM_LIGHT,
-            padding: '5px 14px', borderRadius: 100, marginBottom: 24,
-          }}>
-            {COPY.badge}
-          </span>
+          <Row>
+            <Field label={t.startIndustryLbl}>
+              <Select value={industry} onChange={setIndustry} options={t.INDUSTRIES} />
+            </Field>
+            <Field label={t.startCompanySize}>
+              <Select value={companySize} onChange={setCompanySize} options={t.COMPANY_SIZES} />
+            </Field>
+          </Row>
 
-          <h1 style={{
-            fontSize: 'clamp(30px, 4.8vw, 48px)', fontWeight: 900, lineHeight: 1.1,
-            marginBottom: 20, color: INK, letterSpacing: '-0.025em',
-          }}>
-            {COPY.h1a}<br />{COPY.h1b}
-          </h1>
+          <Row>
+            <Field label={t.startNameLbl}>
+              <Input type="text" value={name} onChange={setName} placeholder="Voornaam" />
+            </Field>
+            <Field label={t.startEmailLbl}>
+              <Input type="email" value={email} onChange={setEmail} placeholder="jij@bedrijf.nl" />
+            </Field>
+          </Row>
 
-          <p style={{
-            fontSize: 17, color: BODY, lineHeight: 1.65, marginBottom: 36,
-          }}>
-            {COPY.body}
-          </p>
+          <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginTop: 6, cursor: 'pointer' }}>
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={e => setConsent(e.target.checked)}
+              style={{ marginTop: 3 }}
+            />
+            <span style={{ fontSize: 13, color: BODY, lineHeight: 1.55 }}>
+              {t.startConsentLbl}
+            </span>
+          </label>
 
-          {/* ── Form / success card ─────────────────────────────────── */}
-          {status === 'ok' ? (
-            <div style={{
-              background: '#fff', border: `1px solid ${BORDER}`,
-              borderRadius: 12, padding: '28px 28px',
-            }}>
-              <p style={{ fontSize: 18, fontWeight: 800, color: INK, marginBottom: 8 }}>
-                {COPY.successH}
-              </p>
-              <p style={{ fontSize: 14, color: BODY, lineHeight: 1.6, marginBottom: 18 }}>
-                {COPY.successBody}
-              </p>
-              <Link href={homeHref} style={{ color: ACCENT, fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
-                {COPY.successCta}
-              </Link>
-            </div>
-          ) : (
-            <form
-              onSubmit={handleSubmit}
+          <button
+            type="submit"
+            disabled={!introValid}
+            style={{
+              marginTop: 22, width: '100%', padding: '14px 16px', fontSize: 15, fontWeight: 700,
+              background: introValid ? ACCENT : '#CBD5E1', color: '#fff',
+              border: 'none', borderRadius: 8,
+              cursor: introValid ? 'pointer' : 'not-allowed',
+              fontFamily: FONT,
+              boxShadow: introValid ? `0 4px 20px ${ACCENT}33` : 'none',
+            }}
+          >
+            {t.startSubmit}
+          </button>
+
+          {!introValid && (
+            <p style={{ marginTop: 10, fontSize: 12, color: MUTED }}>
+              {t.startError}
+            </p>
+          )}
+        </form>
+      </Chrome>
+    )
+  }
+
+  // ── Questions step ───────────────────────────────────────────────────────
+  return (
+    <Chrome>
+      <span style={{
+        display: 'inline-block', fontSize: 11, fontWeight: 700,
+        letterSpacing: '0.16em', textTransform: 'uppercase',
+        color: WARM, background: WARM_LIGHT,
+        padding: '5px 14px', borderRadius: 100, marginBottom: 18,
+      }}>
+        Stap 2 van 2 · {questions.length} vragen
+      </span>
+
+      <h1 style={{ fontSize: 'clamp(26px, 4vw, 34px)', fontWeight: 900, lineHeight: 1.15, marginBottom: 28, color: INK, letterSpacing: '-0.02em' }}>
+        Beantwoord wat klopt voor jou.
+      </h1>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        {questions.map((q, i) => (
+          <QuestionCard
+            key={q.id}
+            q={q}
+            index={i + 1}
+            answer={answers[q.id]}
+            onToggleMulti={toggleMulti}
+            onSetSingle={setSingle}
+            onSetOtherDetail={setOtherDetail}
+            getOtherDetail={getOtherDetail}
+            otherLabel={t.qOtherLabel}
+          />
+        ))}
+      </div>
+
+      {error && (
+        <p style={{ marginTop: 16, fontSize: 13, color: '#B91C1C' }}>
+          {error}
+        </p>
+      )}
+
+      <div style={{ display: 'flex', gap: 12, marginTop: 24, flexWrap: 'wrap' }}>
+        <button
+          onClick={() => setStep('intro')}
+          disabled={submitting}
+          style={{
+            padding: '12px 18px', fontSize: 14, fontWeight: 600,
+            background: '#fff', color: INK, border: `1px solid ${BORDER}`,
+            borderRadius: 8, cursor: 'pointer', fontFamily: FONT,
+          }}
+        >
+          {t.qBack}
+        </button>
+        <button
+          onClick={handleSubmit}
+          disabled={!allAnswered || submitting}
+          style={{
+            flex: 1, padding: '14px 18px', fontSize: 15, fontWeight: 700,
+            background: allAnswered ? ACCENT : '#CBD5E1', color: '#fff',
+            border: 'none', borderRadius: 8,
+            cursor: allAnswered && !submitting ? 'pointer' : 'not-allowed',
+            fontFamily: FONT,
+            boxShadow: allAnswered ? `0 4px 20px ${ACCENT}33` : 'none',
+          }}
+        >
+          {submitting ? t.qSubmitting : t.qSubmit}
+        </button>
+      </div>
+      {!allAnswered && (
+        <p style={{ marginTop: 10, fontSize: 12, color: MUTED }}>
+          Beantwoord alle vragen om je dashboard op te halen.
+        </p>
+      )}
+    </Chrome>
+  )
+}
+
+// ── Small UI primitives ──────────────────────────────────────────────────────
+function Label({ children }: { children: React.ReactNode }) {
+  return <span style={{ display: 'block', fontSize: 12, fontWeight: 700, color: INK, letterSpacing: '0.02em', textTransform: 'uppercase' }}>{children}</span>
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label style={{ flex: '1 1 240px', minWidth: 220, marginBottom: 14 }}>
+      <span style={{ display: 'block', fontSize: 12, fontWeight: 700, color: INK, marginBottom: 6 }}>
+        {label}
+      </span>
+      {children}
+    </label>
+  )
+}
+
+function Row({ children }: { children: React.ReactNode }) {
+  return <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>{children}</div>
+}
+
+function Input({ type, value, onChange, placeholder }: { type: string; value: string; onChange: (v: string) => void; placeholder?: string }) {
+  return (
+    <input
+      type={type}
+      value={value}
+      onChange={e => onChange(e.target.value)}
+      placeholder={placeholder}
+      required
+      style={{
+        width: '100%', padding: '11px 14px', fontSize: 15,
+        border: `1px solid ${BORDER}`, borderRadius: 8,
+        fontFamily: FONT, color: INK, background: '#fff',
+        boxSizing: 'border-box',
+      }}
+    />
+  )
+}
+
+function Select({ value, onChange, options }: { value: string; onChange: (v: string) => void; options: { id: string; label: string }[] }) {
+  return (
+    <select
+      value={value}
+      onChange={e => onChange(e.target.value)}
+      required
+      style={{
+        width: '100%', padding: '11px 14px', fontSize: 15,
+        border: `1px solid ${BORDER}`, borderRadius: 8,
+        fontFamily: FONT, color: value ? INK : MUTED, background: '#fff',
+        boxSizing: 'border-box', appearance: 'none',
+      }}
+    >
+      <option value="">— Kies —</option>
+      {options.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}
+    </select>
+  )
+}
+
+// ── Question card ────────────────────────────────────────────────────────────
+type QCardProps = {
+  q:               Question
+  index:           number
+  answer:          string | string[] | undefined
+  onToggleMulti:   (qId: string, optId: string) => void
+  onSetSingle:     (qId: string, optId: string) => void
+  onSetOtherDetail:(qId: string, value: string) => void
+  getOtherDetail:  (qId: string) => string
+  otherLabel:      string
+}
+
+function QuestionCard({ q, index, answer, onToggleMulti, onSetSingle, onSetOtherDetail, getOtherDetail, otherLabel }: QCardProps) {
+  const isMulti  = q.type === 'multiselect'
+  const isSingle = q.type === 'single_select' || q.type === 'frequency' || q.type === 'weighted_mc' || q.type === 'likert'
+  const arr      = Array.isArray(answer) ? answer : []
+  const isSelectedMulti = (id: string) => arr.includes(id)
+  const isSelectedSingle = (id: string) => answer === id
+
+  return (
+    <div style={{ background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 12, padding: '20px 22px' }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 4 }}>
+        <span style={{ fontSize: 11, fontWeight: 800, color: ACCENT, letterSpacing: '0.06em' }}>
+          Q{index}
+        </span>
+        <span style={{ fontSize: 11, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+          {q.dimension}
+        </span>
+      </div>
+
+      <p style={{ fontSize: 16, fontWeight: 700, color: INK, marginBottom: q.hint ? 4 : 12, lineHeight: 1.4 }}>
+        {q.text}
+      </p>
+      {q.hint && (
+        <p style={{ fontSize: 12, color: MUTED, marginBottom: 12 }}>{q.hint}</p>
+      )}
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        {q.options.map(opt => {
+          const selected = isMulti ? isSelectedMulti(opt.id) : isSelectedSingle(opt.id)
+          return (
+            <button
+              key={opt.id}
+              type="button"
+              onClick={() => isMulti ? onToggleMulti(q.id, opt.id) : onSetSingle(q.id, opt.id)}
               style={{
-                background: '#fff', border: `1px solid ${BORDER}`,
-                borderRadius: 12, padding: '24px 24px',
+                textAlign: 'left', padding: '10px 14px', borderRadius: 8,
+                border: `1.5px solid ${selected ? ACCENT : BORDER}`,
+                background: selected ? `${ACCENT}0d` : '#fff',
+                cursor: 'pointer', fontFamily: FONT,
+                fontSize: 14, color: INK, fontWeight: selected ? 600 : 500,
+                display: 'flex', alignItems: 'center', gap: 10,
+                transition: 'border-color 0.12s, background 0.12s',
               }}
             >
-              <label style={{ display: 'block', marginBottom: 14 }}>
-                <span style={{ display: 'block', fontSize: 12, fontWeight: 700, color: INK, marginBottom: 6 }}>
-                  {COPY.fieldName}
-                </span>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  placeholder={COPY.fieldNameP}
-                  style={{
-                    width: '100%', padding: '11px 14px', fontSize: 15,
-                    border: `1px solid ${BORDER}`, borderRadius: 8,
-                    fontFamily: FONT, color: INK, background: '#fff',
-                    boxSizing: 'border-box',
-                  }}
-                />
-              </label>
+              <span style={{
+                width: isMulti ? 16 : 14, height: isMulti ? 16 : 14,
+                borderRadius: isMulti ? 4 : 100,
+                border: `2px solid ${selected ? ACCENT : BORDER}`,
+                background: selected ? ACCENT : '#fff',
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                flexShrink: 0,
+              }}>
+                {selected && (
+                  <span style={{ color: '#fff', fontSize: 10, lineHeight: 1, fontWeight: 800 }}>✓</span>
+                )}
+              </span>
+              <span>{opt.label}</span>
+            </button>
+          )
+        })}
 
-              <label style={{ display: 'block', marginBottom: 18 }}>
-                <span style={{ display: 'block', fontSize: 12, fontWeight: 700, color: INK, marginBottom: 6 }}>
-                  {COPY.fieldEmail}
-                </span>
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder={COPY.fieldEmailP}
-                  style={{
-                    width: '100%', padding: '11px 14px', fontSize: 15,
-                    border: `1px solid ${BORDER}`, borderRadius: 8,
-                    fontFamily: FONT, color: INK, background: '#fff',
-                    boxSizing: 'border-box',
-                  }}
-                />
-              </label>
-
-              <button
-                type="submit"
-                disabled={status === 'submitting'}
-                style={{
-                  width: '100%', padding: '13px 16px', fontSize: 15, fontWeight: 700,
-                  background: ACCENT, color: '#fff',
-                  border: 'none', borderRadius: 8,
-                  cursor: status === 'submitting' ? 'wait' : 'pointer',
-                  opacity: status === 'submitting' ? 0.7 : 1,
-                  fontFamily: FONT,
-                  boxShadow: `0 4px 20px ${ACCENT}33`,
-                }}
-              >
-                {status === 'submitting' ? COPY.submitting : COPY.submit}
-              </button>
-
-              {status === 'error' && (
-                <p style={{ marginTop: 12, fontSize: 13, color: '#B91C1C' }}>
-                  {errMsg || COPY.errorMsg}
-                </p>
-              )}
-            </form>
-          )}
-
-          {/* ── Direct contact alt ──────────────────────────────────── */}
-          <div style={{ marginTop: 28, fontSize: 13, color: MUTED, lineHeight: 1.6 }}>
-            <strong style={{ color: INK }}>{COPY.altLabel}</strong>{' '}
-            {COPY.altLine}{' '}
-            <a href={`mailto:${COPY.altLink}?subject=AI-benchmark`} style={{ color: ACCENT, textDecoration: 'none', fontWeight: 600 }}>
-              {COPY.altLink}
-            </a>
-          </div>
-
-        </div>
-      </main>
-
-      {/* ── Footer ──────────────────────────────────────────────────────── */}
-      <footer style={{ background: INK, padding: '28px 24px' }}>
-        <div style={{
-          maxWidth: 1100, margin: '0 auto',
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          flexWrap: 'wrap', gap: 12,
-        }}>
-          <span style={{ color: '#fff', fontWeight: 800, fontSize: 13, letterSpacing: '-0.01em' }}>
-            {COPY.footerLine}
-          </span>
-          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)' }}>
-            {COPY.reportLine}
-          </p>
-        </div>
-      </footer>
+        {isMulti && q.hasOther && (
+          <input
+            type="text"
+            value={getOtherDetail(q.id)}
+            onChange={e => onSetOtherDetail(q.id, e.target.value)}
+            placeholder={otherLabel}
+            style={{
+              padding: '10px 14px', fontSize: 14, marginTop: 4,
+              border: `1px dashed ${BORDER}`, borderRadius: 8,
+              fontFamily: FONT, color: INK, background: LIGHT,
+              boxSizing: 'border-box',
+            }}
+          />
+        )}
+      </div>
     </div>
   )
 }
