@@ -62,6 +62,12 @@ function StartInner() {
   const allAnswered = questions.every(q => {
     const a = answers[q.id]
     if (a === undefined) return false
+    if (q.type === 'matrix') {
+      const rowCount = q.rows?.length ?? 0
+      if (!Array.isArray(a)) return false
+      const filled = a.filter(x => typeof x === 'string' && x.length > 0).length
+      return filled >= rowCount && rowCount > 0
+    }
     if (Array.isArray(a)) return a.length > 0
     return typeof a === 'string' && a.length > 0
   })
@@ -100,6 +106,15 @@ function StartInner() {
 
   function setSingle(qId: string, optId: string) {
     setAnswers(prev => ({ ...prev, [qId]: optId }))
+  }
+
+  function setMatrix(qId: string, rowIndex: number, optId: string, totalRows: number) {
+    setAnswers(prev => {
+      const cur = Array.isArray(prev[qId]) ? [...(prev[qId] as string[])] : []
+      while (cur.length < totalRows) cur.push('')
+      cur[rowIndex] = optId
+      return { ...prev, [qId]: cur }
+    })
   }
 
   // ── Submit ───────────────────────────────────────────────────────────────
@@ -258,6 +273,7 @@ function StartInner() {
             answer={answers[q.id]}
             onToggleMulti={toggleMulti}
             onSetSingle={setSingle}
+            onSetMatrix={setMatrix}
             onSetOtherDetail={setOtherDetail}
             getOtherDetail={getOtherDetail}
             otherLabel={t.qOtherLabel}
@@ -425,14 +441,15 @@ type QCardProps = {
   answer:          string | string[] | undefined
   onToggleMulti:   (qId: string, optId: string) => void
   onSetSingle:     (qId: string, optId: string) => void
+  onSetMatrix:     (qId: string, rowIndex: number, optId: string, totalRows: number) => void
   onSetOtherDetail:(qId: string, value: string) => void
   getOtherDetail:  (qId: string) => string
   otherLabel:      string
 }
 
-function QuestionCard({ q, index, answer, onToggleMulti, onSetSingle, onSetOtherDetail, getOtherDetail, otherLabel }: QCardProps) {
+function QuestionCard({ q, index, answer, onToggleMulti, onSetSingle, onSetMatrix, onSetOtherDetail, getOtherDetail, otherLabel }: QCardProps) {
   const isMulti  = q.type === 'multiselect'
-  const isSingle = q.type === 'single_select' || q.type === 'frequency' || q.type === 'weighted_mc' || q.type === 'likert'
+  const isMatrix = q.type === 'matrix'
   const arr      = Array.isArray(answer) ? answer : []
   const isSelectedMulti = (id: string) => arr.includes(id)
   const isSelectedSingle = (id: string) => answer === id
@@ -455,6 +472,47 @@ function QuestionCard({ q, index, answer, onToggleMulti, onSetSingle, onSetOther
         <p style={{ fontSize: 12, color: MUTED, marginBottom: 12 }}>{q.hint}</p>
       )}
 
+      {/* Matrix: per-row option pills */}
+      {isMatrix && q.rows && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          {q.rows.map((row, rowIdx) => {
+            const selectedId = arr[rowIdx]
+            return (
+              <div key={row.id}>
+                <p style={{ fontSize: 13, fontWeight: 700, color: INK, marginBottom: 6 }}>
+                  {row.label}
+                </p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  {q.options.map(opt => {
+                    const selected = selectedId === opt.id
+                    return (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        onClick={() => onSetMatrix(q.id, rowIdx, opt.id, q.rows!.length)}
+                        style={{
+                          padding: '8px 14px', borderRadius: 100, fontSize: 13,
+                          border: `1.5px solid ${selected ? ACCENT : BORDER}`,
+                          background: selected ? `${ACCENT}0d` : '#fff',
+                          color: selected ? ACCENT : INK,
+                          fontWeight: selected ? 700 : 500,
+                          cursor: 'pointer', fontFamily: FONT,
+                          transition: 'border-color 0.12s, background 0.12s',
+                        }}
+                      >
+                        {opt.label}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+
+      {/* Standard single/multi: flat option list */}
+      {!isMatrix && (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
         {q.options.map(opt => {
           const selected = isMulti ? isSelectedMulti(opt.id) : isSelectedSingle(opt.id)
@@ -505,6 +563,7 @@ function QuestionCard({ q, index, answer, onToggleMulti, onSetSingle, onSetOther
           />
         )}
       </div>
+      )}
     </div>
   )
 }

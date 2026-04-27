@@ -70,6 +70,19 @@ function scoreQuestion(q: Question, answer: Answers[string]): number | null {
       return max === 0 ? 0 : Math.round((opt.weight / max) * 100)
     }
 
+    case 'matrix': {
+      // Answer is string[] indexed by rows. Score by the LAST row
+      // (most recent timeframe), since current ability is what counts.
+      const arr = Array.isArray(answer) ? answer : []
+      if (arr.length === 0) return null
+      const last = arr[arr.length - 1]
+      if (!last) return null
+      const opt = q.options.find(o => o.id === last)
+      if (!opt || opt.weight === undefined) return null
+      const max = Math.max(...q.options.map(o => o.weight ?? 0), 4)
+      return max === 0 ? 0 : Math.round((opt.weight / max) * 100)
+    }
+
     case 'single_select':
       return null  // not scored
   }

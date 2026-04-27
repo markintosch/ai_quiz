@@ -29,12 +29,17 @@ export type Archetype = {
 export type Role = 'marketing' | 'sales' | 'hybrid'
 
 // ── Questions ─────────────────────────────────────────────────────────────────
-export type QuestionType = 'multiselect' | 'frequency' | 'weighted_mc' | 'likert' | 'single_select'
+export type QuestionType = 'multiselect' | 'frequency' | 'weighted_mc' | 'likert' | 'single_select' | 'matrix'
 
 export type Option = {
   id:     string
   label:  string
   weight?: number  // weighted_mc, single_select sentiment ranking
+}
+
+export type MatrixRow = {
+  id:    string
+  label: string
 }
 
 export type Question = {
@@ -47,7 +52,9 @@ export type Question = {
   // multiselect-specific:
   saturation?: number   // count of selected options that = 100% score; default 3
   hasOther?:   boolean
-  // weighted_mc / frequency: max option weight; default 4 for weighted_mc, options.length-1 for frequency
+  // matrix-specific: rows answered with the same option set; answer stored as
+  // string[] indexed by rows. Scoring uses the LAST row (most recent timeframe).
+  rows?:     MatrixRow[]
 }
 
 // ── Content per language ──────────────────────────────────────────────────────
@@ -426,14 +433,20 @@ const SHARED_CORE: Question[] = [
     ],
   },
   {
-    id: 'q10', type: 'weighted_mc', dimension: 'skill',
-    text: 'Hoe schat je je eigen AI-vaardigheid in vs. een jaar geleden?',
+    id: 'q10', type: 'matrix', dimension: 'skill',
+    text: 'Hoe vaardig was je met AI op deze momenten?',
+    hint: 'Geef per moment je inschatting — dat laat zien hoe je trajectorie eruitziet.',
+    rows: [
+      { id: 'm12', label: '12 maanden geleden' },
+      { id: 'm6',  label: '6 maanden geleden'  },
+      { id: 'm3',  label: '3 maanden geleden'  },
+    ],
     options: [
-      { id: 'same',       label: 'Zelfde',                                     weight: 0 },
-      { id: 'slight',     label: 'Iets verbeterd',                             weight: 1 },
-      { id: 'strong',     label: 'Sterk verbeterd',                            weight: 3 },
-      { id: 'fundamental',label: 'Fundamenteel anders gaan werken',            weight: 4 },
-      { id: 'starting',   label: 'Niet vergelijkbaar — pas net begonnen',      weight: 1 },
+      { id: 'never',       label: 'Niet / nooit gebruikt', weight: 0 },
+      { id: 'beginner',    label: 'Beginner',              weight: 1 },
+      { id: 'comfortable', label: 'Comfortabel',           weight: 2 },
+      { id: 'experienced', label: 'Ervaren',               weight: 3 },
+      { id: 'expert',      label: 'Expert',                weight: 4 },
     ],
   },
   {
