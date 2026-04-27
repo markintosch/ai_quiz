@@ -124,75 +124,17 @@ function StartInner() {
     }
   }
 
-  // ── UI: shared chrome ────────────────────────────────────────────────────
-  function Chrome({ children }: { children: React.ReactNode }) {
-    return (
-      <div style={{ minHeight: '100vh', background: '#fff', color: INK, fontFamily: FONT, display: 'flex', flexDirection: 'column' }}>
-        <nav style={{ background: '#fff', borderBottom: `1px solid ${BORDER}`, position: 'sticky', top: 0, zIndex: 50 }}>
-          <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Link href={`/ai_benchmark?lang=${lang}`} style={{ display: 'flex', alignItems: 'baseline', gap: 8, textDecoration: 'none' }}>
-              <span style={{ color: INK, fontWeight: 800, fontSize: 16, letterSpacing: '-0.01em' }}>
-                {t.navName}
-              </span>
-              <span style={{ color: MUTED, fontSize: 13, fontWeight: 500 }}>
-                {t.navTagline}
-              </span>
-            </Link>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-              <div style={{ display: 'flex', gap: 4 }}>
-                {LANG_LABELS.map(({ key, label }) => (
-                  <button
-                    key={key}
-                    onClick={() => switchLang(key)}
-                    style={{
-                      padding: '4px 10px', borderRadius: 100, fontSize: 11, fontWeight: 700,
-                      border: `1px solid ${lang === key ? ACCENT : BORDER}`,
-                      background: 'transparent',
-                      color: lang === key ? ACCENT : MUTED,
-                      cursor: 'pointer', fontFamily: FONT,
-                    }}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </nav>
-
-        <main style={{ flex: 1, padding: '56px 24px 64px', background: LIGHT }}>
-          <div style={{ maxWidth: 720, margin: '0 auto' }}>
-            {children}
-          </div>
-        </main>
-
-        <footer style={{ background: INK, padding: '28px 24px' }}>
-          <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
-            <span style={{ color: '#fff', fontWeight: 800, fontSize: 13, letterSpacing: '-0.01em' }}>
-              {t.footerLine}
-            </span>
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)' }}>
-              {t.reportLine}
-            </p>
-          </div>
-        </footer>
-      </div>
-    )
-  }
-
-  // ── Intro step ───────────────────────────────────────────────────────────
-  if (step === 'intro') {
-    return (
-      <Chrome>
-        <span style={{
-          display: 'inline-block', fontSize: 11, fontWeight: 700,
-          letterSpacing: '0.16em', textTransform: 'uppercase',
-          color: WARM, background: WARM_LIGHT,
-          padding: '5px 14px', borderRadius: 100, marginBottom: 18,
-        }}>
-          {t.startBadge}
-        </span>
+  // ── Render ───────────────────────────────────────────────────────────────
+  const introContent = (
+    <>
+      <span style={{
+        display: 'inline-block', fontSize: 11, fontWeight: 700,
+        letterSpacing: '0.16em', textTransform: 'uppercase',
+        color: WARM, background: WARM_LIGHT,
+        padding: '5px 14px', borderRadius: 100, marginBottom: 18,
+      }}>
+        {t.startBadge}
+      </span>
 
         <h1 style={{ fontSize: 'clamp(28px, 4.5vw, 42px)', fontWeight: 900, lineHeight: 1.15, marginBottom: 16, color: INK, letterSpacing: '-0.02em' }}>
           {t.startH1}
@@ -283,19 +225,17 @@ function StartInner() {
             {t.startSubmit}
           </button>
 
-          {!introValid && (
-            <p style={{ marginTop: 10, fontSize: 12, color: MUTED }}>
-              {t.startError}
-            </p>
-          )}
-        </form>
-      </Chrome>
-    )
-  }
+      {!introValid && (
+        <p style={{ marginTop: 10, fontSize: 12, color: MUTED }}>
+          {t.startError}
+        </p>
+      )}
+    </form>
+    </>
+  )
 
-  // ── Questions step ───────────────────────────────────────────────────────
-  return (
-    <Chrome>
+  const questionsContent = (
+    <>
       <span style={{
         display: 'inline-block', fontSize: 11, fontWeight: 700,
         letterSpacing: '0.16em', textTransform: 'uppercase',
@@ -363,7 +303,61 @@ function StartInner() {
           Beantwoord alle vragen om je dashboard op te halen.
         </p>
       )}
-    </Chrome>
+    </>
+  )
+
+  return (
+    <div style={{ minHeight: '100vh', background: '#fff', color: INK, fontFamily: FONT, display: 'flex', flexDirection: 'column' }}>
+      <nav style={{ background: '#fff', borderBottom: `1px solid ${BORDER}`, position: 'sticky', top: 0, zIndex: 50 }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Link href={`/ai_benchmark?lang=${lang}`} style={{ display: 'flex', alignItems: 'baseline', gap: 8, textDecoration: 'none' }}>
+            <span style={{ color: INK, fontWeight: 800, fontSize: 16, letterSpacing: '-0.01em' }}>
+              {t.navName}
+            </span>
+            <span style={{ color: MUTED, fontSize: 13, fontWeight: 500 }}>
+              {t.navTagline}
+            </span>
+          </Link>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div style={{ display: 'flex', gap: 4 }}>
+              {LANG_LABELS.map(({ key, label }) => (
+                <button
+                  key={key}
+                  onClick={() => switchLang(key)}
+                  style={{
+                    padding: '4px 10px', borderRadius: 100, fontSize: 11, fontWeight: 700,
+                    border: `1px solid ${lang === key ? ACCENT : BORDER}`,
+                    background: 'transparent',
+                    color: lang === key ? ACCENT : MUTED,
+                    cursor: 'pointer', fontFamily: FONT,
+                  }}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <main style={{ flex: 1, padding: '56px 24px 64px', background: LIGHT }}>
+        <div style={{ maxWidth: 720, margin: '0 auto' }}>
+          {step === 'intro' ? introContent : questionsContent}
+        </div>
+      </main>
+
+      <footer style={{ background: INK, padding: '28px 24px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+          <span style={{ color: '#fff', fontWeight: 800, fontSize: 13, letterSpacing: '-0.01em' }}>
+            {t.footerLine}
+          </span>
+          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)' }}>
+            {t.reportLine}
+          </p>
+        </div>
+      </footer>
+    </div>
   )
 }
 
