@@ -599,8 +599,9 @@ const ROLE_HYBRID: Question[] = [
 
 const SENTIMENT: Question[] = [
   {
-    id: 'q17', type: 'single_select', dimension: 'sentiment',
-    text: 'Wat is de grootste blokkade voor meer AI-gebruik in je team?',
+    id: 'q17', type: 'multiselect', dimension: 'sentiment', saturation: 1,
+    text: 'Welke blokkades houden meer AI-gebruik tegen (in je werk of team)?',
+    hint: 'Meerdere antwoorden mogelijk.',
     options: [
       { id: 'time',       label: 'Geen tijd'                       },
       { id: 'strategy',   label: 'Geen strategie'                  },
