@@ -28,7 +28,8 @@ export type LangContent = {
   heroBadge:   string
   heroH1a:     string
   heroH1b:     string
-  heroSub:     string
+  heroIntro:   string  // longer framing paragraph
+  heroSub:     string  // promise / what you get
   heroCta1:    string
   heroCta2:    string
   trustLine:   string
@@ -64,7 +65,8 @@ const NL: LangContent = {
   heroBadge:  'Onafhankelijk onderzoek · door Mark de Kock',
   heroH1a:    'Hoe gebruik jij AI in',
   heroH1b:    'marketing & sales — écht?',
-  heroSub:    'Vergelijk je werkwijze, je tools en je impact met die van honderden andere marketeers en sellers. In ruil: een persoonlijk dashboard. Geen verkooppraat.',
+  heroIntro:  'We gebruiken steeds vaker AI-tools. Van eenvoudige chat op een instapaccount tot dure videobewerking of sales-funnel tools. En elke dag lijkt er een nieuwe tool bij te komen. Waar steek je nou je tijd in om het gebruik te leren? Wat nou als je vakgenoten je de weg wijzen in wat wél werkt?',
+  heroSub:    'Vergelijk je werkwijze, je tools en je impact met die van vele andere marketeers en sales-professionals. Deel jouw inzichten en krijg een beeld van de markt in een overzichtelijk dashboard.',
   heroCta1:   'Start de benchmark →',
   heroCta2:   'Hoe het werkt',
   trustLine:  '18 vragen · ~6 minuten · Gratis · Persoonlijk dashboard direct na invullen',

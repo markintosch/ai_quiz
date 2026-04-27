@@ -120,7 +120,12 @@ function AiBenchmarkLandingInner() {
           </h1>
 
           <p style={{
-            fontSize: 18, color: BODY, lineHeight: 1.6, marginBottom: 36, maxWidth: 580,
+            fontSize: 17, color: BODY, lineHeight: 1.65, marginBottom: 18, maxWidth: 620,
+          }}>
+            {t.heroIntro}
+          </p>
+          <p style={{
+            fontSize: 17, color: INK, lineHeight: 1.6, marginBottom: 36, maxWidth: 620, fontWeight: 600,
           }}>
             {t.heroSub}
           </p>
