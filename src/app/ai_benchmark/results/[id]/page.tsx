@@ -89,7 +89,7 @@ export default async function ResultsPage({
   if (error || !data) return notFound()
 
   // ── Peer aggregates: real (filtered by segment) or mocked when ?preview=1 ─
-  const allQuestions   = getQuestions(data.role as Role)
+  const allQuestions   = getQuestions(data.role as Role, lang)
   const compareableQs  = allQuestions.filter(q => q.type !== 'matrix')
 
   let aggregates: Record<string, QuestionAggregate>

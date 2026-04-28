@@ -75,7 +75,7 @@ function StartInner() {
 
   const switchLang = (key: Lang) => router.replace(`/ai_benchmark/start?lang=${key}`)
 
-  const questions = useMemo<Question[]>(() => role ? getQuestions(role) : [], [role])
+  const questions = useMemo<Question[]>(() => role ? getQuestions(role, lang) : [], [role, lang])
 
   const introValid = !!(role && email.includes('@') && name.trim() && seniority && industry && companySize && region)
 
