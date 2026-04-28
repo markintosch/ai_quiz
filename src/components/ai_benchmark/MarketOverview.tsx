@@ -13,6 +13,7 @@
 // section on both the personal results page and the public dashboard).
 
 import { type DashboardData } from '@/products/ai_benchmark/public_dashboard'
+import { getContent, type Lang } from '@/products/ai_benchmark/data'
 import { Radar }         from './Radar'
 import { Heatmap }       from './Heatmap'
 import { RankedBars, StackedBar } from './RankedBars'
@@ -24,15 +25,10 @@ const BODY   = '#374151'
 const MUTED  = '#94A3B8'
 const BORDER = '#E2E8F0'
 
-const ROLE_LABEL: Record<string, string> = {
-  marketing: 'Marketing',
-  sales:     'Sales',
-  hybrid:    'Hybride',
-}
 const ROLE_COLOR: Record<string, string> = {
-  marketing: '#1D4ED8', // accent blue
-  sales:     '#15803D', // green
-  hybrid:    '#7C3AED', // purple
+  marketing: '#1D4ED8',
+  sales:     '#15803D',
+  hybrid:    '#7C3AED',
 }
 const ARCH_COLORS: Record<string, string> = {
   pragmatist:      '#1D4ED8',
@@ -43,15 +39,12 @@ const ARCH_COLORS: Record<string, string> = {
   shadow_operator: '#D97706',
 }
 
-export function MarketOverview({ data }: { data: DashboardData }) {
-  const dims = [
-    { id: 'adoption',   label: 'Adoptie' },
-    { id: 'workflow',   label: 'Workflow' },
-    { id: 'outcome',    label: 'Outcome' },
-    { id: 'data',       label: 'Data' },
-    { id: 'skill',      label: 'Skill' },
-    { id: 'governance', label: 'Governance' },
-  ]
+export function MarketOverview({ data, lang = 'nl' }: { data: DashboardData; lang?: Lang }) {
+  const t = getContent(lang)
+  const ROLE_LABEL: Record<string, string> = {}
+  for (const r of t.ROLES) ROLE_LABEL[r.id] = r.label
+
+  const dims = t.DIMENSIONS.map(d => ({ id: d.id, label: d.name }))
   const radarSeries = (['marketing', 'sales', 'hybrid'] as const).map(role => ({
     id:    role,
     label: ROLE_LABEL[role],
@@ -70,7 +63,10 @@ export function MarketOverview({ data }: { data: DashboardData }) {
     .sort((a, b) => b.gap - a.gap)[0]
 
   const radarTakeaway = biggestDimGap
-    ? `Sales scoort ${biggestDimGap.s} op ${biggestDimGap.d.label.toLowerCase()}, marketing ${biggestDimGap.m}. Dat is het grootste verschil tussen rollen.`
+    ? (lang === 'en' ? `Sales scores ${biggestDimGap.s} on ${biggestDimGap.d.label.toLowerCase()}, marketing ${biggestDimGap.m}. That is the biggest gap between roles.`
+       : lang === 'fr' ? `La vente obtient ${biggestDimGap.s} sur ${biggestDimGap.d.label.toLowerCase()}, le marketing ${biggestDimGap.m}. C'est le plus grand écart entre rôles.`
+       : lang === 'de' ? `Sales erzielt ${biggestDimGap.s} bei ${biggestDimGap.d.label.toLowerCase()}, Marketing ${biggestDimGap.m}. Das ist die größte Lücke zwischen Rollen.`
+       : `Sales scoort ${biggestDimGap.s} op ${biggestDimGap.d.label.toLowerCase()}, marketing ${biggestDimGap.m}. Dat is het grootste verschil tussen rollen.`)
     : ''
 
   // Archetype distribution as stacked bar
@@ -85,51 +81,52 @@ export function MarketOverview({ data }: { data: DashboardData }) {
 
   // Heatmap takeaway
   const heatmapTakeaway = (() => {
-    // Find tool with biggest spread (max - min across roles)
-    const spreads = data.topTools.map(t => {
-      const vals = (['marketing', 'sales', 'hybrid'] as const).map(r => data.toolAdoptionByRole[r]?.[t.id] ?? 0)
+    const spreads = data.topTools.map(tool => {
+      const vals = (['marketing', 'sales', 'hybrid'] as const).map(r => data.toolAdoptionByRole[r]?.[tool.id] ?? 0)
       const max  = Math.max(...vals); const min = Math.min(...vals)
       const dominant = (['marketing', 'sales', 'hybrid'] as const)[vals.indexOf(max)]
-      return { tool: t, max, min, dominant, spread: max - min }
+      return { tool, max, min, dominant, spread: max - min }
     })
       .sort((a, b) => b.spread - a.spread)
     const top = spreads[0]
-    return top ? `${top.tool.label} is sterk geconcentreerd in ${ROLE_LABEL[top.dominant]} (${top.max}% vs. ${top.min}% in de rest).` : ''
+    if (!top) return ''
+    if (lang === 'en') return `${top.tool.label} is strongly concentrated in ${ROLE_LABEL[top.dominant]} (${top.max}% vs. ${top.min}% in the rest).`
+    if (lang === 'fr') return `${top.tool.label} est fortement concentré dans ${ROLE_LABEL[top.dominant]} (${top.max}% contre ${top.min}% dans le reste).`
+    if (lang === 'de') return `${top.tool.label} ist stark in ${ROLE_LABEL[top.dominant]} konzentriert (${top.max}% gegenüber ${top.min}% im Rest).`
+    return `${top.tool.label} is sterk geconcentreerd in ${ROLE_LABEL[top.dominant]} (${top.max}% vs. ${top.min}% in de rest).`
   })()
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
 
       {/* ── Radar ── */}
-      <Card label="Dimensies × rol" headline="Waar elke rol sterk en zwak in is.">
-        <Radar axes={dims} series={radarSeries} size={320} />
-        <Caption>
-          {radarTakeaway} De zes dimensies meten elk een ander aspect van AI-volwassenheid: van pure adoptie tot governance. Hoe groter het oppervlak, hoe meer een rol in de breedte werkt met AI.
-        </Caption>
+      <Card label={t.moRadarLabel} headline={t.moRadarHeadline}>
+        <Radar axes={dims} series={radarSeries} size={320} lang={lang} />
+        <Caption>{radarTakeaway} {t.moRadarCaption}</Caption>
       </Card>
 
       {/* ── Heatmap ── */}
-      <Card label="Tool-adoptie heatmap" headline="Welke tools horen bij welke rol.">
+      <Card label={t.moHeatmapLabel} headline={t.moHeatmapHeadline}>
         <Heatmap
           rows={(['marketing', 'sales', 'hybrid'] as const).map(r => ({ id: r, label: ROLE_LABEL[r] }))}
           cols={data.topTools}
           values={data.toolAdoptionByRole}
+          lang={lang}
         />
-        <Caption>
-          {heatmapTakeaway} De heatmap toont per rol welk percentage de top-10 specialistische AI-tools wekelijks gebruikt. Donker = hoge adoptie. Sales-stacks centreren rond outreach (Apollo, Clay, Gong); marketing-stacks rond content (Jasper, Canva, Midjourney).
-        </Caption>
+        <Caption>{heatmapTakeaway} {t.moHeatmapCaption}</Caption>
       </Card>
 
       {/* ── Archetype distribution ── */}
-      <Card label="Archetype-verdeling" headline={topArch ? `${topArch.emoji} ${topArch.label} is het grootste profiel (${topArch.pct}%).` : 'Archetypes in het veld.'}>
+      <Card
+        label={t.moArchLabel}
+        headline={topArch ? `${topArch.emoji} ${topArch.label} ${t.moArchHeadlineTopSuffix} (${topArch.pct}%).` : t.moArchHeadlineDefault}
+      >
         <StackedBar segments={archSegments} height={32} />
-        <Caption>
-          De zes archetypes laten zien hoe iemand AI gebruikt, niet hoe goed. Een Pragmatist is even waardevol als een Strategist. Ze nemen alleen een andere positie in. Een klein aandeel Power Users is normaal. Een klein aandeel Lagging Builders betekent dat het veld z'n inhaalslag al heeft gemaakt.
-        </Caption>
+        <Caption>{t.moArchCaption}</Caption>
       </Card>
 
       {/* ── Blockers per role ── */}
-      <Card label="Top blokkades per rol" headline="Waar de remmen zitten.">
+      <Card label={t.moBlockLabel} headline={t.moBlockHeadline}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>
           {(['marketing', 'sales', 'hybrid'] as const).map(role => (
             <div key={role}>
@@ -144,30 +141,24 @@ export function MarketOverview({ data }: { data: DashboardData }) {
             </div>
           ))}
         </div>
-        <Caption>
-          De drie meest-genoemde blokkades per rol. Strategie en data-hygiëne komen het vaakst terug. Opvallend hoe rolspecifiek het beeld is: sales worstelt met data, marketing met richting, hybride teams met budget en bestuur.
-        </Caption>
+        <Caption>{t.moBlockCaption}</Caption>
       </Card>
 
       {/* ── Time saved + Top use cases ── */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 18 }}>
-        <Card label="Tijdwinst per week" headline="Hoeveel uur AI bespaart.">
+        <Card label={t.moTimeLabel} headline={t.moTimeHeadline}>
           <RankedBars
-            items={data.timeSavedDist.map(t => ({ id: t.id, label: t.label, pct: t.pct }))}
+            items={data.timeSavedDist.map(d => ({ id: d.id, label: d.label, pct: d.pct }))}
             color={WARM}
           />
-          <Caption>
-            Eigen schatting van de respondenten. De meesten zitten tussen 1 en 8 uur per week. Boven die grens gaat het meer over wat je extra doet, en minder over wat je sneller doet.
-          </Caption>
+          <Caption>{t.moTimeCaption}</Caption>
         </Card>
 
-        <Card label="Top AI use-cases" headline="Waar AI vandaag voor wordt ingezet.">
+        <Card label={t.moUseLabel} headline={t.moUseHeadline}>
           <RankedBars
             items={data.topUseCases.map(u => ({ id: u.id, label: u.label, pct: u.pct }))}
           />
-          <Caption>
-            De vijf meest-genoemde toepassingen, over alle rollen heen. Schrijven en research domineren. De agentische toepassingen (proactieve workflows, klantcontact) zijn nog kleiner, maar groeien snel.
-          </Caption>
+          <Caption>{t.moUseCaption}</Caption>
         </Card>
       </div>
     </div>

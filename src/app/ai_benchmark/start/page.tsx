@@ -255,15 +255,13 @@ function StartInner() {
               </span>
             </label>
             <p style={{ fontSize: 11, color: MUTED, marginTop: 10, lineHeight: 1.55 }}>
-              Je e-mailadres is verplicht omdat we je dashboard via een unieke link delen.
-              Het wordt nooit verkocht of gedeeld met derden. Je kunt op elk moment je gegevens
-              laten verwijderen via{' '}
+              {t.privacyEmailNote}{' '}{t.privacyDeleteVia}{' '}
               <a href="mailto:mark@brandpwrdmedia.com" style={{ color: ACCENT, textDecoration: 'underline' }}>
                 mark@brandpwrdmedia.com
               </a>
-              . Lees ook ons{' '}
+              . {t.privacyAlsoRead}{' '}
               <a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: ACCENT, textDecoration: 'underline' }}>
-                privacybeleid
+                {t.privacyPolicyLink}
               </a>.
             </p>
           </div>
@@ -300,11 +298,11 @@ function StartInner() {
         color: WARM, background: WARM_LIGHT,
         padding: '5px 14px', borderRadius: 100, marginBottom: 18,
       }}>
-        Stap 2 van 2 · {questions.length} vragen
+        {t.qStepBadge.replace('{n}', String(questions.length))}
       </span>
 
       <h1 style={{ fontSize: 'clamp(26px, 4vw, 34px)', fontWeight: 900, lineHeight: 1.15, marginBottom: 28, color: INK, letterSpacing: '-0.02em' }}>
-        Beantwoord wat klopt voor jou.
+        {t.qStepHeadline}
       </h1>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -359,7 +357,7 @@ function StartInner() {
       </div>
       {!allAnswered && (
         <p style={{ marginTop: 10, fontSize: 12, color: MUTED }}>
-          Beantwoord alle vragen om je dashboard op te halen.
+          {t.qSubmitHelp}
         </p>
       )}
     </>

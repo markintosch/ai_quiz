@@ -113,7 +113,7 @@ export default async function AiBenchmarkLandingPage({
                 padding: '8px 12px', borderRadius: 6, textDecoration: 'none',
               }}
             >
-              Dashboard
+              {t.navDashboard}
             </Link>
             <Link
               href={startHref}
@@ -185,7 +185,7 @@ export default async function AiBenchmarkLandingPage({
                 border: `1px solid ${BORDER}`,
               }}
             >
-              Bekijk eerst de data →
+              {t.viewDataCta}
             </Link>
           </div>
 
@@ -274,44 +274,44 @@ export default async function AiBenchmarkLandingPage({
         <div style={{ maxWidth: 1000, margin: '0 auto' }}>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 4 }}>
             <h2 style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: ACCENT }}>
-              Wat we tot nu toe zien
+              {t.teaserLabel}
             </h2>
             <Link href={dashboardHref} style={{ fontSize: 13, color: ACCENT, fontWeight: 700, textDecoration: 'none' }}>
-              Volledige dashboard →
+              {t.teaserFullDashboard}
             </Link>
           </div>
           <p style={{ fontSize: 24, fontWeight: 800, color: INK, marginBottom: 24, letterSpacing: '-0.01em' }}>
-            Een voorproefje uit de live data.
+            {t.teaserHeadline}
           </p>
 
           {/* 4 stat tiles */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12, marginBottom: 28 }}>
             <StatTile
-              eyebrow="Skill-shift in 12 mnd"
+              eyebrow={t.statSkillShift}
               big={`${data.skillCurve.fieldShift > 0 ? '+' : ''}${data.skillCurve.fieldShift.toFixed(1)}`}
-              unit="niveaus"
-              caption="Hoe het hele veld omhoog ging. Van Niet naar Comfortabel."
+              unit={t.statSkillShiftUnit}
+              caption={t.statSkillShiftCaption}
               accent={ACCENT}
             />
             <StatTile
-              eyebrow="Dominant archetype"
+              eyebrow={t.statDominantArch}
               big={topArch ? `${topArch.pct}%` : '—'}
               unit={topArch ? topArch.label : ''}
-              caption={topArch ? `${topArch.emoji} ${topArch.label} is het meest voorkomende profiel.` : ''}
+              caption={topArch ? `${topArch.emoji} ${topArch.label} ${t.statDominantArchSuffix}` : ''}
               accent={WARM}
             />
             <StatTile
-              eyebrow="Meest gebruikte tool"
+              eyebrow={t.statTopTool}
               big={topTool ? `${topTool.topPct}%` : '—'}
               unit={topTool?.label ?? ''}
-              caption={topTool ? `Meest-gebruikte specialistische tool in marketing & sales.` : ''}
+              caption={topTool ? t.statTopToolCaption : ''}
               accent={ACCENT}
             />
             <StatTile
-              eyebrow="Top tijdwinst-bucket"
+              eyebrow={t.statTopTimeBucket}
               big={topTimeBucket ? `${topTimeBucket.pct}%` : '—'}
               unit={topTimeBucket ? topTimeBucket.label : ''}
-              caption={topUseCase ? `Top use-case: ${topUseCase.label} (${topUseCase.pct}%).` : ''}
+              caption={topUseCase ? `${t.statTopUseCasePrefix} ${topUseCase.label} (${topUseCase.pct}%).` : ''}
               accent={WARM}
             />
           </div>
@@ -320,13 +320,15 @@ export default async function AiBenchmarkLandingPage({
           <div style={{ background: LIGHT, border: `1px solid ${BORDER}`, borderRadius: 12, padding: '20px 22px' }}>
             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8, marginBottom: 14 }}>
               <p style={{ fontSize: 14, fontWeight: 800, color: INK, margin: 0 }}>
-                AI-vaardigheid steeg van gem. {data.skillCurve.points[0].avgIndex.toFixed(1)} → {data.skillCurve.points[data.skillCurve.points.length - 1].avgIndex.toFixed(1)} (0–4 schaal).
+                {t.skillTeaserSentence
+                  .replace('{a}', data.skillCurve.points[0].avgIndex.toFixed(1))
+                  .replace('{b}', data.skillCurve.points[data.skillCurve.points.length - 1].avgIndex.toFixed(1))}
               </p>
               <Link href={dashboardHref} style={{ fontSize: 12, color: ACCENT, fontWeight: 700, textDecoration: 'none' }}>
-                Open dashboard →
+                {t.teaserOpenDashboard}
               </Link>
             </div>
-            <SkillCurve curve={data.skillCurve} />
+            <SkillCurve curve={data.skillCurve} lang={lang} />
           </div>
         </div>
       </section>
@@ -395,7 +397,7 @@ export default async function AiBenchmarkLandingPage({
             })}
           </div>
           <p style={{ marginTop: 14, fontSize: 12, color: MUTED }}>
-            % = aandeel van de huidige respondenten dat in dit profiel valt.
+            {t.archetypeShareNote}
           </p>
         </div>
 
@@ -442,7 +444,7 @@ export default async function AiBenchmarkLandingPage({
                 border: `1px solid ${BORDER}`,
               }}
             >
-              Bekijk de cijfers →
+              {t.viewNumbersCta}
             </Link>
           </div>
         </div>

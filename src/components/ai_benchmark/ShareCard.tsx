@@ -5,6 +5,7 @@
 
 import { useEffect, useState } from 'react'
 import { trackBenchEvent } from './Tracker'
+import { getContent, type Lang } from '@/products/ai_benchmark/data'
 
 const INK    = '#0F172A'
 const ACCENT = '#1D4ED8'
@@ -22,6 +23,7 @@ export function ShareCard({
   punchline,
   shareUrl,
   ogUrl,
+  lang = 'nl',
 }: {
   resultId:        string
   archetypeName:   string
@@ -30,7 +32,9 @@ export function ShareCard({
   punchline:       string
   shareUrl:        string
   ogUrl:           string
+  lang?:           Lang
 }) {
+  const t = getContent(lang)
   const [open,   setOpen]   = useState(false)
   const [copied, setCopied] = useState(false)
 
@@ -40,13 +44,16 @@ export function ShareCard({
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
-  const text = `Ik ben een ${archetypeName} (${totalScore}/100) op de AI-benchmark voor marketing & sales. ${punchline} Doe 'm zelf:`
+  const text = t.shareIntroBody
+    .replace('{arch}', archetypeName)
+    .replace('{score}', String(totalScore))
+    .replace('{punchline}', punchline)
   const enc  = encodeURIComponent
   const links = {
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(shareUrl)}`,
     x:        `https://twitter.com/intent/tweet?url=${enc(shareUrl)}&text=${enc(text)}`,
     whatsapp: `https://wa.me/?text=${enc(`${text} ${shareUrl}`)}`,
-    mail:     `mailto:?subject=${enc('AI-benchmark: wat is jouw archetype?')}&body=${enc(`${text}\n\n${shareUrl}`)}`,
+    mail:     `mailto:?subject=${enc(t.shareEmailSubject)}&body=${enc(`${text}\n\n${shareUrl}`)}`,
   }
 
   async function copy() {
@@ -71,7 +78,7 @@ export function ShareCard({
         }}
       >
         <span style={{ fontSize: 16 }}>↗</span>
-        Deel je resultaat
+        {t.shareTriggerLabel}
       </button>
 
       {/* Modal */}
@@ -97,12 +104,12 @@ export function ShareCard({
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
               <p style={{ fontSize: 11, fontWeight: 800, color: WARM, letterSpacing: '0.16em', textTransform: 'uppercase' }}>
-                Deel je resultaat
+                {t.shareModalLabel}
               </p>
               <button
                 onClick={() => setOpen(false)}
                 style={{ background: 'transparent', border: 'none', fontSize: 22, color: MUTED, cursor: 'pointer', lineHeight: 1 }}
-                aria-label="Sluiten"
+                aria-label="×"
               >×</button>
             </div>
 
@@ -119,7 +126,7 @@ export function ShareCard({
             {/* Pre-filled text */}
             <div style={{ background: '#F8FAFC', border: `1px solid ${BORDER}`, borderRadius: 8, padding: '10px 12px', marginBottom: 14 }}>
               <p style={{ fontSize: 12, color: MUTED, marginBottom: 4, fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase' }}>
-                Pre-filled tekst
+                {t.sharePrefilledLabel}
               </p>
               <p style={{ fontSize: 13, color: INK, lineHeight: 1.55, margin: 0 }}>
                 {text} <span style={{ color: ACCENT, wordBreak: 'break-all' }}>{shareUrl}</span>
@@ -145,11 +152,11 @@ export function ShareCard({
                 transition: 'background 0.2s, color 0.2s, border-color 0.2s',
               }}
             >
-              {copied ? '✓ Link gekopieerd' : '🔗 Kopieer link'}
+              {copied ? t.shareCopiedLink : t.shareCopyLink}
             </button>
 
             <p style={{ marginTop: 14, fontSize: 11, color: MUTED, textAlign: 'center' }}>
-              Resultaat-URL is alleen toegankelijk voor wie deze link heeft.
+              {t.shareUrlNote}
             </p>
           </div>
 

@@ -4,10 +4,9 @@
 import {
   type SkillCurve,
   SKILL_LEVELS,
-  SKILL_LEVEL_LABELS_NL,
-  SKILL_TIMEFRAME_LABELS_NL,
   type SkillCurvePoint,
 } from '@/products/ai_benchmark/aggregates'
+import { getContent, getQuestions, type Lang } from '@/products/ai_benchmark/data'
 
 const INK    = '#0F172A'
 const BODY   = '#374151'
@@ -23,11 +22,21 @@ const LEVEL_COLORS: Record<string, string> = {
   expert:      '#1E3A8A',
 }
 
-export function SkillCurve({ curve, userTrajectory }: {
+export function SkillCurve({ curve, userTrajectory, lang = 'nl' }: {
   curve:           SkillCurve
-  userTrajectory?: number[] | null   // [12mo idx, 6mo idx, 3mo idx]
+  userTrajectory?: number[] | null
+  lang?:           Lang
 }) {
+  const t = getContent(lang)
   const points: SkillCurvePoint[] = curve.points
+
+  // Pull localised level + timeframe labels from Q10 (matrix question)
+  const q10 = getQuestions('marketing', lang).find(q => q.id === 'q10')
+  const levelLabels: Record<string, string> = {}
+  for (const opt of q10?.options ?? []) levelLabels[opt.id] = opt.label
+  const tfLabels: Record<string, string> = {}
+  for (const row of q10?.rows ?? []) tfLabels[row.id] = row.label
+  tfLabels.now = ''  // 'now' renders as empty + the NU badge separately
 
   return (
     <div>
@@ -36,7 +45,7 @@ export function SkillCurve({ curve, userTrajectory }: {
         {SKILL_LEVELS.map(lvl => (
           <span key={lvl} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 11, color: BODY }}>
             <span style={{ width: 10, height: 10, background: LEVEL_COLORS[lvl], borderRadius: 2, display: 'inline-block' }} />
-            {SKILL_LEVEL_LABELS_NL[lvl]}
+            {levelLabels[lvl] ?? lvl}
           </span>
         ))}
       </div>
@@ -58,11 +67,11 @@ export function SkillCurve({ curve, userTrajectory }: {
             <div key={pt.timeframe}>
               <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 4, gap: 8 }}>
                 <span style={{ fontSize: 12, fontWeight: 700, color: isNow ? INK : BODY }}>
-                  {SKILL_TIMEFRAME_LABELS_NL[pt.timeframe]}
-                  {isNow && <span style={{ marginLeft: 6, fontSize: 10, fontWeight: 800, color: '#1D4ED8', letterSpacing: '0.08em' }}>NU</span>}
+                  {tfLabels[pt.timeframe] || ''}
+                  {isNow && <span style={{ marginLeft: 6, fontSize: 10, fontWeight: 800, color: '#1D4ED8', letterSpacing: '0.08em' }}>{t.scNowBadge}</span>}
                 </span>
                 <span style={{ fontSize: 11, color: MUTED }}>
-                  Gem. niveau: <strong style={{ color: INK }}>{pt.avgIndex.toFixed(1)}</strong>
+                  {t.scAvgLabel} <strong style={{ color: INK }}>{pt.avgIndex.toFixed(1)}</strong>
                 </span>
               </div>
 
@@ -79,7 +88,7 @@ export function SkillCurve({ curve, userTrajectory }: {
                   return (
                     <div
                       key={lvl}
-                      title={`${SKILL_LEVEL_LABELS_NL[lvl]} · ${pct}%`}
+                      title={`${levelLabels[lvl] ?? lvl} · ${pct}%`}
                       style={{
                         width:      `${pct}%`,
                         background: LEVEL_COLORS[lvl],
@@ -125,7 +134,7 @@ export function SkillCurve({ curve, userTrajectory }: {
       {userTrajectory && (
         <p style={{ marginTop: 10, fontSize: 11, color: MUTED, display: 'flex', alignItems: 'center', gap: 6 }}>
           <span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', background: '#fff', border: '2px solid #D97706' }} />
-          Jouw positie per moment.
+          {t.scYourPosition}
         </p>
       )}
 

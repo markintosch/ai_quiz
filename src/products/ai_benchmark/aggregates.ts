@@ -1,7 +1,7 @@
 // Aggregate respondent answers into per-question peer comparisons.
 // Used by the "Hoe je je verhoudt" dashboard on the results page.
 
-import { type Question } from './data'
+import { type Question, getContent, type Lang } from './data'
 
 export type QuestionAggregate = {
   questionId:        string
@@ -235,7 +235,9 @@ export function distinctiveInsights(
   userIds: string[],
   optionLabel: (id: string) => string,
   max = 1,
+  lang: Lang = 'nl',
 ): Insight[] {
+  const t = getContent(lang)
   const out: Insight[] = []
   const sortedByLow = userIds
     .filter(id => id !== 'none' && agg.optionPct[id] !== undefined && agg.optionPct[id] > 0)
@@ -244,8 +246,8 @@ export function distinctiveInsights(
     out.push({
       kind:  'distinctive',
       emoji: '🦄',
-      title: `Slechts ${agg.optionPct[id]}% gebruikt ${optionLabel(id)}`,
-      body:  `Jij wel. Dat is een onderscheidende keuze in jouw segment.`,
+      title: t.insightDistinctiveTitle.replace('{pct}', String(agg.optionPct[id])).replace('{label}', optionLabel(id)),
+      body:  t.insightDistinctiveBody,
     })
   }
   void questionId
@@ -258,14 +260,16 @@ export function gapInsights(
   userIds: string[],
   optionLabel: (id: string) => string,
   max = 1,
+  lang: Lang = 'nl',
 ): Insight[] {
+  const t = getContent(lang)
   const sortedByHigh = Object.entries(agg.optionPct)
     .filter(([id, pct]) => !userIds.includes(id) && id !== 'none' && pct >= 25)
     .sort((a, b) => b[1] - a[1])
   return sortedByHigh.slice(0, max).map(([id, pct]) => ({
     kind:  'gap',
     emoji: '🎯',
-    title: `${pct}% gebruikt ${optionLabel(id)}. Jij niet.`,
-    body:  `Een populaire keuze in jouw segment die op je radar mag.`,
+    title: t.insightGapTitle.replace('{pct}', String(pct)).replace('{label}', optionLabel(id)),
+    body:  t.insightGapBody,
   }))
 }

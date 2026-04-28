@@ -58,13 +58,7 @@ const COMPARISON_THRESHOLD = 30
 
 type Segment = 'all' | 'role' | 'industry' | 'size' | 'region'
 
-const SEGMENT_LABELS: Record<Segment, string> = {
-  all:      'Iedereen',
-  role:     'Mijn rol',
-  industry: 'Mijn industrie',
-  size:     'Mijn bedrijfsgrootte',
-  region:   'Mijn regio',
-}
+// Segment labels are now pulled from the lang content per request render.
 
 export default async function ResultsPage({
   params,
@@ -154,7 +148,7 @@ export default async function ResultsPage({
       if (!q || !agg) continue
       const userIds = userSelectedIds(data.answers?.[qid])
       const labelOf = (id: string) => q.options.find(o => o.id === id)?.label ?? id
-      insights.push(...distinctiveInsights(qid, agg, userIds, labelOf, 1))
+      insights.push(...distinctiveInsights(qid, agg, userIds, labelOf, 1, lang))
     }
     // Top gap (most-adopted tool user doesn't use)
     {
@@ -163,15 +157,15 @@ export default async function ResultsPage({
       if (q && agg) {
         const userIds = userSelectedIds(data.answers?.q2)
         const labelOf = (id: string) => q.options.find(o => o.id === id)?.label ?? id
-        insights.push(...gapInsights(agg, userIds, labelOf, 1))
+        insights.push(...gapInsights(agg, userIds, labelOf, 1, lang))
       }
     }
     // Tribe size (peer archetype share — preview only for now)
     if (usingMock) {
       insights.push({
         kind: 'tribe', emoji: '🧭',
-        title: '1 op de 6 in jouw segment is óók een Pragmatist',
-        body:  'Het meest voorkomende archetype in 50–200 marketingteams.',
+        title: t.insightTribeTitle,
+        body:  t.insightTribeBody,
       })
     }
     // Time-saved
@@ -188,8 +182,8 @@ export default async function ResultsPage({
           if (userLabel && peerLabel) {
             insights.push({
               kind: 'time', emoji: '⏱️',
-              title: `Jij: ${userLabel} bespaard / week`,
-              body:  `${peerLeader[1]}% van peers zit op ${peerLabel}.`,
+              title: t.insightTimeTitle.replace('{label}', userLabel),
+              body:  t.insightTimeBody.replace('{pct}', String(peerLeader[1])).replace('{label}', peerLabel),
             })
           }
         }
@@ -197,12 +191,14 @@ export default async function ResultsPage({
     }
     // Shift index (motion in the field)
     if (skillCurve && skillCurve.fieldShift > 0) {
+      const sign = userShift !== null && userShift > 0 ? '+' : ''
+      const levelsWord = userShift !== null && Math.abs(userShift) === 1 ? t.resultsLevelSing : t.resultsLevelPlur
       insights.push({
         kind:  'mover', emoji: '📈',
-        title: `Het hele veld steeg ${skillCurve.fieldShift.toFixed(1)} niveaus in 12 mnd`,
+        title: t.insightMoverTitle.replace('{n}', skillCurve.fieldShift.toFixed(1)),
         body:  userShift !== null
-          ? `Jij ging ${userShift > 0 ? '+' : ''}${userShift} niveau${Math.abs(userShift) === 1 ? '' : 's'} omhoog.`
-          : 'Aggregaat-trend uit alle respondenten.',
+          ? t.insightMoverBodyUserPos.replace('{sign}', sign).replace('{n}', String(userShift)).replace('{levels}', levelsWord)
+          : t.insightMoverBodyAgg,
         delta: `+${skillCurve.fieldShift.toFixed(1)}`,
         trend: 'up',
       })
@@ -217,8 +213,8 @@ export default async function ResultsPage({
           const label = q.options.find(o => o.id === top[0])?.label ?? top[0]
           insights.push({
             kind: 'blocker', emoji: '🚧',
-            title: `#1 blokkade in jouw segment: '${label}'`,
-            body:  `${top[1]}% van peers noemt dit als belangrijkste rem.`,
+            title: t.insightBlockerTitle.replace('{label}', label),
+            body:  t.insightBlockerBody.replace('{pct}', String(top[1])),
           })
         }
       }
@@ -323,10 +319,10 @@ export default async function ResultsPage({
         <section style={{ background: '#fff', padding: '40px 24px 32px', borderTop: `1px solid ${BORDER}` }}>
           <div style={{ maxWidth: 880, margin: '0 auto' }}>
             <h2 style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: ACCENT, marginBottom: 6 }}>
-              Wat opvalt
+              {t.resultsWatOpvalt}
             </h2>
             <p style={{ fontSize: 22, fontWeight: 800, color: INK, marginBottom: 18, letterSpacing: '-0.01em' }}>
-              {greetingName ? `${greetingName}, ` : ''}dit is wat jouw antwoorden zeggen.
+              {greetingName ? `${greetingName}, ` : ''}{t.resultsWatOpvaltHeadlineSuffix}
             </p>
             <InsightStrip insights={insightTrim} />
           </div>
@@ -338,22 +334,22 @@ export default async function ResultsPage({
         <section style={{ background: LIGHT, padding: '48px 24px', borderTop: `1px solid ${BORDER}` }}>
           <div style={{ maxWidth: 880, margin: '0 auto' }}>
             <h2 style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: ACCENT, marginBottom: 6 }}>
-              De beweging in het veld
+              {t.resultsBeweging}
             </h2>
             <p style={{ fontSize: 22, fontWeight: 800, color: INK, marginBottom: 6, letterSpacing: '-0.01em' }}>
-              Hoe AI-vaardigheid in marketing &amp; sales verschuift.
+              {t.resultsBewegingHeadline}
             </p>
             <p style={{ fontSize: 14, color: BODY, lineHeight: 1.6, marginBottom: 22, maxWidth: 620 }}>
-              Op basis van {skillCurve.totalRespondents.toLocaleString('nl-NL')} respondenten. Het gemiddelde AI-niveau steeg met
-              {' '}<strong style={{ color: INK }}>{skillCurve.fieldShift > 0 ? '+' : ''}{skillCurve.fieldShift.toFixed(1)} niveaus</strong> in 12 maanden.
+              {t.resultsBewegingPart1.replace('{n}', skillCurve.totalRespondents.toLocaleString())} {t.resultsBewegingPart2}
+              {' '}<strong style={{ color: INK }}>{skillCurve.fieldShift > 0 ? '+' : ''}{skillCurve.fieldShift.toFixed(1)} {t.resultsLevelPlur}</strong> {t.resultsBewegingIn12}
               {userShift !== null && (
-                <> Jouw eigen shift: <strong style={{ color: ACCENT }}>{userShift > 0 ? '+' : ''}{userShift} niveau{Math.abs(userShift) === 1 ? '' : 's'}</strong>
-                  {userShift > skillCurve.fieldShift && '. Sneller dan de markt.'}
-                  {userShift < skillCurve.fieldShift && '. Langzamer dan de markt.'}
+                <> {t.resultsYourShift} <strong style={{ color: ACCENT }}>{userShift > 0 ? '+' : ''}{userShift} {Math.abs(userShift) === 1 ? t.resultsLevelSing : t.resultsLevelPlur}</strong>
+                  {userShift > skillCurve.fieldShift && '.' + t.resultsFasterMarket}
+                  {userShift < skillCurve.fieldShift && '.' + t.resultsSlowerMarket}
                 </>
               )}
             </p>
-            <SkillCurve curve={skillCurve} userTrajectory={userTrajectory} />
+            <SkillCurve curve={skillCurve} userTrajectory={userTrajectory} lang={lang} />
           </div>
         </section>
       )}
@@ -365,7 +361,7 @@ export default async function ResultsPage({
             {t.resultsDimsTitle}
           </h2>
           <p style={{ fontSize: 22, fontWeight: 800, color: INK, marginBottom: 24, letterSpacing: '-0.01em' }}>
-            6 dimensies, 0–100.
+            {t.resultsDimsHeadline}
           </p>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -392,18 +388,18 @@ export default async function ResultsPage({
         <section style={{ background: LIGHT, padding: '48px 24px', borderTop: `1px solid ${BORDER}` }}>
           <div style={{ maxWidth: 1100, margin: '0 auto' }}>
             <h2 style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: ACCENT, marginBottom: 6 }}>
-              Het beeld van de markt
+              {t.resultsMarket}
             </h2>
             <p style={{ fontSize: 22, fontWeight: 800, color: INK, marginBottom: 6, letterSpacing: '-0.01em' }}>
-              Zo ziet het AI-landschap eruit waar jij in werkt.
+              {t.resultsMarketHeadline}
             </p>
             <p style={{ fontSize: 13, color: BODY, marginBottom: 20, lineHeight: 1.6, maxWidth: 720 }}>
-              Een compacte versie van het{' '}
-              <Link href={`/ai_benchmark/dashboard${preview ? '?preview=1' : ''}`} style={{ color: ACCENT, fontWeight: 700 }}>publieke dashboard</Link>
-              {' '}op basis van {marketData.totalRespondents.toLocaleString('nl-NL')} respondenten.
-              Onder elke grafiek staat in 2–3 zinnen wat je ziet en waarom het ertoe doet.
+              {t.resultsMarketBodyA}{' '}
+              <Link href={`/ai_benchmark/dashboard${preview ? '?preview=1' : ''}`} style={{ color: ACCENT, fontWeight: 700 }}>{t.resultsMarketBodyB}</Link>
+              {' '}{t.resultsMarketBodyC.replace('{n}', marketData.totalRespondents.toLocaleString())}
+              {' '}{t.resultsMarketBodyD}
             </p>
-            <MarketOverview data={marketData} />
+            <MarketOverview data={marketData} lang={lang} />
           </div>
         </section>
       )}
@@ -417,20 +413,24 @@ export default async function ResultsPage({
                 {t.resultsCompareTtl}
               </h2>
               <span style={{ fontSize: 12, color: MUTED }}>
-                Op basis van <strong style={{ color: INK }}>{segmentN.toLocaleString('nl-NL')}</strong> respondenten
-                {usingMock && <span style={{ marginLeft: 6, color: WARM, fontWeight: 700 }}>· preview-data</span>}
+                {t.resultsBasedOn.replace('{n}', segmentN.toLocaleString())}
+                {usingMock && <span style={{ marginLeft: 6, color: WARM, fontWeight: 700 }}>· {t.resultsPreviewTag}</span>}
               </span>
             </div>
             <p style={{ fontSize: 22, fontWeight: 800, color: INK, marginBottom: 20, letterSpacing: '-0.01em' }}>
-              Hoe je je verhoudt, per vraag.
+              {t.resultsCompareHeadline}
             </p>
 
             {/* Segment filter */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 28, fontSize: 13 }}>
-              <span style={{ color: MUTED }}>Vergelijk met:</span>
+              <span style={{ color: MUTED }}>{t.resultsCompareWith}</span>
               {(['all', 'role', 'industry', 'size', 'region'] as Segment[]).map(seg => {
                 const active = seg === segment
                 const href = `/ai_benchmark/results/${data.id}?lang=${lang}${preview ? '&preview=1' : ''}${seg === 'all' ? '' : `&segment=${seg}`}`
+                const segLabel: Record<Segment, string> = {
+                  all: t.segmentEveryone, role: t.segmentMyRole, industry: t.segmentMyIndustry,
+                  size: t.segmentMySize, region: t.segmentMyRegion,
+                }
                 return (
                   <Link
                     key={seg}
@@ -443,7 +443,7 @@ export default async function ResultsPage({
                       textDecoration: 'none',
                     }}
                   >
-                    {SEGMENT_LABELS[seg]}
+                    {segLabel[seg]}
                   </Link>
                 )
               })}
@@ -463,6 +463,7 @@ export default async function ResultsPage({
                     q={q}
                     agg={agg}
                     userIds={userIds}
+                    noAnswerText={t.resultsNoAnswerForQ}
                   />
                 )
               })}
@@ -479,8 +480,9 @@ export default async function ResultsPage({
               {t.resultsCompareBody}
             </p>
             <p style={{ fontSize: 13, color: BODY, marginTop: 12 }}>
-              <span style={{ color: WARM, fontWeight: 700 }}>{segmentN}</span> / {COMPARISON_THRESHOLD} respondenten in jouw segment.
-              Zodra de drempel is bereikt, ontgrendelt deze sectie automatisch.
+              {t.resultsLockedThreshold
+                .replace('{n}', String(segmentN))
+                .replace('{threshold}', String(COMPARISON_THRESHOLD))}
             </p>
           </div>
         </section>
@@ -505,6 +507,7 @@ export default async function ResultsPage({
               punchline={punchline}
               shareUrl={shareUrl}
               ogUrl={ogUrl}
+              lang={lang}
             />
             <Link
               href={`/ai_benchmark?lang=${lang}`}
@@ -514,7 +517,7 @@ export default async function ResultsPage({
                 marginLeft: 'auto',
               }}
             >
-              ← Terug naar de benchmark
+              {t.backToBenchmark}
             </Link>
           </div>
         </div>
@@ -570,11 +573,12 @@ export default async function ResultsPage({
 }
 
 // ── Per-question comparison card ─────────────────────────────────────────────
-function ComparisonCard({ label, q, agg, userIds }: {
+function ComparisonCard({ label, q, agg, userIds, noAnswerText }: {
   label:   string
   q:       Question
   agg:     QuestionAggregate
   userIds: string[]
+  noAnswerText: string
 }) {
   // Sort options by adoption % descending so the headline reads top-down
   const sortedOptions = [...q.options].sort((a, b) =>
@@ -634,7 +638,7 @@ function ComparisonCard({ label, q, agg, userIds }: {
 
       {userIds.length === 0 && (
         <p style={{ marginTop: 10, fontSize: 11, color: MUTED, fontStyle: 'italic' }}>
-          (Geen antwoord van jou op deze vraag.)
+          {noAnswerText}
         </p>
       )}
     </div>

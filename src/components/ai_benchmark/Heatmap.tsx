@@ -1,11 +1,12 @@
 // Compact heatmap — rows × columns × intensity (0-100). Color intensity scales
 // with value; cells show the % number on top.
 
+import { getContent, type Lang } from '@/products/ai_benchmark/data'
+
 const INK    = '#0F172A'
 const BODY   = '#374151'
 const MUTED  = '#94A3B8'
 const BORDER = '#E2E8F0'
-const ACCENT = '#1D4ED8'
 
 export type HeatmapRow = {
   id:    string
@@ -15,12 +16,14 @@ export type HeatmapRow = {
 export type HeatmapCol = HeatmapRow
 
 export function Heatmap({
-  rows, cols, values,
+  rows, cols, values, lang = 'nl',
 }: {
   rows: HeatmapRow[]
   cols: HeatmapCol[]
-  values: Record<string, Record<string, number>>   // row.id → col.id → 0–100
+  values: Record<string, Record<string, number>>
+  lang?: Lang
 }) {
+  const t = getContent(lang)
   // Color: white → ACCENT depending on value
   const cellColor = (pct: number) => {
     if (pct === 0) return '#F8FAFC'
@@ -38,7 +41,7 @@ export function Heatmap({
         <thead>
           <tr>
             <th style={{ position: 'sticky', left: 0, background: '#fff', textAlign: 'left', padding: '6px 10px 10px 0', fontSize: 10, fontWeight: 800, color: MUTED, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-              Rol →
+              {t.hmRowsLabel}
             </th>
             {cols.map(col => (
               <th key={col.id} style={{
@@ -89,12 +92,12 @@ export function Heatmap({
 
       <p style={{ marginTop: 10, fontSize: 11, color: MUTED, display: 'flex', alignItems: 'center', gap: 8 }}>
         <span style={{ width: 12, height: 12, background: cellColor(10), border: `1px solid ${BORDER}`, display: 'inline-block' }} />
-        laag
+        {t.hmLow}
         <span style={{ width: 12, height: 12, background: cellColor(50), display: 'inline-block' }} />
-        midden
+        {t.hmMid}
         <span style={{ width: 12, height: 12, background: cellColor(90), display: 'inline-block' }} />
-        hoog
-        <span style={{ marginLeft: 'auto' }}>{ACCENT && ''}% gebruikers per rol</span>
+        {t.hmHigh}
+        <span style={{ marginLeft: 'auto' }}>{t.hmCaption}</span>
       </p>
     </div>
   )

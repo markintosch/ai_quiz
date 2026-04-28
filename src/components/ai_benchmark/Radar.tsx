@@ -1,5 +1,7 @@
 // SVG radar chart — 6 dimensions overlaid by role.
 
+import { getContent, type Lang } from '@/products/ai_benchmark/data'
+
 const INK    = '#0F172A'
 const MUTED  = '#94A3B8'
 const BORDER = '#E2E8F0'
@@ -12,12 +14,14 @@ type Series = {
 }
 
 export function Radar({
-  axes, series, size = 280,
+  axes, series, size = 280, lang = 'nl',
 }: {
   axes:   { id: string; label: string }[]
   series: Series[]
   size?:  number
+  lang?:  Lang
 }) {
+  const t = getContent(lang)
   const cx = size / 2
   const cy = size / 2
   const r  = size / 2 - 36   // padding for labels
@@ -100,7 +104,7 @@ export function Radar({
         ))}
       </div>
 
-      <p style={{ fontSize: 10, color: MUTED, margin: 0 }}>0 tot 100 per dimensie</p>
+      <p style={{ fontSize: 10, color: MUTED, margin: 0 }}>{t.radarRange}</p>
     </div>
   )
 }
