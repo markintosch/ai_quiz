@@ -99,6 +99,7 @@ export type LangContent = {
 
   // proof
   proofN:        string
+  proofVague:    string  // shown when usingMock or N too low to claim a number
   proofSubtitle: string
 
   // sections
@@ -159,6 +160,9 @@ export type LangContent = {
 
   footerLine:  string
   reportLine:  string
+
+  // LiveCounter — fuzzy text shown when N too low to claim a number
+  liveVagueLabel: string
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -184,6 +188,7 @@ const NL: LangContent = {
   quoteRole:   'Marketing consultant · markdekock.com',
 
   proofN:        '{n} marketeers en sellers hebben al meegedaan',
+  proofVague:    'Een groeiende groep marketeers en sellers doet mee',
   proofSubtitle: 'Jouw antwoorden bouwen mee aan het grootste onafhankelijke beeld van AI-gebruik in BeNeLux.',
 
   dimensionsLabel: '6 Dimensies',
@@ -289,6 +294,8 @@ const NL: LangContent = {
 
   footerLine: 'Gehost door Mark de Kock · markdekock.com',
   reportLine: 'Aggregaat-rapport: State of AI in Marketing & Sales 2026',
+
+  liveVagueLabel: 'Groeiende groep professionals',
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -314,6 +321,7 @@ const EN: LangContent = {
   quoteRole:   'Marketing consultant · markdekock.com',
 
   proofN:        '{n} marketers and sellers have already taken part',
+  proofVague:    'A growing group of marketers and sellers is taking part',
   proofSubtitle: "Your answers help build the largest independent picture of AI use in BeNeLux.",
 
   dimensionsLabel: '6 Dimensions',
@@ -419,6 +427,8 @@ const EN: LangContent = {
 
   footerLine: 'Hosted by Mark de Kock · markdekock.com',
   reportLine: 'Aggregate report: State of AI in Marketing & Sales 2026',
+
+  liveVagueLabel: 'Growing group of professionals',
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -444,6 +454,7 @@ const FR: LangContent = {
   quoteRole:   'Consultant marketing · markdekock.com',
 
   proofN:        '{n} marketeurs et commerciaux ont déjà participé',
+  proofVague:    'Un groupe grandissant de marketeurs et commerciaux participe',
   proofSubtitle: "Tes réponses contribuent à la plus grande image indépendante de l'usage de l'IA au BeNeLux.",
 
   dimensionsLabel: '6 Dimensions',
@@ -549,6 +560,8 @@ const FR: LangContent = {
 
   footerLine: 'Hébergé par Mark de Kock · markdekock.com',
   reportLine: 'Rapport agrégé : State of AI in Marketing & Sales 2026',
+
+  liveVagueLabel: 'Groupe grandissant de professionnels',
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -574,6 +587,7 @@ const DE: LangContent = {
   quoteRole:   'Marketing-Berater · markdekock.com',
 
   proofN:        '{n} Marketeers und Seller haben bereits teilgenommen',
+  proofVague:    'Eine wachsende Gruppe Marketeers und Seller macht mit',
   proofSubtitle: 'Deine Antworten tragen zum größten unabhängigen Bild der KI-Nutzung in BeNeLux bei.',
 
   dimensionsLabel: '6 Dimensionen',
@@ -679,6 +693,8 @@ const DE: LangContent = {
 
   footerLine: 'Gehostet von Mark de Kock · markdekock.com',
   reportLine: 'Aggregierter Bericht: State of AI in Marketing & Sales 2026',
+
+  liveVagueLabel: 'Wachsende Gruppe Professionals',
 }
 
 export const CONTENT: Record<Lang, LangContent> = { nl: NL, en: EN, fr: FR, de: DE }

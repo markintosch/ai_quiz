@@ -1,10 +1,21 @@
-// Server component — small "LIVE · N respondents · +X this week" badge with
-// a pulsing dot. Visual liveness for the dashboard.
+// Server component — small "LIVE" badge with a pulsing dot.
+// In vague mode (used while we're still on mock data), the count + 'this week'
+// delta are replaced with a fuzzy text like "Growing group of professionals"
+// so we never claim numbers we don't have.
+
+import { getContent, type Lang } from '@/products/ai_benchmark/data'
 
 const INK = '#0F172A'
 const WARM = '#D97706'
 
-export function LiveCounter({ total, lastWeek }: { total: number; lastWeek?: number }) {
+export function LiveCounter({ total, lastWeek, lang = 'nl', vague = false }: {
+  total:      number
+  lastWeek?:  number
+  lang?:      Lang
+  vague?:     boolean
+}) {
+  const t = getContent(lang)
+
   return (
     <div style={{
       display: 'inline-flex', alignItems: 'center', gap: 10,
@@ -24,11 +35,17 @@ export function LiveCounter({ total, lastWeek }: { total: number; lastWeek?: num
       </span>
       <span style={{ letterSpacing: '0.08em', fontSize: 10, color: WARM }}>LIVE</span>
       <span>·</span>
-      <span><strong>{total.toLocaleString('nl-NL')}</strong> respondenten</span>
-      {lastWeek !== undefined && lastWeek > 0 && (
+      {vague ? (
+        <span><strong>{t.liveVagueLabel}</strong></span>
+      ) : (
         <>
-          <span>·</span>
-          <span style={{ color: '#15803D' }}>+{lastWeek} deze week</span>
+          <span><strong>{total.toLocaleString('nl-NL')}</strong> respondenten</span>
+          {lastWeek !== undefined && lastWeek > 0 && (
+            <>
+              <span>·</span>
+              <span style={{ color: '#15803D' }}>+{lastWeek} deze week</span>
+            </>
+          )}
         </>
       )}
 

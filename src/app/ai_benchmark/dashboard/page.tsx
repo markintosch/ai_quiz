@@ -101,7 +101,7 @@ export default async function DashboardPage({
             }}>
               Wekelijks geüpdatet · onafhankelijk onderzoek
             </span>
-            <LiveCounter total={data.totalRespondents} lastWeek={data.usingMock ? 38 : undefined} />
+            <LiveCounter total={data.totalRespondents} lang="nl" vague={data.usingMock} />
           </div>
 
           <h1 style={{ fontSize: 'clamp(30px, 4.8vw, 50px)', fontWeight: 900, lineHeight: 1.1, marginBottom: 16, color: INK, letterSpacing: '-0.025em', maxWidth: 880 }}>

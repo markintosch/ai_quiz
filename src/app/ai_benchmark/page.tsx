@@ -149,7 +149,7 @@ export default async function AiBenchmarkLandingPage({
                 </>
               ) : t.heroBadge}
             </span>
-            <LiveCounter total={data.totalRespondents} lastWeek={data.usingMock ? 38 : undefined} />
+            <LiveCounter total={data.totalRespondents} lastWeek={data.usingMock ? undefined : undefined} lang={lang} vague={data.usingMock} />
           </div>
 
           <h1 style={{
@@ -243,7 +243,9 @@ export default async function AiBenchmarkLandingPage({
         }}>
           <div>
             <p style={{ fontSize: 22, fontWeight: 800, marginBottom: 6, letterSpacing: '-0.01em' }}>
-              {t.proofN.replace('{n}', data.totalRespondents.toLocaleString('nl-NL'))}
+              {data.usingMock
+                ? t.proofVague
+                : t.proofN.replace('{n}', data.totalRespondents.toLocaleString('nl-NL'))}
             </p>
             <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', maxWidth: 560, lineHeight: 1.55 }}>
               {t.proofSubtitle}
