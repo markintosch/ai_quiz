@@ -18,6 +18,7 @@ const NAV_LINKS = [
   { href: '/admin/pulse', label: 'Pulse' },
   { href: '/admin/ai_benchmark', label: 'AI-benchmark' },
   { href: '/admin/ai_benchmark/funnel', label: '↳ Funnel' },
+  { href: '/admin/ai_benchmark/writeins', label: '↳ Write-ins' },
 ]
 
 export default function AdminLayout({

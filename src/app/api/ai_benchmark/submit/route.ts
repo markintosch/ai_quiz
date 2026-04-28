@@ -76,6 +76,50 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Storage failed' }, { status: 500 })
     }
 
+    // Extract any 'other_detail:<text>' write-ins and upsert into the
+    // moderation queue. Best-effort; failures don't block the submit.
+    void (async () => {
+      try {
+        const writeins: { qid: string; raw: string; norm: string }[] = []
+        for (const [qid, val] of Object.entries(answers)) {
+          if (!Array.isArray(val)) continue
+          for (const v of val) {
+            if (typeof v !== 'string' || !v.startsWith('other_detail:')) continue
+            const raw = v.slice('other_detail:'.length).trim().slice(0, 100)
+            if (!raw) continue
+            const norm = raw
+              .toLowerCase()
+              .replace(/\s+/g, ' ')
+              .replace(/\s*(pro|plus|premium|free|trial|beta)\s*$/i, '')
+              .trim()
+            if (norm) writeins.push({ qid, raw, norm })
+          }
+        }
+
+        for (const w of writeins) {
+          const { data: existing } = await supabase
+            .from('ai_benchmark_writeins')
+            .select('id, count')
+            .eq('question_id', w.qid)
+            .eq('normalized', w.norm)
+            .maybeSingle()
+
+          if (existing) {
+            await supabase
+              .from('ai_benchmark_writeins')
+              .update({ count: (existing.count as number) + 1, last_seen: new Date().toISOString() })
+              .eq('id', existing.id)
+          } else {
+            await supabase
+              .from('ai_benchmark_writeins')
+              .insert({ question_id: w.qid, raw_text: w.raw, normalized: w.norm })
+          }
+        }
+      } catch (e) {
+        console.error('[ai_benchmark/submit] writein upsert', e)
+      }
+    })()
+
     return NextResponse.json({
       id:               data.id,
       totalScore,
