@@ -8,10 +8,14 @@ import {
   computeSkillCurve, mockSkillCurve, userSkillShift, SKILL_LEVELS,
   distinctiveInsights, gapInsights, type Insight,
 } from '@/products/ai_benchmark/aggregates'
-import { SkillCurve }   from '@/components/ai_benchmark/SkillCurve'
-import { InsightStrip } from '@/components/ai_benchmark/InsightStrip'
-import { LiveCounter }  from '@/components/ai_benchmark/LiveCounter'
-import { ShareCard }    from '@/components/ai_benchmark/ShareCard'
+import { SkillCurve }     from '@/components/ai_benchmark/SkillCurve'
+import { InsightStrip }   from '@/components/ai_benchmark/InsightStrip'
+import { LiveCounter }    from '@/components/ai_benchmark/LiveCounter'
+import { ShareCard }      from '@/components/ai_benchmark/ShareCard'
+import { MarketOverview } from '@/components/ai_benchmark/MarketOverview'
+import {
+  computePublicDashboard, mockPublicDashboard, type DashboardData,
+} from '@/products/ai_benchmark/public_dashboard'
 
 export const dynamic = 'force-dynamic'
 
@@ -114,14 +118,23 @@ export default async function ResultsPage({
 
   const showComparison = preview || segmentN >= COMPARISON_THRESHOLD
 
-  // ── Skill curve (Q10 trajectory across the field) ───────────────────────
+  // ── Skill curve + public market overview (full-field aggregates) ────────
   let skillCurve = preview ? mockSkillCurve() : undefined
-  if (!preview) {
-    const { data: trajRows } = await supabase
+  let marketData: DashboardData
+  if (preview) {
+    marketData = mockPublicDashboard()
+  } else {
+    const { data: allRows } = await supabase
       .from('ai_benchmark_responses')
-      .select('answers')
-      .limit(2000) as unknown as { data: { answers: Record<string, unknown> }[] | null }
-    skillCurve = computeSkillCurve(trajRows ?? [])
+      .select('role, archetype, dimension_scores, answers, created_at')
+      .limit(5000) as unknown as { data: { role: string; archetype: string; dimension_scores: Record<string, number> | null; answers: Record<string, unknown> | null; created_at: string }[] | null }
+    const rows = allRows ?? []
+    skillCurve = computeSkillCurve(rows.map(r => ({ answers: r.answers || {} })))
+    marketData = computePublicDashboard(rows)
+    // If real N is too small to be meaningful, fall back to mock so the embed isn't an empty grid
+    if (marketData.totalRespondents < COMPARISON_THRESHOLD) {
+      marketData = { ...mockPublicDashboard(), usingMock: true }
+    }
   }
   const userTrajectory = (() => {
     const a = data.answers?.q10
@@ -371,6 +384,27 @@ export default async function ResultsPage({
           </div>
         </div>
       </section>
+
+      {/* ── Market overview (compact embed of the public dashboard) ── */}
+      {marketData.totalRespondents > 0 && (
+        <section style={{ background: LIGHT, padding: '48px 24px', borderTop: `1px solid ${BORDER}` }}>
+          <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+            <h2 style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: ACCENT, marginBottom: 6 }}>
+              Het beeld van de markt
+            </h2>
+            <p style={{ fontSize: 22, fontWeight: 800, color: INK, marginBottom: 6, letterSpacing: '-0.01em' }}>
+              Zo ziet het AI-landschap eruit waar jij in werkt.
+            </p>
+            <p style={{ fontSize: 13, color: BODY, marginBottom: 20, lineHeight: 1.6, maxWidth: 720 }}>
+              Een compacte versie van het{' '}
+              <Link href={`/ai_benchmark/dashboard${preview ? '?preview=1' : ''}`} style={{ color: ACCENT, fontWeight: 700 }}>publieke dashboard</Link>
+              {' '}— op basis van {marketData.totalRespondents.toLocaleString('nl-NL')} respondenten.
+              Onder elke grafiek staat in 2–3 zinnen wat je ziet en waarom het ertoe doet.
+            </p>
+            <MarketOverview data={marketData} />
+          </div>
+        </section>
+      )}
 
       {/* ── Comparison ── */}
       {showComparison ? (
