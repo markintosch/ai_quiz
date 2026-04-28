@@ -344,12 +344,12 @@ export default async function ResultsPage({
               Hoe AI-vaardigheid in marketing &amp; sales verschuift.
             </p>
             <p style={{ fontSize: 14, color: BODY, lineHeight: 1.6, marginBottom: 22, maxWidth: 620 }}>
-              Op basis van {skillCurve.totalRespondents.toLocaleString('nl-NL')} respondenten — gemiddeld AI-niveau steeg
+              Op basis van {skillCurve.totalRespondents.toLocaleString('nl-NL')} respondenten. Het gemiddelde AI-niveau steeg met
               {' '}<strong style={{ color: INK }}>{skillCurve.fieldShift > 0 ? '+' : ''}{skillCurve.fieldShift.toFixed(1)} niveaus</strong> in 12 maanden.
               {userShift !== null && (
                 <> Jouw eigen shift: <strong style={{ color: ACCENT }}>{userShift > 0 ? '+' : ''}{userShift} niveau{Math.abs(userShift) === 1 ? '' : 's'}</strong>
-                  {userShift > skillCurve.fieldShift && ' — sneller dan de markt.'}
-                  {userShift < skillCurve.fieldShift && ' — langzamer dan de markt.'}
+                  {userShift > skillCurve.fieldShift && '. Sneller dan de markt.'}
+                  {userShift < skillCurve.fieldShift && '. Langzamer dan de markt.'}
                 </>
               )}
             </p>
@@ -400,7 +400,7 @@ export default async function ResultsPage({
             <p style={{ fontSize: 13, color: BODY, marginBottom: 20, lineHeight: 1.6, maxWidth: 720 }}>
               Een compacte versie van het{' '}
               <Link href={`/ai_benchmark/dashboard${preview ? '?preview=1' : ''}`} style={{ color: ACCENT, fontWeight: 700 }}>publieke dashboard</Link>
-              {' '}— op basis van {marketData.totalRespondents.toLocaleString('nl-NL')} respondenten.
+              {' '}op basis van {marketData.totalRespondents.toLocaleString('nl-NL')} respondenten.
               Onder elke grafiek staat in 2–3 zinnen wat je ziet en waarom het ertoe doet.
             </p>
             <MarketOverview data={marketData} />
@@ -422,7 +422,7 @@ export default async function ResultsPage({
               </span>
             </div>
             <p style={{ fontSize: 22, fontWeight: 800, color: INK, marginBottom: 20, letterSpacing: '-0.01em' }}>
-              Hoe je je verhoudt — per vraag.
+              Hoe je je verhoudt, per vraag.
             </p>
 
             {/* Segment filter */}

@@ -268,7 +268,7 @@ export default async function AiBenchmarkLandingPage({
               eyebrow="Skill-shift in 12 mnd"
               big={`${data.skillCurve.fieldShift > 0 ? '+' : ''}${data.skillCurve.fieldShift.toFixed(1)}`}
               unit="niveaus"
-              caption="Hoe het hele veld omhoog ging — Niet → Comfortabel."
+              caption="Hoe het hele veld omhoog ging. Van Niet naar Comfortabel."
               accent={ACCENT}
             />
             <StatTile

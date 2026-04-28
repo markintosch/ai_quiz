@@ -457,7 +457,7 @@ function Select({ value, onChange, options }: { value: string; onChange: (v: str
         boxSizing: 'border-box', appearance: 'none',
       }}
     >
-      <option value="">— Kies —</option>
+      <option value="">Kies...</option>
       {options.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}
     </select>
   )

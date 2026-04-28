@@ -46,7 +46,7 @@ export function ShareCard({
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(shareUrl)}`,
     x:        `https://twitter.com/intent/tweet?url=${enc(shareUrl)}&text=${enc(text)}`,
     whatsapp: `https://wa.me/?text=${enc(`${text} ${shareUrl}`)}`,
-    mail:     `mailto:?subject=${enc('AI-benchmark — wat is jouw archetype?')}&body=${enc(`${text}\n\n${shareUrl}`)}`,
+    mail:     `mailto:?subject=${enc('AI-benchmark: wat is jouw archetype?')}&body=${enc(`${text}\n\n${shareUrl}`)}`,
   }
 
   async function copy() {

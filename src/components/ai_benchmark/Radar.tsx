@@ -100,7 +100,7 @@ export function Radar({
         ))}
       </div>
 
-      <p style={{ fontSize: 10, color: MUTED, margin: 0 }}>0 — 100 per dimensie</p>
+      <p style={{ fontSize: 10, color: MUTED, margin: 0 }}>0 tot 100 per dimensie</p>
     </div>
   )
 }

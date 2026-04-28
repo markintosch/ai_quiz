@@ -153,7 +153,7 @@ const NL: LangContent = {
 
   heroBadge:  'Onafhankelijk onderzoek · door Mark de Kock',
   heroH1a:    'Hoe gebruik jij AI in',
-  heroH1b:    'marketing & sales — écht?',
+  heroH1b:    'marketing & sales, écht?',
   heroIntro:  'We gebruiken steeds vaker AI-tools. Van eenvoudige chat op een instapaccount tot dure videobewerking of sales-funnel tools. En elke dag lijkt er een nieuwe tool bij te komen. Waar steek je nou je tijd in om het gebruik te leren? Wat nou als je vakgenoten je de weg wijzen in wat wél werkt?',
   heroSub:    'Vergelijk je werkwijze, je tools en je impact met die van vele andere marketeers en sales-professionals. Deel jouw inzichten en krijg een beeld van de markt in een overzichtelijk dashboard.',
   heroCta1:   'Start de benchmark →',
@@ -174,7 +174,7 @@ const NL: LangContent = {
   archetypesTitle: 'Welk type AI-gebruiker ben jij?',
   shareLabel:      'De reden om mee te doen',
   shareTitle:      'Je krijgt geen score. Je krijgt context.',
-  shareBody:       'Een score van 73 is een nummer. "Maar 19% van sellers in jouw segment gebruikt Clay — jij wel" is een identiteit. Het persoonlijke dashboard laat per vraag zien hoe je je verhoudt tot je peers, met een filter waarmee je wisselt tussen "iedereen", "alleen sales", "mijn industrie", "mijn bedrijfsgrootte".',
+  shareBody:       'Een score van 73 is een nummer. "Slechts 19% van sellers in jouw segment gebruikt Clay, en jij wel" is een identiteit. Het persoonlijke dashboard laat per vraag zien hoe je je verhoudt tot je peers, met een filter om te wisselen tussen iedereen, alleen sales, jouw industrie of jouw bedrijfsgrootte.',
 
   DIMENSIONS: [
     { id: 'adoption',   icon: '🧭', name: 'Adoptie',                description: 'Welke tools je gebruikt en hoe vaak.' },
@@ -186,17 +186,17 @@ const NL: LangContent = {
   ],
 
   ARCHETYPES: [
-    { id: 'pragmatist',      emoji: '🎯', name: 'Pragmatist',      identity: 'Gebruikt AI waar het concreet helpt — geen theater.' },
-    { id: 'power_user',      emoji: '⚡', name: 'Power User',       identity: "Bouwt eigen workflows, haalt 5× tijdwinst uit z'n stack." },
-    { id: 'curious_skeptic', emoji: '🤔', name: 'Curious Skeptic',  identity: 'Probeert alles, vertrouwt nog niets blind. Gezond.' },
-    { id: 'strategist',      emoji: '🧠', name: 'Strategist',       identity: 'Stuurt op governance, ROI en team-adoptie. Lange lijn.' },
-    { id: 'lagging_builder', emoji: '🛠️', name: 'Lagging Builder',  identity: 'Achterstand, maar bouwt nu actief op. Inhaalslag bezig.' },
-    { id: 'shadow_operator', emoji: '🥷', name: 'Shadow Operator',  identity: 'Gebruikt AI dagelijks, organisatie weet van niks.' },
+    { id: 'pragmatist',      emoji: '🎯', name: 'Pragmatist',      identity: 'Zet AI in waar het concreet helpt. Geen theater.' },
+    { id: 'power_user',      emoji: '⚡', name: 'Power User',       identity: "Bouwt eigen workflows en haalt 5× tijdwinst uit z'n stack." },
+    { id: 'curious_skeptic', emoji: '🤔', name: 'Curious Skeptic',  identity: 'Probeert alles, vertrouwt nog niets blind. Gezond dus.' },
+    { id: 'strategist',      emoji: '🧠', name: 'Strategist',       identity: 'Stuurt op governance, ROI en team-adoptie. Speelt voor de lange lijn.' },
+    { id: 'lagging_builder', emoji: '🛠️', name: 'Lagging Builder',  identity: 'Achterstand, maar bouwt nu actief op. Inhaalslag is bezig.' },
+    { id: 'shadow_operator', emoji: '🥷', name: 'Shadow Operator',  identity: 'Gebruikt AI dagelijks. Organisatie weet van niks.' },
   ],
 
   startBadge:        'Stap 1 van 2 · ~30 seconden',
   startH1:           'Wie ben je, en in welke wereld werk je?',
-  startBody:         'We gebruiken deze antwoorden om jouw resultaat te vergelijken met de juiste peergroep. Niets wordt gedeeld zonder je naam erbij — alleen geaggregeerd in het rapport.',
+  startBody:         'We gebruiken deze antwoorden om jouw resultaat te vergelijken met de juiste peergroep. Niets wordt gedeeld onder jouw naam. Alleen anoniem en geaggregeerd in het rapport.',
   startRoleLabel:    'Wat is je hoofdrol?',
   startSeniorityLbl: 'Seniority',
   startIndustryLbl:  'Industrie',
@@ -260,11 +260,11 @@ const NL: LangContent = {
 
   resultsBadge:      'Jouw AI-benchmark resultaat',
   resultsArchTitle:  'Je archetype',
-  resultsArchBody:   'Op basis van je antwoorden val je in dit profiel. Het zegt iets over je manier van werken — niet je waarde als professional.',
+  resultsArchBody:   'Op basis van je antwoorden val je in dit profiel. Het zegt iets over je manier van werken, niet over je waarde als professional.',
   resultsScoreLbl:   'AI Fluency Index',
   resultsDimsTitle:  'Score per dimensie',
   resultsCompareTtl: 'Hoe je je verhoudt',
-  resultsCompareBody:'Per-vraag vergelijking met je peergroep ontgrendelt zodra we minstens 30 respondenten in jouw segment hebben. Op dit moment ben je één van de eersten — bedankt.',
+  resultsCompareBody:'Per-vraag vergelijking met je peergroep ontgrendelt zodra we minstens 30 respondenten in jouw segment hebben. Op dit moment ben je één van de eersten. Bedankt daarvoor.',
   resultsShareTitle: 'Help je vakgenoten ook verder',
   resultsShareBody:  'Hoe meer mensen meedoen, hoe scherper het beeld wordt. Deel de benchmark met collega\'s die ook benieuwd zijn waar ze staan.',
   resultsCtaCalendly:'Praat 1-op-1 met Mark over je resultaat',
@@ -380,7 +380,7 @@ const SHARED_CORE: Question[] = [
   {
     id: 'q5', type: 'multiselect', dimension: 'workflow',
     text: 'Hoe zit AI in je workflow?',
-    hint: 'Meerdere antwoorden mogelijk — kies wat geldt.',
+    hint: 'Meerdere antwoorden mogelijk. Kies wat geldt.',
     options: [
       { id: 'standalone', label: 'Losstaande tools / browser-tabs',    weight: 1 },
       { id: 'integrated', label: 'Geïntegreerd in CRM / CMS / inbox',  weight: 2 },
@@ -435,7 +435,7 @@ const SHARED_CORE: Question[] = [
   {
     id: 'q10', type: 'matrix', dimension: 'skill',
     text: 'Hoe vaardig was je met AI op deze momenten?',
-    hint: 'Geef per moment je inschatting — dat laat zien hoe je trajectorie eruitziet.',
+    hint: 'Geef per moment je inschatting. Zo zien we hoe je trajectorie loopt.',
     rows: [
       { id: 'm12', label: '12 maanden geleden' },
       { id: 'm6',  label: '6 maanden geleden'  },
@@ -515,7 +515,7 @@ const ROLE_MARKETING: Question[] = [
   {
     id: 'q16m', type: 'frequency', dimension: 'workflow',
     text: 'Welk deel van je creatieve werk begint nu met AI?',
-    hint: 'Drafts, ideeën, eerste versies — voordat jij of je team het verder uitwerkt.',
+    hint: 'Denk aan drafts, ideeën en eerste versies, voordat jij of je team het verder uitwerkt.',
     options: FREQ_PCT,
   },
 ]

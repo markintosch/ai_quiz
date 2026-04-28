@@ -34,11 +34,11 @@ const supabase = createClient(
 )
 
 export const metadata = {
-  title:       'State of AI in Marketing & Sales — research dashboard | Mark de Kock',
-  description: 'Wekelijks geüpdatet onderzoeksdashboard: hoe marketing- en sales-professionals AI gebruiken, welke tools, welke tijdwinst, welke blokkades. Gratis te bekijken; doe zelf de benchmark in 6 minuten.',
+  title:       'State of AI in Marketing & Sales · research dashboard | Mark de Kock',
+  description: 'Wekelijks geüpdatet onderzoeksdashboard. Hoe marketing- en sales-professionals AI gebruiken, welke tools, welke tijdwinst, welke blokkades. Gratis te bekijken. Doe zelf de benchmark in 6 minuten.',
   alternates:  { canonical: '/ai_benchmark/dashboard' },
   openGraph: {
-    title: 'State of AI in Marketing & Sales — wekelijks geüpdatet',
+    title: 'State of AI in Marketing & Sales, wekelijks geüpdatet',
     description: 'Onafhankelijk onderzoek door Mark de Kock. Heatmap, radar, archetype-verdeling, blokkades.',
     type: 'website',
   },
@@ -108,7 +108,7 @@ export default async function DashboardPage({
             State of AI in <span style={{ color: ACCENT }}>marketing &amp; sales</span>
           </h1>
           <p style={{ fontSize: 17, color: BODY, lineHeight: 1.65, maxWidth: 720, marginBottom: 14 }}>
-            Hoe marketing- en sales-professionals in BeNeLux écht met AI werken — welke tools, welke tijdwinst, welke blokkades, welk archetype.
+            Hoe marketing- en sales-professionals in BeNeLux écht met AI werken. Welke tools, welke tijdwinst, welke blokkades, welk archetype.
             Vrij in te zien, geen account nodig. Wil je weten waar je zelf staat?
             <Link href="/ai_benchmark/start" style={{ color: ACCENT, fontWeight: 700, marginLeft: 6 }}>Doe de benchmark in 6 minuten →</Link>
           </p>
@@ -129,7 +129,7 @@ export default async function DashboardPage({
             AI-vaardigheid steeg met <span style={{ color: ACCENT }}>{data.skillCurve.fieldShift > 0 ? '+' : ''}{data.skillCurve.fieldShift.toFixed(1)} niveaus</span> in 12 maanden.
           </p>
           <p style={{ fontSize: 13, color: BODY, marginBottom: 22, lineHeight: 1.6, maxWidth: 720 }}>
-            Per moment terugkijkend (12 / 6 / 3 maanden geleden + nu) — gemeten in zelf-ingeschat ervaringsniveau van Niet gebruikt → Expert.
+            Per moment terugkijkend (12 / 6 / 3 maanden geleden + nu), gemeten in zelf-ingeschat ervaringsniveau van Niet gebruikt tot Expert.
             De dataset is een doorsnee van marketing- en sales-professionals die de benchmark hebben ingevuld.
           </p>
           <SkillCurve curve={data.skillCurve} />

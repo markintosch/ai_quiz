@@ -70,7 +70,7 @@ export function MarketOverview({ data }: { data: DashboardData }) {
     .sort((a, b) => b.gap - a.gap)[0]
 
   const radarTakeaway = biggestDimGap
-    ? `Sales scoort ${biggestDimGap.s} op ${biggestDimGap.d.label.toLowerCase()}, marketing ${biggestDimGap.m} — het grootste verschil tussen rollen.`
+    ? `Sales scoort ${biggestDimGap.s} op ${biggestDimGap.d.label.toLowerCase()}, marketing ${biggestDimGap.m}. Dat is het grootste verschil tussen rollen.`
     : ''
 
   // Archetype distribution as stacked bar
@@ -124,7 +124,7 @@ export function MarketOverview({ data }: { data: DashboardData }) {
       <Card label="Archetype-verdeling" headline={topArch ? `${topArch.emoji} ${topArch.label} is het grootste profiel (${topArch.pct}%).` : 'Archetypes in het veld.'}>
         <StackedBar segments={archSegments} height={32} />
         <Caption>
-          De zes archetypes vatten samen hoe iemand AI gebruikt — niet hoe goed. Een Pragmatist is even waardevol als een Strategist; ze nemen verschillende posities in. Klein aandeel Power Users is normaal; klein aandeel Lagging Builders signaleert dat het veld z'n inhaalslag heeft gemaakt.
+          De zes archetypes laten zien hoe iemand AI gebruikt, niet hoe goed. Een Pragmatist is even waardevol als een Strategist. Ze nemen alleen een andere positie in. Een klein aandeel Power Users is normaal. Een klein aandeel Lagging Builders betekent dat het veld z'n inhaalslag al heeft gemaakt.
         </Caption>
       </Card>
 
@@ -145,7 +145,7 @@ export function MarketOverview({ data }: { data: DashboardData }) {
           ))}
         </div>
         <Caption>
-          De drie meest-genoemde blokkades per rol. Strategie en data-hygiëne komen het vaakst terug — opvallend hoe rolspecifiek het beeld is: sales worstelt met data, marketing met richting, hybride teams met budget en bestuur.
+          De drie meest-genoemde blokkades per rol. Strategie en data-hygiëne komen het vaakst terug. Opvallend hoe rolspecifiek het beeld is: sales worstelt met data, marketing met richting, hybride teams met budget en bestuur.
         </Caption>
       </Card>
 
@@ -157,7 +157,7 @@ export function MarketOverview({ data }: { data: DashboardData }) {
             color={WARM}
           />
           <Caption>
-            Eigen schatting van de respondenten. De meesten zitten tussen 1 en 8 uur per week — daarboven kantelt het van time-saver naar productiviteits-multiplier.
+            Eigen schatting van de respondenten. De meesten zitten tussen 1 en 8 uur per week. Boven die grens gaat het meer over wat je extra doet, en minder over wat je sneller doet.
           </Caption>
         </Card>
 
@@ -166,7 +166,7 @@ export function MarketOverview({ data }: { data: DashboardData }) {
             items={data.topUseCases.map(u => ({ id: u.id, label: u.label, pct: u.pct }))}
           />
           <Caption>
-            De vijf meest-genoemde toepassingen, over alle rollen heen. Schrijven en research domineren — de "agentic" use-cases (proactieve workflows, klantcontact) zijn nog kleiner maar groeien snel.
+            De vijf meest-genoemde toepassingen, over alle rollen heen. Schrijven en research domineren. De agentische toepassingen (proactieve workflows, klantcontact) zijn nog kleiner, maar groeien snel.
           </Caption>
         </Card>
       </div>

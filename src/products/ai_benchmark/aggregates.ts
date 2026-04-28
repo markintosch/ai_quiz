@@ -245,7 +245,7 @@ export function distinctiveInsights(
       kind:  'distinctive',
       emoji: '🦄',
       title: `Slechts ${agg.optionPct[id]}% gebruikt ${optionLabel(id)}`,
-      body:  `Jij wel — dat is een onderscheidende keuze in jouw segment.`,
+      body:  `Jij wel. Dat is een onderscheidende keuze in jouw segment.`,
     })
   }
   void questionId
@@ -265,7 +265,7 @@ export function gapInsights(
   return sortedByHigh.slice(0, max).map(([id, pct]) => ({
     kind:  'gap',
     emoji: '🎯',
-    title: `${pct}% gebruikt ${optionLabel(id)} — jij niet`,
+    title: `${pct}% gebruikt ${optionLabel(id)}. Jij niet.`,
     body:  `Een populaire keuze in jouw segment die op je radar mag.`,
   }))
 }

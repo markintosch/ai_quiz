@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: 'AI-benchmark voor marketing & sales',
     description: 'Vergelijk je werkwijze met vele honderden marketeers en sellers. Persoonlijk dashboard, geen verkooppraat.',
     url:     `${BASE}/ai_benchmark`,
-    siteName:'Mark de Kock — AI-benchmark',
+    siteName:'Mark de Kock · AI-benchmark',
     locale:  'nl_NL',
     type:    'website',
   },
