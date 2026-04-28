@@ -139,7 +139,15 @@ export default async function AiBenchmarkLandingPage({
               color: WARM, background: WARM_LIGHT,
               padding: '5px 14px', borderRadius: 100,
             }}>
-              {t.heroBadge}
+              {t.heroBadge.includes('Mark de Kock') ? (
+                <>
+                  {t.heroBadge.split('Mark de Kock')[0]}
+                  <a href="https://markdekock.com" target="_blank" rel="noopener noreferrer" style={{ color: WARM, textDecoration: 'underline' }}>
+                    Mark de Kock
+                  </a>
+                  {t.heroBadge.split('Mark de Kock')[1]}
+                </>
+              ) : t.heroBadge}
             </span>
             <LiveCounter total={data.totalRespondents} lastWeek={data.usingMock ? 38 : undefined} />
           </div>
@@ -213,7 +221,11 @@ export default async function AiBenchmarkLandingPage({
           <div style={{ marginTop: 28, display: 'flex', alignItems: 'center', gap: 14 }}>
             <div style={{ width: 36, height: 2, background: WARM, flexShrink: 0 }} />
             <div>
-              <p style={{ fontSize: 14, fontWeight: 800, color: INK, margin: 0 }}>{t.quoteAuthor}</p>
+              <p style={{ fontSize: 14, fontWeight: 800, color: INK, margin: 0 }}>
+                <a href="https://markdekock.com" target="_blank" rel="noopener noreferrer" style={{ color: INK, textDecoration: 'underline', textDecorationColor: `${WARM}88`, textDecorationThickness: 2, textUnderlineOffset: 3 }}>
+                  {t.quoteAuthor}
+                </a>
+              </p>
               <p style={{ fontSize: 12, color: BODY, margin: '2px 0 0' }}>{t.quoteRole}</p>
             </div>
           </div>
@@ -434,7 +446,14 @@ export default async function AiBenchmarkLandingPage({
           flexWrap: 'wrap', gap: 12,
         }}>
           <span style={{ color: '#fff', fontWeight: 800, fontSize: 14, letterSpacing: '-0.01em' }}>
-            {t.footerLine}
+            Gehost door{' '}
+            <a href="https://markdekock.com" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'underline', textDecorationColor: `${WARM}99`, textUnderlineOffset: 3 }}>
+              Mark de Kock
+            </a>
+            {' · '}
+            <a href="https://markdekock.com" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 600, textDecoration: 'none' }}>
+              markdekock.com
+            </a>
           </span>
           <div style={{ display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap' }}>
             <Link href={dashboardHref} style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontWeight: 600 }}>

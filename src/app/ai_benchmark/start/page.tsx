@@ -47,7 +47,7 @@ function StartInner() {
   const [industry,    setIndustry]     = useState('')
   const [companySize, setCompanySize]  = useState('')
   const [region,      setRegion]       = useState('')
-  const [consent,     setConsent]      = useState(true)
+  const [consent,     setConsent]      = useState(false)
 
   const [step,        setStep]         = useState<Step>('intro')
   const [answers,     setAnswers]      = useState<Answers>({})
@@ -242,17 +242,31 @@ function StartInner() {
             </Field>
           </Row>
 
-          <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginTop: 6, cursor: 'pointer' }}>
-            <input
-              type="checkbox"
-              checked={consent}
-              onChange={e => setConsent(e.target.checked)}
-              style={{ marginTop: 3 }}
-            />
-            <span style={{ fontSize: 13, color: BODY, lineHeight: 1.55 }}>
-              {t.startConsentLbl}
-            </span>
-          </label>
+          <div style={{ marginTop: 6, padding: '14px 16px', background: LIGHT, borderRadius: 8, border: `1px solid ${BORDER}` }}>
+            <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={consent}
+                onChange={e => setConsent(e.target.checked)}
+                style={{ marginTop: 3, flexShrink: 0 }}
+              />
+              <span style={{ fontSize: 13, color: BODY, lineHeight: 1.55 }}>
+                {t.startConsentLbl}
+              </span>
+            </label>
+            <p style={{ fontSize: 11, color: MUTED, marginTop: 10, lineHeight: 1.55 }}>
+              Je e-mailadres is verplicht omdat we je dashboard via een unieke link delen.
+              Het wordt nooit verkocht of gedeeld met derden. Je kunt op elk moment je gegevens
+              laten verwijderen via{' '}
+              <a href="mailto:mark@brandpwrdmedia.com" style={{ color: ACCENT, textDecoration: 'underline' }}>
+                mark@brandpwrdmedia.com
+              </a>
+              . Lees ook ons{' '}
+              <a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: ACCENT, textDecoration: 'underline' }}>
+                privacybeleid
+              </a>.
+            </p>
+          </div>
 
           <button
             type="submit"
