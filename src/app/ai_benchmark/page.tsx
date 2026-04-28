@@ -218,8 +218,8 @@ export default async function AiBenchmarkLandingPage({
             </p>
           </div>
 
-          <div style={{ marginTop: 28, display: 'flex', alignItems: 'center', gap: 14 }}>
-            <div style={{ width: 36, height: 2, background: WARM, flexShrink: 0 }} />
+          <div style={{ marginTop: 28, display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+            <div style={{ width: 36, height: 2, background: WARM, flexShrink: 0, marginTop: 8 }} />
             <div>
               <p style={{ fontSize: 14, fontWeight: 800, color: INK, margin: 0 }}>
                 <a href="https://markdekock.com" target="_blank" rel="noopener noreferrer" style={{ color: INK, textDecoration: 'underline', textDecorationColor: `${WARM}88`, textDecorationThickness: 2, textUnderlineOffset: 3 }}>
@@ -227,6 +227,9 @@ export default async function AiBenchmarkLandingPage({
                 </a>
               </p>
               <p style={{ fontSize: 12, color: BODY, margin: '2px 0 0' }}>{t.quoteRole}</p>
+              <p style={{ fontSize: 12, color: BODY, margin: '6px 0 0', lineHeight: 1.5, fontStyle: 'italic', maxWidth: 460 }}>
+                {t.quoteRoleSub}
+              </p>
             </div>
           </div>
         </div>

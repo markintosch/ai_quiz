@@ -506,18 +506,6 @@ export default async function ResultsPage({
               shareUrl={shareUrl}
               ogUrl={ogUrl}
             />
-            <a
-              href={CALENDLY_INTAKE}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                background: 'transparent', color: '#fff', fontWeight: 700, fontSize: 14,
-                padding: '12px 22px', borderRadius: 6, textDecoration: 'none',
-                border: `1.5px solid ${WARM}`,
-              }}
-            >
-              {t.resultsCtaCalendly} →
-            </a>
             <Link
               href={`/ai_benchmark?lang=${lang}`}
               style={{
@@ -528,6 +516,41 @@ export default async function ResultsPage({
             >
               ← Terug naar de benchmark
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Project-acquisition CTA (companies + agencies) ── */}
+      <section style={{ background: '#fff', padding: '64px 24px', borderTop: `1px solid ${BORDER}` }}>
+        <div style={{ maxWidth: 760, margin: '0 auto' }}>
+          <div style={{
+            background: WARM_LIGHT, border: `1px solid ${WARM}55`, borderRadius: 14,
+            padding: '32px 32px',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 12 }}>
+              <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', color: WARM }}>
+                {t.projectCtaLabel}
+              </span>
+            </div>
+            <h2 style={{ fontSize: 'clamp(22px, 3vw, 30px)', fontWeight: 900, color: INK, lineHeight: 1.2, letterSpacing: '-0.015em', marginBottom: 14 }}>
+              {t.projectCtaHeadline}
+            </h2>
+            <p style={{ fontSize: 16, color: BODY, lineHeight: 1.65, marginBottom: 22 }}>
+              {t.projectCtaBody}
+            </p>
+            <a
+              href={CALENDLY_INTAKE}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-block',
+                background: ACCENT, color: '#fff', fontWeight: 700, fontSize: 15,
+                padding: '13px 26px', borderRadius: 8, textDecoration: 'none',
+                boxShadow: `0 4px 20px ${ACCENT}33`,
+              }}
+            >
+              {t.projectCtaButton}
+            </a>
           </div>
         </div>
       </section>

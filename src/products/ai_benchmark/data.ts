@@ -163,6 +163,13 @@ export type LangContent = {
 
   // LiveCounter — fuzzy text shown when N too low to claim a number
   liveVagueLabel: string
+
+  // Project-acquisition CTA (companies + agencies looking to put AI to work)
+  projectCtaLabel:    string  // small uppercase label
+  projectCtaHeadline: string
+  projectCtaBody:     string
+  projectCtaButton:   string
+  quoteRoleSub:       string  // sublabel under the quote attribution
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -290,12 +297,18 @@ const NL: LangContent = {
   resultsCompareBody:'Per-vraag vergelijking met je peergroep ontgrendelt zodra we minstens 30 respondenten in jouw segment hebben. Op dit moment ben je één van de eersten. Bedankt daarvoor.',
   resultsShareTitle: 'Help je vakgenoten ook verder',
   resultsShareBody:  "Hoe meer mensen meedoen, hoe scherper het beeld wordt. Deel de benchmark met collega's die ook benieuwd zijn waar ze staan.",
-  resultsCtaCalendly:'Praat 1-op-1 met Mark over je resultaat',
+  resultsCtaCalendly:'Toepassen in een project? Plan een gesprek met Mark →',
 
   footerLine: 'Gehost door Mark de Kock · markdekock.com',
   reportLine: 'Aggregaat-rapport: State of AI in Marketing & Sales 2026',
 
   liveVagueLabel: 'Groeiende groep professionals',
+
+  projectCtaLabel:    'Werk samen',
+  projectCtaHeadline: 'Wil je dit zelf inzetten in jouw bedrijf of bureau?',
+  projectCtaBody:     'Mark werkt projectmatig aan AI-implementaties in marketing & sales. Bij bedrijven die hun eigen team willen versnellen en bij bureaus die hetzelfde willen doen voor klanten.',
+  projectCtaButton:   'Plan een verkenningsgesprek →',
+  quoteRoleSub:       'Werkt met bedrijven en bureaus aan AI-projecten in marketing & sales',
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -423,12 +436,18 @@ const EN: LangContent = {
   resultsCompareBody:'Per-question comparison with your peer group unlocks once we have at least 30 respondents in your segment. Right now you are one of the first. Thanks for that.',
   resultsShareTitle: 'Help your peers move forward too',
   resultsShareBody:  'The more people take part, the sharper the picture gets. Share the benchmark with colleagues who are curious where they stand too.',
-  resultsCtaCalendly:'Talk 1-on-1 with Mark about your result',
+  resultsCtaCalendly:'Want to put this to work? Schedule a call with Mark →',
 
   footerLine: 'Hosted by Mark de Kock · markdekock.com',
   reportLine: 'Aggregate report: State of AI in Marketing & Sales 2026',
 
   liveVagueLabel: 'Growing group of professionals',
+
+  projectCtaLabel:    'Work together',
+  projectCtaHeadline: 'Want to put this to work in your company or agency?',
+  projectCtaBody:     'Mark works on AI implementation projects in marketing & sales. With in-house teams that want to move faster, and with agencies doing the same for their clients.',
+  projectCtaButton:   'Schedule an intake call →',
+  quoteRoleSub:       'Works with companies and agencies on AI projects in marketing & sales',
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -556,12 +575,18 @@ const FR: LangContent = {
   resultsCompareBody:"La comparaison par question avec ton groupe de pairs se débloque dès que nous avons au moins 30 répondants dans ton segment. Pour l'instant tu es l'un des premiers. Merci pour cela.",
   resultsShareTitle: 'Aide tes pairs à avancer aussi',
   resultsShareBody:  'Plus de personnes participent, plus le portrait devient net. Partage le benchmark avec des collègues curieux de savoir où ils en sont.',
-  resultsCtaCalendly:'Échange en 1-à-1 avec Mark sur ton résultat',
+  resultsCtaCalendly:"Mettre ça en pratique ? Planifie un échange avec Mark →",
 
   footerLine: 'Hébergé par Mark de Kock · markdekock.com',
   reportLine: 'Rapport agrégé : State of AI in Marketing & Sales 2026',
 
   liveVagueLabel: 'Groupe grandissant de professionnels',
+
+  projectCtaLabel:    'Travailler ensemble',
+  projectCtaHeadline: 'Tu veux mettre ça en pratique dans ton entreprise ou ton agence ?',
+  projectCtaBody:     "Mark intervient en mode projet sur des implémentations IA en marketing & vente. Avec des équipes internes qui veulent accélérer, et avec des agences qui font la même chose pour leurs clients.",
+  projectCtaButton:   'Planifier un échange →',
+  quoteRoleSub:       'Intervient pour des entreprises et agences sur des projets IA en marketing & vente',
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -689,12 +714,18 @@ const DE: LangContent = {
   resultsCompareBody:"Der Vergleich pro Frage mit deiner Peer-Gruppe wird freigeschaltet, sobald wir mindestens 30 Befragte in deinem Segment haben. Aktuell bist du einer der Ersten. Danke dafür.",
   resultsShareTitle: 'Hilf deinen Fachkollegen ebenfalls weiter',
   resultsShareBody:  'Je mehr Menschen teilnehmen, desto schärfer wird das Bild. Teile den Benchmark mit Kollegen, die auch wissen wollen, wo sie stehen.',
-  resultsCtaCalendly:'1-zu-1 mit Mark über dein Ergebnis sprechen',
+  resultsCtaCalendly:'In ein Projekt umsetzen? Termin mit Mark planen →',
 
   footerLine: 'Gehostet von Mark de Kock · markdekock.com',
   reportLine: 'Aggregierter Bericht: State of AI in Marketing & Sales 2026',
 
   liveVagueLabel: 'Wachsende Gruppe Professionals',
+
+  projectCtaLabel:    'Zusammenarbeiten',
+  projectCtaHeadline: 'Willst du das in deinem Unternehmen oder deiner Agentur einsetzen?',
+  projectCtaBody:     'Mark arbeitet projektweise an KI-Implementierungen in Marketing & Sales. Mit internen Teams, die schneller werden wollen, und mit Agenturen, die dasselbe für ihre Kunden tun.',
+  projectCtaButton:   'Termin vereinbaren →',
+  quoteRoleSub:       'Arbeitet mit Unternehmen und Agenturen an KI-Projekten in Marketing & Sales',
 }
 
 export const CONTENT: Record<Lang, LangContent> = { nl: NL, en: EN, fr: FR, de: DE }

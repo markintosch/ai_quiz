@@ -156,17 +156,32 @@ export default async function DashboardPage({
             6 minuten · 18 vragen · persoonlijk dashboard direct na invullen.
             Jouw antwoorden bouwen mee aan dit beeld voor de volgende lichting.
           </p>
-          <Link
-            href="/ai_benchmark/start"
-            style={{
-              display: 'inline-block',
-              background: ACCENT, color: '#fff', fontWeight: 700, fontSize: 16,
-              padding: '14px 32px', borderRadius: 8, textDecoration: 'none',
-              boxShadow: `0 4px 20px ${ACCENT}55`,
-            }}
-          >
-            Start de benchmark →
-          </Link>
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link
+              href="/ai_benchmark/start"
+              style={{
+                display: 'inline-block',
+                background: ACCENT, color: '#fff', fontWeight: 700, fontSize: 16,
+                padding: '14px 32px', borderRadius: 8, textDecoration: 'none',
+                boxShadow: `0 4px 20px ${ACCENT}55`,
+              }}
+            >
+              Start de benchmark →
+            </Link>
+            <a
+              href="https://calendly.com/markiesbpm/ai-intro-meeting-mark-de-kock"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-block',
+                background: 'transparent', color: '#fff', fontWeight: 700, fontSize: 16,
+                padding: '14px 28px', borderRadius: 8, textDecoration: 'none',
+                border: `1.5px solid ${WARM}`,
+              }}
+            >
+              Of werk samen aan een AI-project →
+            </a>
+          </div>
         </div>
       </section>
 
