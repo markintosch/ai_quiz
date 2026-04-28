@@ -181,7 +181,7 @@ const NL: LangContent = {
   quoteLabel:  'Waarom ik dit doe',
   quoteBody:   'Ik geloof in de kracht van mijn vakgenoten die mij de weg wijzen naar slimmere keuzes in het gebruik van AI-tools. Om die inzichten op te halen en gelijk te delen met de mensen die er zelf aan bijdragen, lijkt mij de beste manier om iedereen verder te helpen in één van de snelst innoverende fases van mijn werkend bestaan.',
   quoteAuthor: 'Mark de Kock',
-  quoteRole:   'Mentor · markdekock.com',
+  quoteRole:   'Marketing consultant · markdekock.com',
 
   proofN:        '{n} marketeers en sellers hebben al meegedaan',
   proofSubtitle: 'Jouw antwoorden bouwen mee aan het grootste onafhankelijke beeld van AI-gebruik in BeNeLux.',
@@ -311,7 +311,7 @@ const EN: LangContent = {
   quoteLabel:  'Why I do this',
   quoteBody:   'I believe in the strength of my peers showing me smarter choices for using AI tools. Pulling those insights together and sharing them straight back with the people who contributed seems to me the best way to help everyone forward in one of the fastest-innovating phases of my working life.',
   quoteAuthor: 'Mark de Kock',
-  quoteRole:   'Mentor · markdekock.com',
+  quoteRole:   'Marketing consultant · markdekock.com',
 
   proofN:        '{n} marketers and sellers have already taken part',
   proofSubtitle: "Your answers help build the largest independent picture of AI use in BeNeLux.",
@@ -441,7 +441,7 @@ const FR: LangContent = {
   quoteLabel:  'Pourquoi je fais ça',
   quoteBody:   "Je crois en la force de mes pairs pour me montrer des choix plus intelligents dans l'utilisation des outils IA. Recueillir ces insights et les partager directement avec les personnes qui y contribuent me semble la meilleure façon d'aider tout le monde à avancer dans l'une des phases d'innovation les plus rapides de ma vie professionnelle.",
   quoteAuthor: 'Mark de Kock',
-  quoteRole:   'Mentor · markdekock.com',
+  quoteRole:   'Consultant marketing · markdekock.com',
 
   proofN:        '{n} marketeurs et commerciaux ont déjà participé',
   proofSubtitle: "Tes réponses contribuent à la plus grande image indépendante de l'usage de l'IA au BeNeLux.",
@@ -571,7 +571,7 @@ const DE: LangContent = {
   quoteLabel:  'Warum ich das mache',
   quoteBody:   "Ich glaube an die Stärke meiner Fachkollegen, die mir den Weg zu klügeren Entscheidungen bei der Nutzung von KI-Tools zeigen. Diese Erkenntnisse einzusammeln und direkt mit den Menschen zu teilen, die selbst dazu beitragen, scheint mir der beste Weg, um alle in einer der am schnellsten innovierenden Phasen meines Berufslebens weiterzubringen.",
   quoteAuthor: 'Mark de Kock',
-  quoteRole:   'Mentor · markdekock.com',
+  quoteRole:   'Marketing-Berater · markdekock.com',
 
   proofN:        '{n} Marketeers und Seller haben bereits teilgenommen',
   proofSubtitle: 'Deine Antworten tragen zum größten unabhängigen Bild der KI-Nutzung in BeNeLux bei.',
