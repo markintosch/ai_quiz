@@ -2,7 +2,8 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@supabase/supabase-js'
-import { getContent, type Lang } from '@/products/ai_benchmark/data'
+import { getContent, getQuestions, type Lang, type Role, type Question } from '@/products/ai_benchmark/data'
+import { computeAggregates, mockAggregates, userSelectedIds, type QuestionAggregate } from '@/products/ai_benchmark/aggregates'
 
 export const dynamic = 'force-dynamic'
 
@@ -30,10 +31,26 @@ interface ResultRow {
   email:            string
   lang:             string
   role:             string
+  industry:         string | null
+  company_size:     string | null
+  region:           string | null
   archetype:        string
   total_score:      number
   dimension_scores: Record<string, number>
+  answers:          Record<string, unknown>
   created_at:       string
+}
+
+const COMPARISON_THRESHOLD = 30
+
+type Segment = 'all' | 'role' | 'industry' | 'size' | 'region'
+
+const SEGMENT_LABELS: Record<Segment, string> = {
+  all:      'Iedereen',
+  role:     'Mijn rol',
+  industry: 'Mijn industrie',
+  size:     'Mijn bedrijfsgrootte',
+  region:   'Mijn regio',
 }
 
 export default async function ResultsPage({
@@ -41,18 +58,53 @@ export default async function ResultsPage({
   searchParams,
 }: {
   params:        { id: string }
-  searchParams: { lang?: string }
+  searchParams: { lang?: string; preview?: string; segment?: string }
 }) {
-  const lang = (['nl', 'en', 'fr', 'de'].includes(searchParams.lang || '') ? searchParams.lang : 'nl') as Lang
-  const t    = getContent(lang)
+  const lang    = (['nl', 'en', 'fr', 'de'].includes(searchParams.lang || '') ? searchParams.lang : 'nl') as Lang
+  const t       = getContent(lang)
+  const preview = searchParams.preview === '1'
+  const segment = (['all', 'role', 'industry', 'size', 'region'].includes(searchParams.segment || '')
+    ? searchParams.segment
+    : 'all') as Segment
 
   const { data, error } = await supabase
     .from('ai_benchmark_responses')
-    .select('id, name, email, lang, role, archetype, total_score, dimension_scores, created_at')
+    .select('id, name, email, lang, role, industry, company_size, region, archetype, total_score, dimension_scores, answers, created_at')
     .eq('id', params.id)
     .single() as { data: ResultRow | null; error: unknown }
 
   if (error || !data) return notFound()
+
+  // ── Peer aggregates: real (filtered by segment) or mocked when ?preview=1 ─
+  const allQuestions   = getQuestions(data.role as Role)
+  const compareableQs  = allQuestions.filter(q => q.type !== 'matrix')
+
+  let aggregates: Record<string, QuestionAggregate>
+  let segmentN  = 0
+  let usingMock = false
+
+  if (preview) {
+    aggregates = mockAggregates(compareableQs, /*seed*/ 42, /*N*/ 247)
+    segmentN   = 247
+    usingMock  = true
+  } else {
+    let q = supabase
+      .from('ai_benchmark_responses')
+      .select('role, answers, industry, company_size, region')
+      .neq('id', data.id) // exclude the respondent themselves
+      .limit(2000)
+
+    if (segment === 'role'     && data.role)         q = q.eq('role',         data.role)
+    if (segment === 'industry' && data.industry)     q = q.eq('industry',     data.industry)
+    if (segment === 'size'     && data.company_size) q = q.eq('company_size', data.company_size)
+    if (segment === 'region'   && data.region)       q = q.eq('region',       data.region)
+
+    const { data: rows } = await q as unknown as { data: { role: string; answers: Record<string, unknown> }[] | null }
+    segmentN   = rows?.length ?? 0
+    aggregates = computeAggregates(rows ?? [], compareableQs)
+  }
+
+  const showComparison = preview || segmentN >= COMPARISON_THRESHOLD
 
   const archetype = t.ARCHETYPES.find(a => a.id === data.archetype) || t.ARCHETYPES[0]
 
@@ -161,17 +213,83 @@ export default async function ResultsPage({
         </div>
       </section>
 
-      {/* ── Comparison placeholder ── */}
-      <section style={{ background: WARM_LIGHT, padding: '48px 24px', borderTop: `1px solid ${WARM}33` }}>
-        <div style={{ maxWidth: 760, margin: '0 auto' }}>
-          <h2 style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: WARM, marginBottom: 6 }}>
-            {t.resultsCompareTtl}
-          </h2>
-          <p style={{ fontSize: 18, color: INK, lineHeight: 1.6, fontWeight: 600, marginBottom: 0 }}>
-            {t.resultsCompareBody}
-          </p>
-        </div>
-      </section>
+      {/* ── Comparison ── */}
+      {showComparison ? (
+        <section style={{ background: LIGHT, padding: '56px 24px', borderTop: `1px solid ${BORDER}` }}>
+          <div style={{ maxWidth: 880, margin: '0 auto' }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 6 }}>
+              <h2 style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: ACCENT }}>
+                {t.resultsCompareTtl}
+              </h2>
+              <span style={{ fontSize: 12, color: MUTED }}>
+                Op basis van <strong style={{ color: INK }}>{segmentN.toLocaleString('nl-NL')}</strong> respondenten
+                {usingMock && <span style={{ marginLeft: 6, color: WARM, fontWeight: 700 }}>· preview-data</span>}
+              </span>
+            </div>
+            <p style={{ fontSize: 22, fontWeight: 800, color: INK, marginBottom: 20, letterSpacing: '-0.01em' }}>
+              Hoe je je verhoudt — per vraag.
+            </p>
+
+            {/* Segment filter */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 28, fontSize: 13 }}>
+              <span style={{ color: MUTED }}>Vergelijk met:</span>
+              {(['all', 'role', 'industry', 'size', 'region'] as Segment[]).map(seg => {
+                const active = seg === segment
+                const href = `/ai_benchmark/results/${data.id}?lang=${lang}${preview ? '&preview=1' : ''}${seg === 'all' ? '' : `&segment=${seg}`}`
+                return (
+                  <Link
+                    key={seg}
+                    href={href}
+                    style={{
+                      padding: '5px 12px', borderRadius: 100, fontSize: 12, fontWeight: 700,
+                      border: `1.5px solid ${active ? ACCENT : BORDER}`,
+                      background: active ? `${ACCENT}0d` : '#fff',
+                      color: active ? ACCENT : BODY,
+                      textDecoration: 'none',
+                    }}
+                  >
+                    {SEGMENT_LABELS[seg]}
+                  </Link>
+                )
+              })}
+            </div>
+
+            {/* Per-question comparison cards */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+              {compareableQs.map(q => {
+                const agg = aggregates[q.id]
+                if (!agg || agg.totalRespondents === 0) return null
+                const userIds = userSelectedIds(data.answers?.[q.id])
+
+                return (
+                  <ComparisonCard
+                    key={q.id}
+                    label={q.id.toUpperCase()}
+                    q={q}
+                    agg={agg}
+                    userIds={userIds}
+                  />
+                )
+              })}
+            </div>
+          </div>
+        </section>
+      ) : (
+        <section style={{ background: WARM_LIGHT, padding: '48px 24px', borderTop: `1px solid ${WARM}33` }}>
+          <div style={{ maxWidth: 760, margin: '0 auto' }}>
+            <h2 style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: WARM, marginBottom: 6 }}>
+              {t.resultsCompareTtl}
+            </h2>
+            <p style={{ fontSize: 18, color: INK, lineHeight: 1.6, fontWeight: 600, marginBottom: 8 }}>
+              {t.resultsCompareBody}
+            </p>
+            <p style={{ fontSize: 13, color: BODY, marginTop: 12 }}>
+              <span style={{ color: WARM, fontWeight: 700 }}>{segmentN}</span> / {COMPARISON_THRESHOLD} respondenten in jouw segment.
+              Zodra de drempel is bereikt, ontgrendelt deze sectie automatisch.
+            </p>
+          </div>
+        </section>
+      )}
 
       {/* ── Share + Calendly ── */}
       <section style={{ background: INK, padding: '56px 24px', color: '#fff' }}>
@@ -219,6 +337,78 @@ export default async function ResultsPage({
           </p>
         </div>
       </footer>
+    </div>
+  )
+}
+
+// ── Per-question comparison card ─────────────────────────────────────────────
+function ComparisonCard({ label, q, agg, userIds }: {
+  label:   string
+  q:       Question
+  agg:     QuestionAggregate
+  userIds: string[]
+}) {
+  // Sort options by adoption % descending so the headline reads top-down
+  const sortedOptions = [...q.options].sort((a, b) =>
+    (agg.optionPct[b.id] ?? 0) - (agg.optionPct[a.id] ?? 0)
+  )
+  const userPicked = (id: string) => userIds.includes(id)
+
+  return (
+    <div style={{ background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 12, padding: '20px 22px' }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 4 }}>
+        <span style={{ fontSize: 11, fontWeight: 800, color: ACCENT, letterSpacing: '0.06em' }}>
+          {label}
+        </span>
+        <span style={{ fontSize: 11, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+          {q.dimension}
+        </span>
+      </div>
+
+      <p style={{ fontSize: 15, fontWeight: 700, color: INK, marginBottom: 14, lineHeight: 1.4 }}>
+        {q.text}
+      </p>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {sortedOptions.map(opt => {
+          const pct      = agg.optionPct[opt.id] ?? 0
+          const selected = userPicked(opt.id)
+          const barColor = selected ? ACCENT : '#CBD5E1'
+          const labelCol = selected ? INK    : BODY
+          return (
+            <div key={opt.id} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div style={{
+                width: 18, height: 18, flexShrink: 0,
+                borderRadius: 4,
+                border: `2px solid ${selected ? ACCENT : BORDER}`,
+                background: selected ? ACCENT : '#fff',
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                {selected && <span style={{ color: '#fff', fontSize: 10, lineHeight: 1, fontWeight: 800 }}>✓</span>}
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 4, gap: 8 }}>
+                  <span style={{ fontSize: 13, color: labelCol, fontWeight: selected ? 700 : 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {opt.label}
+                  </span>
+                  <span style={{ fontSize: 13, color: selected ? ACCENT : MUTED, fontWeight: 800, flexShrink: 0 }}>
+                    {pct}%
+                  </span>
+                </div>
+                <div style={{ height: 6, background: '#F1F5F9', borderRadius: 100, overflow: 'hidden' }}>
+                  <div style={{ height: 6, width: `${pct}%`, background: barColor, borderRadius: 100, transition: 'width 0.5s ease-out' }} />
+                </div>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      {userIds.length === 0 && (
+        <p style={{ marginTop: 10, fontSize: 11, color: MUTED, fontStyle: 'italic' }}>
+          (Geen antwoord van jou op deze vraag.)
+        </p>
+      )}
     </div>
   )
 }
