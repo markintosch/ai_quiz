@@ -4,6 +4,7 @@
 // share buttons (LinkedIn / X / WhatsApp / Mail), and copy-link.
 
 import { useEffect, useState } from 'react'
+import { trackBenchEvent } from './Tracker'
 
 const INK    = '#0F172A'
 const ACCENT = '#1D4ED8'
@@ -60,7 +61,7 @@ export function ShareCard({
     <>
       {/* Trigger button */}
       <button
-        onClick={() => setOpen(true)}
+        onClick={() => { trackBenchEvent('share_opened', { meta: { resultId } }); setOpen(true) }}
         style={{
           background: ACCENT, color: '#fff', fontWeight: 700, fontSize: 14,
           padding: '12px 22px', borderRadius: 8, border: 'none',
@@ -127,10 +128,10 @@ export function ShareCard({
 
             {/* Social buttons */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 8 }}>
-              <ShareBtn href={links.linkedin} bg="#0A66C2"  label="LinkedIn"  icon="in" />
-              <ShareBtn href={links.x}        bg="#000"     label="X"         icon="X" />
-              <ShareBtn href={links.whatsapp} bg="#25D366"  label="WhatsApp"  icon="✆" />
-              <ShareBtn href={links.mail}     bg={BODY}     label="E-mail"    icon="✉" />
+              <ShareBtn href={links.linkedin} bg="#0A66C2"  label="LinkedIn"  icon="in" platform="linkedin" />
+              <ShareBtn href={links.x}        bg="#000"     label="X"         icon="X"  platform="x"        />
+              <ShareBtn href={links.whatsapp} bg="#25D366"  label="WhatsApp"  icon="✆"  platform="whatsapp" />
+              <ShareBtn href={links.mail}     bg={BODY}     label="E-mail"    icon="✉"  platform="mail"     />
             </div>
 
             <button
@@ -164,12 +165,13 @@ export function ShareCard({
   )
 }
 
-function ShareBtn({ href, bg, label, icon }: { href: string; bg: string; label: string; icon: string }) {
+function ShareBtn({ href, bg, label, icon, platform }: { href: string; bg: string; label: string; icon: string; platform: string }) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={() => trackBenchEvent('share_clicked', { meta: { platform } })}
       style={{
         background: bg, color: '#fff', fontWeight: 700, fontSize: 13,
         padding: '11px 12px', borderRadius: 8, textDecoration: 'none',

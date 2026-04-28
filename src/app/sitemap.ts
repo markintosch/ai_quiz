@@ -18,6 +18,12 @@ const ASSESSMENT_PATHS = [
   { path: '/a/extended', priority: 0.6, changeFrequency: 'monthly' as const }, // full assessment
 ]
 
+// ── AI-benchmark (standalone, own /lang query toggle, NOT locale-prefixed) ───
+const AI_BENCHMARK_PAGES = [
+  { path: '/ai_benchmark',           priority: 0.9, changeFrequency: 'weekly' as const }, // landing
+  { path: '/ai_benchmark/dashboard', priority: 0.9, changeFrequency: 'weekly' as const }, // public dashboard
+]
+
 // ── Legal / utility ───────────────────────────────────────────────────────────
 const UTILITY_PAGES = [
   { path: '/privacy',     priority: 0.3, changeFrequency: 'yearly' as const },
@@ -98,6 +104,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
       })
     }
+  }
+
+  // AI-benchmark — standalone product, internal lang toggle (no locale prefix)
+  for (const { path, priority, changeFrequency } of AI_BENCHMARK_PAGES) {
+    entries.push({
+      url:             `${BASE_URL}${path}`,
+      lastModified:    new Date(),
+      changeFrequency,
+      priority,
+      alternates: {
+        languages: {
+          'nl':        `${BASE_URL}${path}?lang=nl`,
+          'en':        `${BASE_URL}${path}?lang=en`,
+          'fr':        `${BASE_URL}${path}?lang=fr`,
+          'de':        `${BASE_URL}${path}?lang=de`,
+          'x-default': `${BASE_URL}${path}?lang=nl`,
+        },
+      },
+    })
   }
 
   // The Crew picker (language chooser at /thecrew/)

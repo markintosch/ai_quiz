@@ -1,11 +1,12 @@
 'use client'
 
-import { Suspense, useMemo, useState } from 'react'
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
   getContent, getQuestions, type Lang, type Role, type Question,
 } from '@/products/ai_benchmark/data'
+import { trackBenchEvent } from '@/components/ai_benchmark/Tracker'
 
 // ── Mentor brand tokens ──────────────────────────────────────────────────────
 const INK        = '#0F172A'
@@ -52,6 +53,25 @@ function StartInner() {
   const [answers,     setAnswers]      = useState<Answers>({})
   const [submitting,  setSubmitting]   = useState(false)
   const [error,       setError]        = useState<string | null>(null)
+
+  // Funnel tracking
+  const introMounted = useRef(false)
+  useEffect(() => {
+    if (introMounted.current) return
+    introMounted.current = true
+    trackBenchEvent('intro_started')
+  }, [])
+  const trackedQs = useRef<Set<string>>(new Set())
+  useEffect(() => {
+    if (step !== 'questions') return
+    for (const [qid, val] of Object.entries(answers)) {
+      const filled = Array.isArray(val) ? val.length > 0 : !!val
+      if (filled && !trackedQs.current.has(qid)) {
+        trackedQs.current.add(qid)
+        trackBenchEvent('question_answered', { question_id: qid, role: role || undefined })
+      }
+    }
+  }, [answers, step, role])
 
   const switchLang = (key: Lang) => router.replace(`/ai_benchmark/start?lang=${key}`)
 
@@ -121,6 +141,7 @@ function StartInner() {
   async function handleSubmit() {
     if (submitting) return
     setSubmitting(true); setError(null)
+    trackBenchEvent('submit_attempt', { role: role || undefined })
     try {
       const res = await fetch('/api/ai_benchmark/submit', {
         method:  'POST',
@@ -132,8 +153,10 @@ function StartInner() {
       })
       const json = await res.json()
       if (!res.ok || !json?.id) throw new Error(json?.error || 'Submit failed')
+      trackBenchEvent('submit_success', { role: role || undefined, meta: { archetype: json.archetype, score: json.totalScore } })
       router.push(`/ai_benchmark/results/${json.id}?lang=${lang}`)
     } catch (e) {
+      trackBenchEvent('submit_error')
       setError(e instanceof Error ? e.message : 'Submit failed')
       setSubmitting(false)
     }
@@ -159,7 +182,13 @@ function StartInner() {
         </p>
 
         <form
-          onSubmit={e => { e.preventDefault(); if (introValid) setStep('questions') }}
+          onSubmit={e => {
+            e.preventDefault()
+            if (introValid) {
+              trackBenchEvent('intro_completed', { role: role || undefined })
+              setStep('questions')
+            }
+          }}
           style={{ background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 12, padding: '24px 24px' }}
         >
           {/* Role pills */}

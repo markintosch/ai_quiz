@@ -12,6 +12,7 @@ import {
 import { LangPills }   from '@/components/ai_benchmark/LangPills'
 import { LiveCounter } from '@/components/ai_benchmark/LiveCounter'
 import { SkillCurve }  from '@/components/ai_benchmark/SkillCurve'
+import { Tracker }     from '@/components/ai_benchmark/Tracker'
 
 // Refresh aggregate data every hour in production.
 export const revalidate = 3600
@@ -82,6 +83,7 @@ export default async function AiBenchmarkLandingPage({
 
   return (
     <div style={{ minHeight: '100vh', background: '#fff', color: INK, fontFamily: FONT }}>
+      <Tracker event="page_view" />
 
       {/* ── Nav ─────────────────────────────────────────────────────────── */}
       <nav style={{

@@ -13,6 +13,7 @@ import { InsightStrip }   from '@/components/ai_benchmark/InsightStrip'
 import { LiveCounter }    from '@/components/ai_benchmark/LiveCounter'
 import { ShareCard }      from '@/components/ai_benchmark/ShareCard'
 import { MarketOverview } from '@/components/ai_benchmark/MarketOverview'
+import { Tracker }        from '@/components/ai_benchmark/Tracker'
 import {
   computePublicDashboard, mockPublicDashboard, type DashboardData,
 } from '@/products/ai_benchmark/public_dashboard'
@@ -244,6 +245,7 @@ export default async function ResultsPage({
 
   return (
     <div style={{ minHeight: '100vh', background: '#fff', color: INK, fontFamily: FONT, display: 'flex', flexDirection: 'column' }}>
+      <Tracker event="results_viewed" role={data.role} meta={{ archetype: data.archetype, score: data.total_score }} />
 
       {/* ── Nav ── */}
       <nav style={{ background: '#fff', borderBottom: `1px solid ${BORDER}` }}>

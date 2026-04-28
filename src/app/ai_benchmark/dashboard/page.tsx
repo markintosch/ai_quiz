@@ -11,6 +11,7 @@ import {
 import { SkillCurve }     from '@/components/ai_benchmark/SkillCurve'
 import { MarketOverview } from '@/components/ai_benchmark/MarketOverview'
 import { LiveCounter }    from '@/components/ai_benchmark/LiveCounter'
+import { Tracker }        from '@/components/ai_benchmark/Tracker'
 
 // Refresh once a day in production; mock fallback handles low-N case.
 export const revalidate = 86400
@@ -68,6 +69,7 @@ export default async function DashboardPage({
 
   return (
     <div style={{ minHeight: '100vh', background: LIGHT, color: INK, fontFamily: FONT }}>
+      <Tracker event="dashboard_viewed" />
       {/* ── Nav ── */}
       <nav style={{ background: '#fff', borderBottom: `1px solid ${BORDER}`, position: 'sticky', top: 0, zIndex: 50 }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
