@@ -3,19 +3,18 @@
 // delta are replaced with a fuzzy text like "Growing group of professionals"
 // so we never claim numbers we don't have.
 
-import { getContent, type Lang } from '@/products/ai_benchmark/data'
+import { type Lang } from '@/products/ai_benchmark/data'
 
 const INK = '#0F172A'
 const WARM = '#D97706'
 
-export function LiveCounter({ total, lastWeek, lang = 'nl', vague = false }: {
+export function LiveCounter({ total, lastWeek, lang, vague = false }: {
   total:      number
   lastWeek?:  number
   lang?:      Lang
   vague?:     boolean
 }) {
-  const t = getContent(lang)
-
+  void lang  // reserved for future "respondents" word translation when vague=false
   return (
     <div style={{
       display: 'inline-flex', alignItems: 'center', gap: 10,
@@ -34,11 +33,9 @@ export function LiveCounter({ total, lastWeek, lang = 'nl', vague = false }: {
         }} />
       </span>
       <span style={{ letterSpacing: '0.08em', fontSize: 10, color: WARM }}>LIVE</span>
-      <span>·</span>
-      {vague ? (
-        <span><strong>{t.liveVagueLabel}</strong></span>
-      ) : (
+      {!vague && (
         <>
+          <span>·</span>
           <span><strong>{total.toLocaleString('nl-NL')}</strong> respondenten</span>
           {lastWeek !== undefined && lastWeek > 0 && (
             <>

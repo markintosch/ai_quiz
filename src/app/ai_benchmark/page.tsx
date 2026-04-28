@@ -242,12 +242,17 @@ export default async function AiBenchmarkLandingPage({
           display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap', justifyContent: 'space-between',
         }}>
           <div>
-            <p style={{ fontSize: 22, fontWeight: 800, marginBottom: 6, letterSpacing: '-0.01em' }}>
-              {data.usingMock
-                ? t.proofVague
-                : t.proofN.replace('{n}', data.totalRespondents.toLocaleString('nl-NL'))}
-            </p>
-            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', maxWidth: 560, lineHeight: 1.55 }}>
+            {!data.usingMock && (
+              <p style={{ fontSize: 22, fontWeight: 800, marginBottom: 6, letterSpacing: '-0.01em' }}>
+                {t.proofN.replace('{n}', data.totalRespondents.toLocaleString('nl-NL'))}
+              </p>
+            )}
+            <p style={{
+              fontSize: data.usingMock ? 18 : 13,
+              fontWeight: data.usingMock ? 700 : 400,
+              color: data.usingMock ? '#fff' : 'rgba(255,255,255,0.65)',
+              maxWidth: 620, lineHeight: 1.55,
+            }}>
               {t.proofSubtitle}
             </p>
           </div>
