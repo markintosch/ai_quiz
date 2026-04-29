@@ -15,8 +15,10 @@ export async function GET(_req: NextRequest) {
     .order('created_at', { ascending: false })
     .limit(100)
 
-  const { data: companies } = await supabase.from('companies').select('id, name')
-  const companyMap = new Map((companies ?? []).map((c: { id: string; name: string }) => [c.id, c.name]))
+  const { data: companies } = await supabase.from('companies').select('id, name, slug')
+  const companyMap = new Map(
+    (companies ?? []).map((c: { id: string; name: string; slug: string }) => [c.id, { name: c.name, slug: c.slug }])
+  )
 
   const { data: participants } = await supabase.from('arena_participants').select('session_id')
   const countMap = new Map<string, number>()
@@ -24,11 +26,15 @@ export async function GET(_req: NextRequest) {
     if (p.session_id) countMap.set(p.session_id, (countMap.get(p.session_id) ?? 0) + 1)
   }
 
-  const enriched = (sessions ?? []).map((s: { id: string; company_id?: string | null }) => ({
-    ...s,
-    company_name: s.company_id ? (companyMap.get(s.company_id) ?? null) : null,
-    participant_count: countMap.get(s.id) ?? 0,
-  }))
+  const enriched = (sessions ?? []).map((s: { id: string; company_id?: string | null }) => {
+    const company = s.company_id ? companyMap.get(s.company_id) : null
+    return {
+      ...s,
+      company_name: company?.name ?? null,
+      company_slug: company?.slug ?? null,
+      participant_count: countMap.get(s.id) ?? 0,
+    }
+  })
 
   return NextResponse.json(enriched)
 }

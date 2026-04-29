@@ -23,8 +23,23 @@ interface ArenaSession {
   time_per_q: number
   started_at: string | null
   created_at: string
-  company_name?: string
+  company_id?: string | null
+  company_name?: string | null
+  company_slug?: string | null
   participant_count?: number
+}
+
+// Companies that have a dedicated player UI built for them.
+// When the session is tagged to one of these, we surface the
+// company-specific player URL instead of the default /arena/[code].
+const COMPANY_PLAYER_URLS: Record<string, (code: string) => string> = {
+  proserve: code => `/proserve/arena/${code}`,
+}
+
+function playerUrlForSession(s: ArenaSession): string {
+  const slug = s.company_slug
+  if (slug && COMPANY_PLAYER_URLS[slug]) return COMPANY_PLAYER_URLS[slug](s.join_code)
+  return `/arena/${s.join_code}`
 }
 
 interface Sysdig555Row {
@@ -176,6 +191,7 @@ function HotLapTab() {
 function ArenaTab() {
   const [sessions, setSessions] = useState<ArenaSession[]>([])
   const [loading, setLoading] = useState(true)
+  const [companyFilter, setCompanyFilter] = useState<string>('all')
 
   const load = useCallback(() => {
     setLoading(true)
@@ -190,45 +206,134 @@ function ArenaTab() {
 
   useEffect(() => { load() }, [load])
 
+  // Build company filter options from current sessions
+  const companyOptions = (() => {
+    const map = new Map<string, string>()
+    map.set('__none__', '— Geen koppeling')
+    for (const s of sessions) {
+      if (s.company_id && s.company_name) map.set(s.company_id, s.company_name)
+    }
+    return Array.from(map.entries()).sort((a, b) => a[1].localeCompare(b[1]))
+  })()
+
+  const filtered = sessions.filter(s => {
+    if (companyFilter === 'all') return true
+    if (companyFilter === '__none__') return !s.company_id
+    return s.company_id === companyFilter
+  })
+
+  function copyToClipboard(text: string) {
+    if (typeof navigator === 'undefined' || !navigator.clipboard) return
+    navigator.clipboard.writeText(text).catch(() => { /* ignore */ })
+  }
+
   return (
     <div>
-      <TabHeader title="🏟️ Arena Sessies" subtitle={`${sessions.length} sessies`} onRefresh={load}>
+      <TabHeader title="🏟️ Arena Sessies" subtitle={`${filtered.length} van ${sessions.length} sessies`} onRefresh={load}>
         <Link href="/admin/arena/new" style={{ fontSize: 13, padding: '7px 16px', borderRadius: 8, background: '#354E5E', color: '#fff', textDecoration: 'none', fontWeight: 700 }}>
           + Nieuwe sessie
         </Link>
       </TabHeader>
-      {loading ? <p style={{ color: '#94A3B8', fontSize: 14 }}>Laden…</p> : sessions.length === 0 ? (
-        <EmptyState icon="🏟️" text="Nog geen arena-sessies aangemaakt." />
+
+      {/* Company filter */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 14, fontSize: 12 }}>
+        <span style={{ color: '#64748B', fontWeight: 600 }}>Filter op bedrijf:</span>
+        <button
+          onClick={() => setCompanyFilter('all')}
+          style={filterPill(companyFilter === 'all')}
+        >
+          Alle ({sessions.length})
+        </button>
+        {companyOptions.map(([id, name]) => {
+          const count = sessions.filter(s => id === '__none__' ? !s.company_id : s.company_id === id).length
+          return (
+            <button
+              key={id}
+              onClick={() => setCompanyFilter(id)}
+              style={filterPill(companyFilter === id)}
+            >
+              {name} ({count})
+            </button>
+          )
+        })}
+      </div>
+
+      {loading ? <p style={{ color: '#94A3B8', fontSize: 14 }}>Laden…</p> : filtered.length === 0 ? (
+        <EmptyState icon="🏟️" text={companyFilter === 'all' ? 'Nog geen arena-sessies aangemaakt.' : 'Geen sessies voor deze filter.'} />
       ) : (
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
             <thead>
               <tr style={{ borderBottom: '2px solid #E2E8F0' }}>
-                {['Code', 'Host', 'Status', 'Vragen', 'Deeln.', 'Aangemaakt', ''].map(h => (
+                {['Code', 'Bedrijf', 'Host', 'Status', 'Vragen', 'Deeln.', 'Aangemaakt', 'Speel-URL', ''].map(h => (
                   <th key={h} style={thStyle}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {sessions.map(s => (
-                <tr key={s.id} style={{ borderBottom: '1px solid #F1F5F9' }}>
-                  <td style={{ ...tdStyle, fontFamily: 'monospace', fontWeight: 800, letterSpacing: '0.1em', color: '#0F172A' }}>{s.join_code}</td>
-                  <td style={{ ...tdStyle, fontWeight: 600, color: '#0F172A' }}>{s.host_name}</td>
-                  <td style={tdStyle}>{statusPill(s.status)}</td>
-                  <td style={{ ...tdStyle, color: '#475569' }}>{s.question_count}</td>
-                  <td style={{ ...tdStyle, color: '#475569' }}>{s.participant_count ?? '—'}</td>
-                  <td style={{ ...tdStyle, color: '#64748B', whiteSpace: 'nowrap' }}>{fmtDate(s.created_at)}</td>
-                  <td style={tdStyle}>
-                    <Link href={`/admin/arena/${s.id}`} style={{ fontSize: 12, color: '#354E5E', fontWeight: 600, textDecoration: 'none' }}>Bekijk →</Link>
-                  </td>
-                </tr>
-              ))}
+              {filtered.map(s => {
+                const playerUrl = playerUrlForSession(s)
+                const isThemed   = !!s.company_slug && !!COMPANY_PLAYER_URLS[s.company_slug]
+                return (
+                  <tr key={s.id} style={{ borderBottom: '1px solid #F1F5F9' }}>
+                    <td style={{ ...tdStyle, fontFamily: 'monospace', fontWeight: 800, letterSpacing: '0.1em', color: '#0F172A' }}>{s.join_code}</td>
+                    <td style={tdStyle}>
+                      {s.company_name
+                        ? <span style={{ fontWeight: 700, color: '#0F172A' }}>{s.company_name}</span>
+                        : <span style={{ color: '#94A3B8', fontStyle: 'italic' }}>—</span>}
+                    </td>
+                    <td style={{ ...tdStyle, color: '#475569' }}>{s.host_name}</td>
+                    <td style={tdStyle}>{statusPill(s.status)}</td>
+                    <td style={{ ...tdStyle, color: '#475569' }}>{s.question_count}</td>
+                    <td style={{ ...tdStyle, color: '#475569' }}>{s.participant_count ?? '—'}</td>
+                    <td style={{ ...tdStyle, color: '#64748B', whiteSpace: 'nowrap' }}>{fmtDate(s.created_at)}</td>
+                    <td style={tdStyle}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <a
+                          href={playerUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ fontSize: 12, color: isThemed ? '#1F8EFF' : '#354E5E', fontWeight: 600, textDecoration: 'none' }}
+                          title={`Open ${playerUrl}`}
+                        >
+                          ↗ {isThemed ? 'Themed' : 'Default'}
+                        </a>
+                        <button
+                          type="button"
+                          onClick={() => copyToClipboard(window.location.origin + playerUrl)}
+                          style={{
+                            fontSize: 11, color: '#94A3B8', background: 'none', border: '1px solid #E2E8F0',
+                            borderRadius: 4, padding: '2px 6px', cursor: 'pointer',
+                          }}
+                          title="Kopieer absolute URL"
+                        >
+                          📋
+                        </button>
+                      </div>
+                    </td>
+                    <td style={tdStyle}>
+                      <Link href={`/admin/arena/${s.id}`} style={{ fontSize: 12, color: '#354E5E', fontWeight: 600, textDecoration: 'none' }}>Bekijk →</Link>
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>
       )}
     </div>
   )
+}
+
+function filterPill(active: boolean) {
+  return {
+    fontSize: 11, fontWeight: 700,
+    padding: '4px 12px', borderRadius: 100,
+    background: active ? '#354E5E' : '#fff',
+    color:      active ? '#fff'    : '#475569',
+    border:     `1px solid ${active ? '#354E5E' : '#E2E8F0'}`,
+    cursor: 'pointer',
+  } as const
 }
 
 // ── Tab: Sysdig 555 Time Trial ────────────────────────────────────────────────
