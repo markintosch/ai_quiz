@@ -1,5 +1,6 @@
 // FILE: src/app/ai_benchmark/results/[id]/page.tsx
 import type { Metadata } from 'next'
+import { headers } from 'next/headers'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@supabase/supabase-js'
@@ -21,18 +22,27 @@ import {
 
 export const dynamic = 'force-dynamic'
 
-const OG_BASE = process.env.NEXT_PUBLIC_BASE_URL || 'https://markdekock.com'
+function getBaseUrl(): string {
+  try {
+    const h = headers()
+    const host = h.get('host')
+    const proto = h.get('x-forwarded-proto') || 'https'
+    if (host) return `${proto}://${host}`
+  } catch { /* headers() unavailable in some build contexts */ }
+  return process.env.NEXT_PUBLIC_BASE_URL || 'https://markdekock.com'
+}
 
 // Per-result metadata so social shares pull the dynamic archetype card.
 // Page itself is noindex (set in /ai_benchmark/results/layout.tsx); this
 // only ensures share scrapers see the right preview.
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const ogUrl = `${OG_BASE}/api/ai_benchmark/og?id=${params.id}`
+  const BASE = getBaseUrl()
+  const ogUrl = `${BASE}/api/ai_benchmark/og?id=${params.id}`
   return {
     openGraph: {
       title:       'Mijn AI-benchmark resultaat',
       description: 'Mijn archetype + score in de AI-benchmark voor marketing & sales.',
-      url:         `${OG_BASE}/ai_benchmark/results/${params.id}`,
+      url:         `${BASE}/ai_benchmark/results/${params.id}`,
       type:        'article',
       images: [{ url: ogUrl, width: 1200, height: 630, alt: 'AI-benchmark resultaat' }],
     },

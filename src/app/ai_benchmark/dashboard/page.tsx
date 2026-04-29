@@ -33,30 +33,45 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-const OG_BASE = process.env.NEXT_PUBLIC_BASE_URL || 'https://markdekock.com'
+import type { Metadata } from 'next'
+import { headers } from 'next/headers'
 
-export const metadata = {
-  title:       'State of AI in Marketing & Sales · research dashboard | Mark de Kock',
-  description: 'Wekelijks geüpdatet onderzoeksdashboard. Hoe marketing- en sales-professionals AI gebruiken, welke tools, welke tijdwinst, welke blokkades. Gratis te bekijken. Doe zelf de benchmark in 6 minuten.',
-  alternates:  { canonical: '/ai_benchmark/dashboard' },
-  openGraph: {
-    title: 'State of AI in Marketing & Sales, wekelijks geüpdatet',
-    description: 'Onafhankelijk onderzoek door Mark de Kock. Heatmap, radar, archetype-verdeling, blokkades.',
-    url:    `${OG_BASE}/ai_benchmark/dashboard`,
-    type:   'website',
-    images: [{
-      url:    `${OG_BASE}/api/ai_benchmark/og?type=dashboard`,
-      width:  1200,
-      height: 630,
-      alt:    'State of AI in Marketing & Sales — public research dashboard',
-    }],
-  },
-  twitter: {
-    card:  'summary_large_image',
-    title: 'State of AI in Marketing & Sales',
-    description: 'Onafhankelijk onderzoek door Mark de Kock. Wekelijks geüpdatet.',
-    images: [`${OG_BASE}/api/ai_benchmark/og?type=dashboard`],
-  },
+function getBaseUrl(): string {
+  try {
+    const h = headers()
+    const host = h.get('host')
+    const proto = h.get('x-forwarded-proto') || 'https'
+    if (host) return `${proto}://${host}`
+  } catch { /* headers() unavailable in some build contexts */ }
+  return process.env.NEXT_PUBLIC_BASE_URL || 'https://markdekock.com'
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const BASE = getBaseUrl()
+  const ogUrl = `${BASE}/api/ai_benchmark/og?type=dashboard`
+  return {
+    title:       'State of AI in Marketing & Sales · research dashboard | Mark de Kock',
+    description: 'Wekelijks geüpdatet onderzoeksdashboard. Hoe marketing- en sales-professionals AI gebruiken, welke tools, welke tijdwinst, welke blokkades. Gratis te bekijken. Doe zelf de benchmark in 6 minuten.',
+    alternates:  { canonical: `${BASE}/ai_benchmark/dashboard` },
+    openGraph: {
+      title: 'State of AI in Marketing & Sales, wekelijks geüpdatet',
+      description: 'Onafhankelijk onderzoek door Mark de Kock. Heatmap, radar, archetype-verdeling, blokkades.',
+      url:    `${BASE}/ai_benchmark/dashboard`,
+      type:   'website',
+      images: [{
+        url:    ogUrl,
+        width:  1200,
+        height: 630,
+        alt:    'State of AI in Marketing & Sales — public research dashboard',
+      }],
+    },
+    twitter: {
+      card:  'summary_large_image',
+      title: 'State of AI in Marketing & Sales',
+      description: 'Onafhankelijk onderzoek door Mark de Kock. Wekelijks geüpdatet.',
+      images: [ogUrl],
+    },
+  }
 }
 
 export default async function DashboardPage({
