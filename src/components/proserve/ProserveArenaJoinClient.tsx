@@ -53,7 +53,7 @@ export default function ProserveArenaJoinClient({
         if (newStatus && newStatus !== status) setStatus(newStatus)
         if (newStatus === 'active') {
           setPhase('redirecting')
-          router.push(`/arena/${joinCode}/play?pid=${participantId}`)
+          router.push(`/proserve/arena/${joinCode}/play?pid=${participantId}`)
         }
       } catch { /* ignore */ }
     }, 3000)
@@ -80,7 +80,7 @@ export default function ProserveArenaJoinClient({
       setParticipantId(json.participantId)
       if (status === 'active') {
         setPhase('redirecting')
-        router.push(`/arena/${joinCode}/play?pid=${json.participantId}`)
+        router.push(`/proserve/arena/${joinCode}/play?pid=${json.participantId}`)
       } else {
         setPhase('lobby')
         setLoading(false)

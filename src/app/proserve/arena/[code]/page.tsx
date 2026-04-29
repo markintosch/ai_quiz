@@ -158,7 +158,7 @@ function CompletedNotice({ code }: { code: string }) {
         Geen probleem. Vraag Mark of Proserve recruitment om de volgende sessie-code, of bekijk de eindstand hieronder.
       </p>
       <a
-        href={`/arena/${code}/results`}
+        href={`/proserve/arena/${code}/results`}
         style={{
           display: 'inline-block',
           background: BLUE, color: '#fff', fontWeight: 700, fontSize: 14,
