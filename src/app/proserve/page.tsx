@@ -5,17 +5,18 @@
 
 import Link from 'next/link'
 
-// ── Proserve brand tokens (estimated from logo; update when exact hex confirmed)
-const NAVY        = '#1E2A57'
-const NAVY_DARK   = '#141C3D'
-const NAVY_LIGHT  = '#2F4084'
-const CORAL       = '#F46D5C'
-const CORAL_LIGHT = '#FCE3DE'
-const INK         = '#0F172A'
-const BODY        = '#3B4565'
-const MUTED       = '#94A3B8'
-const BORDER      = '#E2E8F0'
-const LIGHT_BG    = '#F7F8FB'
+// ── Proserve brand tokens (refined from proserve.nl screencap) ─────────────
+const NAVY        = '#1F0F70'   // deep purple-indigo (hero / dark sections)
+const NAVY_DARK   = '#0F0840'   // footer / deepest
+const NAVY_LIGHT  = '#2D1B96'   // slightly lighter for gradients
+const BLUE        = '#1F8EFF'   // bright cyan-blue accent — CTAs + inline highlights
+const BLUE_HOVER  = '#0E7CEF'
+const BLUE_SOFT   = '#E5F2FF'   // pale blue tint for inline backgrounds
+const INK         = '#1A1A2E'   // body text, near-black with navy tint
+const BODY        = '#4B5468'
+const MUTED       = '#8C92A6'
+const BORDER      = '#E5E7EE'
+const LIGHT_BG    = '#F5F6F9'
 const FONT        = "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
 
 export default function ProservePitchPage() {
@@ -33,8 +34,8 @@ export default function ProservePitchPage() {
             <a
               href="#contact"
               style={{
-                background: CORAL, color: '#fff', fontSize: 13, fontWeight: 700,
-                padding: '9px 18px', borderRadius: 6, textDecoration: 'none',
+                background: BLUE, color: '#fff', fontSize: 13, fontWeight: 700,
+                padding: '10px 22px', borderRadius: 100, textDecoration: 'none',
               }}
             >
               Plan een gesprek →
@@ -50,17 +51,15 @@ export default function ProservePitchPage() {
       }}>
         <div style={{ maxWidth: 880, margin: '0 auto' }}>
           <span style={{
-            display: 'inline-block', fontSize: 11, fontWeight: 800,
-            letterSpacing: '0.16em', textTransform: 'uppercase',
-            color: CORAL, background: 'rgba(244,109,92,0.14)',
-            padding: '6px 14px', borderRadius: 100, marginBottom: 28,
-            border: `1px solid rgba(244,109,92,0.35)`,
+            display: 'inline-block', fontSize: 12, fontWeight: 600,
+            color: BLUE, background: 'rgba(31,142,255,0.14)',
+            padding: '8px 18px', borderRadius: 100, marginBottom: 28,
           }}>
             Voorstel · voor Proserve
           </span>
 
           <h1 style={{ fontSize: 'clamp(34px, 5.5vw, 60px)', fontWeight: 900, lineHeight: 1.05, marginBottom: 24, letterSpacing: '-0.025em', color: '#fff' }}>
-            Twee tools om <span style={{ color: CORAL }}>cloud-talent aan te trekken</span> en kwaliteit te benchmarken.
+            Twee tools om <span style={{ color: BLUE }}>cloud-talent aan te trekken</span> en kwaliteit te benchmarken.
           </h1>
 
           <p style={{ fontSize: 19, color: 'rgba(255,255,255,0.82)', lineHeight: 1.55, marginBottom: 14, maxWidth: 720 }}>
@@ -72,15 +71,15 @@ export default function ProservePitchPage() {
 
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             <a href="#assessment" style={{
-              background: CORAL, color: '#fff', fontWeight: 700, fontSize: 16,
-              padding: '14px 30px', borderRadius: 8, textDecoration: 'none',
-              boxShadow: '0 8px 24px rgba(244,109,92,0.35)',
+              background: BLUE, color: '#fff', fontWeight: 700, fontSize: 16,
+              padding: '14px 32px', borderRadius: 100, textDecoration: 'none',
+              boxShadow: '0 8px 24px rgba(31,142,255,0.35)',
             }}>
               1 · Cloud Assessment
             </a>
             <a href="#arena" style={{
               background: 'transparent', color: '#fff', fontWeight: 700, fontSize: 16,
-              padding: '14px 30px', borderRadius: 8, textDecoration: 'none',
+              padding: '14px 32px', borderRadius: 100, textDecoration: 'none',
               border: '2px solid rgba(255,255,255,0.4)',
             }}>
               2 · Cloud Arena Game
@@ -90,9 +89,9 @@ export default function ProservePitchPage() {
       </section>
 
       {/* ── Why this works for Proserve ── */}
-      <section style={{ background: LIGHT_BG, padding: '72px 24px', borderTop: `4px solid ${CORAL}` }}>
+      <section style={{ background: LIGHT_BG, padding: '72px 24px', borderTop: `4px solid ${BLUE}` }}>
         <div style={{ maxWidth: 920, margin: '0 auto' }}>
-          <h2 style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.18em', textTransform: 'uppercase', color: CORAL, marginBottom: 14 }}>
+          <h2 style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0', color: BLUE, marginBottom: 12 }}>
             Waarom dit werkt voor Proserve
           </h2>
           <p style={{ fontSize: 28, fontWeight: 800, color: NAVY, marginBottom: 20, letterSpacing: '-0.015em', lineHeight: 1.25 }}>
@@ -115,8 +114,8 @@ export default function ProservePitchPage() {
       <section id="assessment" style={{ background: '#fff', padding: '88px 24px' }}>
         <div style={{ maxWidth: 1000, margin: '0 auto' }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 14, marginBottom: 12 }}>
-            <span style={{ fontSize: 36, fontWeight: 900, color: CORAL, letterSpacing: '-0.02em' }}>01</span>
-            <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', color: NAVY }}>
+            <span style={{ fontSize: 36, fontWeight: 900, color: BLUE, letterSpacing: '-0.02em' }}>01</span>
+            <span style={{ fontSize: 13, fontWeight: 600, color: BLUE }}>
               Cloud Readiness Assessment
             </span>
           </div>
@@ -145,7 +144,7 @@ export default function ProservePitchPage() {
               href="/proserve/assessment-demo"
               style={{
                 background: NAVY, color: '#fff', fontWeight: 700, fontSize: 15,
-                padding: '14px 28px', borderRadius: 8, textDecoration: 'none',
+                padding: '14px 30px', borderRadius: 100, textDecoration: 'none',
               }}
             >
               Bekijk de demo →
@@ -164,8 +163,8 @@ export default function ProservePitchPage() {
       }}>
         <div style={{ maxWidth: 1000, margin: '0 auto' }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 14, marginBottom: 12 }}>
-            <span style={{ fontSize: 36, fontWeight: 900, color: CORAL, letterSpacing: '-0.02em' }}>02</span>
-            <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.85)' }}>
+            <span style={{ fontSize: 36, fontWeight: 900, color: BLUE, letterSpacing: '-0.02em' }}>02</span>
+            <span style={{ fontSize: 13, fontWeight: 600, color: BLUE }}>
               Cloud Arena · het talent-spel
             </span>
           </div>
@@ -191,9 +190,9 @@ export default function ProservePitchPage() {
             <Link
               href="/proserve/arena-demo"
               style={{
-                background: CORAL, color: '#fff', fontWeight: 700, fontSize: 15,
-                padding: '14px 28px', borderRadius: 8, textDecoration: 'none',
-                boxShadow: '0 6px 20px rgba(244,109,92,0.35)',
+                background: BLUE, color: '#fff', fontWeight: 700, fontSize: 15,
+                padding: '14px 30px', borderRadius: 100, textDecoration: 'none',
+                boxShadow: '0 6px 20px rgba(31,142,255,0.35)',
               }}
             >
               Speel een proefronde →
@@ -208,7 +207,7 @@ export default function ProservePitchPage() {
       {/* ── How it works ── */}
       <section style={{ background: LIGHT_BG, padding: '88px 24px' }}>
         <div style={{ maxWidth: 920, margin: '0 auto' }}>
-          <h2 style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.18em', textTransform: 'uppercase', color: CORAL, marginBottom: 14 }}>
+          <h2 style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0', color: BLUE, marginBottom: 12 }}>
             Hoe het werkt
           </h2>
           <p style={{ fontSize: 28, fontWeight: 800, color: NAVY, marginBottom: 28, letterSpacing: '-0.015em' }}>
@@ -231,7 +230,7 @@ export default function ProservePitchPage() {
       {/* ── Pricing / commercial ── */}
       <section style={{ background: '#fff', padding: '88px 24px' }}>
         <div style={{ maxWidth: 920, margin: '0 auto' }}>
-          <h2 style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.18em', textTransform: 'uppercase', color: CORAL, marginBottom: 14 }}>
+          <h2 style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0', color: BLUE, marginBottom: 12 }}>
             Wat het kost
           </h2>
           <p style={{ fontSize: 28, fontWeight: 800, color: NAVY, marginBottom: 28, letterSpacing: '-0.015em' }}>
@@ -266,7 +265,7 @@ export default function ProservePitchPage() {
         color: '#fff', padding: '88px 24px',
       }}>
         <div style={{ maxWidth: 720, margin: '0 auto', textAlign: 'center' }}>
-          <h2 style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.18em', textTransform: 'uppercase', color: CORAL, marginBottom: 14 }}>
+          <h2 style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0', color: BLUE, marginBottom: 12 }}>
             Volgende stap
           </h2>
           <p style={{ fontSize: 32, fontWeight: 900, color: '#fff', marginBottom: 18, letterSpacing: '-0.02em', lineHeight: 1.2 }}>
@@ -281,9 +280,9 @@ export default function ProservePitchPage() {
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              background: CORAL, color: '#fff', fontWeight: 800, fontSize: 17,
-              padding: '16px 40px', borderRadius: 8, textDecoration: 'none',
-              boxShadow: '0 10px 30px rgba(244,109,92,0.4)',
+              background: BLUE, color: '#fff', fontWeight: 800, fontSize: 17,
+              padding: '16px 44px', borderRadius: 100, textDecoration: 'none',
+              boxShadow: '0 10px 30px rgba(31,142,255,0.4)',
               display: 'inline-block',
             }}
           >
@@ -292,7 +291,7 @@ export default function ProservePitchPage() {
 
           <p style={{ marginTop: 22, fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>
             of stuur een mail naar{' '}
-            <a href="mailto:mark@brandpwrdmedia.com" style={{ color: CORAL, textDecoration: 'underline' }}>
+            <a href="mailto:mark@brandpwrdmedia.com" style={{ color: BLUE, textDecoration: 'underline' }}>
               mark@brandpwrdmedia.com
             </a>
           </p>
@@ -330,14 +329,14 @@ function ProserveLogo() {
 
 function Stat({ label, value, caption }: { label: string; value: string; caption: string }) {
   return (
-    <div style={{ background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 12, padding: '18px 20px' }}>
-      <p style={{ fontSize: 10, fontWeight: 800, color: MUTED, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 8 }}>
+    <div style={{ background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 16, padding: '24px 24px' }}>
+      <p style={{ fontSize: 12, fontWeight: 500, color: MUTED, marginBottom: 10 }}>
         {label}
       </p>
-      <p style={{ fontSize: 28, fontWeight: 900, color: NAVY, letterSpacing: '-0.02em', marginBottom: 8, lineHeight: 1 }}>
+      <p style={{ fontSize: 38, fontWeight: 800, color: NAVY, letterSpacing: '-0.025em', marginBottom: 10, lineHeight: 1 }}>
         {value}
       </p>
-      <p style={{ fontSize: 12, color: BODY, lineHeight: 1.55 }}>
+      <p style={{ fontSize: 13, color: BODY, lineHeight: 1.55 }}>
         {caption}
       </p>
     </div>
@@ -361,7 +360,7 @@ function FeatureCard({ icon, title, body, dark = false }: { icon: string; title:
 function Step({ n, title, body }: { n: string; title: string; body: string }) {
   return (
     <div style={{ background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 12, padding: '20px 22px' }}>
-      <span style={{ display: 'inline-block', width: 32, height: 32, borderRadius: '50%', background: CORAL_LIGHT, color: CORAL, textAlign: 'center', lineHeight: '32px', fontWeight: 900, fontSize: 14, marginBottom: 10 }}>
+      <span style={{ display: 'inline-block', width: 32, height: 32, borderRadius: '50%', background: BLUE_SOFT, color: BLUE, textAlign: 'center', lineHeight: '32px', fontWeight: 900, fontSize: 14, marginBottom: 10 }}>
         {n}
       </span>
       <p style={{ fontSize: 15, fontWeight: 800, color: NAVY, marginBottom: 6 }}>{title}</p>
@@ -382,8 +381,8 @@ function PriceCard({ tag, title, price, body, highlight = false }: { tag: string
       <span style={{
         display: 'inline-block', fontSize: 10, fontWeight: 800, letterSpacing: '0.12em',
         textTransform: 'uppercase',
-        color: highlight ? CORAL : NAVY,
-        background: highlight ? 'rgba(244,109,92,0.14)' : LIGHT_BG,
+        color: highlight ? BLUE : NAVY,
+        background: highlight ? 'rgba(31,142,255,0.12)' : LIGHT_BG,
         padding: '4px 10px', borderRadius: 100, marginBottom: 14,
       }}>
         {tag}
@@ -391,7 +390,7 @@ function PriceCard({ tag, title, price, body, highlight = false }: { tag: string
       <p style={{ fontSize: 20, fontWeight: 800, color: highlight ? '#fff' : NAVY, marginBottom: 12, lineHeight: 1.25 }}>
         {title}
       </p>
-      <p style={{ fontSize: 32, fontWeight: 900, color: highlight ? CORAL : NAVY, letterSpacing: '-0.02em', marginBottom: 14 }}>
+      <p style={{ fontSize: 32, fontWeight: 900, color: highlight ? BLUE : NAVY, letterSpacing: '-0.02em', marginBottom: 14 }}>
         {price}
       </p>
       <p style={{ fontSize: 14, color: highlight ? 'rgba(255,255,255,0.78)' : BODY, lineHeight: 1.55 }}>
@@ -422,10 +421,10 @@ function ResultsPreview() {
           <div key={d.lbl}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: BODY, marginBottom: 4 }}>
               <span style={{ fontWeight: 700, color: NAVY }}>{d.lbl}</span>
-              <span style={{ fontWeight: 800, color: CORAL }}>{d.pct}/100</span>
+              <span style={{ fontWeight: 800, color: BLUE }}>{d.pct}/100</span>
             </div>
             <div style={{ height: 7, background: '#fff', borderRadius: 100, border: `1px solid ${BORDER}`, overflow: 'hidden' }}>
-              <div style={{ height: 7, width: `${d.pct}%`, background: CORAL, borderRadius: 100 }} />
+              <div style={{ height: 7, width: `${d.pct}%`, background: BLUE, borderRadius: 100 }} />
             </div>
           </div>
         ))}
@@ -438,7 +437,7 @@ function ArenaPreview() {
   return (
     <div style={{ background: 'rgba(255,255,255,0.06)', border: `1px solid rgba(255,255,255,0.12)`, borderRadius: 14, padding: '24px 24px' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 18 }}>
-        <span style={{ fontSize: 11, fontWeight: 800, color: CORAL, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+        <span style={{ fontSize: 11, fontWeight: 800, color: BLUE, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
           Voorbeeld · live leaderboard
         </span>
         <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)' }}>Join code: <strong style={{ color: '#fff', letterSpacing: '0.16em' }}>CLOUD4</strong> · 12 spelers</span>
@@ -453,16 +452,16 @@ function ArenaPreview() {
         ].map(p => (
           <div key={p.rank} style={{
             display: 'flex', alignItems: 'center', gap: 14,
-            background: p.rank === 1 ? 'rgba(244,109,92,0.14)' : 'rgba(255,255,255,0.04)',
-            border: `1px solid ${p.rank === 1 ? 'rgba(244,109,92,0.4)' : 'rgba(255,255,255,0.08)'}`,
+            background: p.rank === 1 ? 'rgba(31,142,255,0.12)' : 'rgba(255,255,255,0.04)',
+            border: `1px solid ${p.rank === 1 ? 'rgba(31,142,255,0.4)' : 'rgba(255,255,255,0.08)'}`,
             borderRadius: 8, padding: '10px 14px',
           }}>
-            <span style={{ width: 28, textAlign: 'center', fontSize: 14, fontWeight: 900, color: p.rank === 1 ? CORAL : 'rgba(255,255,255,0.55)' }}>
+            <span style={{ width: 28, textAlign: 'center', fontSize: 14, fontWeight: 900, color: p.rank === 1 ? BLUE : 'rgba(255,255,255,0.55)' }}>
               {p.rank}
             </span>
             <span style={{ flex: 1, fontSize: 14, fontWeight: 700, color: '#fff' }}>{p.name}</span>
             <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)' }}>{p.accuracy}</span>
-            <span style={{ fontSize: 14, fontWeight: 900, color: CORAL, minWidth: 60, textAlign: 'right' }}>
+            <span style={{ fontSize: 14, fontWeight: 900, color: BLUE, minWidth: 60, textAlign: 'right' }}>
               {p.score.toLocaleString()}
             </span>
           </div>
