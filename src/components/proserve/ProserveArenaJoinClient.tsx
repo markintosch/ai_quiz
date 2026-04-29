@@ -214,6 +214,18 @@ export default function ProserveArenaJoinClient({
         >
           {loading ? 'Bezig…' : status === 'active' ? 'Direct meedoen →' : 'Naar de wachtkamer →'}
         </button>
+
+        <p style={{ marginTop: 12, fontSize: 12, color: MUTED, textAlign: 'center', lineHeight: 1.5 }}>
+          Door deel te nemen ga je akkoord met het{' '}
+          <a
+            href="https://www.proserve.nl/over-ons/privacybeleid"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: BLUE, textDecoration: 'underline' }}
+          >
+            privacybeleid van Proserve
+          </a>.
+        </p>
       </form>
 
       <p style={{ marginTop: 16, fontSize: 11, color: MUTED, textAlign: 'center' }}>
