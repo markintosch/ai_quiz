@@ -321,6 +321,17 @@ export type LangContent = {
   shareIntroPunchlineUp: string  // template
   shareIntroPunchlineDefault: string
   shareIntroBody:        string  // template
+
+  // Tool Wall (preview)
+  toolWallBadge:        string
+  toolWallH1:           string
+  toolWallSubtitle:     string
+  toolWallColMarketing: string
+  toolWallColSales:     string
+  toolWallMentionsTpl:  string  // template "{n} gebruiken dit"
+  toolWallVotesNote:    string
+  toolWallEmpty:        string
+  toolWallPreviewBadge: string  // shown while we're in preview mode
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -599,6 +610,16 @@ const NL: LangContent = {
   shareIntroPunchlineUp: 'Ik ging {n} skill-{levels} omhoog in 12 maanden.',
   shareIntroPunchlineDefault: 'Doe de benchmark en zie waar jij staat.',
   shareIntroBody:        'Ik ben een {arch} ({score}/100) op de AI-benchmark voor marketing & sales. {punchline} Doe \'m zelf:',
+
+  toolWallBadge:        'Community gestemd · door je vakgenoten',
+  toolWallH1:           'AI-tools die wérken in marketing & sales',
+  toolWallSubtitle:     'Top 15 per rol, gerangschikt op gebruik én community-stemmen. Stem mee — één stem per tool.',
+  toolWallColMarketing: 'Marketing',
+  toolWallColSales:     'Sales',
+  toolWallMentionsTpl:  '{n} respondenten gebruiken dit',
+  toolWallVotesNote:    'Toggle dezelfde knop opnieuw om je stem in te trekken.',
+  toolWallEmpty:        'Nog geen tools in deze lijst. Doe de benchmark om er één toe te voegen.',
+  toolWallPreviewBadge: 'PREVIEW · nog niet publiek',
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -877,6 +898,16 @@ const EN: LangContent = {
   shareIntroPunchlineUp: 'I moved up {n} skill-{levels} in 12 months.',
   shareIntroPunchlineDefault: 'Take the benchmark and see where you stand.',
   shareIntroBody:        'I am a {arch} ({score}/100) on the AI-benchmark for marketing & sales. {punchline} Take it yourself:',
+
+  toolWallBadge:        'Community-voted · by your peers',
+  toolWallH1:           'AI tools that actually work in marketing & sales',
+  toolWallSubtitle:     'Top 15 per role, ranked by usage and community votes. Vote in — one vote per tool.',
+  toolWallColMarketing: 'Marketing',
+  toolWallColSales:     'Sales',
+  toolWallMentionsTpl:  '{n} respondents use this',
+  toolWallVotesNote:    'Click the same arrow again to undo your vote.',
+  toolWallEmpty:        'No tools in this list yet. Take the benchmark to add one.',
+  toolWallPreviewBadge: 'PREVIEW · not public yet',
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -1155,6 +1186,16 @@ const FR: LangContent = {
   shareIntroPunchlineUp: "J'ai gagné {n} skill-{levels} en 12 mois.",
   shareIntroPunchlineDefault: "Fais le benchmark et vois où tu en es.",
   shareIntroBody:        "Je suis un {arch} ({score}/100) sur l'AI-benchmark pour marketing & vente. {punchline} Fais-le toi-même :",
+
+  toolWallBadge:        'Voté par la communauté · par tes pairs',
+  toolWallH1:           "Les outils IA qui fonctionnent en marketing & vente",
+  toolWallSubtitle:     'Top 15 par rôle, classés par usage et votes de la communauté. Vote — un vote par outil.',
+  toolWallColMarketing: 'Marketing',
+  toolWallColSales:     'Vente',
+  toolWallMentionsTpl:  '{n} répondants utilisent ceci',
+  toolWallVotesNote:    'Clique sur la même flèche pour annuler ton vote.',
+  toolWallEmpty:        "Aucun outil dans cette liste. Fais le benchmark pour en ajouter un.",
+  toolWallPreviewBadge: 'PREVIEW · pas encore public',
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -1433,6 +1474,16 @@ const DE: LangContent = {
   shareIntroPunchlineUp: 'Ich bin in 12 Monaten {n} Skill-{levels} aufgestiegen.',
   shareIntroPunchlineDefault: 'Mach den Benchmark und sieh, wo du stehst.',
   shareIntroBody:        'Ich bin ein {arch} ({score}/100) im AI-benchmark für Marketing & Sales. {punchline} Probier es selbst:',
+
+  toolWallBadge:        'Community-gewählt · von deinen Fachkollegen',
+  toolWallH1:           'KI-Tools, die in Marketing & Sales wirklich funktionieren',
+  toolWallSubtitle:     'Top 15 pro Rolle, gerankt nach Nutzung und Community-Stimmen. Stimm mit — eine Stimme pro Tool.',
+  toolWallColMarketing: 'Marketing',
+  toolWallColSales:     'Sales',
+  toolWallMentionsTpl:  '{n} Befragte nutzen das',
+  toolWallVotesNote:    'Klick denselben Pfeil erneut, um deine Stimme zurückzunehmen.',
+  toolWallEmpty:        'Noch keine Tools in dieser Liste. Mach den Benchmark, um eines hinzuzufügen.',
+  toolWallPreviewBadge: 'PREVIEW · noch nicht öffentlich',
 }
 
 export const CONTENT: Record<Lang, LangContent> = { nl: NL, en: EN, fr: FR, de: DE }
