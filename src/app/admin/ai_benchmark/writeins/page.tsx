@@ -6,6 +6,7 @@
 import Link from 'next/link'
 import { createClient } from '@supabase/supabase-js'
 import { getQuestions } from '@/products/ai_benchmark/data'
+import { WriteinActions } from '@/components/admin/WriteinActions'
 
 export const dynamic = 'force-dynamic'
 
@@ -15,6 +16,7 @@ interface WriteIn {
   raw_text:     string
   normalized:   string
   status:       string
+  merge_target: string | null
   count:        number
   first_seen:   string
   last_seen:    string
@@ -110,14 +112,17 @@ export default async function WriteInsPage({
                       <Th className="w-16 text-right">Count</Th>
                       <Th>Raw text</Th>
                       <Th>Normalized</Th>
-                      <Th>First seen</Th>
                       <Th>Last seen</Th>
                       <Th>Status</Th>
+                      <Th className="text-right">Actions</Th>
                     </tr>
                   </thead>
                   <tbody>
                     {items.map(w => {
                       const isCanonical = !!meta?.options.find(o => o.id === w.normalized)
+                      const mergeTargetLabel = w.merge_target
+                        ? meta?.options.find(o => o.id === w.merge_target)?.label ?? w.merge_target
+                        : null
                       return (
                         <tr key={w.id} className="border-b border-gray-100 hover:bg-gray-50">
                           <Td className="text-right font-bold text-brand-accent">{w.count}</Td>
@@ -127,11 +132,20 @@ export default async function WriteInsPage({
                             {isCanonical && (
                               <span className="ml-2 text-xs text-amber-700 font-semibold">⚠ matches canonical id</span>
                             )}
+                            {mergeTargetLabel && (
+                              <span className="ml-2 text-xs text-purple-700">→ {mergeTargetLabel}</span>
+                            )}
                           </Td>
-                          <Td className="text-xs text-gray-500">{fmtDate(w.first_seen)}</Td>
                           <Td className="text-xs text-gray-500">{fmtDate(w.last_seen)}</Td>
                           <Td>
                             <StatusBadge status={w.status} />
+                          </Td>
+                          <Td className="text-right">
+                            <WriteinActions
+                              id={w.id}
+                              currentStatus={w.status}
+                              options={meta?.options ?? []}
+                            />
                           </Td>
                         </tr>
                       )
@@ -144,11 +158,18 @@ export default async function WriteInsPage({
         </div>
       )}
 
-      <p className="text-xs text-gray-500">
-        Promote a write-in by adding its normalized id + label to the relevant question in{' '}
-        <code className="bg-gray-100 px-1 rounded">src/products/ai_benchmark/data.ts</code>{' '}
-        (both the structure and each language&apos;s translation table). After deploying, mark the row as <code className="bg-gray-100 px-1 rounded">promoted</code>.
-      </p>
+      <div className="text-xs text-gray-500 space-y-1">
+        <p>
+          <strong className="text-gray-700">Action legend:</strong>{' '}
+          <code className="bg-gray-100 px-1 rounded">↑ Promote</code> = mark for inclusion in the canonical Q2 list (still requires a code edit in <code className="bg-gray-100 px-1 rounded">data.ts</code>; ask Claude or do it yourself).{' '}
+          <code className="bg-gray-100 px-1 rounded">⇆ Merge</code> = roll this into an existing canonical option (e.g. &quot;Claude AI&quot; → Claude). Future submissions of the same write-in still get logged but visually merged.{' '}
+          <code className="bg-gray-100 px-1 rounded">✕ Reject</code> = dismiss as noise / spam.{' '}
+          <code className="bg-gray-100 px-1 rounded">✓ Seen</code> = acknowledged, no further action needed yet.
+        </p>
+        <p>
+          Run <code className="bg-gray-100 px-1 rounded">supabase/migration_ai_benchmark_writeins_merge.sql</code> if Merge fails — it adds the <code className="bg-gray-100 px-1 rounded">merge_target</code> column.
+        </p>
+      </div>
     </div>
   )
 }
