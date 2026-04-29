@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { rateLimit, getClientIp } from '@/lib/rateLimit'
 import { scoreAssessment, type Answers } from '@/products/ai_benchmark/scoring'
-import { type Role } from '@/products/ai_benchmark/data'
+import { type Role, getQuestions } from '@/products/ai_benchmark/data'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -10,6 +10,13 @@ const supabase = createClient(
 )
 
 const VALID_ROLES: Role[] = ['marketing', 'sales', 'hybrid']
+
+// Canonical Q2 tool ID set, computed once per cold start.
+const Q2_CANONICAL_TOOL_IDS = (() => {
+  const q2 = getQuestions('marketing').find(q => q.id === 'q2')
+  if (!q2) return new Set<string>()
+  return new Set(q2.options.map(o => o.id).filter(id => id !== 'none'))
+})()
 
 export async function POST(req: NextRequest) {
   const ip = getClientIp(req.headers)
@@ -75,6 +82,31 @@ export async function POST(req: NextRequest) {
       console.error('[ai_benchmark/submit] insert error', error)
       return NextResponse.json({ error: 'Storage failed' }, { status: 500 })
     }
+
+    // Auto-upvote each canonical Q2 tool the respondent selected.
+    // Cold-start solution for the Tool Wall: every assessment submission
+    // moves rankings, so the page is meaningful from N=1 instead of
+    // waiting for manual votes to accumulate. Manual ▲▼ votes layer
+    // quality signal on top of usage signal.
+    // Best-effort; failures don't block the submit.
+    void (async () => {
+      try {
+        const q2 = answers.q2
+        if (!Array.isArray(q2)) return
+        const seedSession = `auto:${data.id}`  // unique per submission
+        const upvotes: { tool_id: string; session_id: string; direction: number; ip: string | null; user_agent: string | null }[] = []
+        for (const v of q2) {
+          if (typeof v !== 'string') continue
+          if (v === 'none' || v.startsWith('other_detail:')) continue
+          if (!Q2_CANONICAL_TOOL_IDS.has(v)) continue
+          upvotes.push({ tool_id: v, session_id: seedSession, direction: 1, ip, user_agent: userAgent })
+        }
+        if (upvotes.length === 0) return
+        await supabase.from('ai_benchmark_tool_votes').insert(upvotes)
+      } catch (e) {
+        console.error('[ai_benchmark/submit] auto-upvote', e)
+      }
+    })()
 
     // Extract any 'other_detail:<text>' write-ins and upsert into the
     // moderation queue. Best-effort; failures don't block the submit.
