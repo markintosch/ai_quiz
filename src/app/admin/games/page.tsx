@@ -312,7 +312,7 @@ function ArenaTab() {
                       </div>
                     </td>
                     <td style={tdStyle}>
-                      <Link href={`/admin/arena/${s.id}`} style={{ fontSize: 12, color: '#354E5E', fontWeight: 600, textDecoration: 'none' }}>Bekijk →</Link>
+                      <Link href={`/admin/arena/${s.join_code}`} style={{ fontSize: 12, color: '#354E5E', fontWeight: 600, textDecoration: 'none' }}>Bekijk →</Link>
                     </td>
                   </tr>
                 )
