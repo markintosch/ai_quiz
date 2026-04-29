@@ -23,13 +23,13 @@ export async function generateMetadata(): Promise<Metadata> {
       default:  'AI-benchmark voor marketing & sales | Mark de Kock',
       template: '%s · AI-benchmark · Mark de Kock',
     },
-    description: 'Onafhankelijk onderzoek naar AI-gebruik in marketing & sales. Vergelijk je werkwijze met vele honderden professionals. Persoonlijk dashboard direct na invullen.',
+    description: 'Vergelijk jouw gebruik van AI-tools met die van je vakgenoten. Of je nu in marketing beweegt of sales. Kijk welke inzichten je kunt gebruiken van anderen.',
     keywords: ['AI', 'marketing', 'sales', 'benchmark', 'onderzoek', 'AI-tools', 'AI-adoptie', 'marketing AI', 'sales AI'],
     authors: [{ name: 'Mark de Kock', url: 'https://markdekock.com' }],
     alternates: { canonical: `${BASE}/ai_benchmark` },
     openGraph: {
       title: 'AI-benchmark voor marketing & sales',
-      description: 'Vergelijk je werkwijze met vele honderden marketeers en sellers. Persoonlijk dashboard, geen verkooppraat.',
+      description: 'Vergelijk jouw gebruik van AI-tools met die van je vakgenoten. Of je nu in marketing beweegt of sales. Kijk welke inzichten je kunt gebruiken van anderen.',
       url:     `${BASE}/ai_benchmark`,
       siteName:'Mark de Kock · AI-benchmark',
       locale:  'nl_NL',
@@ -44,7 +44,7 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: {
       card:  'summary_large_image',
       title: 'AI-benchmark voor marketing & sales',
-      description: 'Vergelijk je werkwijze met honderden marketeers en sellers.',
+      description: 'Vergelijk jouw gebruik van AI-tools met die van je vakgenoten in marketing of sales.',
       images: [ogUrl],
     },
   }
