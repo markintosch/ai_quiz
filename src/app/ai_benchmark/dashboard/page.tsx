@@ -33,6 +33,8 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
+const OG_BASE = process.env.NEXT_PUBLIC_BASE_URL || 'https://markdekock.com'
+
 export const metadata = {
   title:       'State of AI in Marketing & Sales · research dashboard | Mark de Kock',
   description: 'Wekelijks geüpdatet onderzoeksdashboard. Hoe marketing- en sales-professionals AI gebruiken, welke tools, welke tijdwinst, welke blokkades. Gratis te bekijken. Doe zelf de benchmark in 6 minuten.',
@@ -40,7 +42,20 @@ export const metadata = {
   openGraph: {
     title: 'State of AI in Marketing & Sales, wekelijks geüpdatet',
     description: 'Onafhankelijk onderzoek door Mark de Kock. Heatmap, radar, archetype-verdeling, blokkades.',
-    type: 'website',
+    url:    `${OG_BASE}/ai_benchmark/dashboard`,
+    type:   'website',
+    images: [{
+      url:    `${OG_BASE}/api/ai_benchmark/og?type=dashboard`,
+      width:  1200,
+      height: 630,
+      alt:    'State of AI in Marketing & Sales — public research dashboard',
+    }],
+  },
+  twitter: {
+    card:  'summary_large_image',
+    title: 'State of AI in Marketing & Sales',
+    description: 'Onafhankelijk onderzoek door Mark de Kock. Wekelijks geüpdatet.',
+    images: [`${OG_BASE}/api/ai_benchmark/og?type=dashboard`],
   },
 }
 

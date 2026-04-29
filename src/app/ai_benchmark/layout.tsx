@@ -19,11 +19,18 @@ export const metadata: Metadata = {
     siteName:'Mark de Kock · AI-benchmark',
     locale:  'nl_NL',
     type:    'website',
+    images:  [{
+      url:    `${BASE}/api/ai_benchmark/og?type=landing`,
+      width:  1200,
+      height: 630,
+      alt:    'AI-benchmark voor marketing & sales — door Mark de Kock',
+    }],
   },
   twitter: {
     card:  'summary_large_image',
     title: 'AI-benchmark voor marketing & sales',
     description: 'Vergelijk je werkwijze met honderden marketeers en sellers.',
+    images: [`${BASE}/api/ai_benchmark/og?type=landing`],
   },
 }
 
