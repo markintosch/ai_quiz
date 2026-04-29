@@ -218,12 +218,12 @@ export default function ProserveArenaJoinClient({
         <p style={{ marginTop: 12, fontSize: 12, color: MUTED, textAlign: 'center', lineHeight: 1.5 }}>
           Door deel te nemen ga je akkoord met het{' '}
           <a
-            href="https://www.proserve.nl/over-ons/privacybeleid"
+            href="https://markdekock.com/privacy"
             target="_blank"
             rel="noopener noreferrer"
             style={{ color: BLUE, textDecoration: 'underline' }}
           >
-            privacybeleid van Proserve
+            privacybeleid
           </a>.
         </p>
       </form>
