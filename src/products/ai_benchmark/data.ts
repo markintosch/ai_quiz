@@ -459,7 +459,7 @@ const NL: LangContent = {
   projectCtaHeadline: 'Wil je dit zelf inzetten in jouw bedrijf of bureau?',
   projectCtaBody:     'Mark werkt projectmatig aan AI-implementaties in marketing & sales. Bij bedrijven die hun eigen team willen versnellen en bij bureaus die hetzelfde willen doen voor klanten.',
   projectCtaButton:   'Plan een verkenningsgesprek →',
-  quoteRoleSub:       'Werkt met bedrijven en bureaus aan AI-projecten in marketing & sales',
+  quoteRoleSub:       'Werkt met bedrijven en bureaus aan (AI-)projecten in marketing & sales',
 
   teaserLabel:           'Wat we tot nu toe zien',
   teaserHeadline:        'Een voorproefje uit de live data.',
@@ -737,7 +737,7 @@ const EN: LangContent = {
   projectCtaHeadline: 'Want to put this to work in your company or agency?',
   projectCtaBody:     'Mark works on AI implementation projects in marketing & sales. With in-house teams that want to move faster, and with agencies doing the same for their clients.',
   projectCtaButton:   'Schedule an intake call →',
-  quoteRoleSub:       'Works with companies and agencies on AI projects in marketing & sales',
+  quoteRoleSub:       'Works with companies and agencies on (AI) projects in marketing & sales',
 
   teaserLabel:           'What we see so far',
   teaserHeadline:        'A glimpse of the live data.',
@@ -1015,7 +1015,7 @@ const FR: LangContent = {
   projectCtaHeadline: 'Tu veux mettre ça en pratique dans ton entreprise ou ton agence ?',
   projectCtaBody:     "Mark intervient en mode projet sur des implémentations IA en marketing & vente. Avec des équipes internes qui veulent accélérer, et avec des agences qui font la même chose pour leurs clients.",
   projectCtaButton:   'Planifier un échange →',
-  quoteRoleSub:       'Intervient pour des entreprises et agences sur des projets IA en marketing & vente',
+  quoteRoleSub:       'Intervient pour des entreprises et agences sur des projets (IA) en marketing & vente',
 
   teaserLabel:           'Ce que nous voyons jusqu’ici',
   teaserHeadline:        'Un aperçu des données en direct.',
@@ -1293,7 +1293,7 @@ const DE: LangContent = {
   projectCtaHeadline: 'Willst du das in deinem Unternehmen oder deiner Agentur einsetzen?',
   projectCtaBody:     'Mark arbeitet projektweise an KI-Implementierungen in Marketing & Sales. Mit internen Teams, die schneller werden wollen, und mit Agenturen, die dasselbe für ihre Kunden tun.',
   projectCtaButton:   'Termin vereinbaren →',
-  quoteRoleSub:       'Arbeitet mit Unternehmen und Agenturen an KI-Projekten in Marketing & Sales',
+  quoteRoleSub:       'Arbeitet mit Unternehmen und Agenturen an (KI-)Projekten in Marketing & Sales',
 
   teaserLabel:           'Was wir bisher sehen',
   teaserHeadline:        'Ein Vorgeschmack auf die Live-Daten.',
