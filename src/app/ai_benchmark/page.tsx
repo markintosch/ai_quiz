@@ -3,6 +3,8 @@
 // 'Wat we tot nu toe zien' teaser, and the archetype tile %s all reflect
 // reality. Falls back to mock when N < 30 so the page is meaningful from day 1.
 
+import type { Metadata } from 'next'
+import { headers } from 'next/headers'
 import Link from 'next/link'
 import { createClient } from '@supabase/supabase-js'
 import { getContent, type Lang } from '@/products/ai_benchmark/data'
@@ -13,6 +15,94 @@ import { LangPills }   from '@/components/ai_benchmark/LangPills'
 import { LiveCounter } from '@/components/ai_benchmark/LiveCounter'
 import { SkillCurve }  from '@/components/ai_benchmark/SkillCurve'
 import { Tracker }     from '@/components/ai_benchmark/Tracker'
+
+const VALID_LANGS: Lang[] = ['nl', 'en', 'fr', 'de']
+
+// Per-language preview / OG metadata. Page metadata wins over layout
+// metadata via Next 14 deep-merge, so this overrides the NL fallback
+// shipped in /ai_benchmark/layout.tsx.
+const META_BY_LANG: Record<Lang, {
+  title:    string
+  desc:     string
+  ogTitle:  string
+  twTitle:  string
+  twDesc:   string
+  locale:   string
+}> = {
+  nl: {
+    title:   'AI-benchmark voor marketing & sales | Mark de Kock',
+    desc:    'Vergelijk jouw gebruik van AI-tools met die van je vakgenoten. Of je nu in marketing beweegt of sales. Kijk welke inzichten je kunt gebruiken van anderen.',
+    ogTitle: 'AI-benchmark voor marketing & sales',
+    twTitle: 'AI-benchmark voor marketing & sales',
+    twDesc:  'Vergelijk jouw gebruik van AI-tools met die van je vakgenoten in marketing of sales.',
+    locale:  'nl_NL',
+  },
+  en: {
+    title:   'AI-benchmark for marketing & sales | Mark de Kock',
+    desc:    'Compare your AI-tool use with peers in marketing or sales. See which insights from others you can put to work.',
+    ogTitle: 'AI-benchmark for marketing & sales',
+    twTitle: 'AI-benchmark for marketing & sales',
+    twDesc:  'Compare your AI-tool use with peers in marketing or sales.',
+    locale:  'en_GB',
+  },
+  fr: {
+    title:   'AI-benchmark pour le marketing & la vente | Mark de Kock',
+    desc:    "Compare ton usage des outils IA avec celui de tes pairs en marketing ou en vente. Vois quels enseignements des autres tu peux mettre en pratique.",
+    ogTitle: 'AI-benchmark pour le marketing & la vente',
+    twTitle: 'AI-benchmark pour le marketing & la vente',
+    twDesc:  'Compare ton usage des outils IA avec celui de tes pairs en marketing ou en vente.',
+    locale:  'fr_FR',
+  },
+  de: {
+    title:   'AI-benchmark für Marketing & Sales | Mark de Kock',
+    desc:    'Vergleiche deinen AI-Tool-Einsatz mit dem deiner Fachkollegen in Marketing oder Sales. Sieh, welche Erkenntnisse anderer du nutzen kannst.',
+    ogTitle: 'AI-benchmark für Marketing & Sales',
+    twTitle: 'AI-benchmark für Marketing & Sales',
+    twDesc:  'Vergleiche deinen AI-Tool-Einsatz mit dem deiner Kollegen in Marketing oder Sales.',
+    locale:  'de_DE',
+  },
+}
+
+function getBaseUrl(): string {
+  try {
+    const h = headers()
+    const host = h.get('host')
+    const proto = h.get('x-forwarded-proto') || 'https'
+    if (host) return `${proto}://${host}`
+  } catch { /* not available in some build contexts */ }
+  return process.env.NEXT_PUBLIC_BASE_URL || 'https://markdekock.com'
+}
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: { lang?: string }
+}): Promise<Metadata> {
+  const lang = (VALID_LANGS.includes((searchParams.lang || 'nl') as Lang)
+    ? (searchParams.lang as Lang)
+    : 'nl')
+  const m = META_BY_LANG[lang]
+  const BASE = getBaseUrl()
+  const ogUrl = `${BASE}/api/ai_benchmark/og?type=landing`
+  return {
+    title:       m.title,
+    description: m.desc,
+    openGraph: {
+      title:       m.ogTitle,
+      description: m.desc,
+      url:         `${BASE}/ai_benchmark`,
+      locale:      m.locale,
+      type:        'website',
+      images: [{ url: ogUrl, width: 1200, height: 630, alt: m.ogTitle }],
+    },
+    twitter: {
+      card:        'summary_large_image',
+      title:       m.twTitle,
+      description: m.twDesc,
+      images:      [ogUrl],
+    },
+  }
+}
 
 // Refresh aggregate data every hour in production.
 export const revalidate = 3600
