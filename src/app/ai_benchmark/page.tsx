@@ -79,9 +79,8 @@ export async function generateMetadata({
 }: {
   searchParams: { lang?: string }
 }): Promise<Metadata> {
-  const lang = (VALID_LANGS.includes((searchParams.lang || 'nl') as Lang)
-    ? (searchParams.lang as Lang)
-    : 'nl')
+  const candidate = (searchParams.lang || 'nl') as Lang
+  const lang: Lang = VALID_LANGS.includes(candidate) ? candidate : 'nl'
   const m = META_BY_LANG[lang]
   const BASE = getBaseUrl()
   const ogUrl = `${BASE}/api/ai_benchmark/og?type=landing`
