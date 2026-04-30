@@ -14,10 +14,10 @@ function isMentorDomain(): boolean {
 export async function generateMetadata(): Promise<Metadata> {
   if (isMentorDomain()) {
     return {
-      title: 'Strategisch mentor voor AI & executie | Mark de Kock',
+      title: 'AI strategie & executie | Mark de Kock',
       description: 'Van AI-ambitie naar iets wat écht werkt in jouw organisatie. Persoonlijke begeleiding voor leiders. Max. 5 trajecten tegelijk.',
       openGraph: {
-        title: 'Mark de Kock — Strategisch mentor voor AI & executie',
+        title: 'Mark de Kock — AI strategie & executie',
         description: 'Van AI-ambitie naar iets wat écht werkt in jouw organisatie.',
         url: 'https://markdekock.com',
         siteName: 'markdekock.com',

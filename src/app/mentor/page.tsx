@@ -37,7 +37,7 @@ const stagger = {
 const T = {
   nl: {
     navName:    'Mark de Kock',
-    navRole:    'Strategisch mentor voor AI & executie',
+    navRole:    'AI strategie & executie',
     navPartner: 'Partner · Kirk & Blackbeard',
     navCta:     'Plan gesprek →',
     heroBadge:  'Persoonlijke begeleiding · Beperkt beschikbaar',
@@ -146,16 +146,16 @@ const T = {
     spotsCta2:   'Doe eerst de gratis AI-scan',
     spotsTrust:  'Gratis intake · Geen verplichting · We bekijken samen of er een match is',
 
-    footerCopy:  'Strategisch mentor voor AI & executie',
+    footerCopy:  'AI strategie & executie',
     footerSub:   'markdekock.com',
     footerWerk:  'Wat ik maak →',
   },
   en: {
     navName:    'Mark de Kock',
-    navRole:    'Strategic mentor for AI & execution',
+    navRole:    'AI strategy & execution',
     navPartner: 'Partner · Kirk & Blackbeard',
     navCta:     'Book a call →',
-    heroBadge:  'Personal mentorship · Limited availability',
+    heroBadge:  'Personal guidance · Limited availability',
     heroH1a:    'From AI ambition to',
     heroH1b:    'something that actually works in your organisation.',
     heroBody:   'Most leaders I speak with don\'t lack information about AI. They lack someone to help them decide. Not as a trainer, but as someone who moves between strategy and what actually gets delivered.',
@@ -261,16 +261,16 @@ const T = {
     spotsCta2:   'Take the free AI scan first',
     spotsTrust:  'Free intake · No obligations · We\'ll see if there\'s a fit',
 
-    footerCopy:  'Strategic mentor for AI & execution',
+    footerCopy:  'AI strategy & execution',
     footerSub:   'markdekock.com',
     footerWerk:  'What I build →',
   },
   de: {
     navName:    'Mark de Kock',
-    navRole:    'Strategischer Mentor für KI & Umsetzung',
+    navRole:    'KI-Strategie & Umsetzung',
     navPartner: 'Partner · Kirk & Blackbeard',
     navCta:     'Gespräch vereinbaren →',
-    heroBadge:  'Persönliches Mentoring · Begrenzte Verfügbarkeit',
+    heroBadge:  'Persönliche Begleitung · Begrenzte Verfügbarkeit',
     heroH1a:    'Von KI-Ambitionen zu',
     heroH1b:    'etwas, das in deiner Organisation wirklich funktioniert.',
     heroBody:   'Die meisten Führungskräfte, mit denen ich spreche, haben keinen Mangel an Informationen über KI. Was fehlt, ist jemand, der hilft, Entscheidungen zu treffen. Nicht als Trainer, sondern als jemand, der sich zwischen Strategie und dem bewegt, was tatsächlich umgesetzt wird.',
@@ -364,7 +364,7 @@ const T = {
     spotsCta2:   'Zuerst den kostenlosen KI-Scan machen',
     spotsTrust:  'Kostenloses Erstgespräch · Keine Verpflichtung · Wir schauen gemeinsam, ob es passt',
 
-    footerCopy:  'Strategischer Mentor für KI & Umsetzung',
+    footerCopy:  'KI-Strategie & Umsetzung',
     footerSub:   'markdekock.com',
     footerWerk:  'Was ich baue →',
   },

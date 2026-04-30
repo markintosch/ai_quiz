@@ -1,9 +1,9 @@
 // FILE: src/components/shared/MarkPortrait.tsx
 // ──────────────────────────────────────────────────────────────────────────────
 // Reusable portrait of Mark, used to add a human touch above-the-fold on
-// markdekock.com (mentor landing) and the AI-benchmark landing.
+// markdekock.com and the AI-benchmark landing.
 //
-// The image lives at /public/mark/portrait-warm.jpg. If the file is missing,
+// The image lives at /public/MDK_klein.png. If the file is missing,
 // nothing renders — the surrounding layout stays intact.
 
 'use client'
@@ -54,7 +54,7 @@ export function MarkPortrait({
       }}
     >
       <Image
-        src="/mark/portrait-warm.jpg"
+        src="/MDK_klein.png"
         alt={alt}
         fill
         sizes={`${size}px`}
