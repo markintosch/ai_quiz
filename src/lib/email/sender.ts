@@ -59,6 +59,26 @@ export async function logEmail({
 
 // ── sendSummaryEmail ──────────────────────────────────────────────────────────
 
+type Locale = 'en' | 'nl' | 'fr'
+
+const SUMMARY_SUBJECT: Record<Locale, (lite: boolean, score: QuizScore) => string> = {
+  en: (lite, s) => lite
+    ? `Your AI Maturity Score: ${s.overall}/100 — ${s.maturityLevel}`
+    : `Your AI Maturity Assessment Results — ${s.maturityLevel} (${s.overall}/100)`,
+  nl: (lite, s) => lite
+    ? `Jouw AI-maturity score: ${s.overall}/100 — ${s.maturityLevel}`
+    : `Je AI-maturity assessment resultaat — ${s.maturityLevel} (${s.overall}/100)`,
+  fr: (lite, s) => lite
+    ? `Votre score AI Maturity : ${s.overall}/100 — ${s.maturityLevel}`
+    : `Vos résultats AI Maturity — ${s.maturityLevel} (${s.overall}/100)`,
+}
+
+const FOLLOWUP_SUBJECT: Record<Locale, (firstName: string, productName: string) => string> = {
+  en: (n, p) => `Still thinking about your ${p} score? Here's your next step, ${n}.`,
+  nl: (n, p) => `Nog aan het denken over je ${p}-score? Hier is je volgende stap, ${n}.`,
+  fr: (n, p) => `Vous réfléchissez encore à votre score ${p} ? Voici votre prochaine étape, ${n}.`,
+}
+
 interface SendSummaryEmailParams {
   to: string
   name: string
@@ -66,18 +86,18 @@ interface SendSummaryEmailParams {
   resultsUrl: string
   respondentId: string
   isLite: boolean
+  locale?: Locale
 }
 
 export async function sendSummaryEmail(params: SendSummaryEmailParams) {
-  const { to, name, score, resultsUrl, respondentId, isLite } = params
+  const { to, name, score, resultsUrl, respondentId, isLite, locale = 'en' } = params
 
   const html = await render(
-    SummaryEmail({ name, score, resultsUrl, respondentId, isLite })
+    SummaryEmail({ name, score, resultsUrl, respondentId, isLite, locale })
   )
 
-  const subject = isLite
-    ? `Your AI Maturity Score: ${score.overall}/100 — ${score.maturityLevel}`
-    : `Your AI Maturity Assessment Results — ${score.maturityLevel} (${score.overall}/100)`
+  const subjectFn = SUMMARY_SUBJECT[locale] ?? SUMMARY_SUBJECT.en
+  const subject = subjectFn(isLite, score)
 
   const { error } = await resend.emails.send({ from: FROM, to, subject, html })
 
@@ -209,17 +229,26 @@ interface SendFollowUpEmailParams {
   nextStepsUrl: string
   respondentId: string
   productName?: string
+  locale?: Locale
+}
+
+const FOLLOWUP_GENERIC: Record<Locale, string> = {
+  en: 'AI Maturity Assessment',
+  nl: 'AI-maturity assessment',
+  fr: 'évaluation AI Maturity',
 }
 
 export async function sendFollowUpEmail(params: SendFollowUpEmailParams) {
-  const { to, name, score, maturityLevel, resultsUrl, nextStepsUrl, respondentId, productName } = params
+  const { to, name, score, maturityLevel, resultsUrl, nextStepsUrl, respondentId, productName, locale = 'en' } = params
   const firstName = name.trim().split(/\s+/)[0]
+  const product   = productName ?? FOLLOWUP_GENERIC[locale] ?? FOLLOWUP_GENERIC.en
 
   const html = await render(
-    FollowUpEmail({ firstName, score, maturityLevel, resultsUrl, nextStepsUrl, productName })
+    FollowUpEmail({ firstName, score, maturityLevel, resultsUrl, nextStepsUrl, productName: product, locale })
   )
 
-  const subject = `Still thinking about your ${productName ?? 'assessment'} score? Here's your next step, ${firstName}.`
+  const subjectFn = FOLLOWUP_SUBJECT[locale] ?? FOLLOWUP_SUBJECT.en
+  const subject = subjectFn(firstName, product)
 
   const scheduledAt = new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString()
 

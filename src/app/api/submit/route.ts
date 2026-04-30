@@ -183,6 +183,10 @@ export async function POST(req: NextRequest) {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? ''
     const resultsUrl = `${baseUrl}/${locale}/results/${response.id}`
 
+    // Normalise locale to one of the supported email locales.
+    const emailLocale: 'en' | 'nl' | 'fr' =
+      locale === 'nl' ? 'nl' : locale === 'fr' ? 'fr' : 'en'
+
     await Promise.allSettled([
       sendSummaryEmail({
         to:          lead.email,
@@ -191,6 +195,7 @@ export async function POST(req: NextRequest) {
         resultsUrl,
         respondentId,
         isLite:      version === 'lite',
+        locale:      emailLocale,
       }),
       sendAdminNotification({
         respondent: {
@@ -215,6 +220,7 @@ export async function POST(req: NextRequest) {
         nextStepsUrl: `${baseUrl}/${locale}/next-steps?r=${response.id}`,
         respondentId,
         productName:  productConfig.name,
+        locale:       emailLocale,
       })] : []),
       // Company lead notification — only fires when notify_email is set on the company
       ...(companyNotifyEmail ? [sendLeadNotification({

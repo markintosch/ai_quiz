@@ -12,23 +12,88 @@ import {
 } from '@react-email/components'
 import type { QuizScore } from '@/types'
 
+type Locale = 'en' | 'nl' | 'fr'
+
 interface SummaryEmailProps {
-  name: string
-  score: QuizScore
-  resultsUrl: string
+  name:         string
+  score:        QuizScore
+  resultsUrl:   string
   respondentId: string
-  isLite: boolean
+  isLite:       boolean
+  locale?:      Locale
 }
 
-export function SummaryEmail({ name, score, resultsUrl, respondentId, isLite }: SummaryEmailProps) {
+const STRINGS: Record<Locale, {
+  preview:        (overall: number, level: string) => string
+  greeting:       (firstName: string) => string
+  bodyIntro:      (isLite: boolean) => string
+  liteTeaser:     string
+  dimensionTitle: string
+  ctaIntro:       (isLite: boolean) => string
+  buttonLabel:    string
+  brand:          string
+  receivedNote:   string
+  unsubLine:      (unsubUrl: string, privacyUrl: string) => { unsubLabel: string; privacyLabel: string; before: string }
+  deletionNote:   string
+}> = {
+  en: {
+    preview:        (o, l) => `Your AI Maturity Score: ${o}/100 — ${l}`,
+    greeting:       (n) => `Hi ${n},`,
+    bodyIntro:      (lite) => `Thank you for completing the ${lite ? 'AI Maturity Lite Assessment' : 'AI Maturity Assessment'}. Here is a summary of your results.`,
+    liteTeaser:     'This is a directional score based on the Lite assessment (8 questions). Your full canonical score, including a detailed dimension breakdown, Shadow AI analysis and personalised recommendations, is available in the Full Assessment.',
+    dimensionTitle: 'Dimension Snapshot',
+    ctaIntro:       (lite) => lite
+      ? 'View your full directional results and explore how to accelerate your AI journey.'
+      : 'Your full results dashboard, including recommendations and a personalised consultation booking, is ready.',
+    buttonLabel:    'View My Results →',
+    brand:          'Brand PWRD Media · AI Transformation Consultancy',
+    receivedNote:   'You received this email because you completed the AI Maturity Assessment and consented to receive your results. This is a transactional email.',
+    unsubLine:      () => ({ unsubLabel: 'Unsubscribe', privacyLabel: 'Privacy Policy', before: 'To stop receiving marketing communications: ' }),
+    deletionNote:   'To request deletion of your data email ',
+  },
+  nl: {
+    preview:        (o, l) => `Jouw AI-maturity score: ${o}/100 — ${l}`,
+    greeting:       (n) => `Hoi ${n},`,
+    bodyIntro:      (lite) => `Bedankt voor het invullen van ${lite ? 'de AI-maturity Lite-assessment' : 'de AI-maturity assessment'}. Hieronder een samenvatting van je resultaat.`,
+    liteTeaser:     'Dit is een indicatieve score op basis van de Lite-assessment (8 vragen). Je volledige score, inclusief gedetailleerde dimensies, Shadow AI-analyse en persoonlijke aanbevelingen, krijg je in de uitgebreide assessment.',
+    dimensionTitle: 'Dimensies in één oogopslag',
+    ctaIntro:       (lite) => lite
+      ? 'Bekijk je volledige indicatieve resultaat en ontdek hoe je je AI-traject kunt versnellen.'
+      : 'Je volledige resultatenoverzicht staat klaar, inclusief aanbevelingen en de mogelijkheid om een persoonlijk gesprek in te plannen.',
+    buttonLabel:    'Bekijk mijn resultaat →',
+    brand:          'Brand PWRD Media · AI-transformatieconsultancy',
+    receivedNote:   'Je ontvangt deze e-mail omdat je de AI-maturity assessment hebt ingevuld en hebt aangegeven je resultaat te willen ontvangen. Dit is een transactionele e-mail.',
+    unsubLine:      () => ({ unsubLabel: 'Uitschrijven', privacyLabel: 'Privacybeleid', before: 'Geen marketingmails meer ontvangen: ' }),
+    deletionNote:   'Wil je dat we je gegevens verwijderen? Mail dan ',
+  },
+  fr: {
+    preview:        (o, l) => `Votre score AI Maturity : ${o}/100 — ${l}`,
+    greeting:       (n) => `Bonjour ${n},`,
+    bodyIntro:      (lite) => `Merci d'avoir complété ${lite ? "l'évaluation AI Maturity Lite" : "l'évaluation AI Maturity"}. Voici un résumé de vos résultats.`,
+    liteTeaser:     "Il s'agit d'un score indicatif basé sur l'évaluation Lite (8 questions). Votre score complet, avec un détail par dimension, une analyse Shadow AI et des recommandations personnalisées, est disponible dans l'évaluation complète.",
+    dimensionTitle: 'Aperçu par dimension',
+    ctaIntro:       (lite) => lite
+      ? "Consultez vos résultats indicatifs complets et découvrez comment accélérer votre parcours IA."
+      : "Votre tableau de bord complet est prêt, avec des recommandations et la possibilité de réserver un entretien personnalisé.",
+    buttonLabel:    'Voir mes résultats →',
+    brand:          'Brand PWRD Media · Conseil en transformation IA',
+    receivedNote:   "Vous recevez cet e-mail parce que vous avez complété l'évaluation AI Maturity et accepté de recevoir vos résultats. Ceci est un e-mail transactionnel.",
+    unsubLine:      () => ({ unsubLabel: 'Se désabonner', privacyLabel: 'Politique de confidentialité', before: 'Pour ne plus recevoir de communications marketing : ' }),
+    deletionNote:   'Pour demander la suppression de vos données, écrivez à ',
+  },
+}
+
+export function SummaryEmail({ name, score, resultsUrl, respondentId, isLite, locale = 'en' }: SummaryEmailProps) {
+  const t = STRINGS[locale] ?? STRINGS.en
   const firstName = name.split(' ')[0]
+  const unsubUrl   = `${process.env.NEXT_PUBLIC_BASE_URL}/api/unsubscribe?rid=${respondentId}`
+  const privacyUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/privacy`
+  const { unsubLabel, privacyLabel, before } = t.unsubLine(unsubUrl, privacyUrl)
 
   return (
     <Html>
       <Head />
-      <Preview>
-        Your AI Maturity Score: {String(score.overall)}/100 — {score.maturityLevel}
-      </Preview>
+      <Preview>{t.preview(score.overall, score.maturityLevel)}</Preview>
       <Body style={main}>
         <Container style={container}>
           {/* Header */}
@@ -38,12 +103,8 @@ export function SummaryEmail({ name, score, resultsUrl, respondentId, isLite }: 
 
           {/* Score hero */}
           <Section style={scoreSection}>
-            <Text style={greeting}>Hi {firstName},</Text>
-            <Text style={body}>
-              Thank you for completing the{' '}
-              {isLite ? 'AI Maturity Lite Assessment' : 'AI Maturity Assessment'}.
-              Here is a summary of your results.
-            </Text>
+            <Text style={greeting}>{t.greeting(firstName)}</Text>
+            <Text style={body}>{t.bodyIntro(isLite)}</Text>
 
             <Section style={scoreBadge}>
               <Text style={scoreNumber}>{score.overall}</Text>
@@ -51,19 +112,14 @@ export function SummaryEmail({ name, score, resultsUrl, respondentId, isLite }: 
             </Section>
 
             {isLite && (
-              <Text style={teaser}>
-                This is a <strong>directional score</strong> based on the Lite assessment
-                (8 questions). Your full canonical score — including a detailed dimension
-                breakdown, Shadow AI analysis and personalised recommendations — is available
-                in the Full Assessment.
-              </Text>
+              <Text style={teaser}>{t.liteTeaser}</Text>
             )}
           </Section>
 
           {/* Dimension snapshot */}
           <Section style={section}>
             <Heading as="h2" style={sectionHeading}>
-              Dimension Snapshot
+              {t.dimensionTitle}
             </Heading>
             {score.dimensionScores.map(ds => (
               <Section key={ds.dimension} style={dimensionRow}>
@@ -77,38 +133,25 @@ export function SummaryEmail({ name, score, resultsUrl, respondentId, isLite }: 
 
           {/* CTA */}
           <Section style={section}>
-            <Text style={body}>
-              {isLite
-                ? 'View your full directional results and explore how to accelerate your AI journey.'
-                : 'Your full results dashboard — including recommendations and a personalised consultation booking — is ready.'}
-            </Text>
+            <Text style={body}>{t.ctaIntro(isLite)}</Text>
             <Button style={button} href={resultsUrl}>
-              View My Results →
+              {t.buttonLabel}
             </Button>
           </Section>
 
           <Hr style={divider} />
 
           <Section style={footer}>
+            <Text style={footerText}>{t.brand}</Text>
+            <Text style={footerText}>{t.receivedNote}</Text>
             <Text style={footerText}>
-              Brand PWRD Media · AI Transformation Consultancy
-            </Text>
-            <Text style={footerText}>
-              You received this email because you completed the AI Maturity Assessment
-              and consented to receive your results. This is a transactional email.
-            </Text>
-            <Text style={footerText}>
-              To stop receiving marketing communications:{' '}
-              <a href={`${process.env.NEXT_PUBLIC_BASE_URL}/api/unsubscribe?rid=${respondentId}`} style={link}>
-                Unsubscribe
-              </a>
+              {before}
+              <a href={unsubUrl} style={link}>{unsubLabel}</a>
               {' · '}
-              <a href={`${process.env.NEXT_PUBLIC_BASE_URL}/privacy`} style={link}>
-                Privacy Policy
-              </a>
+              <a href={privacyUrl} style={link}>{privacyLabel}</a>
             </Text>
             <Text style={footerText}>
-              To request deletion of your data email{' '}
+              {t.deletionNote}
               <a href="mailto:mark@brandpwrdmedia.com?subject=Data deletion request" style={link}>
                 mark@brandpwrdmedia.com
               </a>
