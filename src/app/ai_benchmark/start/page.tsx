@@ -4,7 +4,7 @@ import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
-  getContent, getQuestions, type Lang, type Role, type Question,
+  getContent, getQuestions, pickLang, type Lang, type Role, type Question,
 } from '@/products/ai_benchmark/data'
 import { trackBenchEvent } from '@/components/ai_benchmark/Tracker'
 
@@ -34,8 +34,7 @@ type Answers = Record<string, string | string[] | undefined>
 function StartInner() {
   const searchParams = useSearchParams()
   const router       = useRouter()
-  const rawLang      = searchParams.get('lang') || 'nl'
-  const lang         = (['nl', 'en', 'fr', 'de'].includes(rawLang) ? rawLang : 'nl') as Lang
+  const lang         = pickLang(searchParams.get('lang'))
 
   const t = getContent(lang)
 

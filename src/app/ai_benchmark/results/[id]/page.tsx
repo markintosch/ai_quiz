@@ -4,7 +4,7 @@ import { headers } from 'next/headers'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@supabase/supabase-js'
-import { getContent, getQuestions, type Lang, type Role, type Question } from '@/products/ai_benchmark/data'
+import { getContent, getQuestions, pickLang, type Lang, type Role, type Question } from '@/products/ai_benchmark/data'
 import {
   computeAggregates, mockAggregates, userSelectedIds, type QuestionAggregate,
   computeSkillCurve, mockSkillCurve, userSkillShift, SKILL_LEVELS,
@@ -231,7 +231,7 @@ export default async function ResultsPage({
   params:        { id: string }
   searchParams: { lang?: string; preview?: string; segment?: string }
 }) {
-  const lang    = (['nl', 'en', 'fr', 'de'].includes(searchParams.lang || '') ? searchParams.lang : 'nl') as Lang
+  const lang    = pickLang(searchParams.lang)
   const t       = getContent(lang)
   const preview = searchParams.preview === '1'
   const segment = (['all', 'role', 'industry', 'size', 'region'].includes(searchParams.segment || '')

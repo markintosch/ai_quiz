@@ -4,7 +4,7 @@
 
 import Link from 'next/link'
 import { createClient } from '@supabase/supabase-js'
-import { getContent, getQuestions, type Lang } from '@/products/ai_benchmark/data'
+import { getContent, getQuestions, pickLang, type Lang } from '@/products/ai_benchmark/data'
 import { computeToolWalls } from '@/products/ai_benchmark/tools_aggregator'
 import { LangPills }   from '@/components/ai_benchmark/LangPills'
 import { VoteButtons } from '@/components/ai_benchmark/VoteButtons'
@@ -31,7 +31,7 @@ export default async function ToolsPage({
 }: {
   searchParams: { lang?: string }
 }) {
-  const lang = (['nl', 'en', 'fr', 'de'].includes(searchParams.lang || '') ? searchParams.lang : 'nl') as Lang
+  const lang = pickLang(searchParams.lang)
   const t    = getContent(lang)
 
   // Load Q2 canonical labels in the active language

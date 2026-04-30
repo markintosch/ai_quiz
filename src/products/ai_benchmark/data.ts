@@ -1492,6 +1492,17 @@ export function getContent(lang: Lang): LangContent {
   return CONTENT[lang] ?? NL
 }
 
+// ── Centralized lang-input picker ────────────────────────────────────────────
+// Use everywhere a `lang` is read from a URL query / param / cookie. Returns
+// 'nl' when the input is missing, empty, or unsupported. Single source of
+// truth so the same pickLang bug (undefined slipping through) cannot recur.
+export const VALID_LANGS: Lang[] = ['nl', 'en', 'fr', 'de']
+
+export function pickLang(input: string | string[] | undefined | null): Lang {
+  const candidate = Array.isArray(input) ? input[0] : input
+  return VALID_LANGS.includes(candidate as Lang) ? (candidate as Lang) : 'nl'
+}
+
 // ════════════════════════════════════════════════════════════════════════════
 // Question structures (language-agnostic)
 // ════════════════════════════════════════════════════════════════════════════

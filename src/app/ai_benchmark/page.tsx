@@ -7,7 +7,7 @@ import type { Metadata } from 'next'
 import { headers } from 'next/headers'
 import Link from 'next/link'
 import { createClient } from '@supabase/supabase-js'
-import { getContent, type Lang } from '@/products/ai_benchmark/data'
+import { getContent, pickLang, type Lang } from '@/products/ai_benchmark/data'
 import {
   computePublicDashboard, mockPublicDashboard, type DashboardData,
 } from '@/products/ai_benchmark/public_dashboard'
@@ -16,8 +16,6 @@ import { LiveCounter }  from '@/components/ai_benchmark/LiveCounter'
 import { SkillCurve }   from '@/components/ai_benchmark/SkillCurve'
 import { Tracker }      from '@/components/ai_benchmark/Tracker'
 import { MarkPortrait } from '@/components/shared/MarkPortrait'
-
-const VALID_LANGS: Lang[] = ['nl', 'en', 'fr', 'de']
 
 // Per-language preview / OG metadata. Page metadata wins over layout
 // metadata via Next 14 deep-merge, so this overrides the NL fallback
@@ -79,8 +77,7 @@ export async function generateMetadata({
 }: {
   searchParams: { lang?: string }
 }): Promise<Metadata> {
-  const candidate = (searchParams.lang || 'nl') as Lang
-  const lang: Lang = VALID_LANGS.includes(candidate) ? candidate : 'nl'
+  const lang = pickLang(searchParams.lang)
   const m = META_BY_LANG[lang]
   const BASE = getBaseUrl()
   const ogUrl = `${BASE}/api/ai_benchmark/og?type=landing`
@@ -130,7 +127,7 @@ export default async function AiBenchmarkLandingPage({
 }: {
   searchParams: { lang?: string; preview?: string }
 }) {
-  const lang = (['nl', 'en', 'fr', 'de'].includes(searchParams.lang || '') ? searchParams.lang : 'nl') as Lang
+  const lang = pickLang(searchParams.lang)
   const preview = searchParams.preview === '1'
   const t = getContent(lang)
 

@@ -8,7 +8,7 @@ import { createClient } from '@supabase/supabase-js'
 import {
   computePublicDashboard, mockPublicDashboard, type DashboardData,
 } from '@/products/ai_benchmark/public_dashboard'
-import { getContent, type Lang } from '@/products/ai_benchmark/data'
+import { getContent, pickLang, type Lang } from '@/products/ai_benchmark/data'
 import { SkillCurve }     from '@/components/ai_benchmark/SkillCurve'
 import { MarketOverview } from '@/components/ai_benchmark/MarketOverview'
 import { LiveCounter }    from '@/components/ai_benchmark/LiveCounter'
@@ -31,7 +31,6 @@ const LIGHT      = '#F8FAFC'
 const FONT       = "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
 
 const COMPARISON_THRESHOLD = 30
-const VALID_LANGS: Lang[] = ['nl', 'en', 'fr', 'de']
 
 // Map our internal lang code → Intl.DateTimeFormat locale tag
 const DATE_LOCALE: Record<Lang, string> = {
@@ -55,7 +54,7 @@ function getBaseUrl(): string {
 
 export async function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Promise<Metadata> {
   const BASE = getBaseUrl()
-  const lang = (VALID_LANGS.includes((searchParams.lang || 'nl') as Lang) ? (searchParams.lang as Lang) : 'nl')
+  const lang = pickLang(searchParams.lang)
   const ogUrl = `${BASE}/api/ai_benchmark/og?type=dashboard`
   const titles: Record<Lang, { title: string; desc: string; ogTitle: string; twTitle: string; twDesc: string }> = {
     nl: {
@@ -114,7 +113,7 @@ export default async function DashboardPage({
   searchParams: { preview?: string; lang?: string }
 }) {
   const preview = searchParams.preview === '1'
-  const lang = (VALID_LANGS.includes((searchParams.lang || 'nl') as Lang) ? (searchParams.lang as Lang) : 'nl')
+  const lang = pickLang(searchParams.lang)
   const t = getContent(lang)
 
   let data: DashboardData
