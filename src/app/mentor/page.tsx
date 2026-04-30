@@ -528,16 +528,13 @@ function MentorPageInner() {
             <motion.div
               variants={fadeUp}
               style={{
-                display: 'inline-flex', alignItems: 'center', gap: 14,
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                padding: '10px 20px 10px 10px', borderRadius: 100,
-                marginBottom: 32,
+                display: 'inline-flex', alignItems: 'center', gap: 16,
+                marginBottom: 36,
               }}
             >
-              <MarkPortrait size={64} ringColor={`${WARM}55`} />
+              <MarkPortrait size={72} ringColor={`${WARM}55`} />
               <div style={{ textAlign: 'left', lineHeight: 1.3 }}>
-                <p style={{ fontSize: 14, fontWeight: 700, color: WHITE, margin: 0 }}>
+                <p style={{ fontSize: 15, fontWeight: 700, color: WHITE, margin: 0 }}>
                   {t.navName}
                 </p>
                 <p style={{ fontSize: 12, color: '#94A3B8', margin: 0 }}>

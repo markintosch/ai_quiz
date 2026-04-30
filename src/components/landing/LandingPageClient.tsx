@@ -7,6 +7,7 @@ import { Link } from '@/i18n/routing'
 import { trackEvent } from '@/lib/analytics'
 import { RadarChart } from '@/components/results/RadarChart'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+import { MarkPortrait } from '@/components/shared/MarkPortrait'
 import type { DimensionScore } from '@/types'
 import type { ProductCopy } from '@/products/types'
 
@@ -99,10 +100,11 @@ export default function LandingPageClient({ productName, productShortName, dimen
   const navSubHref  = copy.navSubHref  ?? '/mentor'
   const navSubLabel = copy.navSub      ?? 'markdekock.com/mentor →'
   const practitionerName    = copy.practitionerName    ?? 'Mark de Kock'
-  const practitionerPhoto   = copy.practitionerPhoto   ?? '/mark-de-kock.jpg'
+  // practitionerPhoto deprecated — MarkPortrait now points at /MDK_klein.png directly.
+  // practitionerInitial still used for the small monogram badge in the nav.
   const practitionerInitial = copy.practitionerInitial ?? 'M'
   const practitionersLink      = copy.practitionersLink      ?? '/mentor'
-  const practitionersLinkLabel = copy.practitionersLinkLabel ?? 'Over de AI Mentor begeleiding →'
+  const practitionersLinkLabel = copy.practitionersLinkLabel ?? 'Meer over de aanpak →'
   const footerOwner     = copy.footerOwner     ?? 'Mark de Kock'
   const footerOwnerLink = copy.footerOwnerLink ?? '/mentor'
 
@@ -344,17 +346,8 @@ export default function LandingPageClient({ productName, productShortName, dimen
 
             <motion.div variants={stagger} className="max-w-lg mx-auto">
               <motion.div variants={fadeUp} className="rounded-2xl p-7 flex flex-col items-center text-center border border-white/15" style={{ background: 'rgba(30,58,95,0.6)' }}>
-                <div className="w-24 h-24 rounded-full overflow-hidden mb-4 bg-[#1E3A5F] flex items-center justify-center flex-shrink-0 ring-2 ring-blue-500/40">
-                  <img
-                    src={practitionerPhoto}
-                    alt={practitionerName}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      const tgt = e.currentTarget
-                      tgt.style.display = 'none'
-                      if (tgt.parentElement) tgt.parentElement.innerHTML = `<span style="color:white;font-weight:700;font-size:1.25rem">${practitionerInitial}</span>`
-                    }}
-                  />
+                <div className="mb-4">
+                  <MarkPortrait size={144} ringColor="rgba(96,165,250,0.4)" alt={practitionerName} />
                 </div>
                 <h3 className="text-white font-bold text-lg mb-0.5">{practitionerName}</h3>
                 <p className="text-xs font-semibold mb-4" style={{ color: '#D97706' }}>{copy.markRole ?? t('practitioners.mark.role')}</p>
