@@ -83,6 +83,20 @@ export default function VrooooomPage() {
   return (
     <div style={{ minHeight: '100vh', background: BLACK, fontFamily: 'Inter, system-ui, sans-serif', color: WHITE }}>
 
+      {/* ── MVP banner (full-width, top of page) ── */}
+      <div style={{
+        background: AMBER,
+        color: BLACK,
+        padding: '8px 24px',
+        textAlign: 'center',
+        fontSize: 11,
+        fontWeight: 800,
+        letterSpacing: '0.14em',
+        textTransform: 'uppercase',
+      }}>
+        🚧 MVP · Work in progress · Concept release for review · Not yet public
+      </div>
+
       {/* ── Nav ── */}
       <nav style={{ borderBottom: `1px solid ${BORDER}`, padding: '0 24px' }}>
         <div style={{ maxWidth: 1080, margin: '0 auto', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -112,12 +126,24 @@ export default function VrooooomPage() {
 
         <div style={{ position: 'relative', maxWidth: 720, margin: '0 auto' }}>
           <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            background: `${RED}18`, border: `1px solid ${RED}40`,
-            borderRadius: 100, padding: '5px 16px', marginBottom: 28,
+            display: 'inline-flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', justifyContent: 'center',
+            marginBottom: 28,
           }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: RED, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+            <span style={{
+              display: 'inline-flex', alignItems: 'center',
+              background: `${RED}18`, border: `1px solid ${RED}40`,
+              borderRadius: 100, padding: '5px 16px',
+              fontSize: 11, fontWeight: 700, color: RED, letterSpacing: '0.12em', textTransform: 'uppercase',
+            }}>
               🏎 Vrooooom Games — F1 Knowledge Experience
+            </span>
+            <span style={{
+              display: 'inline-flex', alignItems: 'center',
+              background: `${AMBER}18`, border: `1px solid ${AMBER}40`,
+              borderRadius: 100, padding: '5px 12px',
+              fontSize: 10, fontWeight: 800, color: AMBER, letterSpacing: '0.14em', textTransform: 'uppercase',
+            }}>
+              MVP · Demo
             </span>
           </div>
 
