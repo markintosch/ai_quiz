@@ -67,6 +67,135 @@ const LIGHT      = '#F8FAFC'
 const FONT       = "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
 
 const CALENDLY_INTAKE = 'https://calendly.com/markiesbpm/ai-intro-meeting-mark-de-kock'
+// Single point of truth for the acquisition-funnel destination. When markdekock.com
+// gains a real #contact anchor or contact form, swap this to that URL.
+const CONTACT_HREF = CALENDLY_INTAKE
+const THECREW_HREF = 'https://markdekock.com/thecrew/nl'
+
+// Score band cutoffs (0-100). Tweak here if the field saturates higher.
+function getScoreTier(score: number): 'low' | 'mid' | 'high' {
+  if (score < 40) return 'low'
+  if (score < 70) return 'mid'
+  return 'high'
+}
+
+// ── Acquisition copy (per locale; FR/DE fall back to NL) ────────────────────
+type AcqCopy = {
+  // Tiered primary CTA (one of three based on score)
+  tier: Record<'low' | 'mid' | 'high', { eyebrow: string; headline: string; sub: string; button: string }>
+  // The Crew teaser
+  crewLabel:    string
+  crewBody:     string
+  crewLink:     string
+  // Three entry-point cards
+  threeWaysLabel:    string
+  threeWaysHeadline: string
+  cards: Array<{ title: string; body: string; cta: string }>
+  // Reframed share section
+  shareEyebrow: string
+  shareHeading: string
+  shareBody:    string
+}
+
+const ACQUISITION_COPY_NL: AcqCopy = {
+  tier: {
+    low: {
+      eyebrow:  'Volgende stap',
+      headline: 'Je organisatie staat aan het begin. Dat is een kans.',
+      sub:      '45 minuten. We laten zien waar de snelste winst zit voor jouw situatie.',
+      button:   'Plan een AI-quickscan sessie →',
+    },
+    mid: {
+      eyebrow:  'Volgende stap',
+      headline: 'Je hebt de basis. Nu wordt het interessant.',
+      sub:      'Eén team, één campagne, meetbare resultaten. Zie wat AI oplevert voordat je opschaalt.',
+      button:   'Start een 4-weken pilot →',
+    },
+    high: {
+      eyebrow:  'Volgende stap',
+      headline: 'Je bent verder dan de meeste. Tijd om te versnellen.',
+      sub:      'The Crew structureel ingebed in je workflow. Op maat ingericht voor jouw operatie.',
+      button:   'Bespreek volledige AI-implementatie →',
+    },
+  },
+  crewLabel: 'Wat als',
+  crewBody:  'Wat als je deze score structureel kon verbeteren? The Crew is een AI-marketing systeem van 10 agents die dagelijks je marketing versterken.',
+  crewLink:  'Bekijk hoe The Crew werkt →',
+  threeWaysLabel:    'Drie manieren om te starten',
+  threeWaysHeadline: 'Kies de instap die past bij waar je nu staat.',
+  cards: [
+    {
+      title: 'AI-scan → ontdek je kansen',
+      body:  'Je hebt ’m net gedaan. Deel je resultaten en krijg een persoonlijke analyse.',
+      cta:   'Bespreek mijn resultaat →',
+    },
+    {
+      title: 'Pilot-project → bewijs in 4 weken',
+      body:  'Eén campagne, één team, meetbare resultaten.',
+      cta:   'Start een pilot →',
+    },
+    {
+      title: 'Volledige implementatie → AI in je operatie',
+      body:  'The Crew structureel ingebed in je marketing- of bureauworkflow.',
+      cta:   'Plan een implementatiegesprek →',
+    },
+  ],
+  shareEyebrow: 'Deel met je team',
+  shareHeading: 'Laat je team ook de scan doen.',
+  shareBody:    'Zo weet je waar jullie als organisatie staan voordat je aan een AI-project begint. Eén beeld, gedeelde prioriteiten.',
+}
+
+const ACQUISITION_COPY_EN: AcqCopy = {
+  tier: {
+    low: {
+      eyebrow:  'Next step',
+      headline: 'Your organisation is at the start. That is an opportunity.',
+      sub:      '45 minutes. We show you where the fastest win is for your situation.',
+      button:   'Book an AI quick-scan session →',
+    },
+    mid: {
+      eyebrow:  'Next step',
+      headline: 'You have the basics. Now it gets interesting.',
+      sub:      'One team, one campaign, measurable results. See what AI delivers before you scale.',
+      button:   'Start a 4-week pilot →',
+    },
+    high: {
+      eyebrow:  'Next step',
+      headline: "You're ahead of most. Time to accelerate.",
+      sub:      'The Crew embedded in your workflow. Tailored to your operation.',
+      button:   'Discuss full AI implementation →',
+    },
+  },
+  crewLabel: 'What if',
+  crewBody:  'What if you could improve this score structurally? The Crew is an AI marketing system of 10 agents that strengthen your marketing daily.',
+  crewLink:  'See how The Crew works →',
+  threeWaysLabel:    'Three ways to start',
+  threeWaysHeadline: 'Pick the entry point that fits where you are.',
+  cards: [
+    {
+      title: 'AI-scan → discover your opportunities',
+      body:  'You just did it. Share your results and get a personal analysis.',
+      cta:   'Discuss my result →',
+    },
+    {
+      title: 'Pilot project → proof in 4 weeks',
+      body:  'One campaign, one team, measurable results.',
+      cta:   'Start a pilot →',
+    },
+    {
+      title: 'Full implementation → AI in your operation',
+      body:  'The Crew embedded in your marketing or agency workflow.',
+      cta:   'Plan an implementation call →',
+    },
+  ],
+  shareEyebrow: 'Share with your team',
+  shareHeading: 'Let your team take the scan too.',
+  shareBody:    'So you know where you stand as an organisation before starting an AI project. One picture, shared priorities.',
+}
+
+function getAcqCopy(lang: Lang): AcqCopy {
+  return lang === 'en' ? ACQUISITION_COPY_EN : ACQUISITION_COPY_NL
+}
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -523,75 +652,164 @@ export default async function ResultsPage({
         </section>
       )}
 
-      {/* ── Share + Calendly ── */}
-      <section style={{ background: INK, padding: '56px 24px', color: '#fff' }}>
-        <div style={{ maxWidth: 760, margin: '0 auto' }}>
-          <h2 style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: WARM, marginBottom: 8 }}>
-            {t.resultsShareTitle}
-          </h2>
-          <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.8)', lineHeight: 1.6, marginBottom: 24 }}>
-            {t.resultsShareBody}
-          </p>
-
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
-            <ShareCard
-              resultId={data.id}
-              archetypeName={archetype.name}
-              archetypeEmoji={archetype.emoji}
-              totalScore={data.total_score}
-              punchline={punchline}
-              shareUrl={shareUrl}
-              ogUrl={ogUrl}
-              lang={lang}
-            />
-            <Link
-              href={`/ai_benchmark?lang=${lang}`}
-              style={{
-                color: 'rgba(255,255,255,0.7)', fontWeight: 600, fontSize: 13,
-                padding: '12px 0', textDecoration: 'none',
-                marginLeft: 'auto',
-              }}
-            >
-              {t.backToBenchmark}
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Project-acquisition CTA (companies + agencies) ── */}
-      <section style={{ background: '#fff', padding: '64px 24px', borderTop: `1px solid ${BORDER}` }}>
-        <div style={{ maxWidth: 760, margin: '0 auto' }}>
-          <div style={{
-            background: WARM_LIGHT, border: `1px solid ${WARM}55`, borderRadius: 14,
-            padding: '32px 32px',
-          }}>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 12 }}>
-              <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', color: WARM }}>
-                {t.projectCtaLabel}
-              </span>
+      {/* ── Tiered acquisition CTA (score-aware) ──────────────────────────── */}
+      {(() => {
+        const acq  = getAcqCopy(lang)
+        const tier = getScoreTier(data.total_score)
+        const tc   = acq.tier[tier]
+        return (
+          <section style={{ background: '#fff', padding: '64px 24px', borderTop: `1px solid ${BORDER}` }}>
+            <div style={{ maxWidth: 760, margin: '0 auto' }}>
+              <div style={{
+                background: WARM_LIGHT, border: `1px solid ${WARM}55`, borderRadius: 14,
+                padding: '32px 32px',
+              }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 12 }}>
+                  <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', color: WARM }}>
+                    {tc.eyebrow}
+                  </span>
+                </div>
+                <h2 style={{ fontSize: 'clamp(22px, 3vw, 30px)', fontWeight: 900, color: INK, lineHeight: 1.2, letterSpacing: '-0.015em', marginBottom: 14 }}>
+                  {tc.headline}
+                </h2>
+                <p style={{ fontSize: 16, color: BODY, lineHeight: 1.65, marginBottom: 22 }}>
+                  {tc.sub}
+                </p>
+                <a
+                  href={CONTACT_HREF}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-block',
+                    background: ACCENT, color: '#fff', fontWeight: 700, fontSize: 15,
+                    padding: '13px 26px', borderRadius: 8, textDecoration: 'none',
+                    boxShadow: `0 4px 20px ${ACCENT}33`,
+                  }}
+                >
+                  {tc.button}
+                </a>
+              </div>
             </div>
-            <h2 style={{ fontSize: 'clamp(22px, 3vw, 30px)', fontWeight: 900, color: INK, lineHeight: 1.2, letterSpacing: '-0.015em', marginBottom: 14 }}>
-              {t.projectCtaHeadline}
-            </h2>
-            <p style={{ fontSize: 16, color: BODY, lineHeight: 1.65, marginBottom: 22 }}>
-              {t.projectCtaBody}
-            </p>
-            <a
-              href={CALENDLY_INTAKE}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: 'inline-block',
-                background: ACCENT, color: '#fff', fontWeight: 700, fontSize: 15,
-                padding: '13px 26px', borderRadius: 8, textDecoration: 'none',
-                boxShadow: `0 4px 20px ${ACCENT}33`,
-              }}
-            >
-              {t.projectCtaButton}
-            </a>
-          </div>
-        </div>
-      </section>
+          </section>
+        )
+      })()}
+
+      {/* ── The Crew teaser (brief, links to detail page) ─────────────────── */}
+      {(() => {
+        const acq = getAcqCopy(lang)
+        return (
+          <section style={{ background: LIGHT, padding: '40px 24px', borderTop: `1px solid ${BORDER}` }}>
+            <div style={{ maxWidth: 760, margin: '0 auto' }}>
+              <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', color: ACCENT, marginBottom: 8 }}>
+                {acq.crewLabel}
+              </p>
+              <p style={{ fontSize: 17, color: INK, lineHeight: 1.6, fontWeight: 500, marginBottom: 12 }}>
+                {acq.crewBody}
+              </p>
+              <a
+                href={THECREW_HREF}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: ACCENT, fontWeight: 700, fontSize: 14, textDecoration: 'none', borderBottom: `2px solid ${ACCENT}55` }}
+              >
+                {acq.crewLink}
+              </a>
+            </div>
+          </section>
+        )
+      })()}
+
+      {/* ── Drie manieren om te starten (three entry-point cards) ─────────── */}
+      {(() => {
+        const acq = getAcqCopy(lang)
+        return (
+          <section style={{ background: '#fff', padding: '56px 24px', borderTop: `1px solid ${BORDER}` }}>
+            <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+              <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', color: ACCENT, marginBottom: 6 }}>
+                {acq.threeWaysLabel}
+              </p>
+              <p style={{ fontSize: 22, fontWeight: 800, color: INK, marginBottom: 24, letterSpacing: '-0.01em' }}>
+                {acq.threeWaysHeadline}
+              </p>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+                gap: 16,
+              }}>
+                {acq.cards.map((card, i) => (
+                  <div key={i} style={{
+                    background: LIGHT, border: `1px solid ${BORDER}`, borderRadius: 12,
+                    padding: '22px 22px',
+                    display: 'flex', flexDirection: 'column', gap: 10,
+                  }}>
+                    <p style={{ fontSize: 15, fontWeight: 800, color: INK, lineHeight: 1.35, letterSpacing: '-0.01em' }}>
+                      {card.title}
+                    </p>
+                    <p style={{ fontSize: 13, color: BODY, lineHeight: 1.6, flex: 1 }}>
+                      {card.body}
+                    </p>
+                    <a
+                      href={CONTACT_HREF}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        marginTop: 6, color: ACCENT, fontWeight: 700, fontSize: 13,
+                        textDecoration: 'none', borderBottom: `2px solid ${ACCENT}55`,
+                        alignSelf: 'flex-start',
+                      }}
+                    >
+                      {card.cta}
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )
+      })()}
+
+      {/* ── Share with team (reframed: project-oriented) ──────────────────── */}
+      {(() => {
+        const acq = getAcqCopy(lang)
+        return (
+          <section style={{ background: INK, padding: '56px 24px', color: '#fff' }}>
+            <div style={{ maxWidth: 760, margin: '0 auto' }}>
+              <h2 style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: WARM, marginBottom: 8 }}>
+                {acq.shareEyebrow}
+              </h2>
+              <p style={{ fontSize: 22, fontWeight: 800, color: '#fff', lineHeight: 1.3, marginBottom: 10, letterSpacing: '-0.01em' }}>
+                {acq.shareHeading}
+              </p>
+              <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.78)', lineHeight: 1.65, marginBottom: 24 }}>
+                {acq.shareBody}
+              </p>
+
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+                <ShareCard
+                  resultId={data.id}
+                  archetypeName={archetype.name}
+                  archetypeEmoji={archetype.emoji}
+                  totalScore={data.total_score}
+                  punchline={punchline}
+                  shareUrl={shareUrl}
+                  ogUrl={ogUrl}
+                  lang={lang}
+                />
+                <Link
+                  href={`/ai_benchmark?lang=${lang}`}
+                  style={{
+                    color: 'rgba(255,255,255,0.7)', fontWeight: 600, fontSize: 13,
+                    padding: '12px 0', textDecoration: 'none',
+                    marginLeft: 'auto',
+                  }}
+                >
+                  {t.backToBenchmark}
+                </Link>
+              </div>
+            </div>
+          </section>
+        )
+      })()}
 
       <footer style={{ background: '#000', padding: '24px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
