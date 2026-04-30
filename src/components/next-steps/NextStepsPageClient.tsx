@@ -25,10 +25,108 @@ const MATURITY_COLOUR: Record<string, string> = {
   Leading:       'bg-green-100 text-green-700',
 }
 
-const SCORE_BAND_HEADING: Record<ScoreBand, string> = {
-  low:  'Your AI journey is just beginning — here is the smartest first step.',
-  mid:  'You have real AI activity underway — here is how to accelerate it.',
-  high: 'You are ahead of most organisations — here is how to stay that way.',
+type SupportedLocale = 'en' | 'nl' | 'fr'
+
+const SCORE_BAND_HEADING: Record<SupportedLocale, Record<ScoreBand, string>> = {
+  en: {
+    low:  'Your AI journey is just beginning. Here is the smartest first step.',
+    mid:  'You have real AI activity underway. Here is how to accelerate it.',
+    high: 'You are ahead of most organisations. Here is how to stay that way.',
+  },
+  nl: {
+    low:  'Je AI-reis begint net. Dit is de slimste eerste stap.',
+    mid:  'Er gebeurt al echt iets met AI bij jou. Zo versnel je dat.',
+    high: 'Je loopt voor op de meeste organisaties. Zo blijf je daar.',
+  },
+  fr: {
+    low:  "Votre parcours IA débute. Voici la première étape la plus intelligente.",
+    mid:  "Vous avez déjà une activité IA réelle. Voici comment l'accélérer.",
+    high: "Vous êtes en avance sur la plupart des organisations. Voici comment le rester.",
+  },
+}
+
+const PAGE_COPY: Record<SupportedLocale, {
+  yourResult:        string
+  outOf100:          string
+  fallbackHeading:   string
+  recommendedBadge:  string
+  otherOptions:      string
+  forLabel:          string
+  formatLabel:       string
+  bestForLabel:      string
+  notReadyHeading:   string
+  notReadySub:       string
+  namePlaceholder:   string
+  emailPlaceholder:  string
+  saving:            string
+  stayInTouch:       string
+  thanksHeading:     string
+  thanksSub:         string
+}> = {
+  en: {
+    yourResult:        'Your result',
+    outOf100:          'out of 100',
+    fallbackHeading:   'Here are your options.',
+    recommendedBadge:  'Recommended next step',
+    otherOptions:      'Other relevant options',
+    forLabel:          'For:',
+    formatLabel:       'Format:',
+    bestForLabel:      'Best for:',
+    notReadyHeading:   'Not ready for a call yet?',
+    notReadySub:       "Leave your details and we'll reach out when the timing is right for you.",
+    namePlaceholder:   'Your name',
+    emailPlaceholder:  'your@email.com',
+    saving:            'Saving…',
+    stayInTouch:       'Stay in touch',
+    thanksHeading:     "Got it. We'll be in touch.",
+    thanksSub:         'No spam. Just relevant updates when the timing makes sense.',
+  },
+  nl: {
+    yourResult:        'Jouw resultaat',
+    outOf100:          'van de 100',
+    fallbackHeading:   'Hier zijn je opties.',
+    recommendedBadge:  'Aanbevolen volgende stap',
+    otherOptions:      'Andere relevante opties',
+    forLabel:          'Voor:',
+    formatLabel:       'Vorm:',
+    bestForLabel:      'Beste voor:',
+    notReadyHeading:   'Nog niet klaar voor een gesprek?',
+    notReadySub:       'Laat je gegevens achter en we nemen contact op zodra de timing voor jou klopt.',
+    namePlaceholder:   'Je naam',
+    emailPlaceholder:  'jij@bedrijf.nl',
+    saving:            'Bezig…',
+    stayInTouch:       'Blijf in contact',
+    thanksHeading:     'Genoteerd. We laten van ons horen.',
+    thanksSub:         'Geen spam. Alleen relevante updates op het juiste moment.',
+  },
+  fr: {
+    yourResult:        'Votre résultat',
+    outOf100:          'sur 100',
+    fallbackHeading:   'Voici vos options.',
+    recommendedBadge:  'Prochaine étape recommandée',
+    otherOptions:      'Autres options pertinentes',
+    forLabel:          'Pour :',
+    formatLabel:       'Format :',
+    bestForLabel:      'Idéal pour :',
+    notReadyHeading:   "Pas encore prêt à échanger ?",
+    notReadySub:       "Laissez vos coordonnées et nous reviendrons vers vous quand le moment sera opportun.",
+    namePlaceholder:   'Votre nom',
+    emailPlaceholder:  'vous@entreprise.fr',
+    saving:            'Enregistrement…',
+    stayInTouch:       'Restons en contact',
+    thanksHeading:     'Bien noté. Nous reviendrons vers vous.',
+    thanksSub:         'Pas de spam. Uniquement des mises à jour pertinentes au bon moment.',
+  },
+}
+
+function getCopy(locale: string) {
+  const key: SupportedLocale = (locale === 'nl' || locale === 'fr') ? locale : 'en'
+  return PAGE_COPY[key]
+}
+
+function getScoreBandHeading(locale: string, band: ScoreBand): string {
+  const key: SupportedLocale = (locale === 'nl' || locale === 'fr') ? locale : 'en'
+  return SCORE_BAND_HEADING[key][band]
 }
 
 // ── Check icon ───────────────────────────────────────────────────────────────
@@ -62,6 +160,7 @@ function HeroCard({
 }) {
   const href = buildHref(service, responseId, locale)
   const isExternal = service.destinationType === 'calendly'
+  const copy = getCopy(locale)
 
   return (
     <div className="bg-white rounded-2xl border-2 border-brand-accent shadow-xl overflow-hidden">
@@ -73,7 +172,7 @@ function HeroCard({
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-accent/10 text-brand-accent text-xs font-bold rounded-full uppercase tracking-wide">
             <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse" />
-            Recommended next step
+            {copy.recommendedBadge}
           </span>
         </div>
 
@@ -131,6 +230,7 @@ function CompactCard({
 }) {
   const href = buildHref(service, responseId, locale)
   const isExternal = service.destinationType === 'calendly'
+  const copy = getCopy(locale)
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-5 flex flex-col gap-3 hover:border-brand/40 hover:shadow-sm transition-all">
@@ -140,9 +240,9 @@ function CompactCard({
       </div>
 
       <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-gray-500">
-        <span><span className="font-medium text-gray-600">For:</span> {service.audience}</span>
-        <span><span className="font-medium text-gray-600">Format:</span> {service.format}</span>
-        <span className="col-span-2"><span className="font-medium text-gray-600">Best for:</span> {service.bestFor}</span>
+        <span><span className="font-medium text-gray-600">{copy.forLabel}</span> {service.audience}</span>
+        <span><span className="font-medium text-gray-600">{copy.formatLabel}</span> {service.format}</span>
+        <span className="col-span-2"><span className="font-medium text-gray-600">{copy.bestForLabel}</span> {service.bestFor}</span>
       </div>
 
       {isExternal ? (
@@ -172,6 +272,7 @@ function NotReadySection({ locale }: { locale: string }) {
   const [name, setName]       = useState('')
   const [submitted, setSubmit] = useState(false)
   const [loading, setLoading]  = useState(false)
+  const copy = getCopy(locale)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -191,23 +292,23 @@ function NotReadySection({ locale }: { locale: string }) {
   if (submitted) {
     return (
       <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 text-center">
-        <p className="text-gray-700 font-medium text-sm mb-1">Got it — we'll be in touch.</p>
-        <p className="text-gray-500 text-xs">No spam. Just relevant updates when the timing makes sense.</p>
+        <p className="text-gray-700 font-medium text-sm mb-1">{copy.thanksHeading}</p>
+        <p className="text-gray-500 text-xs">{copy.thanksSub}</p>
       </div>
     )
   }
 
   return (
     <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6">
-      <p className="text-sm font-semibold text-gray-700 mb-1">Not ready for a call yet?</p>
-      <p className="text-xs text-gray-500 mb-4">Leave your details and we'll reach out when the timing is right for you.</p>
+      <p className="text-sm font-semibold text-gray-700 mb-1">{copy.notReadyHeading}</p>
+      <p className="text-xs text-gray-500 mb-4">{copy.notReadySub}</p>
       <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
         <input
           type="text"
           value={name}
           onChange={e => setName(e.target.value)}
           required
-          placeholder="Your name"
+          placeholder={copy.namePlaceholder}
           className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent"
         />
         <input
@@ -215,7 +316,7 @@ function NotReadySection({ locale }: { locale: string }) {
           value={email}
           onChange={e => setEmail(e.target.value)}
           required
-          placeholder="your@email.com"
+          placeholder={copy.emailPlaceholder}
           className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent"
         />
         <button
@@ -223,7 +324,7 @@ function NotReadySection({ locale }: { locale: string }) {
           disabled={loading}
           className="px-5 py-2 bg-brand text-white text-sm font-medium rounded-lg hover:bg-brand-dark transition-colors whitespace-nowrap disabled:opacity-60"
         >
-          {loading ? 'Saving…' : 'Stay in touch'}
+          {loading ? copy.saving : copy.stayInTouch}
         </button>
       </form>
     </div>
@@ -247,6 +348,7 @@ export function NextStepsPageClient({
   const secondary   = services.find(s => s.key === secondaryKey)!
   const why = getRecommendationWhy(recommendedKey, band)
   const maturityClass = maturityLevel ? (MATURITY_COLOUR[maturityLevel] ?? 'bg-gray-100 text-gray-600') : 'bg-gray-100 text-gray-600'
+  const copy = getCopy(locale)
 
   const fadeUp: Variants = {
     hidden: { opacity: 0, y: 16 },
@@ -265,7 +367,7 @@ export function NextStepsPageClient({
             transition={{ duration: 0.35, ease: 'easeOut' }}
           >
             <p className="text-xs font-semibold uppercase tracking-widest text-white/50 mb-3">
-              Your result
+              {copy.yourResult}
             </p>
 
             <div className="flex flex-wrap items-center gap-3 mb-4">
@@ -275,7 +377,7 @@ export function NextStepsPageClient({
                     <span className="text-xl font-black tabular-nums">{score}</span>
                   </div>
                   <div>
-                    <p className="text-xs text-white/60">out of 100</p>
+                    <p className="text-xs text-white/60">{copy.outOf100}</p>
                     {maturityLevel && (
                       <span className={`inline-block mt-0.5 px-2.5 py-0.5 rounded-full text-xs font-bold ${maturityClass}`}>
                         {maturityLevel}
@@ -287,7 +389,7 @@ export function NextStepsPageClient({
             </div>
 
             <h1 className="text-xl sm:text-2xl font-bold leading-snug mb-1">
-              {firstName ? `${firstName}, ` : ''}{score !== null ? SCORE_BAND_HEADING[band] : 'Here are your options.'}
+              {firstName ? `${firstName}, ` : ''}{score !== null ? getScoreBandHeading(locale, band) : copy.fallbackHeading}
             </h1>
           </motion.div>
         </div>
@@ -315,7 +417,7 @@ export function NextStepsPageClient({
           <div className="flex items-center gap-3 mb-4">
             <div className="flex-1 h-px bg-gray-200" />
             <span className="text-xs font-semibold uppercase tracking-widest text-gray-400">
-              Other relevant options
+              {copy.otherOptions}
             </span>
             <div className="flex-1 h-px bg-gray-200" />
           </div>

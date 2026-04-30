@@ -68,10 +68,27 @@ function ShareResultsBar({ score, maturityLevel, responseId, locale, assessmentN
   const resultsPath = responseId ? `/${locale}/results/${responseId}` : `/${locale}`
   const resultsUrl = typeof window !== 'undefined' ? `${window.location.origin}${resultsPath}` : ''
   const name = assessmentName ?? 'AI Maturity Assessment'
-  const linkedInText = encodeURIComponent(
-    `I scored ${score}/100 on the ${name} — ${maturityLevel} level. Curious where your organisation stands?`
-  )
-  const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(resultsUrl)}&summary=${linkedInText}`
+
+  // Locale-aware share copy
+  const SHARE_HEADING = locale === 'nl' ? 'Deel je resultaat'
+                      : locale === 'fr' ? 'Partagez votre résultat'
+                      : 'Share your results'
+  const COPY_LABEL    = locale === 'nl' ? 'Kopieer link naar resultaat'
+                      : locale === 'fr' ? 'Copier le lien des résultats'
+                      : 'Copy results link'
+  const COPIED_LABEL  = locale === 'nl' ? 'Link gekopieerd!'
+                      : locale === 'fr' ? 'Lien copié !'
+                      : 'Link copied!'
+  const LINKEDIN_LABEL = locale === 'nl' ? 'Deel op LinkedIn'
+                       : locale === 'fr' ? 'Partager sur LinkedIn'
+                       : 'Share on LinkedIn'
+  const LINKEDIN_TEXT  = locale === 'nl'
+    ? `Ik scoorde ${score}/100 op de ${name} — niveau ${maturityLevel}. Benieuwd waar jouw organisatie staat?`
+    : locale === 'fr'
+    ? `J'ai obtenu ${score}/100 à l'${name} — niveau ${maturityLevel}. Curieux de savoir où se situe votre organisation ?`
+    : `I scored ${score}/100 on the ${name} — ${maturityLevel} level. Curious where your organisation stands?`
+
+  const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(resultsUrl)}&summary=${encodeURIComponent(LINKEDIN_TEXT)}`
 
   function handleCopy() {
     navigator.clipboard.writeText(resultsUrl).then(() => {
@@ -82,7 +99,7 @@ function ShareResultsBar({ score, maturityLevel, responseId, locale, assessmentN
 
   return (
     <div className="rounded-2xl border border-gray-100 bg-white shadow-sm p-5">
-      <p className="text-sm font-semibold text-gray-700 mb-3">Share your results</p>
+      <p className="text-sm font-semibold text-gray-700 mb-3">{SHARE_HEADING}</p>
       <div className="flex gap-3 flex-wrap">
         <button
           onClick={handleCopy}
@@ -91,7 +108,7 @@ function ShareResultsBar({ score, maturityLevel, responseId, locale, assessmentN
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
           </svg>
-          {copied ? 'Link copied!' : 'Copy results link'}
+          {copied ? COPIED_LABEL : COPY_LABEL}
         </button>
         <a
           href={linkedInUrl}
@@ -102,7 +119,7 @@ function ShareResultsBar({ score, maturityLevel, responseId, locale, assessmentN
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
           </svg>
-          Share on LinkedIn
+          {LINKEDIN_LABEL}
         </a>
       </div>
     </div>
@@ -318,25 +335,38 @@ export function ScoreDashboard({
       )}
 
       {/* ── Next-steps CTA (extended public only) ── */}
-      {!isCompany && !isLite && (
-        <motion.div
-          variants={fadeUp}
-          className="bg-brand rounded-2xl p-6 text-white text-center"
-        >
-          <h3 className="text-lg font-bold mb-2">Ready to move forward?</h3>
-          <p className="text-sm text-white/80 mb-5">
-            We&apos;ve put together a set of options matched to your profile —
-            from a short conversation to structured programmes and custom projects.
-          </p>
-          <a
-            href={`/${locale}/next-steps${responseId ? `?r=${responseId}` : ''}`}
-            className="inline-block px-6 py-2.5 bg-brand-accent hover:bg-orange-700 text-white font-semibold rounded-xl text-sm transition-colors"
+      {!isCompany && !isLite && (() => {
+        const NS_HEADING = locale === 'nl' ? 'Klaar voor de volgende stap?'
+                         : locale === 'fr' ? 'Prêt à passer à la suite ?'
+                         : 'Ready to move forward?'
+        const NS_BODY    = locale === 'nl'
+          ? 'We hebben een aantal opties klaargezet die bij jouw profiel passen. Van een kort gesprek tot gestructureerde programma’s en projecten op maat.'
+          : locale === 'fr'
+          ? "Nous avons préparé quelques options adaptées à votre profil : d'un court entretien aux programmes structurés et projets sur mesure."
+          : "We've put together a set of options matched to your profile, from a short conversation to structured programmes and custom projects."
+        const NS_CTA     = locale === 'nl' ? 'Ontdek hoe je verder gaat →'
+                         : locale === 'fr' ? 'Découvrir vos prochaines étapes →'
+                         : 'Explore how to move forward →'
+        const NS_TRUST   = locale === 'nl' ? 'Gratis · Geen verplichtingen · 2 minuten om te verkennen'
+                         : locale === 'fr' ? 'Gratuit · Sans engagement · 2 minutes pour explorer'
+                         : 'Free · No obligation · Takes 2 minutes to explore'
+        return (
+          <motion.div
+            variants={fadeUp}
+            className="bg-brand rounded-2xl p-6 text-white text-center"
           >
-            Explore how to move forward →
-          </a>
-          <p className="text-xs text-white/60 mt-3">Free · No obligation · Takes 2 minutes to explore</p>
-        </motion.div>
-      )}
+            <h3 className="text-lg font-bold mb-2">{NS_HEADING}</h3>
+            <p className="text-sm text-white/80 mb-5">{NS_BODY}</p>
+            <a
+              href={`/${locale}/next-steps${responseId ? `?r=${responseId}` : ''}`}
+              className="inline-block px-6 py-2.5 bg-brand-accent hover:bg-orange-700 text-white font-semibold rounded-xl text-sm transition-colors"
+            >
+              {NS_CTA}
+            </a>
+            <p className="text-xs text-white/60 mt-3">{NS_TRUST}</p>
+          </motion.div>
+        )
+      })()}
 
       {/* ── Share results (extended public only) ── */}
       {!isCompany && !isLite && (
