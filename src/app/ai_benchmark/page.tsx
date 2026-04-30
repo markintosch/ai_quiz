@@ -11,10 +11,11 @@ import { getContent, type Lang } from '@/products/ai_benchmark/data'
 import {
   computePublicDashboard, mockPublicDashboard, type DashboardData,
 } from '@/products/ai_benchmark/public_dashboard'
-import { LangPills }   from '@/components/ai_benchmark/LangPills'
-import { LiveCounter } from '@/components/ai_benchmark/LiveCounter'
-import { SkillCurve }  from '@/components/ai_benchmark/SkillCurve'
-import { Tracker }     from '@/components/ai_benchmark/Tracker'
+import { LangPills }    from '@/components/ai_benchmark/LangPills'
+import { LiveCounter }  from '@/components/ai_benchmark/LiveCounter'
+import { SkillCurve }   from '@/components/ai_benchmark/SkillCurve'
+import { Tracker }      from '@/components/ai_benchmark/Tracker'
+import { MarkPortrait } from '@/components/shared/MarkPortrait'
 
 const VALID_LANGS: Lang[] = ['nl', 'en', 'fr', 'de']
 
@@ -252,9 +253,22 @@ export default async function AiBenchmarkLandingPage({
           <p style={{ fontSize: 17, color: BODY, lineHeight: 1.65, marginBottom: 18, maxWidth: 620 }}>
             {t.heroIntro}
           </p>
-          <p style={{ fontSize: 17, color: INK, lineHeight: 1.6, marginBottom: 36, maxWidth: 620, fontWeight: 600 }}>
+          <p style={{ fontSize: 17, color: INK, lineHeight: 1.6, marginBottom: 24, maxWidth: 620, fontWeight: 600 }}>
             {t.heroSub}
           </p>
+
+          {/* ── Mark byline (above-the-fold human touch) ────────────────────── */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 32 }}>
+            <MarkPortrait size={44} ringColor={`${WARM}33`} />
+            <div style={{ lineHeight: 1.3 }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: INK, margin: 0 }}>
+                <a href="https://markdekock.com" target="_blank" rel="noopener noreferrer" style={{ color: INK, textDecoration: 'none' }}>
+                  {t.quoteAuthor}
+                </a>
+              </p>
+              <p style={{ fontSize: 12, color: MUTED, margin: 0 }}>{t.quoteRole}</p>
+            </div>
+          </div>
 
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center', marginBottom: 22 }}>
             <Link
@@ -308,8 +322,8 @@ export default async function AiBenchmarkLandingPage({
             </p>
           </div>
 
-          <div style={{ marginTop: 28, display: 'flex', alignItems: 'flex-start', gap: 14 }}>
-            <div style={{ width: 36, height: 2, background: WARM, flexShrink: 0, marginTop: 8 }} />
+          <div style={{ marginTop: 28, display: 'flex', alignItems: 'flex-start', gap: 18 }}>
+            <MarkPortrait size={72} ringColor={`${WARM}55`} alt={`${t.quoteAuthor} — ${t.quoteRole}`} />
             <div>
               <p style={{ fontSize: 14, fontWeight: 800, color: INK, margin: 0 }}>
                 <a href="https://markdekock.com" target="_blank" rel="noopener noreferrer" style={{ color: INK, textDecoration: 'underline', textDecorationColor: `${WARM}88`, textDecorationThickness: 2, textUnderlineOffset: 3 }}>

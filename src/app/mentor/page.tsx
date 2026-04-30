@@ -4,6 +4,7 @@ import { Suspense, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { motion, type Variants } from 'framer-motion'
 import { trackEvent } from '@/lib/analytics'
+import { MarkPortrait } from '@/components/shared/MarkPortrait'
 
 // ── Brand tokens ──────────────────────────────────────────────────────────────
 const INK        = '#0F172A'   // hero / dark sections
@@ -518,10 +519,32 @@ function MentorPageInner() {
 
             <motion.p
               variants={fadeUp}
-              style={{ fontSize: 18, color: '#CBD5E1', lineHeight: 1.7, maxWidth: 560, margin: '0 auto 40px' }}
+              style={{ fontSize: 18, color: '#CBD5E1', lineHeight: 1.7, maxWidth: 560, margin: '0 auto 28px' }}
             >
               {t.heroBody}
             </motion.p>
+
+            {/* ── Mark byline (subtle, above the fold) ──────────────────────── */}
+            <motion.div
+              variants={fadeUp}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 12,
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                padding: '8px 14px 8px 8px', borderRadius: 100,
+                marginBottom: 32,
+              }}
+            >
+              <MarkPortrait size={40} ringColor={`${WARM}55`} />
+              <div style={{ textAlign: 'left', lineHeight: 1.25 }}>
+                <p style={{ fontSize: 12, fontWeight: 700, color: WHITE, margin: 0 }}>
+                  {t.navName}
+                </p>
+                <p style={{ fontSize: 11, color: '#94A3B8', margin: 0 }}>
+                  {t.navRole}
+                </p>
+              </div>
+            </motion.div>
 
             <motion.div variants={fadeUp} style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
               <a
