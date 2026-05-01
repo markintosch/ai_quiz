@@ -87,14 +87,15 @@ export default function VrooooomPage() {
       <div style={{
         background: AMBER,
         color: BLACK,
-        padding: '8px 24px',
+        padding: '10px 24px',
         textAlign: 'center',
         fontSize: 11,
         fontWeight: 800,
-        letterSpacing: '0.14em',
+        letterSpacing: '0.12em',
         textTransform: 'uppercase',
+        lineHeight: 1.5,
       }}>
-        🚧 MVP · Work in progress · Concept release for review · Not yet public
+        🚧 MVP · Internal review only · Do not share publicly · Features, content and visuals may change without notice
       </div>
 
       {/* ── Nav ── */}
@@ -143,7 +144,7 @@ export default function VrooooomPage() {
               borderRadius: 100, padding: '5px 12px',
               fontSize: 10, fontWeight: 800, color: AMBER, letterSpacing: '0.14em', textTransform: 'uppercase',
             }}>
-              MVP · Demo
+              MVP · Do Not Share
             </span>
           </div>
 
