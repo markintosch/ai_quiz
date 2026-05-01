@@ -1,7 +1,7 @@
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import type { Metadata } from 'next'
-import MentorPage from './mentor/page'
+import MentorPage from './mentor/MentorPageClient'
 
 // Detect if this request is for markdekock.com
 function isMentorDomain(): boolean {

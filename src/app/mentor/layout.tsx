@@ -9,10 +9,13 @@ import {
 
 const BASE = 'https://markdekock.com'
 
-// ── Metadata ──────────────────────────────────────────────────────────────────
+// ── Default (NL) static metadata ──────────────────────────────────────────────
+// Layouts can't read searchParams in Next 14, so language-aware OG/title is
+// done in src/app/mentor/page.tsx via generateMetadata. Page metadata wins
+// over layout metadata via Next's deep-merge — this is the NL fallback.
 
 export const metadata: Metadata = {
-  title: 'Strategisch mentor voor AI & executie | Mark de Kock',
+  title: 'AI strategie & executie | Mark de Kock',
   description:
     'Van AI-ambitie naar heldere richting, intern draagvlak en een eerste use case die werkt. Persoonlijke begeleiding voor senior leiders. Partner Kirk & Blackbeard. Max. 5 trajecten tegelijk.',
   metadataBase: new URL(BASE),
@@ -29,7 +32,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Van AI-ambitie naar richting, draagvlak en een use case die werkt | Mark de Kock',
     description:
-      'Persoonlijke begeleiding voor senior leiders. Geen training, geen consultancy — strategische mentoring op het punt waar ambitie concreet moet worden. Max. 5 trajecten tegelijk.',
+      'Persoonlijke begeleiding voor senior leiders. Geen training, geen consultancy — strategische begeleiding op het punt waar ambitie concreet moet worden. Max. 5 trajecten tegelijk.',
     url: `${BASE}/mentor`,
     siteName: 'Mark de Kock',
     type: 'website',
@@ -37,11 +40,11 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Strategisch mentor voor AI & executie | Mark de Kock',
+    title: 'AI strategie & executie | Mark de Kock',
     description: 'Persoonlijke begeleiding voor senior leiders. Van AI-ambitie naar iets wat echt werkt.',
   },
   keywords: [
-    'AI strategie directie', 'AI mentor', 'strategisch mentor AI', 'AI implementatie organisatie',
+    'AI strategie directie', 'AI implementatie organisatie',
     'AI readiness management', 'Kirk & Blackbeard', 'Mark de Kock', 'AI executie',
     'digitale transformatie leiderschap', 'AI begeleiding senior leiders',
   ],
@@ -118,7 +121,7 @@ const jsonLd = serializeJsonLd([
   buildPersonSchema({
     name:        'Mark de Kock',
     url:         'https://markdekock.com',
-    jobTitle:    'Strategisch mentor voor AI & executie',
+    jobTitle:    'AI strategie & executie',
     description: 'Senior operator en partner bij Kirk & Blackbeard. Twintig jaar ervaring in strategie, groei, klantbeleving en executie. Begeleidt leidinggevenden bij het vertalen van AI-ambitie naar richting, draagvlak en een eerste werkende use case.',
     orgName:     'Kirk & Blackbeard',
     orgUrl:      'https://kirkandblackbeard.com',
@@ -131,7 +134,7 @@ const jsonLd = serializeJsonLd([
     linkedin:    'https://www.linkedin.com/in/markdekock/',
   }),
   buildProfessionalServiceSchema({
-    name:        'Strategisch mentorschap AI & executie | Mark de Kock',
+    name:        'AI strategie & executie | Mark de Kock',
     url:         'https://markdekock.com',
     description: 'Persoonlijke begeleiding voor senior leiders: van AI-ambitie naar heldere prioriteiten, intern draagvlak en een eerste use case die werkt. Fase per fase, aangepast aan jouw situatie.',
     providerName: 'Mark de Kock',
