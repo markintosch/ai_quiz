@@ -95,7 +95,7 @@ export default function VrooooomPage() {
         textTransform: 'uppercase',
         lineHeight: 1.5,
       }}>
-        🚧 MVP · Internal review only · Do not share publicly · Features, content and visuals may change without notice
+        🚧 MVP · Enkel bedoeld voor Rob Kamphues en het productieteam · Niet publiek delen · Inhoud en visuals kunnen wijzigen
       </div>
 
       {/* ── Nav ── */}
@@ -144,7 +144,7 @@ export default function VrooooomPage() {
               borderRadius: 100, padding: '5px 12px',
               fontSize: 10, fontWeight: 800, color: AMBER, letterSpacing: '0.14em', textTransform: 'uppercase',
             }}>
-              MVP · Do Not Share
+              MVP · Niet delen
             </span>
           </div>
 
