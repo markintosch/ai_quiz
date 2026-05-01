@@ -19,6 +19,7 @@ const NAV_LINKS = [
   { href: '/admin/ai_benchmark', label: 'AI-benchmark' },
   { href: '/admin/ai_benchmark/funnel', label: '↳ Funnel' },
   { href: '/admin/ai_benchmark/writeins', label: '↳ Write-ins' },
+  { href: '/admin/sannahremco', label: 'Sannah & Remco' },
 ]
 
 export default function AdminLayout({
