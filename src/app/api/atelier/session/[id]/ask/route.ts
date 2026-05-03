@@ -46,6 +46,7 @@ interface IcpRow {
   industry: string | null; role: string | null; company_size: string | null;
   triggers: unknown; jobs: unknown; pains: unknown; buying_committee: unknown;
   rationale: string | null;
+  business_type: string | null;
 }
 interface AngleRow {
   lens: string; headline: string; body_md: string; evidence: unknown;
@@ -85,7 +86,7 @@ export async function POST(
     sb.from('atelier_references').select('title, description, source_kind, source_label, source_url, relevance_score, taste_note').eq('session_id', sessionId).order('position'),
     sb.from('atelier_audience_signals').select('track, claim, evidence, source_label, source_url, confidence, contradicts').eq('session_id', sessionId),
     sb.from('atelier_directions').select('position, tension, route, rationale').eq('session_id', sessionId).order('position'),
-    sb.from('atelier_icp_profiles').select('industry, role, company_size, triggers, jobs, pains, buying_committee, rationale').eq('session_id', sessionId).maybeSingle(),
+    sb.from('atelier_icp_profiles').select('industry, role, company_size, triggers, jobs, pains, buying_committee, rationale, business_type').eq('session_id', sessionId).maybeSingle(),
     sb.from('atelier_angles').select('lens, headline, body_md, evidence').eq('session_id', sessionId),
     sb.from('atelier_live_signals').select('title, snippet, source_url, source_label, relevance_score, retrieved_via').eq('session_id', sessionId),
     sb.from('atelier_qa_turns').select('question, answer').eq('session_id', sessionId).order('created_at').limit(20),
@@ -137,6 +138,7 @@ export async function POST(
 
   const icpRow = icpRes.data as IcpRow | null
   const icp: IcpProfile | undefined = icpRow ? {
+    business_type: (icpRow.business_type as IcpProfile['business_type']) ?? 'b2b',
     industry: icpRow.industry ?? '',
     role: icpRow.role ?? '',
     company_size: icpRow.company_size ?? '',

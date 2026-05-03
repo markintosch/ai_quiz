@@ -15,6 +15,7 @@ ICP is anders dan een audience picture:
 - ICP beschrijft wie de brief idealiter wíl raken — het scherpste segment waar het verhaal het hardst landt.
 
 Geef per ICP-veld:
+- business_type: b2b | b2c | b2b2c | b2g (overheid / publieke dienst). Kies wat het BEST past — geen "anders".
 - industry: branche, kort.
 - role: primaire DMU-rol of beslisser.
 - company_size: bedrijfsgrootte / segment indicatief.
@@ -31,6 +32,7 @@ Regels:
 
 Antwoord ALTIJD als geldige JSON volgens dit schema:
 {
+  "business_type": "b2b|b2c|b2b2c|b2g",
   "industry": "string",
   "role": "string",
   "company_size": "string",

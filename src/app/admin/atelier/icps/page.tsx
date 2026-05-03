@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic'
 
 interface IcpRow {
   id:                string
-  session_id:        string
+  session_id:        string | null
   industry:          string | null
   role:              string | null
   company_size:      string | null
@@ -24,6 +24,9 @@ interface IcpRow {
   validation_note:   string | null
   validated_at:      string | null
   superseded_by_id:  string | null
+  is_starter:        boolean
+  archetype_label:   string | null
+  business_type:     'b2b' | 'b2c' | 'b2b2c' | 'b2g' | null
   created_at:        string
 }
 
@@ -40,7 +43,7 @@ export default async function AdminAtelierIcpsPage() {
 
   const [icpsRes, sessionsRes] = await Promise.all([
     sb.from('atelier_icp_profiles')
-      .select('id, session_id, industry, role, company_size, triggers, jobs, pains, buying_committee, rationale, validation_status, validation_note, validated_at, superseded_by_id, created_at')
+      .select('id, session_id, industry, role, company_size, triggers, jobs, pains, buying_committee, rationale, validation_status, validation_note, validated_at, superseded_by_id, is_starter, archetype_label, business_type, created_at')
       .order('created_at', { ascending: false }),
     sb.from('atelier_sessions')
       .select('id, brand_name, jtbd_summary, status, created_at'),
@@ -50,18 +53,20 @@ export default async function AdminAtelierIcpsPage() {
   const sessions = (sessionsRes.data ?? []) as SessionRow[]
   const sessionById = new Map(sessions.map(s => [s.id, s]))
 
-  // ── Aggregations ────────────────────────────────────────────────────────
-  const industryFreq = new Map<string, number>()
-  const roleFreq     = new Map<string, number>()
-  const sizeFreq     = new Map<string, number>()
-  const triggerFreq  = new Map<string, number>()
-  const painFreq     = new Map<string, number>()
-  const committeeFreq = new Map<string, number>()
+  // ── Aggregations (over alle ICPs — starters tellen mee zodat dashboard meteen vol staat) ──
+  const industryFreq    = new Map<string, number>()
+  const roleFreq        = new Map<string, number>()
+  const sizeFreq        = new Map<string, number>()
+  const triggerFreq     = new Map<string, number>()
+  const painFreq        = new Map<string, number>()
+  const committeeFreq   = new Map<string, number>()
+  const businessTypeFreq = new Map<string, number>()
 
   for (const icp of icps) {
-    if (icp.industry)     industryFreq.set(icp.industry, (industryFreq.get(icp.industry) ?? 0) + 1)
-    if (icp.role)         roleFreq.set(icp.role, (roleFreq.get(icp.role) ?? 0) + 1)
-    if (icp.company_size) sizeFreq.set(icp.company_size, (sizeFreq.get(icp.company_size) ?? 0) + 1)
+    if (icp.industry)      industryFreq.set(icp.industry, (industryFreq.get(icp.industry) ?? 0) + 1)
+    if (icp.role)          roleFreq.set(icp.role, (roleFreq.get(icp.role) ?? 0) + 1)
+    if (icp.company_size)  sizeFreq.set(icp.company_size, (sizeFreq.get(icp.company_size) ?? 0) + 1)
+    if (icp.business_type) businessTypeFreq.set(icp.business_type, (businessTypeFreq.get(icp.business_type) ?? 0) + 1)
     for (const t of icp.triggers ?? []) triggerFreq.set(t, (triggerFreq.get(t) ?? 0) + 1)
     for (const p of icp.pains ?? [])    painFreq.set(p, (painFreq.get(p) ?? 0) + 1)
     for (const m of icp.buying_committee ?? []) {
@@ -79,10 +84,20 @@ export default async function AdminAtelierIcpsPage() {
   const validatedCount = icps.filter(i => i.validation_status === 'validated').length
   const dismissedCount = icps.filter(i => i.validation_status === 'dismissed').length
 
-  // ── Group by brand_name (or fallback to "(geen brand)") ─────────────────
+  // Split starters from brief-ICPs
+  const starterIcps = icps.filter(i => i.is_starter)
+  const briefIcps   = icps.filter(i => !i.is_starter)
+
+  // Business-type breakdown
+  const b2bCount   = (businessTypeFreq.get('b2b')   ?? 0)
+  const b2cCount   = (businessTypeFreq.get('b2c')   ?? 0)
+  const b2b2cCount = (businessTypeFreq.get('b2b2c') ?? 0)
+  const b2gCount   = (businessTypeFreq.get('b2g')   ?? 0)
+
+  // ── Group brief-ICPs by brand_name (or fallback to "(geen brand)") ─────
   const groupedByBrand = new Map<string, IcpRow[]>()
-  for (const icp of icps) {
-    const session = sessionById.get(icp.session_id)
+  for (const icp of briefIcps) {
+    const session = icp.session_id ? sessionById.get(icp.session_id) : null
     const key = session?.brand_name?.trim() || '(geen brand)'
     if (!groupedByBrand.has(key)) groupedByBrand.set(key, [])
     groupedByBrand.get(key)!.push(icp)
@@ -101,15 +116,25 @@ export default async function AdminAtelierIcpsPage() {
       </div>
 
       {/* ── Top KPIs ── */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-        <KpiSmall label="ICPs totaal" value={totalIcps.toString()} />
-        <KpiSmall label="Brands" value={brands.length.toString()} />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+        <KpiSmall label="ICPs totaal" value={totalIcps.toString()}
+          sub={`${starterIcps.length} starters · ${briefIcps.length} uit briefs`} />
+        <KpiSmall label="Brands (met brief)" value={brands.length.toString()} />
         <KpiSmall label="Validated" value={validatedCount.toString()} color="green" />
         <KpiSmall label="Dismissed" value={dismissedCount.toString()} color="red" />
       </div>
 
+      {/* ── Business type breakdown ── */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+        <KpiSmall label="B2B"    value={b2bCount.toString()}   color="blue"  />
+        <KpiSmall label="B2C"    value={b2cCount.toString()}   color="amber" />
+        <KpiSmall label="B2B2C"  value={b2b2cCount.toString()} color="teal"  />
+        <KpiSmall label="B2G"    value={b2gCount.toString()}   color="purple" />
+      </div>
+
       {/* ── Aggregations grid ── */}
       <section className="mb-10 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <FreqCard title="Business type" items={topN(businessTypeFreq, 4).map(([k, v]) => [k.toUpperCase(), v] as [string, number])} total={totalIcps} />
         <FreqCard title="Top industries" items={topN(industryFreq, 6)} total={totalIcps} />
         <FreqCard title="Top rollen (primair)" items={topN(roleFreq, 6)} total={totalIcps} />
         <FreqCard title="Bedrijfsgrootte" items={topN(sizeFreq, 6)} total={totalIcps} />
@@ -118,15 +143,63 @@ export default async function AdminAtelierIcpsPage() {
         <FreqCard title="Buying-committee rollen" items={topN(committeeFreq, 8)} total={totalIcps} />
       </section>
 
+      {/* ── Starter ICPs (seed library) ── */}
+      {starterIcps.length > 0 && (
+        <section className="mb-10">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-brand-accent mb-3">
+            🌱 Starter ICPs · {starterIcps.length} archetypes
+            <span className="ml-2 text-[10px] font-normal normal-case tracking-normal text-gray-500">
+              seed-bibliotheek — ankers voor brief-werk
+            </span>
+          </h2>
+          <div className="rounded-2xl bg-gradient-to-br from-amber-50 via-orange-50/30 to-stone-50 border border-amber-200 overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-amber-100/60 text-xs uppercase tracking-wide text-brand-dark">
+                <tr>
+                  <th className="text-left py-2 px-4">Archetype</th>
+                  <th className="text-left py-2 px-3">Type</th>
+                  <th className="text-left py-2 px-3">Industry · Rol</th>
+                  <th className="text-left py-2 px-3">Grootte</th>
+                  <th className="text-left py-2 px-3">Karakteristieke trigger</th>
+                </tr>
+              </thead>
+              <tbody>
+                {starterIcps.map(icp => (
+                  <tr key={icp.id} className="border-t border-amber-200/40">
+                    <td className="py-2 px-4 font-semibold text-brand-dark">
+                      {icp.archetype_label ?? '—'}
+                    </td>
+                    <td className="py-2 px-3">
+                      <BusinessTypeBadge type={icp.business_type} />
+                    </td>
+                    <td className="py-2 px-3 text-xs text-gray-700">
+                      <div>{icp.industry ?? '—'}</div>
+                      <div className="text-gray-500">{icp.role ?? '—'}</div>
+                    </td>
+                    <td className="py-2 px-3 text-xs text-gray-600">{icp.company_size ?? '—'}</td>
+                    <td className="py-2 px-3 text-xs text-gray-700 max-w-md">
+                      {(icp.triggers && icp.triggers[0]) ? icp.triggers[0] : '—'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-gray-500 mt-2 italic">
+            Starters tellen mee in de aggregaties hierboven. Bij elke nieuwe brief-ICP wordt zichtbaar in welk archetype hij/zij past.
+          </p>
+        </section>
+      )}
+
       {/* ── Brands grouped ── */}
       <section>
         <h2 className="text-xs font-bold uppercase tracking-widest text-gray-600 mb-3">
-          ICPs per brand · {brands.length} brands · {totalIcps} ICPs
+          ICPs per brand · {brands.length} {brands.length === 1 ? 'brand' : 'brands'} · {briefIcps.length} brief-ICPs
         </h2>
 
         {brands.length === 0 ? (
           <div className="rounded-2xl bg-gray-50 border border-gray-200 px-6 py-12 text-center">
-            <p className="text-sm text-gray-600">Nog geen ICPs gegenereerd.</p>
+            <p className="text-sm text-gray-600">Nog geen brief-ICPs. Run je eerste briefing op /atelier/new.</p>
           </div>
         ) : (
           <div className="space-y-6">
@@ -160,7 +233,7 @@ export default async function AdminAtelierIcpsPage() {
 
                   <ul className="divide-y divide-gray-100">
                     {brandIcps.map(icp => {
-                      const session = sessionById.get(icp.session_id)
+                      const session = icp.session_id ? sessionById.get(icp.session_id) : null
                       const supersededByLabel = icp.superseded_by_id
                         ? brandIcps.find(o => o.id === icp.superseded_by_id)
                         : null
@@ -177,6 +250,7 @@ export default async function AdminAtelierIcpsPage() {
 
                               <div className="mt-2 flex flex-wrap gap-1">
                                 <StatusBadge status={icp.validation_status} />
+                                <BusinessTypeBadge type={icp.business_type} />
                               </div>
                             </div>
 
@@ -234,12 +308,21 @@ export default async function AdminAtelierIcpsPage() {
   )
 }
 
-function KpiSmall({ label, value, color }: { label: string; value: string; color?: 'green' | 'red' }) {
-  const cls = color === 'green' ? 'text-green-700' : color === 'red' ? 'text-red-700' : 'text-brand-dark'
+function KpiSmall({ label, value, color, sub }: {
+  label: string; value: string; color?: 'green' | 'red' | 'blue' | 'amber' | 'teal' | 'purple'; sub?: string
+}) {
+  const cls = color === 'green'  ? 'text-green-700'
+            : color === 'red'    ? 'text-red-700'
+            : color === 'blue'   ? 'text-blue-700'
+            : color === 'amber'  ? 'text-amber-700'
+            : color === 'teal'   ? 'text-teal-700'
+            : color === 'purple' ? 'text-purple-700'
+            : 'text-brand-dark'
   return (
     <div className="rounded-xl bg-white border border-gray-200 p-3">
       <p className="text-xs uppercase tracking-wide text-gray-600">{label}</p>
       <p className={`text-2xl font-bold mt-1 ${cls}`}>{value}</p>
+      {sub && <p className="text-[10px] text-gray-500 mt-0.5">{sub}</p>}
     </div>
   )
 }
@@ -282,6 +365,21 @@ function StatusBadge({ status }: { status: 'pending' | 'validated' | 'dismissed'
   return (
     <span className={`inline-block text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${palette[status]}`}>
       {status}
+    </span>
+  )
+}
+
+function BusinessTypeBadge({ type }: { type: string | null }) {
+  if (!type) return <span className="text-xs text-gray-400">—</span>
+  const palette: Record<string, string> = {
+    b2b:   'bg-blue-100 text-blue-900',
+    b2c:   'bg-amber-100 text-amber-900',
+    b2b2c: 'bg-teal-100 text-teal-900',
+    b2g:   'bg-purple-100 text-purple-900',
+  }
+  return (
+    <span className={`inline-block text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${palette[type] ?? 'bg-gray-100 text-gray-700'}`}>
+      {type.toUpperCase()}
     </span>
   )
 }

@@ -103,6 +103,7 @@ export const IcpBuyingMemberSchema = z.object({
 export type IcpBuyingMember = z.infer<typeof IcpBuyingMemberSchema>
 
 export const IcpProfileSchema = z.object({
+  business_type:    z.enum(['b2b','b2c','b2b2c','b2g']).describe('Hoofdtype: b2b · b2c · b2b2c · b2g (overheid/publieke dienst)'),
   industry:         z.string().describe('Branche / sector waarvoor het ideaal-klantprofiel geldt'),
   role:             z.string().describe('Primaire rol bij de klant — vaak DMU-positie'),
   company_size:     z.string().describe('Indicatieve bedrijfsgrootte (medewerkers / omzet) of segment'),

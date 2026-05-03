@@ -110,6 +110,7 @@ export async function orchestrateSession(input: OrchestrateInput): Promise<Orche
   if (icp) {
     await sb.from('atelier_icp_profiles').insert({
       session_id:       input.sessionId,
+      business_type:    icp.business_type,
       industry:         icp.industry,
       role:             icp.role,
       company_size:     icp.company_size,
