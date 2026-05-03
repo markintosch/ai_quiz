@@ -8,8 +8,18 @@ import { runReferenceRetrieval } from './modules/reference'
 import { runAudienceEvidence } from './modules/audience'
 import { runTensionSynthesis } from './modules/tension'
 import { runOutputPackaging } from './modules/output'
+import { runIcpProfile } from './modules/icp'
+import { runAllAngles } from './modules/angles'
+import { runLiveSignals } from './modules/live-signal'
 import { serverSupabase } from './run-logger'
-import type { SessionBundle } from './schemas'
+import type {
+  Angle,
+  AudiencePicture,
+  IcpProfile,
+  LiveSignal,
+  Reference,
+  SessionBundle,
+} from './schemas'
 
 export interface OrchestrateInput {
   sessionId:    string
@@ -42,11 +52,26 @@ export async function orchestrateSession(input: OrchestrateInput): Promise<Orche
     .update({ jtbd_summary: jtbd.brief_summary, updated_at: new Date().toISOString() })
     .eq('id', input.sessionId)
 
-  // ── Modules 2 + 3 in parallel ─────────────────────────────────────────
-  const [references, audience] = await Promise.all([
-    runReferenceRetrieval(input.sessionId, jtbd),
-    runAudienceEvidence(input.sessionId, jtbd, input.brandContext),
+  // ── Modules 2 + 3 + ICP + Angles + Live signal in parallel ─────────────
+  // All depend only on JTBD (and optionally brand context). Run in parallel,
+  // collect successes, log failures via runModule's own catch path.
+  const settled = await Promise.allSettled([
+    runReferenceRetrieval(input.sessionId, jtbd),                 // 0: references
+    runAudienceEvidence(input.sessionId, jtbd, input.brandContext), // 1: audience
+    runIcpProfile(input.sessionId, jtbd, input.brandContext),     // 2: icp
+    runAllAngles(input.sessionId, jtbd, input.brandContext),      // 3: angles
+    runLiveSignals({ sessionId: input.sessionId, jtbd }),         // 4: live signals
   ])
+
+  const references: Reference[] = settled[0].status === 'fulfilled' ? settled[0].value : []
+  const audience: AudiencePicture = settled[1].status === 'fulfilled' ? settled[1].value : {
+    audience_summary: '',
+    signals: [],
+    weak_claims: [],
+  }
+  const icp: IcpProfile | undefined = settled[2].status === 'fulfilled' ? settled[2].value : undefined
+  const angles: Angle[] = settled[3].status === 'fulfilled' ? settled[3].value : []
+  const liveSignals: LiveSignal[] = settled[4].status === 'fulfilled' ? settled[4].value : []
 
   // Persist references
   if (references.length > 0) {
@@ -81,6 +106,49 @@ export async function orchestrateSession(input: OrchestrateInput): Promise<Orche
     )
   }
 
+  // Persist ICP
+  if (icp) {
+    await sb.from('atelier_icp_profiles').insert({
+      session_id:       input.sessionId,
+      industry:         icp.industry,
+      role:             icp.role,
+      company_size:     icp.company_size,
+      triggers:         icp.triggers,
+      jobs:             icp.jobs,
+      pains:            icp.pains,
+      buying_committee: icp.buying_committee,
+      rationale:        icp.rationale,
+    })
+  }
+
+  // Persist angles
+  if (angles.length > 0) {
+    await sb.from('atelier_angles').insert(
+      angles.map(a => ({
+        session_id: input.sessionId,
+        lens:       a.lens,
+        headline:   a.headline,
+        body_md:    a.body_md,
+        evidence:   a.evidence,
+      }))
+    )
+  }
+
+  // Persist live signals
+  if (liveSignals.length > 0) {
+    await sb.from('atelier_live_signals').insert(
+      liveSignals.map(s => ({
+        session_id:      input.sessionId,
+        title:           s.title,
+        snippet:         s.snippet,
+        source_url:      s.source_url ?? null,
+        source_label:    s.source_label,
+        relevance_score: s.relevance_score,
+        retrieved_via:   s.retrieved_via,
+      }))
+    )
+  }
+
   // ── Module 4 ──────────────────────────────────────────────────────────
   const directions = await runTensionSynthesis(input.sessionId, { jtbd, references, audience })
 
@@ -110,6 +178,9 @@ export async function orchestrateSession(input: OrchestrateInput): Promise<Orche
     references,
     audience,
     directions,
+    icp,
+    angles,
+    liveSignals,
   }
 
   const onePager = await runOutputPackaging(input.sessionId, bundle)

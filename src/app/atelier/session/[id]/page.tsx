@@ -5,6 +5,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase/server'
+import QaChat from '@/components/atelier/QaChat'
 
 export const dynamic = 'force-dynamic'
 
@@ -40,6 +41,21 @@ interface ModuleRunRow {
   module: string; status: string; model: string | null; latency_ms: number | null;
   cost_cents: number | null; error_message: string | null;
 }
+interface IcpRow {
+  industry: string | null; role: string | null; company_size: string | null;
+  triggers: string[] | null; jobs: string[] | null; pains: string[] | null;
+  buying_committee: Array<{ role: string; influence: string; motivation?: string }> | null;
+  rationale: string | null;
+}
+interface AngleRow {
+  lens: string; headline: string; body_md: string;
+  evidence: Array<{ claim: string; source_label: string; source_url?: string | null }> | null;
+}
+interface LiveSignalRow {
+  title: string; snippet: string | null; source_url: string | null;
+  source_label: string | null; relevance_score: number | null; retrieved_via: string;
+}
+interface QaTurnRow { question: string; answer: string; created_at: string }
 
 interface JtbdRunOutput {
   jtbd_dutch?: string
@@ -60,13 +76,17 @@ export default async function AtelierSessionPage({ params }: PageProps) {
     .single() as { data: SessionRow | null }
   if (!session) notFound()
 
-  const [briefRes, refsRes, signalsRes, dirsRes, outRes, runsRes] = await Promise.all([
+  const [briefRes, refsRes, signalsRes, dirsRes, outRes, runsRes, icpRes, anglesRes, liveRes, qaRes] = await Promise.all([
     sb.from('atelier_briefs').select('raw_text, brand_context').eq('session_id', id).maybeSingle(),
     sb.from('atelier_references').select('id, title, description, source_kind, source_label, source_url, relevance_score, taste_note').eq('session_id', id).order('position'),
     sb.from('atelier_audience_signals').select('id, track, claim, evidence, source_label, source_url, confidence').eq('session_id', id),
     sb.from('atelier_directions').select('id, position, tension, route, rationale').eq('session_id', id).order('position'),
     sb.from('atelier_outputs').select('id, format, language, body_md').eq('session_id', id).order('created_at', { ascending: false }).limit(1).maybeSingle(),
     sb.from('atelier_module_runs').select('module, status, model, latency_ms, cost_cents, error_message').eq('session_id', id).order('started_at'),
+    sb.from('atelier_icp_profiles').select('industry, role, company_size, triggers, jobs, pains, buying_committee, rationale').eq('session_id', id).maybeSingle(),
+    sb.from('atelier_angles').select('lens, headline, body_md, evidence').eq('session_id', id),
+    sb.from('atelier_live_signals').select('title, snippet, source_url, source_label, relevance_score, retrieved_via').eq('session_id', id),
+    sb.from('atelier_qa_turns').select('question, answer, created_at').eq('session_id', id).order('created_at'),
   ])
 
   const brief         = briefRes.data as BriefRow | null
@@ -75,6 +95,10 @@ export default async function AtelierSessionPage({ params }: PageProps) {
   const directions   = (dirsRes.data    ?? []) as DirectionRow[]
   const onePager     = outRes.data as OutputRow | null
   const moduleRuns   = (runsRes.data ?? []) as ModuleRunRow[]
+  const icp          = icpRes.data as IcpRow | null
+  const angles       = (anglesRes.data ?? []) as AngleRow[]
+  const liveSignals  = (liveRes.data   ?? []) as LiveSignalRow[]
+  const qaTurns      = (qaRes.data     ?? []) as QaTurnRow[]
 
   // Pull the JTBD from the latest brief_jtbd run (it was persisted there)
   const jtbdRun = moduleRuns.find(r => r.module === 'brief_jtbd' && r.status === 'ok')
@@ -226,6 +250,154 @@ export default async function AtelierSessionPage({ params }: PageProps) {
           </section>
         )}
 
+        {/* ICP block */}
+        {icp && (
+          <section className="mb-10">
+            <h2 className="text-xs font-bold tracking-widest text-brand-accent uppercase mb-4">Ideal Customer Profile</h2>
+            <div className="rounded-2xl bg-white border border-slate-200 p-6">
+              <div className="grid sm:grid-cols-3 gap-4 text-sm mb-4">
+                <div>
+                  <p className="text-xs uppercase tracking-wide text-slate-500 mb-1">Industry</p>
+                  <p className="font-semibold text-brand-dark">{icp.industry || '—'}</p>
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-wide text-slate-500 mb-1">Rol</p>
+                  <p className="font-semibold text-brand-dark">{icp.role || '—'}</p>
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-wide text-slate-500 mb-1">Bedrijfsgrootte</p>
+                  <p className="font-semibold text-brand-dark">{icp.company_size || '—'}</p>
+                </div>
+              </div>
+
+              {icp.triggers && icp.triggers.length > 0 && (
+                <div className="mb-4">
+                  <p className="text-xs uppercase tracking-wide text-slate-500 mb-1">Triggers</p>
+                  <ul className="list-disc pl-5 space-y-1 text-sm text-slate-700">
+                    {icp.triggers.map((t, i) => <li key={i}>{t}</li>)}
+                  </ul>
+                </div>
+              )}
+
+              {icp.jobs && icp.jobs.length > 0 && (
+                <div className="mb-4">
+                  <p className="text-xs uppercase tracking-wide text-slate-500 mb-1">Jobs</p>
+                  <ul className="list-disc pl-5 space-y-1 text-sm text-slate-700">
+                    {icp.jobs.map((t, i) => <li key={i}>{t}</li>)}
+                  </ul>
+                </div>
+              )}
+
+              {icp.pains && icp.pains.length > 0 && (
+                <div className="mb-4">
+                  <p className="text-xs uppercase tracking-wide text-slate-500 mb-1">Pains</p>
+                  <ul className="list-disc pl-5 space-y-1 text-sm text-slate-700">
+                    {icp.pains.map((t, i) => <li key={i}>{t}</li>)}
+                  </ul>
+                </div>
+              )}
+
+              {icp.buying_committee && icp.buying_committee.length > 0 && (
+                <div className="mb-4">
+                  <p className="text-xs uppercase tracking-wide text-slate-500 mb-1">Buying committee</p>
+                  <ul className="space-y-1 text-sm text-slate-700">
+                    {icp.buying_committee.map((m, i) => (
+                      <li key={i}>
+                        <strong className="text-brand-dark">{m.role}</strong>
+                        <span className="text-xs text-slate-500 ml-2">[{m.influence}]</span>
+                        {m.motivation && <span className="text-slate-600"> — {m.motivation}</span>}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {icp.rationale && (
+                <p className="text-xs text-slate-500 italic border-t border-slate-200 pt-3 mt-3">{icp.rationale}</p>
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* Angles — 3 lenses */}
+        {angles.length > 0 && (
+          <section className="mb-10">
+            <h2 className="text-xs font-bold tracking-widest text-brand-accent uppercase mb-4">Andere invalshoeken</h2>
+            <div className="space-y-4">
+              {angles.map(a => {
+                const lensLabel: Record<string, string> = {
+                  brand_archetype:  'Brand archetype',
+                  competitor:       'Concurrentie & whitespace',
+                  cultural_moment:  'Cultureel moment',
+                }
+                return (
+                  <div key={a.lens} className="rounded-2xl bg-white border border-slate-200 p-6">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-[10px] font-bold uppercase tracking-widest bg-brand-accent/10 text-brand-accent px-2 py-0.5 rounded-full">
+                        {lensLabel[a.lens] ?? a.lens}
+                      </span>
+                    </div>
+                    <h3 className="text-lg font-semibold text-brand-dark mb-3 leading-snug">{a.headline}</h3>
+                    <div className="text-sm text-slate-700 leading-relaxed whitespace-pre-line">
+                      {a.body_md}
+                    </div>
+                    {a.evidence && a.evidence.length > 0 && (
+                      <ul className="mt-4 pt-3 border-t border-slate-200 space-y-1 text-xs text-slate-500">
+                        {a.evidence.map((e, i) => (
+                          <li key={i}>
+                            <span className="text-slate-700">{e.claim}</span>
+                            <span className="text-slate-400"> — {e.source_label}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* Live signals */}
+        {liveSignals.length > 0 && (
+          <section className="mb-10">
+            <h2 className="text-xs font-bold tracking-widest text-brand-accent uppercase mb-4">
+              Live signalen
+              <span className="ml-2 text-[10px] font-normal normal-case tracking-normal text-slate-500">
+                {liveSignals.every(s => s.retrieved_via === 'inferred_fallback')
+                  ? '(web-search niet beschikbaar — alleen inferred)'
+                  : '(web-search)'}
+              </span>
+            </h2>
+            <ul className="space-y-3">
+              {liveSignals.map((s, i) => (
+                <li key={i} className="rounded-2xl bg-white border border-slate-200 p-5">
+                  <div className="flex items-start justify-between gap-3 mb-1">
+                    <h3 className="font-semibold text-brand-dark">{s.title}</h3>
+                    {s.relevance_score != null && (
+                      <span className="text-xs font-mono text-slate-500 shrink-0">
+                        {(Number(s.relevance_score) * 100).toFixed(0)}%
+                      </span>
+                    )}
+                  </div>
+                  {s.snippet && <p className="text-sm text-slate-700 mb-2">{s.snippet}</p>}
+                  <p className="text-xs text-slate-500">
+                    {s.source_url ? (
+                      <a href={s.source_url} target="_blank" rel="noopener noreferrer" className="hover:text-brand-accent">
+                        {s.source_label} ↗
+                      </a>
+                    ) : s.source_label}
+                    <span className="mx-2">·</span>
+                    <span className={`font-mono ${s.retrieved_via === 'inferred_fallback' ? 'text-amber-700' : ''}`}>
+                      {s.retrieved_via}
+                    </span>
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
         {/* Directions */}
         {directions.length > 0 && (
           <section className="mb-10">
@@ -251,6 +423,11 @@ export default async function AtelierSessionPage({ params }: PageProps) {
               {onePager.body_md}
             </div>
           </section>
+        )}
+
+        {/* Q&A chat — only show when session has at least JTBD ready */}
+        {session.status === 'completed' && (
+          <QaChat sessionId={id} initialHistory={qaTurns.map(t => ({ question: t.question, answer: t.answer, created_at: t.created_at }))} />
         )}
 
         {/* Brief + module runs (debug) */}

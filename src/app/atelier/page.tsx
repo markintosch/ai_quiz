@@ -10,7 +10,7 @@ export default function AtelierLandingPage() {
 
         <header className="mb-12 md:mb-16">
           <div className="text-xs font-semibold tracking-widest text-brand-accent uppercase mb-4">
-            Atelier · v0.4 framework · privé preview
+            Atelier · v0.5 framework · privé preview
           </div>
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-brand-dark mb-6 leading-[1.05]">
             Van brief naar verdedigbare richting — in uren, niet dagen.
@@ -29,12 +29,12 @@ export default function AtelierLandingPage() {
             <p className="text-slate-600">Plak een brief en optioneel wat brand context.</p>
           </div>
           <div className="rounded-2xl bg-white border border-slate-200 p-5">
-            <div className="text-brand-accent font-bold mb-1">2 · 5 modules werken</div>
-            <p className="text-slate-600">JTBD, audience, referenties, tensie en synthese — elk met provenance.</p>
+            <div className="text-brand-accent font-bold mb-1">2 · Meervoudige analyse</div>
+            <p className="text-slate-600">JTBD, ICP, audience, referenties, tensies, 3 lenzen, live signalen — parallel.</p>
           </div>
           <div className="rounded-2xl bg-white border border-slate-200 p-5">
-            <div className="text-brand-accent font-bold mb-1">3 · One-pager eruit</div>
-            <p className="text-slate-600">Markdown one-pager voor je werksessie, elke claim met bron.</p>
+            <div className="text-brand-accent font-bold mb-1">3 · One-pager + doorvragen</div>
+            <p className="text-slate-600">One-pager met provenance per claim. Daarna chat-Q&amp;A op de hele bundle.</p>
           </div>
         </section>
 
@@ -54,14 +54,18 @@ export default function AtelierLandingPage() {
         <section className="text-sm text-slate-600 space-y-3">
           <h3 className="font-semibold text-brand-dark">Wat zit er onder de motorkap</h3>
           <ul className="list-disc pl-5 space-y-1.5">
-            <li><strong>Module 1 · Brief & JTBD</strong> — decodeert tot job-to-be-done, hidden assumptions, missing pieces</li>
-            <li><strong>Module 2 · Reference & retrieval</strong> — seed-corpus van Nederlandstalige creatieve referenties + Claude-gestuurde keuze met taste-note</li>
-            <li><strong>Module 3 · Audience evidence</strong> — twee-spoor signaalmodel (Street Signal vs Ground Truth) — nooit vermengd</li>
-            <li><strong>Module 4 · Tension & synthesis</strong> — 2–3 directional routes, elk met evidence_refs + audience_refs</li>
-            <li><strong>Module 5 · Output packaging</strong> — markdown one-pager met provenance per claim</li>
+            <li><strong>Brief & JTBD</strong> — decodeert tot job-to-be-done, hidden assumptions, missing pieces</li>
+            <li><strong>ICP profile</strong> — industry, rol, bedrijfsgrootte, triggers, jobs, pains, buying committee</li>
+            <li><strong>Reference & retrieval</strong> — seed-corpus van Nederlandstalige creatieve referenties + Claude-gestuurde keuze met taste-note</li>
+            <li><strong>Audience evidence</strong> — twee-spoor signaalmodel (Street Signal vs Ground Truth) — nooit vermengd</li>
+            <li><strong>3 lenzen</strong> — brand-archetype, concurrentie/whitespace, cultureel-moment</li>
+            <li><strong>Live signalen</strong> — actuele signalen via web-search (met inferred-fallback als de tool niet beschikbaar is)</li>
+            <li><strong>Tension & synthesis</strong> — 2–3 directional routes met evidence- en audience-refs</li>
+            <li><strong>Output packaging</strong> — markdown one-pager met provenance per claim</li>
+            <li><strong>Q&amp;A</strong> — chat over de hele bundle om door te vragen op routes, ICP, signalen</li>
           </ul>
           <p className="pt-3 text-xs text-slate-500">
-            Framework draait op Anthropic Claude (Sonnet 4.6 voor synthesis, Haiku 4.5 voor retrieval). Elke run logt latency, cost en outputs in <code>atelier_module_runs</code>.
+            Framework draait op Anthropic Claude (Sonnet 4.6 voor synthesis, Haiku 4.5 voor retrieval). Elke call wordt gelogd in <code>atelier_module_runs</code> met latency, cost, model.
           </p>
         </section>
 

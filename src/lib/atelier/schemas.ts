@@ -93,6 +93,67 @@ export const OnePagerSchema = z.object({
 })
 export type OnePager = z.infer<typeof OnePagerSchema>
 
+// ── Module: ICP — Ideal Customer Profile ──────────────────────────────────
+
+export const IcpBuyingMemberSchema = z.object({
+  role:       z.string(),
+  influence:  z.enum(['decision_maker', 'champion', 'evaluator', 'gatekeeper', 'end_user']),
+  motivation: z.string().optional(),
+})
+export type IcpBuyingMember = z.infer<typeof IcpBuyingMemberSchema>
+
+export const IcpProfileSchema = z.object({
+  industry:         z.string().describe('Branche / sector waarvoor het ideaal-klantprofiel geldt'),
+  role:             z.string().describe('Primaire rol bij de klant — vaak DMU-positie'),
+  company_size:     z.string().describe('Indicatieve bedrijfsgrootte (medewerkers / omzet) of segment'),
+  triggers:         z.array(z.string()).describe('Wat zorgt ervoor dat ze NU op zoek gaan'),
+  jobs:             z.array(z.string()).describe('Wat ze gedaan willen krijgen'),
+  pains:            z.array(z.string()).describe('Pijnen / frustraties die ze zelf zouden benoemen'),
+  buying_committee: z.array(IcpBuyingMemberSchema).describe('De bredere DMU rond de hoofdrol'),
+  rationale:        z.string().describe('Waarom deze ICP volgt uit de brief'),
+})
+export type IcpProfile = z.infer<typeof IcpProfileSchema>
+
+// ── Module: Angles (3 lenses) ─────────────────────────────────────────────
+
+export const AngleEvidenceSchema = z.object({
+  claim:        z.string(),
+  source_label: z.string(),
+  source_url:   z.string().url().nullable().optional(),
+})
+
+export const AngleSchema = z.object({
+  lens:     z.enum(['brand_archetype', 'competitor', 'cultural_moment']),
+  headline: z.string().describe('Eén-zin samenvatting van wat deze lens laat zien'),
+  body_md:  z.string().describe('Markdown body — analyses, kansen, risicos'),
+  evidence: z.array(AngleEvidenceSchema).default([]),
+})
+export type Angle = z.infer<typeof AngleSchema>
+
+// ── Module: Live signal (web search) ──────────────────────────────────────
+
+export const LiveSignalSchema = z.object({
+  title:           z.string(),
+  snippet:         z.string(),
+  source_url:      z.string().url().nullable().optional(),
+  source_label:    z.string(),
+  relevance_score: z.number().min(0).max(1),
+  retrieved_via:   z.enum(['web_search', 'manual', 'inferred_fallback']).default('web_search'),
+})
+export type LiveSignal = z.infer<typeof LiveSignalSchema>
+
+export const LiveSignalSetSchema = z.object({
+  signals: z.array(LiveSignalSchema).max(8),
+})
+
+// ── Module: Q&A ────────────────────────────────────────────────────────────
+
+export const QaTurnSchema = z.object({
+  question: z.string().min(2),
+  answer:   z.string().min(1),
+})
+export type QaTurn = z.infer<typeof QaTurnSchema>
+
 // ── Whole-session bundle (handed to module 5) ──────────────────────────────
 
 export const SessionBundleSchema = z.object({
@@ -105,5 +166,8 @@ export const SessionBundleSchema = z.object({
   references:     z.array(ReferenceSchema),
   audience:       AudiencePictureSchema,
   directions:     z.array(DirectionSchema),
+  icp:            IcpProfileSchema.optional(),
+  angles:         z.array(AngleSchema).default([]),
+  liveSignals:    z.array(LiveSignalSchema).default([]),
 })
 export type SessionBundle = z.infer<typeof SessionBundleSchema>

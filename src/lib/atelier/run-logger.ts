@@ -18,9 +18,22 @@ function sb(): SupabaseClient {
   return _sb
 }
 
+export type AtelierModuleId =
+  | 'brief_jtbd'
+  | 'reference'
+  | 'audience'
+  | 'tension'
+  | 'output'
+  | 'icp'
+  | 'brand_archetype'
+  | 'competitor'
+  | 'cultural_moment'
+  | 'live_signal'
+  | 'qa'
+
 export interface RunLoggerInput<TInput, TOutput> {
   sessionId:  string
-  module:     'brief_jtbd' | 'reference' | 'audience' | 'tension' | 'output'
+  module:     AtelierModuleId
   llm:        Omit<LlmCallParams, 'module'>
   /** Used for input_hash + stored payload. Should fully describe the input. */
   inputPayload: TInput
