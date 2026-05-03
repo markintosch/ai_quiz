@@ -21,6 +21,7 @@ const NAV_LINKS = [
   { href: '/admin/ai_benchmark/writeins', label: '↳ Write-ins' },
   { href: '/admin/sannahremco', label: 'Sannah & Remco' },
   { href: '/admin/atelier', label: 'Atelier · ops' },
+  { href: '/admin/atelier/icps', label: '↳ ICP knowledge base' },
 ]
 
 export default function AdminLayout({
