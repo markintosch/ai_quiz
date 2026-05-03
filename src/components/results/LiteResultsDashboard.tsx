@@ -436,11 +436,14 @@ export function LiteResultsDashboard({
           <p className="text-sm text-gray-600 mb-5 max-w-sm mx-auto">
             {t('fullAssessment.body')}
           </p>
+          {/* Continuation flow: re-uses the 7 lite answers, only asks the
+              19 extras. Falls back to a fresh extended quiz if no responseId. */}
           <a
-            href="/a/extended"
+            href={responseId ? `/${locale}/a/continue?r=${responseId}` : `/${locale}/a/extended`}
             onClick={() => trackEvent('full_assessment_clicked', {
-              source:         'lite_results',
-              maturity_level: score.maturityLevel,
+              source:           'lite_results',
+              maturity_level:   score.maturityLevel,
+              continuation:     !!responseId,
             })}
             className="inline-block px-6 py-2.5 bg-brand hover:bg-brand-light text-white font-semibold rounded-xl text-sm transition-colors"
           >

@@ -119,6 +119,8 @@ export interface SubmitQuizPayload {
   utmSource?:    string   // e.g. 'linkedin'
   utmMedium?:    string   // e.g. 'social'
   utmCampaign?:  string   // e.g. 'mentor_q2_2026'
+  /** Lite→Full continuation: parent (lite) response_id this submission upgrades. */
+  parentResponseId?: string
 }
 
 export interface SubmitQuizResponse {

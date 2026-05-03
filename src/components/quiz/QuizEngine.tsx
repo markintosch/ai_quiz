@@ -43,6 +43,17 @@ interface QuizEngineProps {
   leadCaptureMode?: 'full' | 'minimal'
   showCallbackOption?: boolean
   hideMarketingConsent?: boolean
+  /**
+   * Pre-filled answers — used by the Lite→Full continuation flow.
+   * Questions whose code is already in this map are skipped from the rendered
+   * question list, and the answers are merged into the submission payload.
+   */
+  initialAnswers?: AnswerMap
+  /**
+   * If set, the submission is linked back to a parent (Lite) response via
+   * `parent_response_id` — used for the Lite→Full continuation flow.
+   */
+  parentResponseId?: string
 }
 
 export function QuizEngine({
@@ -61,6 +72,8 @@ export function QuizEngine({
   leadCaptureMode = 'full',
   showCallbackOption,
   hideMarketingConsent,
+  initialAnswers,
+  parentResponseId,
 }: QuizEngineProps) {
   const t = useTranslations('quiz.engine')
   const locale = useLocale()
@@ -70,9 +83,13 @@ export function QuizEngine({
 
   const router = useRouter()
   const baseQuestions: Question[] = questionsProp ?? (version === 'lite' ? LITE_QUESTIONS : QUESTIONS)
-  const questions: Question[] = excludedCodes.length > 0
-    ? baseQuestions.filter((q) => !excludedCodes.includes(q.code))
-    : baseQuestions
+  const initialAnswerCodes = initialAnswers ? new Set(Object.keys(initialAnswers)) : null
+  const questions: Question[] = baseQuestions.filter((q) => {
+    if (excludedCodes.includes(q.code)) return false
+    // Continuation flow: skip questions already answered in the parent response
+    if (initialAnswerCodes && initialAnswerCodes.has(q.code)) return false
+    return true
+  })
 
   // ── State ──────────────────────────────────────────────────
   const [phase, setPhase] = useState<'lead_pre' | 'questions' | 'lead_post' | 'submitting'>(
@@ -133,15 +150,22 @@ export function QuizEngine({
     } catch { /* ignore */ }
 
     try {
+      // Continuation flow: merge in the parent (lite) answers so the full
+      // scoring engine sees all 26 question codes, not just the 19 extras.
+      const mergedAnswers: AnswerMap = initialAnswers
+        ? { ...initialAnswers, ...answers }
+        : answers
+
       const payload: SubmitQuizPayload = {
         version,
-        answers,
+        answers: mergedAnswers,
         lead,
         companySlug,
         cohortId,
         waveId,
         locale,
         productKey,
+        ...(parentResponseId ? { parentResponseId } : {}),
         ...(attribution ? {
           refSource:   attribution.ref,
           utmSource:   attribution.utm_source   || undefined,

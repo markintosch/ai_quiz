@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
   }
 
   const { version, answers, lead, companySlug, cohortId, waveId, locale = 'en', productKey = 'ai_maturity',
-          refSource, utmSource, utmMedium, utmCampaign } = body
+          refSource, utmSource, utmMedium, utmCampaign, parentResponseId } = body
   // Extract optional fitness-specific lead fields
   const { phone, callMeBack } = lead as { phone?: string; callMeBack?: boolean }
 
@@ -150,6 +150,8 @@ export async function POST(req: NextRequest) {
         utm_source:            utmSource   ?? null,
         utm_medium:            utmMedium   ?? null,
         utm_campaign:          utmCampaign ?? null,
+        // Lite→Full continuation: link upgraded response back to its parent
+        ...(parentResponseId ? { parent_response_id: parentResponseId } : {}),
       })
       .select('id')
       .single()

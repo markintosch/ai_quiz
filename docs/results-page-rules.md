@@ -241,25 +241,22 @@ Per product configureerbaar via `src/products/{key}/config.ts → scoring.maturi
 
 ---
 
-## 10 · Status — beantwoord en open
+## 10 · Status — alles uit Mark's lijst beantwoord en geïmplementeerd
 
-### ✅ Beantwoord (2026-05-03)
+### ✅ Implementatie compleet (2026-05-03 v4)
 
-1. **MT-rollen breed detecteren** — niet alleen CEO. Nu alle MT-acroniemen + spelled-out + NL/FR/DE varianten. Geïmplementeerd.
-2. **Mid-market (51–500)** — eigen mobilisation-card toegevoegd. Geïmplementeerd.
-3. **Dedicated MT-sessie Calendly** — `ai-strategy-session-clone` ingebakken (env-var override mogelijk via `NEXT_PUBLIC_CALENDLY_MT_SESSION_URL`). Geïmplementeerd.
-4. **Extended Starter-band rijker dan lite** — toegezegd, **nog te bouwen** (volgende ronde, content-only in messages files).
-5. **Lite-naar-extended continuatie-flow** — toegezegd, **nog te bouwen** (aparte sessie nodig, grotere refactor: lite-antwoorden persisteren, alleen extra 19 vragen vragen, hersamenvoegen tot full score).
+1. **MT-rollen breed detecteren** — niet alleen CEO. Alle MT-acroniemen + spelled-out + NL/FR/EN/DE varianten.
+2. **Mid-market (51–500)** — eigen mobilisation-card.
+3. **Dedicated MT-sessie Calendly** — `ai-strategy-session-clone` ingebakken (env-var override via `NEXT_PUBLIC_CALENDLY_MT_SESSION_URL`).
+4. **Extended Starter-band rijker dan lite** — `insightExtended` + `urgencyExtended` in `messages/{nl,fr,en}.json` voor Unaware/Exploring/Experimenting. Bevatten concrete eerste-30/60/90-dagen acties + wat te vermijden. ScoreDashboard valt netjes terug op de korte versie als de extended ontbreekt.
+5. **Lite → extended continuatie-flow** — nieuwe route `/[locale]/a/continue?r=<lite_response_id>`:
+   - Laadt parent lite-response + lead-info uit DB
+   - Toont alleen vragen die nog NIET beantwoord zijn
+   - Vooringevulde lead-velden (naam, email, bedrijf, etc.)
+   - Bij submit: merge lite + extra antwoorden, full score gegenereerd, nieuwe response-rij gelinkt aan parent via `parent_response_id`
+   - "Doe de uitgebreide assessment" CTA in lite-results wijst nu naar deze flow
 
-### Nog open / volgende rondes
-
-- (4) Starter-band insight + urgency teksten in extended verdiepen — content-only update aan `messages/{nl,fr,en}.json`. Schat: 30 min werk, geen code-wijziging.
-- (5) Lite → extended continuatie. Schat: 0,5–1 dag. Vereist:
-  - Persisteren van de 7 lite-antwoorden (in DB of querystring)
-  - Nieuwe route die alleen de extra 19 vragen aanbiedt
-  - Hersamenvoegen van lite + extra antwoorden tot een full-assessment-score
-  - DB-relatie: bestaande lite-respondent linken aan nieuwe full-rij
-  - Verlies-loze upgrade: oude lite-result blijft bereikbaar
+> **Migratie vereist:** `supabase/migration_continuation.sql` voegt `parent_response_id UUID REFERENCES responses(id)` toe + index. Moet draaien vóór deploy van de v4 code.
 
 ---
 

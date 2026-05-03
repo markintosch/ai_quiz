@@ -260,15 +260,21 @@
     "maturityLevels": {
       "Unaware": {
         "insight": "Your organisation is at a critical inflection point. AI is no longer a future consideration — it is reshaping markets now. The good news: starting from awareness means every move you make compounds quickly.",
-        "urgency": "Act now — competitors are already widening the gap."
+        "urgency": "Act now — competitors are already widening the gap.",
+        "insightExtended": "Your organisation is at a critical inflection point. AI is no longer a future consideration — it is reshaping markets now. The good news: starting from awareness means every step you take pays back fast. First 30 days: name one or two people who will own the topic, pick a single concrete use case where AI already delivers value (customer interactions, content creation, data processing), and experiment small without grand announcements. Avoid: broad tool roll-outs or a transformation programme before you know what works for your organisation.",
+        "urgencyExtended": "Act now — competitors are already widening the gap. A structured start in the next 90 days prevents being 12 months behind everyone who is moving today."
       },
       "Exploring": {
         "insight": "You are beginning to see the opportunity — but exploration without direction leads to wasted investment. A clear strategy will help you convert curiosity into competitive advantage faster than you think.",
-        "urgency": "Structured action in the next 90 days can accelerate you by 12+ months."
+        "urgency": "Structured action in the next 90 days can accelerate you by 12+ months.",
+        "insightExtended": "You are beginning to see the opportunity — but exploration without direction leads to wasted investment. A clear strategy will help you convert curiosity into competitive advantage faster than you expect. First 60 days: make one explicit choice on where AI helps you most (efficiency, quality, or new proposition), assign a single owner with mandate and time, and run one pilot with a measurable outcome within 90 days. Avoid: ten parallel experiments without coordination — this is the pattern that traps most organisations here.",
+        "urgencyExtended": "Structured action in the next 90 days can accelerate you by 12+ months. Companies that pick an owner and a focus now learn more in 6 months than competitors do in 2 years without direction."
       },
       "Experimenting": {
         "insight": "You have real AI activity underway, which puts you ahead of most. The challenge now is moving from scattered pilots to a coherent capability that scales and creates lasting differentiation.",
-        "urgency": "Most organisations stall here. The gap between pilots and scaled capability is where competitive advantage is won or lost."
+        "urgency": "Most organisations stall here. The gap between pilots and scaled capability is where competitive advantage is won or lost.",
+        "insightExtended": "You have real AI activity underway, which puts you ahead of most. The challenge now is moving from scattered pilots to a coherent capability that scales and creates lasting differentiation. First 90 days: inventory every running AI initiative, pick the one or two with most promise and convert those into a production track with budget, owner and quarterly targets. Avoid: starting new pilots — consolidating is more valuable than expanding right now.",
+        "urgencyExtended": "Most organisations stall here. The gap between pilots and scaled capability is where competitive advantage is won or lost. Delaying scale-up means losing monthly experience that your competitors are gaining."
       },
       "Scaling": {
         "insight": "AI is embedded in how you operate — a genuine advantage. The leaders who stay ahead are those who lock in governance, culture and compounding capability before the next wave hits.",

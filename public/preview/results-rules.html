@@ -108,7 +108,7 @@
 
   <div class="actions">
     <div class="meta">
-      <strong>Results-pagina regels</strong> · v3 (MT-rollen + mid-market) · 2026-05-03
+      <strong>Results-pagina regels</strong> · v4 (alles geïmplementeerd) · 2026-05-03
     </div>
     <a href="/preview/results-rules.docx" download class="btn btn-secondary" id="dl-docx">
       <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a1 1 0 011 1v9.586l2.293-2.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V3a1 1 0 011-1z"/><path d="M3 14a1 1 0 011 1v2h12v-2a1 1 0 112 0v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2a1 1 0 011-1z"/></svg>
@@ -321,18 +321,26 @@ Maximum 3 cards.</pre>
       <li>Geen invloed op insights of CTA-tekst</li>
     </ul>
 
-    <h2><span class="num">11</span>Status</h2>
-    <h3 style="color: var(--brand);">✅ Beantwoord en geïmplementeerd (2026-05-03)</h3>
+    <h2><span class="num">11</span>Status — alles uit Mark&rsquo;s lijst geïmplementeerd</h2>
+    <h3 style="color: var(--brand);">✅ Implementatie compleet (2026-05-03 v4)</h3>
     <ol>
-      <li><strong>MT-rollen breed detecteren</strong> — niet alleen CEO. Nu alle MT-acroniemen + voluit + NL/FR/EN/DE varianten.</li>
+      <li><strong>MT-rollen breed detecteren</strong> — niet alleen CEO. Alle MT-acroniemen + voluit + NL/FR/EN/DE varianten.</li>
       <li><strong>Mid-market (51–500)</strong> — eigen mobilisation-card.</li>
       <li><strong>Dedicated MT-sessie Calendly</strong> — <code>ai-strategy-session-clone</code> (env-var override mogelijk).</li>
+      <li><strong>Extended Starter-band rijker dan lite</strong> — <code>insightExtended</code> + <code>urgencyExtended</code> in <code>messages/{nl,fr,en}.json</code> voor Unaware/Exploring/Experimenting. Bevat concrete 30/60/90-dagen acties + wat te vermijden. ScoreDashboard valt netjes terug op de korte versie als de extended ontbreekt.</li>
+      <li><strong>Lite → extended continuatie-flow</strong> — nieuwe route <code>/[locale]/a/continue?r=&lt;lite_id&gt;</code>:
+        <ul>
+          <li>Laadt parent lite-response + lead-info uit DB</li>
+          <li>Toont alleen vragen die nog NIET beantwoord zijn</li>
+          <li>Voorgevulde lead-velden (naam, email, bedrijf, etc.)</li>
+          <li>Bij submit: merge lite + extra antwoorden, full score gegenereerd, nieuwe response-rij gelinkt aan parent via <code>parent_response_id</code></li>
+          <li>&ldquo;Doe de uitgebreide assessment&rdquo; CTA in lite-results wijst nu naar deze flow</li>
+        </ul>
+      </li>
     </ol>
-    <h3 style="color: var(--brand-accent);">⚙ Nog te bouwen (volgende rondes)</h3>
-    <ol start="4">
-      <li><strong>Extended Starter-band rijker dan lite</strong> — content-only update aan <code>messages/{nl,fr,en}.json</code> insight + urgency teksten. ~30 min werk.</li>
-      <li><strong>Lite → extended continuatie-flow</strong> — grotere refactor: lite-antwoorden persisteren, alleen extra 19 vragen aanbieden, hersamenvoegen tot full score, DB-relatie tussen lite-rij en nieuwe full-rij. ~0,5–1 dag.</li>
-    </ol>
+    <div class="new-callout">
+      <strong>⚠ Migratie vereist:</strong> <code>supabase/migration_continuation.sql</code> voegt <code>parent_response_id UUID</code> kolom + index toe aan <code>responses</code>. Moet draaien vóór deploy van de v4 code.
+    </div>
   </article>
 
   <div class="toast" id="toast"></div>

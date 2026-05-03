@@ -260,15 +260,21 @@
     "maturityLevels": {
       "Unaware": {
         "insight": "Jouw organisatie bevindt zich op een kritiek keerpunt. AI is niet langer een toekomstige overweging — het herschikt markten nu al. Het goede nieuws: beginnen vanuit bewustzijn betekent dat elke stap die je zet snel rendeert.",
-        "urgency": "Handel nu — concurrenten vergroten de kloof al."
+        "urgency": "Handel nu — concurrenten vergroten de kloof al.",
+        "insightExtended": "Jouw organisatie bevindt zich op een kritiek keerpunt. AI is niet langer een toekomstige overweging — het herschikt markten nu al. Het goede nieuws: beginnen vanuit bewustzijn betekent dat elke stap die je zet snel rendeert. Eerste 30 dagen: wijs één of twee mensen aan die het onderwerp omarmen, kies één concrete use case waar AI nu al waarde oplevert (klantcontact, contentcreatie, dataverwerking) en experimenteer kleinschalig zonder grootse aankondigingen. Vermijd: brede tool-uitrol of een transformatieprogramma vóór je weet wat werkt voor jouw organisatie.",
+        "urgencyExtended": "Handel nu — concurrenten vergroten de kloof al. Een gestructureerde start in de komende 90 dagen voorkomt dat je over 12 maanden achterloopt op iedereen die nu wel beweegt."
       },
       "Exploring": {
         "insight": "Je begint de kans te zien — maar verkennen zonder richting leidt tot verspild kapitaal. Een heldere strategie helpt je nieuwsgierigheid sneller om te zetten in concurrentievoordeel dan je denkt.",
-        "urgency": "Gestructureerde actie in de komende 90 dagen kan je 12+ maanden vooruit helpen."
+        "urgency": "Gestructureerde actie in de komende 90 dagen kan je 12+ maanden vooruit helpen.",
+        "insightExtended": "Je begint de kans te zien — maar verkennen zonder richting leidt tot verspild kapitaal. Een heldere strategie helpt je nieuwsgierigheid sneller om te zetten in concurrentievoordeel dan je denkt. Eerste 60 dagen: maak één keuze over waar AI je organisatie het meest helpt (efficiency, kwaliteit, of nieuwe propositie), wijs een eigenaar aan met mandaat én tijd, en zet één pilot op met meetbare uitkomst binnen 90 dagen. Vermijd: tien parallelle experimenten zonder coördinatie — dat is het patroon dat meeste organisaties hier vastzet.",
+        "urgencyExtended": "Gestructureerde actie in de komende 90 dagen kan je 12+ maanden vooruit helpen. Bedrijven die nu een eigenaar en focus kiezen, leren in 6 maanden meer dan concurrenten in 2 jaar zonder richting."
       },
       "Experimenting": {
         "insight": "Je hebt echte AI-activiteit lopen, waardoor je de meeste organisaties voor bent. De uitdaging nu is om van verspreide pilots te gaan naar een samenhangende capability die schaalt en blijvende differentiatie creëert.",
-        "urgency": "De meeste organisaties stagneren hier. Het gat tussen pilots en geschaalde capability bepaalt wie het concurrentievoordeel wint."
+        "urgency": "De meeste organisaties stagneren hier. Het gat tussen pilots en geschaalde capability bepaalt wie het concurrentievoordeel wint.",
+        "insightExtended": "Je hebt echte AI-activiteit lopen, waardoor je de meeste organisaties voor bent. De uitdaging nu is om van verspreide pilots te gaan naar een samenhangende capability die schaalt en blijvende differentiatie creëert. Eerste 90 dagen: inventariseer al je lopende AI-initiatieven, kies welke 1-2 het meest beloven en zet die om naar een productie-traject met budget, eigenaar en kwartaaltargets. Vermijd: nieuwe pilots starten — consolideren is nu waardevoller dan uitbreiden.",
+        "urgencyExtended": "De meeste organisaties stagneren hier. Het gat tussen pilots en geschaalde capability bepaalt wie het concurrentievoordeel wint. Wachten met opschalen kost jou nu maandelijks ervaring die je concurrenten wel opdoen."
       },
       "Scaling": {
         "insight": "AI is ingebed in hoe jij opereert — een echt voordeel. De leiders die voorop blijven, borgen governance, cultuur en samengestelde capability vóórdat de volgende golf komt.",

@@ -271,6 +271,8 @@ export function ScoreDashboard({
       )}
 
       {/* ── "Wat jouw score je vertelt" — every variant ── */}
+      {/* Extended/company variants get the richer ${level}.insightExtended copy
+          when available (Starter band only); falls back to .insight otherwise. */}
       <motion.div
         variants={fadeUp}
         className="bg-amber-50 rounded-2xl p-5 border-l-4 border-brand-accent"
@@ -278,11 +280,15 @@ export function ScoreDashboard({
         <p className="text-xs font-bold uppercase tracking-widest text-brand-accent mb-2">
           {insightTitle}
         </p>
-        <p className="text-gray-800 text-sm leading-relaxed mb-3">
-          {t(`maturityLevels.${score.maturityLevel}.insight` as Parameters<typeof t>[0])}
+        <p className="text-gray-800 text-sm leading-relaxed mb-3 whitespace-pre-line">
+          {t.has(`maturityLevels.${score.maturityLevel}.insightExtended` as Parameters<typeof t>[0])
+            ? t(`maturityLevels.${score.maturityLevel}.insightExtended` as Parameters<typeof t>[0])
+            : t(`maturityLevels.${score.maturityLevel}.insight` as Parameters<typeof t>[0])}
         </p>
         <p className="text-xs font-semibold text-gray-500 italic">
-          {t(`maturityLevels.${score.maturityLevel}.urgency` as Parameters<typeof t>[0])}
+          {t.has(`maturityLevels.${score.maturityLevel}.urgencyExtended` as Parameters<typeof t>[0])
+            ? t(`maturityLevels.${score.maturityLevel}.urgencyExtended` as Parameters<typeof t>[0])
+            : t(`maturityLevels.${score.maturityLevel}.urgency` as Parameters<typeof t>[0])}
         </p>
       </motion.div>
 

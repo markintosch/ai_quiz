@@ -260,15 +260,21 @@
     "maturityLevels": {
       "Unaware": {
         "insight": "Votre organisation est à un point d'inflexion critique. L'IA n'est plus une considération future — elle remodèle les marchés maintenant. La bonne nouvelle : partir de la prise de conscience signifie que chaque action que vous faites se compose rapidement.",
-        "urgency": "Agissez maintenant — les concurrents creusent déjà l'écart."
+        "urgency": "Agissez maintenant — les concurrents creusent déjà l'écart.",
+        "insightExtended": "Votre organisation est à un point d'inflexion critique. L'IA n'est plus une considération future — elle remodèle les marchés maintenant. La bonne nouvelle : démarrer depuis la prise de conscience signifie que chaque pas rapporte vite. Premiers 30 jours : désignez une ou deux personnes qui s'approprient le sujet, choisissez un cas d'usage concret où l'IA apporte déjà de la valeur (relation client, création de contenu, traitement de données), et expérimentez petit sans grande annonce. À éviter : un déploiement large d'outils ou un programme de transformation avant de savoir ce qui marche pour votre organisation.",
+        "urgencyExtended": "Agissez maintenant — les concurrents creusent déjà l'écart. Un démarrage structuré dans les 90 prochains jours évite d'être 12 mois en retard sur ceux qui bougent aujourd'hui."
       },
       "Exploring": {
         "insight": "Vous commencez à percevoir l'opportunité — mais l'exploration sans direction mène à des investissements gaspillés. Une stratégie claire vous aidera à convertir la curiosité en avantage concurrentiel plus vite que vous ne le pensez.",
-        "urgency": "Des actions structurées dans les 90 prochains jours peuvent vous faire gagner 12+ mois d'avance."
+        "urgency": "Des actions structurées dans les 90 prochains jours peuvent vous faire gagner 12+ mois d'avance.",
+        "insightExtended": "Vous commencez à percevoir l'opportunité — mais l'exploration sans direction mène à des investissements gaspillés. Une stratégie claire vous aidera à transformer votre curiosité en avantage concurrentiel plus vite que vous ne le pensez. Premiers 60 jours : faites un choix explicite sur l'endroit où l'IA vous aide le plus (efficacité, qualité, ou nouvelle proposition), nommez un propriétaire unique avec mandat et temps, et lancez un pilote avec un résultat mesurable dans les 90 jours. À éviter : dix expériences parallèles sans coordination — c'est le piège qui bloque la plupart des organisations ici.",
+        "urgencyExtended": "Des actions structurées dans les 90 prochains jours peuvent vous faire gagner 12+ mois d'avance. Les entreprises qui choisissent maintenant un propriétaire et un focus apprennent en 6 mois plus que leurs concurrents en 2 ans sans direction."
       },
       "Experimenting": {
         "insight": "Vous avez une vraie activité IA en cours, ce qui vous place devant la plupart. Le défi maintenant est de passer de pilotes dispersés à une capacité cohérente qui évolue et crée une différenciation durable.",
-        "urgency": "La plupart des organisations stagnent ici. L'écart entre les pilotes et la capacité à l'échelle est là où l'avantage concurrentiel se gagne ou se perd."
+        "urgency": "La plupart des organisations stagnent ici. L'écart entre les pilotes et la capacité à l'échelle est là où l'avantage concurrentiel se gagne ou se perd.",
+        "insightExtended": "Vous avez une vraie activité IA en cours, ce qui vous place devant la plupart. Le défi maintenant est de passer de pilotes dispersés à une capacité cohérente qui passe à l'échelle et crée une différenciation durable. Premiers 90 jours : inventoriez toutes les initiatives IA en cours, choisissez les une ou deux les plus prometteuses et convertissez-les en un parcours de production avec budget, propriétaire et objectifs trimestriels. À éviter : démarrer de nouveaux pilotes — consolider vaut plus que s'étendre en ce moment.",
+        "urgencyExtended": "La plupart des organisations stagnent ici. L'écart entre les pilotes et la capacité à l'échelle est là où l'avantage concurrentiel se gagne ou se perd. Reporter la mise à l'échelle revient à perdre chaque mois l'expérience que vos concurrents acquièrent."
       },
       "Scaling": {
         "insight": "L'IA est intégrée dans votre mode de fonctionnement — un véritable avantage. Les leaders qui restent en tête sont ceux qui ancrent la gouvernance, la culture et les capacités composées avant que la prochaine vague n'arrive.",
