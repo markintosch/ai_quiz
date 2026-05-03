@@ -129,5 +129,74 @@ export function parseJsonOutput<T>(raw: string): T {
   )
   if (start === Infinity) throw new Error(`No JSON found in model output: ${raw.slice(0, 200)}`)
   s = s.slice(start)
-  return JSON.parse(s) as T
+
+  // Try direct parse first
+  try {
+    return JSON.parse(s) as T
+  } catch (firstErr) {
+    // If the response was truncated mid-string (model ran out of tokens),
+    // attempt a salvage: cut at the last complete element/property and
+    // close the open brackets. Crude but usually works for our schemas
+    // because the early fields are the load-bearing ones.
+    const repaired = repairTruncatedJson(s)
+    try {
+      return JSON.parse(repaired) as T
+    } catch {
+      // Re-throw original error so the failure mode is clear in logs
+      throw firstErr
+    }
+  }
+}
+
+/**
+ * Best-effort repair for JSON that was cut off mid-string by max_tokens.
+ *  1. Walk back to the last complete `,` or `}` or `]` we can see at the right depth.
+ *  2. Close any open `{` `[` and `"`.
+ * Imperfect but unlocks a usable result instead of a hard failure.
+ */
+function repairTruncatedJson(s: string): string {
+  // Walk forward, track string state + bracket depths.
+  const stack: string[] = []
+  let inString = false
+  let escape = false
+  let lastSafeIdx = -1
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i]
+    if (escape) { escape = false; continue }
+    if (ch === '\\') { escape = true; continue }
+    if (ch === '"') { inString = !inString; continue }
+    if (inString) continue
+    if (ch === '{' || ch === '[') stack.push(ch === '{' ? '}' : ']')
+    else if (ch === '}' || ch === ']') {
+      if (stack.length > 0 && stack[stack.length - 1] === ch) stack.pop()
+    }
+    // Mark a safe truncation point: after we've completed a value at top-of-stack
+    if (!inString && (ch === ',' || ch === '}' || ch === ']') && stack.length <= 1) {
+      lastSafeIdx = i
+    }
+  }
+  // If we ended inside a string, cut at lastSafeIdx and close.
+  let trimmed = lastSafeIdx >= 0 ? s.slice(0, lastSafeIdx + 1) : s
+  // Strip trailing comma if present
+  trimmed = trimmed.replace(/,\s*$/, '')
+  // Recompute open brackets
+  const openCount: Record<string, number> = { '{': 0, '[': 0 }
+  let stringMode = false
+  let esc = false
+  for (let i = 0; i < trimmed.length; i++) {
+    const ch = trimmed[i]
+    if (esc) { esc = false; continue }
+    if (ch === '\\') { esc = true; continue }
+    if (ch === '"') stringMode = !stringMode
+    if (stringMode) continue
+    if (ch === '{') openCount['{']++
+    if (ch === '}') openCount['{']--
+    if (ch === '[') openCount['[']++
+    if (ch === ']') openCount['[']--
+  }
+  if (stringMode) trimmed += '"'
+  // Close remaining brackets in reverse-LIFO order — best-effort
+  while (openCount['['] > 0) { trimmed += ']'; openCount['[']-- }
+  while (openCount['{'] > 0) { trimmed += '}'; openCount['{']-- }
+  return trimmed
 }

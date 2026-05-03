@@ -95,7 +95,7 @@ Genereer 2–3 directional routes die in een werksessie besproken kunnen worden.
       system: SYSTEM_PROMPT,
       user: userPrompt,
       jsonOnly: true,
-      maxTokens: 2000,
+      maxTokens: 3000,
       temperature: 0.5,  // higher temp for tension-finding — needs creative leaps
     },
     inputPayload: input,

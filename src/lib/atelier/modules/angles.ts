@@ -92,7 +92,7 @@ Lever de ${lens.replace('_', ' ')}-analyse.`
       system: SYSTEMS[lens],
       user: userPrompt,
       jsonOnly: true,
-      maxTokens: 1500,
+      maxTokens: 2000,
       temperature: 0.5,
     },
     inputPayload: { lens, jtbd, brandContext },

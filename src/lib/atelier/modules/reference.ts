@@ -76,7 +76,7 @@ Kies 3–5 referenties die écht relevant zijn. Scoor relevantie en schrijf tast
       system: SYSTEM_PROMPT,
       user: userPrompt,
       jsonOnly: true,
-      maxTokens: 1500,
+      maxTokens: 2000,
       temperature: 0.4,
     },
     inputPayload: { jtbd, candidates },
