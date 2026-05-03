@@ -4,14 +4,20 @@ import { DimensionScore, ShadowAIResult } from './engine'
 export interface Recommendation {
   /**
    * Source dimension or override key. Override keys are not real dimensions —
-   * they tag recommendations injected post-scoring (CEO MT-sessie, corporate
-   * training & team-dev). Used for tracking + locale lookup.
+   * they tag recommendations injected post-scoring (MT alignment, corporate
+   * training, mid-market mobilisation). Used for tracking + locale lookup.
    */
-  dimension: Dimension | 'shadow_ai' | 'ceo_override' | 'corporate_override'
+  dimension: Dimension | 'shadow_ai' | 'mt_override' | 'corporate_override' | 'midmarket_override'
   heading: string
   body: string
   cta: string
   priority: 'primary' | 'supporting'
+  /**
+   * Optional per-card Calendly URL. Used to give specific override cards
+   * (e.g. MT-sessie) a dedicated booking link different from the score-band
+   * default. Page-level calendlyHref is used as the fallback.
+   */
+  ctaHref?: string
 }
 
 /** Context that may override recommendation order/content based on respondent role + company size. */
@@ -19,6 +25,11 @@ export interface RecommendationContext {
   jobTitle?: string | null
   companySize?: string | null
 }
+
+// Dedicated Calendly URL for MT alignment sessions — Mark's call (2026-05-03).
+// Falls back to env var if set, else hardcoded production link.
+const MT_SESSION_CALENDLY = process.env.NEXT_PUBLIC_CALENDLY_MT_SESSION_URL
+  ?? 'https://calendly.com/markiesbpm/ai-strategy-session-clone'
 
 // Locale-aware recommendation copy. Keyed by [locale][dimension].
 // `en` is the source of truth and the fallback for any missing locale/dimension.
@@ -161,12 +172,14 @@ const RECOMMENDATION_MAP: Record<string, Record<string, Omit<Recommendation, 'pr
 // ── Context overrides (role + company-size) ─────────────────────────────────
 // Injected after the dimension-based recommendations are picked.
 // The override map is locale-aware too — same shape as RECOMMENDATION_MAP.
-const OVERRIDE_RECOMMENDATION_MAP: Record<string, Record<'ceo_override' | 'corporate_override', Omit<Recommendation, 'priority'>>> = {
+type OverrideKey = 'mt_override' | 'corporate_override' | 'midmarket_override'
+
+const OVERRIDE_RECOMMENDATION_MAP: Record<string, Record<OverrideKey, Omit<Recommendation, 'priority'>>> = {
   en: {
-    ceo_override: {
-      dimension: 'ceo_override',
+    mt_override: {
+      dimension: 'mt_override',
       heading: 'Align your leadership team on AI in a single working session',
-      body: 'As CEO, the highest-leverage move is to bring your management team together in one focused session — set scope, build shared support, prioritise concrete opportunities. Underlying teams can then scale on one shared direction.',
+      body: 'As an MT-level leader, the highest-leverage move is to bring your management team together in one focused session — set scope, build shared support, prioritise concrete opportunities. Underlying teams can then scale on one shared direction.',
       cta: 'Book an MT alignment session',
     },
     corporate_override: {
@@ -175,12 +188,18 @@ const OVERRIDE_RECOMMENDATION_MAP: Record<string, Record<'ceo_override' | 'corpo
       body: 'At your size, structured training and team development deliver the biggest leverage: one coherent curriculum that brings management and operational teams to the same level of fluency, instead of scattered ad-hoc training.',
       cta: 'Discuss a training programme',
     },
+    midmarket_override: {
+      dimension: 'midmarket_override',
+      heading: 'Mobilise your mid-market advantage on AI',
+      body: 'At 51–500 you have a real advantage: small enough to move fast, big enough to invest. The next step is a focused workshop with the right 6–10 people to translate AI ambition into 1–2 prioritised use cases your teams can actually start on.',
+      cta: 'Plan a mid-market kick-off',
+    },
   },
   nl: {
-    ceo_override: {
-      dimension: 'ceo_override',
+    mt_override: {
+      dimension: 'mt_override',
       heading: 'Lijn je MT in één werksessie uit op AI',
-      body: 'Als CEO heb je het meeste effect door je managementteam in één gerichte sessie samen te brengen: scope vaststellen, draagvlak creëren, concrete kansen prioriteren. Onderliggende teams schalen vervolgens door op één gedeelde richting.',
+      body: 'Als MT-lid heb je het meeste effect door je managementteam in één gerichte sessie samen te brengen: scope vaststellen, draagvlak creëren, concrete kansen prioriteren. Onderliggende teams schalen vervolgens door op één gedeelde richting.',
       cta: 'Plan een MT-sessie',
     },
     corporate_override: {
@@ -189,12 +208,18 @@ const OVERRIDE_RECOMMENDATION_MAP: Record<string, Record<'ceo_override' | 'corpo
       body: 'Bij jullie omvang levert gestructureerd opleiden en teamontwikkeling de grootste hefboom: één coherent curriculum dat management én operationele teams op hetzelfde kennisniveau brengt, ipv ad-hoc training.',
       cta: 'Bespreek een opleidingsprogramma',
     },
+    midmarket_override: {
+      dimension: 'midmarket_override',
+      heading: 'Mobiliseer je mid-market voordeel op AI',
+      body: 'Bij 51–500 medewerkers heb je een reëel voordeel: klein genoeg om snel te bewegen, groot genoeg om te investeren. De volgende stap is een gerichte workshop met de juiste 6–10 mensen om AI-ambitie te vertalen naar 1–2 geprioriteerde use cases waar je teams direct mee aan de slag kunnen.',
+      cta: 'Plan een mid-market kick-off',
+    },
   },
   fr: {
-    ceo_override: {
-      dimension: 'ceo_override',
+    mt_override: {
+      dimension: 'mt_override',
       heading: 'Alignez votre comité de direction sur l\'IA en une seule séance de travail',
-      body: 'En tant que CEO, le meilleur levier est de rassembler votre équipe de direction en une séance focalisée : définir le périmètre, créer l\'adhésion, prioriser des opportunités concrètes. Les équipes opérationnelles peuvent ensuite passer à l\'échelle sur une direction partagée.',
+      body: 'En tant que membre du comité, le meilleur levier est de rassembler votre équipe de direction en une séance focalisée : définir le périmètre, créer l\'adhésion, prioriser des opportunités concrètes. Les équipes opérationnelles peuvent ensuite passer à l\'échelle sur une direction partagée.',
       cta: 'Planifiez une séance d\'alignement du comité',
     },
     corporate_override: {
@@ -203,30 +228,92 @@ const OVERRIDE_RECOMMENDATION_MAP: Record<string, Record<'ceo_override' | 'corpo
       body: 'À votre taille, une formation structurée et le développement d\'équipe offrent le plus grand levier : un curriculum cohérent qui amène la direction et les équipes opérationnelles au même niveau, plutôt que des formations ad hoc dispersées.',
       cta: 'Discutez d\'un programme de formation',
     },
+    midmarket_override: {
+      dimension: 'midmarket_override',
+      heading: 'Mobilisez votre avantage mid-market sur l\'IA',
+      body: 'Avec 51 à 500 collaborateurs, vous avez un vrai avantage : assez petit pour bouger vite, assez grand pour investir. La prochaine étape est un atelier ciblé avec les 6 à 10 bonnes personnes pour traduire l\'ambition IA en 1–2 cas d\'usage prioritaires que vos équipes peuvent réellement démarrer.',
+      cta: 'Planifiez un kick-off mid-market',
+    },
   },
 }
 
-/** Detect CEO-like job titles (case-insensitive substring match). */
-function isCeoLike(jobTitle?: string | null): boolean {
+/**
+ * Detect MT-level (management team / executive) job titles, case-insensitive.
+ *
+ * Matches:
+ *  - C-suite acronyms: CEO, CTO, CFO, CMO, CIO, COO, CDO, CHRO, CSO, CRO, CPO, CISO, CCO
+ *  - Spelled-out C-suite: "Chief X Officer" pattern
+ *  - Director-level: Director, Algemeen Directeur, Directeur Général, PDG, Geschäftsführer, Managing Director
+ *  - Senior leadership: VP / Vice President, Founder, General Manager, Owner/Eigenaar
+ *  - Dutch-specific: Hoofd (head of department), Directie, Bestuurder
+ *
+ * Deliberately excludes: "Manager" alone (too junior), "Project Director" (not MT-level).
+ */
+function isMtLevelLike(jobTitle?: string | null): boolean {
   if (!jobTitle) return false
   const t = jobTitle.toLowerCase()
-  return (
-    /\bceo\b/.test(t) ||
-    t.includes('chief executive') ||
-    t.includes('algemeen directeur') ||
-    t.includes('directeur-eigenaar') ||
-    t.includes('eigenaar/directeur') ||
-    t.includes('general manager') ||
-    t.includes('président-directeur') ||
-    t.includes('directeur général') ||
-    t.includes('founder') &&  // founder/CEO patterns
-      (t.includes('ceo') || t.includes('director'))
-  )
+
+  // C-suite acronyms (word-boundary so we don't match e.g. "ceo" inside another word)
+  if (/\b(ceo|cto|cfo|cmo|cio|coo|cdo|chro|cso|cro|cpo|ciso|ccso|cco|cxo)\b/.test(t)) return true
+
+  // Spelled-out C-suite ("Chief X Officer" patterns)
+  if (/chief\s+\w+\s+officer/.test(t)) return true
+  if (t.includes('chief executive') || t.includes('chief technology') ||
+      t.includes('chief financial') || t.includes('chief marketing') ||
+      t.includes('chief information') || t.includes('chief operating') ||
+      t.includes('chief data') || t.includes('chief strategy') ||
+      t.includes('chief revenue') || t.includes('chief product') ||
+      t.includes('chief people') || t.includes('chief commercial') ||
+      t.includes('chief digital') || t.includes('chief innovation')) return true
+
+  // Director / general management roles
+  if (t.includes('algemeen directeur') ||
+      t.includes('adjunct-directeur') ||
+      t.includes('adjunct directeur') ||
+      t.includes('directeur-eigenaar') ||
+      t.includes('eigenaar/directeur') ||
+      t.includes('eigenaar-directeur') ||
+      t.includes('managing director') ||
+      t.includes('general manager') ||
+      t.includes('directeur général') ||
+      t.includes('président-directeur') ||
+      t.includes('président directeur') ||
+      /\bpdg\b/.test(t) ||
+      t.includes('geschäftsführer') ||
+      t.includes('geschaftsfuhrer')) return true
+
+  // Founder (excludes pure "co-founder, engineer" type without leadership signal)
+  if (t.includes('founder') &&
+      (t.includes('ceo') || t.includes('director') || t.includes('chief') || /\bowner\b/.test(t))) return true
+  if (t === 'founder' || /^founder\b/.test(t) || /\bfounder & ceo\b/.test(t)) return true
+
+  // VP / Senior VP
+  if (/\b(vp|svp|evp)\b/.test(t)) return true
+  if (t.includes('vice president') || t.includes('vice-president')) return true
+
+  // Dutch leadership terms
+  if (/\b(hoofd|directie|bestuurder)\b/.test(t)) return true
+
+  // Standalone "Director" / "Directeur" — only when not modified by a non-MT noun
+  // e.g. "Director" passes; "Project Director" / "Sales Director" we accept (top-of-function MT)
+  // but "Assistant Director" we exclude.
+  if (/\b(director|directeur)\b/.test(t) &&
+      !t.includes('assistant') && !t.includes('deputy') && !t.includes('associate')) return true
+
+  // Owner — small-business proxy for CEO
+  if (/\b(owner|eigenaar)\b/.test(t)) return true
+
+  return false
 }
 
 /** Treat 501+ as corporate — biggest training/budget lever per Mark's call. */
 function isCorporateSize(size?: string | null): boolean {
   return size === '501–1000' || size === '1000+'
+}
+
+/** Treat 51–500 as mid-market — small enough to move, big enough to invest. */
+function isMidMarketSize(size?: string | null): boolean {
+  return size === '51–200' || size === '201–500'
 }
 
 // ─── Maturity-band CTA copy ──────────────────────────────────────────────────
@@ -306,10 +393,13 @@ export function getNextStepsCopy(level: string | null | undefined, locale: strin
  * Apply role + company-size overrides to a list of recommendations.
  *
  * Rules (in this order):
- *  1. CEO-like job title → prepend a CEO MT-sessie card as PRIMARY, demote
- *     existing primary to supporting, trim list back to max 3.
- *  2. Corporate company size (501+) → if there's room, append a training /
- *     team-development supporting card. If full, replace the last supporting.
+ *  1. MT-level job title → prepend an MT alignment card as PRIMARY (with a
+ *     dedicated Calendly URL), demote existing primary to supporting, trim
+ *     to max 3.
+ *  2. Company size — at most ONE size-driven card injected:
+ *     - 501+ → corporate training / team-development supporting card
+ *     - 51–500 → mid-market mobilisation supporting card
+ *     If there's no room, replace the last supporting.
  *
  * Pure function: returns a new array, doesn't mutate input.
  */
@@ -321,26 +411,36 @@ export function applyRoleAndSizeOverrides(
   const map = OVERRIDE_RECOMMENDATION_MAP[locale] ?? OVERRIDE_RECOMMENDATION_MAP.en
   let result = [...recommendations]
 
-  // 1. CEO override
-  if (isCeoLike(context.jobTitle)) {
-    const ceoCard: Recommendation = { ...map.ceo_override, priority: 'primary' }
-    // Demote the existing primary to supporting (if any), and prepend CEO card
+  // 1. MT-level role override (broadened from CEO-only to all MT-level roles)
+  if (isMtLevelLike(context.jobTitle)) {
+    const mtCard: Recommendation = {
+      ...map.mt_override,
+      priority: 'primary',
+      ctaHref:  MT_SESSION_CALENDLY, // dedicated MT-sessie booking link
+    }
+    // Demote the existing primary to supporting (if any), and prepend MT card
     result = result.map((r, i) =>
       i === 0 && r.priority === 'primary' ? { ...r, priority: 'supporting' } : r
     )
-    result = [ceoCard, ...result].slice(0, 3)
+    result = [mtCard, ...result].slice(0, 3)
   }
 
-  // 2. Corporate override
+  // 2. Company-size override — pick one card based on the size band
+  let sizeCard: Recommendation | null = null
   if (isCorporateSize(context.companySize)) {
-    const corpCard: Recommendation = { ...map.corporate_override, priority: 'supporting' }
-    // Don't duplicate — skip if a corporate_override is already present (defensive)
-    if (!result.some(r => r.dimension === 'corporate_override')) {
+    sizeCard = { ...map.corporate_override, priority: 'supporting' }
+  } else if (isMidMarketSize(context.companySize)) {
+    sizeCard = { ...map.midmarket_override, priority: 'supporting' }
+  }
+
+  if (sizeCard) {
+    // Defensive: don't duplicate the same dimension key
+    if (!result.some(r => r.dimension === sizeCard!.dimension)) {
       if (result.length < 3) {
-        result.push(corpCard)
+        result.push(sizeCard)
       } else {
         // Replace the last supporting (preserves primary at index 0)
-        result[result.length - 1] = corpCard
+        result[result.length - 1] = sizeCard
       }
     }
   }
@@ -364,7 +464,9 @@ export function localizeRecommendations(
   const overrideMap = OVERRIDE_RECOMMENDATION_MAP[locale]
   return recommendations.map(rec => {
     // Override keys live in OVERRIDE_RECOMMENDATION_MAP
-    if (rec.dimension === 'ceo_override' || rec.dimension === 'corporate_override') {
+    if (rec.dimension === 'mt_override' ||
+        rec.dimension === 'corporate_override' ||
+        rec.dimension === 'midmarket_override') {
       const tr = overrideMap?.[rec.dimension]
       if (!tr) return rec
       return { ...rec, heading: tr.heading, body: tr.body, cta: tr.cta }

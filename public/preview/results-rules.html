@@ -108,7 +108,7 @@
 
   <div class="actions">
     <div class="meta">
-      <strong>Results-pagina regels</strong> · v2 (met overrides) · 2026-05-03
+      <strong>Results-pagina regels</strong> · v3 (MT-rollen + mid-market) · 2026-05-03
     </div>
     <a href="/preview/results-rules.docx" download class="btn btn-secondary" id="dl-docx">
       <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a1 1 0 011 1v9.586l2.293-2.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V3a1 1 0 011-1z"/><path d="M3 14a1 1 0 011 1v2h12v-2a1 1 0 112 0v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2a1 1 0 011-1z"/></svg>
@@ -121,9 +121,9 @@
   </div>
 
   <article class="doc">
-    <div class="eyebrow">Brand PWRD Media · AI Quiz · v2</div>
+    <div class="eyebrow">Brand PWRD Media · AI Quiz · v3</div>
     <h1>Results-pagina regels — wat zie je waar, wanneer</h1>
-    <p class="lede">Snapshot van de huidige regels in de code (gemerged 2026-05-03). <span class="new-badge">★ Nieuw</span> markeert wijzigingen op basis van Mark&rsquo;s feedback van vandaag.</p>
+    <p class="lede">Snapshot van de huidige regels in de code (gemerged 2026-05-03 v3). <span class="new-badge">Nieuw</span> markeert wijzigingen. <strong>v3</strong>: MT-rol detectie verbreed naar alle MT-acroniemen, mid-market (51–500) override toegevoegd, dedicated MT-sessie Calendly-link inbgebakken.</p>
 
     <hr class="sep" />
 
@@ -211,32 +211,48 @@ Maximum 3 cards.</pre>
     <h3><span class="new-badge">Nieuw</span>B · Overrides op rol + bedrijfsgrootte</h3>
 
     <div class="new-callout">
-      <strong>Regel A — CEO-rol</strong> (job_title bevat <em>CEO, Chief Executive, Algemeen Directeur, General Manager, Directeur Eigenaar, Directeur Général</em>):
-      <ul>
-        <li>Voegt een <strong>MT-sessie</strong> card toe als <strong>PRIMAIR</strong></li>
-        <li>Demoot de bestaande primaire dimensie tot supporting</li>
-        <li>Trimt de lijst tot max 3 cards</li>
+      <strong>Regel A — MT-rol</strong> (verbreed v3 — niet alleen CEO):
+      <p style="margin-top:8px;font-size:14px;">Detecteert MT-acroniemen + voluit + EU-varianten:</p>
+      <ul style="margin-top:0;">
+        <li><strong>C-suite acroniemen:</strong> CEO, CTO, CFO, CMO, CIO, COO, CDO, CHRO, CSO, CRO, CPO, CISO, CCO, CXO</li>
+        <li><strong>Voluit:</strong> Chief X Officer / Chief Executive / Chief Technology / Chief Financial / etc.</li>
+        <li><strong>NL:</strong> Algemeen / Adjunct Directeur, Directeur, Directeur-Eigenaar, Hoofd, Directie, Bestuurder</li>
+        <li><strong>FR:</strong> Directeur Général, Président-Directeur, PDG</li>
+        <li><strong>EN:</strong> Managing Director, General Manager, VP / SVP / EVP, Director, Owner</li>
+        <li><strong>DE:</strong> Geschäftsführer</li>
+        <li><strong>Founder</strong> (alleen i.c.m. CEO/Director/Chief/Owner)</li>
+      </ul>
+      <p style="margin-top:8px;font-size:14px;"><strong>Wat de regel doet:</strong></p>
+      <ul style="margin-top:0;">
+        <li>Voegt MT-sessie card toe als PRIMAIR</li>
+        <li>Demoot bestaande primaire dimensie tot supporting</li>
+        <li>Trimt tot max 3 cards</li>
         <li>Heading: &ldquo;Lijn je MT in één werksessie uit op AI&rdquo;</li>
-        <li>CTA gaat naar Calendly strategy-link (30 min)</li>
+        <li><span class="new-badge">v3</span>CTA gaat naar dedicated link: <code>https://calendly.com/markiesbpm/ai-strategy-session-clone</code></li>
       </ul>
     </div>
 
     <div class="new-callout">
-      <strong>Regel B — Corporate bedrijfsgrootte</strong> (<code>501–1000</code> of <code>1000+</code>):
-      <ul>
-        <li>Voegt een <strong>opleiding/teamontwikkeling</strong> card toe als supporting</li>
-        <li>Als er al 3 cards zijn: vervangt de laatste supporting</li>
-        <li>Heading: &ldquo;Investeer in AI-bekwaamheid van je teams&rdquo;</li>
-      </ul>
+      <strong>Regel B — Bedrijfsgrootte</strong> (één size-card max):
+      <table style="margin-top:8px;">
+        <thead><tr><th>Size</th><th>Card</th><th>Heading</th></tr></thead>
+        <tbody>
+          <tr><td><code>501–1000</code> of <code>1000+</code></td><td>corporate training</td><td>&ldquo;Investeer in AI-bekwaamheid van je teams&rdquo;</td></tr>
+          <tr><td><span class="new-badge">v3</span><code>51–200</code> of <code>201–500</code></td><td>mid-market mobilisation</td><td>&ldquo;Mobiliseer je mid-market voordeel op AI&rdquo;</td></tr>
+          <tr><td><code>1–10</code> of <code>11–50</code></td><td>(geen)</td><td>—</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:8px;font-size:14px;">Als er al 3 cards zijn, vervangt de size-card de laatste supporting.</p>
     </div>
 
     <h3>Calendly-link onder elke card</h3>
     <table>
-      <thead><tr><th>Conditie</th><th>Link</th></tr></thead>
+      <thead><tr><th>Card-type</th><th>Link</th></tr></thead>
       <tbody>
-        <tr><td><code>productUI</code> heeft eigen rules (bv. M&amp;A)</td><td>via <code>productUI.calendlyRules</code></td></tr>
-        <tr><td>AI Maturity, <code>overall &lt; 50</code></td><td>discovery (15 min)</td></tr>
-        <tr><td>AI Maturity, <code>overall ≥ 50</code></td><td>strategy (30 min)</td></tr>
+        <tr><td><span class="new-badge">v3</span>MT-card</td><td><code>ai-strategy-session-clone</code> (dedicated)</td></tr>
+        <tr><td>Andere AI Maturity cards, <code>overall &lt; 50</code></td><td>discovery (15 min)</td></tr>
+        <tr><td>Andere AI Maturity cards, <code>overall ≥ 50</code></td><td>strategy (30 min)</td></tr>
+        <tr><td>Andere products (M&amp;A etc.)</td><td><code>productUI.calendlyRules</code></td></tr>
       </tbody>
     </table>
 
@@ -283,7 +299,7 @@ Maximum 3 cards.</pre>
     <h3>Rol (job_title)</h3>
     <p><strong>Wel:</strong></p>
     <ul>
-      <li><span class="new-badge">Nieuw</span>Bij CEO-achtige titel → primaire recommendation wordt MT-sessie</li>
+      <li><span class="new-badge">v3</span>Bij MT-rol (zie §5 Regel A voor de volledige lijst) → primaire recommendation wordt MT-sessie met dedicated Calendly</li>
       <li>Rol-benchmark-paneel (vergelijking met dezelfde job_title)</li>
     </ul>
     <p><strong>Niet:</strong></p>
@@ -296,20 +312,26 @@ Maximum 3 cards.</pre>
     <h3>Bedrijfsgrootte (company_size)</h3>
     <p><strong>Wel:</strong></p>
     <ul>
-      <li><span class="new-badge">Nieuw</span>Bij <code>501–1000</code> of <code>1000+</code> → opleiding/teamontwikkeling supporting recommendation toegevoegd</li>
+      <li><span class="new-badge">v3</span>Bij <code>51–200</code> of <code>201–500</code> → mid-market mobilisation card als supporting</li>
+      <li><span class="new-badge">Nieuw</span>Bij <code>501–1000</code> of <code>1000+</code> → corporate training card als supporting</li>
     </ul>
     <p><strong>Niet:</strong></p>
     <ul>
-      <li>Geen invloed op insights, primary recommendation, of CTA-tekst</li>
+      <li>Bij <code>1–10</code> of <code>11–50</code>: geen size-card — basis-recommendations blijven leidend</li>
+      <li>Geen invloed op insights of CTA-tekst</li>
     </ul>
 
-    <h2><span class="num">11</span>Open vragen — nog te beslissen</h2>
+    <h2><span class="num">11</span>Status</h2>
+    <h3 style="color: var(--brand);">✅ Beantwoord en geïmplementeerd (2026-05-03)</h3>
     <ol>
-      <li><strong>Andere C-suite rollen?</strong> Nu alleen CEO-achtige titels. Wil je ook CTO/CFO/CMO andere overrides geven (bv. CFO → ROI-framed CTA, CTO → tech-stack assessment), of blijft CEO de enige rol-override?</li>
-      <li><strong>Tussen-grootte (51–500)?</strong> Nu krijgen alleen 501+ corporates de training-card. Moet 51–200 of 201–500 ook iets specifieks krijgen (mid-market framing)?</li>
-      <li><strong>MT-sessie Calendly-link.</strong> CEO-override gebruikt nu de standaard strategy URL. Wil je een dedicated Calendly-link voor de MT-sessie?</li>
-      <li><strong>Detail-niveau Starter-band.</strong> Insight-tekst is nu identiek tussen lite en extended. Wil je extended hier rijker maken?</li>
-      <li><strong>Lite-naar-extended continuatie.</strong> CTA gaat nu naar <code>/a/extended</code> (nieuwe quiz). Wil je een continuatie-flow waarin de 7 lite-vragen behouden blijven en alleen de extra 19 worden gevraagd?</li>
+      <li><strong>MT-rollen breed detecteren</strong> — niet alleen CEO. Nu alle MT-acroniemen + voluit + NL/FR/EN/DE varianten.</li>
+      <li><strong>Mid-market (51–500)</strong> — eigen mobilisation-card.</li>
+      <li><strong>Dedicated MT-sessie Calendly</strong> — <code>ai-strategy-session-clone</code> (env-var override mogelijk).</li>
+    </ol>
+    <h3 style="color: var(--brand-accent);">⚙ Nog te bouwen (volgende rondes)</h3>
+    <ol start="4">
+      <li><strong>Extended Starter-band rijker dan lite</strong> — content-only update aan <code>messages/{nl,fr,en}.json</code> insight + urgency teksten. ~30 min werk.</li>
+      <li><strong>Lite → extended continuatie-flow</strong> — grotere refactor: lite-antwoorden persisteren, alleen extra 19 vragen aanbieden, hersamenvoegen tot full score, DB-relatie tussen lite-rij en nieuwe full-rij. ~0,5–1 dag.</li>
     </ol>
   </article>
 

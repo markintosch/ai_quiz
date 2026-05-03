@@ -326,7 +326,7 @@ export function ScoreDashboard({
               >
                 <RecommendationCard
                   recommendation={rec}
-                  ctaHref={calendlyHref}
+                  ctaHref={rec.ctaHref ?? calendlyHref}
                 />
               </motion.div>
             ))}

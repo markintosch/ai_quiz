@@ -97,17 +97,31 @@ Maximum 3 cards.
 
 Worden toegepast NA de basis-selectie, vóór de cards op het scherm verschijnen:
 
-**Regel A — CEO-rol** (job_title bevat 'CEO', 'Chief Executive', 'Algemeen Directeur', 'General Manager', 'Directeur Eigenaar', 'Directeur Général'):
-- Voegt een **CEO MT-sessie** card toe als **PRIMAIR**
+**Regel A — MT-rol** (job_title bevat een van de onderstaande, case-insensitive):
+- C-suite acroniemen: CEO, CTO, CFO, CMO, CIO, COO, CDO, CHRO, CSO, CRO, CPO, CISO, CCO, CXO
+- "Chief X Officer" patronen voluit (Chief Executive / Technology / Financial / Marketing / Information / Operating / Data / Strategy / Revenue / Product / People / Commercial / Digital / Innovation)
+- NL: Algemeen / Adjunct Directeur, Directeur, Directeur-Eigenaar, Hoofd, Directie, Bestuurder
+- FR: Directeur Général, Président-Directeur, PDG
+- EN: Managing Director, General Manager, VP / Vice President / SVP / EVP, Director, Owner
+- DE: Geschäftsführer
+- Founder (alleen i.c.m. CEO/Director/Chief/Owner)
+
+Wat de regel doet:
+- Voegt een **MT-sessie card** toe als **PRIMAIR**
 - Demoot de bestaande primaire dimensie-aanbeveling tot supporting
 - Trimt de lijst tot max 3 cards
 - Heading: *"Lijn je MT in één werksessie uit op AI"*
-- CTA gaat naar Calendly strategy-link (30 min)
+- CTA gaat naar **dedicated Calendly-link**: `https://calendly.com/markiesbpm/ai-strategy-session-clone` (te overschrijven via env var `NEXT_PUBLIC_CALENDLY_MT_SESSION_URL`)
 
-**Regel B — Corporate bedrijfsgrootte** (`501–1000` of `1000+`):
-- Voegt een **opleiding/teamontwikkeling** card toe als supporting
-- Als er al 3 cards zijn: vervangt de laatste supporting
-- Heading: *"Investeer in AI-bekwaamheid van je teams"*
+**Regel B — Bedrijfsgrootte** — exact één size-card wordt toegevoegd:
+
+| Size | Card | Heading |
+|---|---|---|
+| `501–1000` of `1000+` | corporate training | *"Investeer in AI-bekwaamheid van je teams"* |
+| `51–200` of `201–500` | mid-market mobilisation | *"Mobiliseer je mid-market voordeel op AI"* |
+| `1–10` of `11–50` | (geen) | — |
+
+Als er al 3 cards zijn, vervangt de size-card de laatste supporting.
 
 ### 3.3 Tekst per card
 
@@ -189,7 +203,7 @@ Per product configureerbaar via `src/products/{key}/config.ts → scoring.maturi
 ## 8 · Wat de rol (`job_title`) wel én niet stuurt
 
 **Wel** ★ NIEUW:
-- Bij CEO-achtige titel → primaire recommendation wordt MT-sessie (zie §3.2 Regel A)
+- Bij MT-rol (zie §3.2 Regel A voor de volledige lijst) → primaire recommendation wordt MT-sessie met dedicated Calendly-link
 - Rol-benchmark-paneel (vergelijking met dezelfde job_title)
 
 **Niet:**
@@ -201,10 +215,12 @@ Per product configureerbaar via `src/products/{key}/config.ts → scoring.maturi
 ## 8b · Wat de bedrijfsgrootte (`company_size`) wel én niet stuurt
 
 **Wel** ★ NIEUW:
-- Bij `501–1000` of `1000+` → opleiding/teamontwikkeling supporting recommendation toegevoegd
+- Bij `501–1000` of `1000+` → corporate training-card toegevoegd
+- Bij `51–200` of `201–500` → mid-market mobilisation-card toegevoegd
 
 **Niet:**
-- Geen invloed op insights, primary recommendation, of CTA-tekst
+- Bij `1–10` of `11–50`: geen size-card — basis-recommendations blijven leidend
+- Geen invloed op insights, primary recommendation (tenzij MT-rol fired), of CTA-tekst
 
 ---
 
@@ -225,13 +241,25 @@ Per product configureerbaar via `src/products/{key}/config.ts → scoring.maturi
 
 ---
 
-## 10 · Open vragen — nog te beslissen
+## 10 · Status — beantwoord en open
 
-1. **Andere C-suite rollen?** Nu detecteren we alleen CEO-achtige titels. Wil je ook CTO/CFO/CMO/CIO andere overrides geven (bv. CFO → ROI-framed CTA, CTO → tech-stack assessment), of blijft CEO de enige rol-override?
-2. **Tussen-grootte (51–500)?** Nu krijgen alleen 501+ corporates de training-card. Moet 51–200 of 201–500 ook iets specifieks krijgen (mid-market framing)?
-3. **MT-sessie Calendly-link.** De CEO-override gebruikt nu de standaard strategy URL. Wil je een dedicated Calendly-link voor de MT-sessie?
-4. **Lite vs extended detail-niveau bij Starter-band.** Voor Unaware/Exploring is de insight-tekst nu identiek tussen lite en extended. Wil je dat extended hier rijker wordt, of houden we het simpel?
-5. **Stoppen met lite of niet.** Mark heeft eerder gezegd lite moet kans krijgen om door te gaan naar extended. Die "Doe de uitgebreide assessment" CTA staat er, maar gaat naar `/a/extended` (een nieuwe quiz). Wil je een continuatie-flow waarin de 7 lite-vragen behouden blijven en alleen de extra 19 vragen worden aangeboden?
+### ✅ Beantwoord (2026-05-03)
+
+1. **MT-rollen breed detecteren** — niet alleen CEO. Nu alle MT-acroniemen + spelled-out + NL/FR/DE varianten. Geïmplementeerd.
+2. **Mid-market (51–500)** — eigen mobilisation-card toegevoegd. Geïmplementeerd.
+3. **Dedicated MT-sessie Calendly** — `ai-strategy-session-clone` ingebakken (env-var override mogelijk via `NEXT_PUBLIC_CALENDLY_MT_SESSION_URL`). Geïmplementeerd.
+4. **Extended Starter-band rijker dan lite** — toegezegd, **nog te bouwen** (volgende ronde, content-only in messages files).
+5. **Lite-naar-extended continuatie-flow** — toegezegd, **nog te bouwen** (aparte sessie nodig, grotere refactor: lite-antwoorden persisteren, alleen extra 19 vragen vragen, hersamenvoegen tot full score).
+
+### Nog open / volgende rondes
+
+- (4) Starter-band insight + urgency teksten in extended verdiepen — content-only update aan `messages/{nl,fr,en}.json`. Schat: 30 min werk, geen code-wijziging.
+- (5) Lite → extended continuatie. Schat: 0,5–1 dag. Vereist:
+  - Persisteren van de 7 lite-antwoorden (in DB of querystring)
+  - Nieuwe route die alleen de extra 19 vragen aanbiedt
+  - Hersamenvoegen van lite + extra antwoorden tot een full-assessment-score
+  - DB-relatie: bestaande lite-respondent linken aan nieuwe full-rij
+  - Verlies-loze upgrade: oude lite-result blijft bereikbaar
 
 ---
 

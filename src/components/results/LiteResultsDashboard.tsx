@@ -351,7 +351,7 @@ export function LiteResultsDashboard({
                   priority:  rec.priority,
                 })}
               >
-                <RecommendationCard recommendation={rec} softCta={true} ctaHref={calendlyHref} />
+                <RecommendationCard recommendation={rec} softCta={true} ctaHref={rec.ctaHref ?? calendlyHref} />
               </motion.div>
             ))}
           </div>
@@ -376,7 +376,7 @@ export function LiteResultsDashboard({
                   priority:  rec.priority,
                 })}
               >
-                <RecommendationCard recommendation={rec} softCta={true} ctaHref={calendlyHref} />
+                <RecommendationCard recommendation={rec} softCta={true} ctaHref={rec.ctaHref ?? calendlyHref} />
               </motion.div>
             ))}
           </div>
