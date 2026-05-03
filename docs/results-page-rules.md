@@ -1,18 +1,13 @@
 # Results-pagina regels — wat zie je waar, wanneer
 
 > **Status:** beschrijving van de **huidige** regels zoals ze nu in de code staan
-> (commit `f28ec0c`, 2026-05-03). Bedoeld om door Mark gereviewed te worden:
-> strepen in regels die anders moeten, aanvullen waar logica ontbreekt.
->
-> **Niet** een specificatie. De code is leidend; dit document beschrijft wat de
-> code op dit moment doet.
+> (gemerged op 2026-05-03). Bedoeld om door Mark gereviewed te worden.
 
 ---
 
 ## 1 · Welke variant wordt getoond?
 
-URL: `/[locale]/results/[id]`. De pagina kiest één van twee componenten als
-hoofdlayout, op basis van twee velden uit de DB:
+URL: `/[locale]/results/[id]`. De pagina kiest één van twee componenten als hoofdlayout op basis van twee velden uit de DB:
 
 | `quiz_version` | `respondent.source` | Variant | Component |
 |---|---|---|---|
@@ -20,223 +15,226 @@ hoofdlayout, op basis van twee velden uit de DB:
 | niet-lite | `'public'` | **Extended** | `ScoreDashboard` (variant `extended`) |
 | niet-lite | iets anders (bv. `'sbs'`) | **Company** | `ScoreDashboard` (variant `company`) |
 
-> **Bron:** `src/app/[locale]/results/[id]/page.tsx:131-134`
->
-> `companySlug = isCompany ? respondent.source : undefined` — bepaalt o.a. de URL voor doorverwijzingen.
-
 ---
 
 ## 2 · Render-volgorde per variant
 
-### 2.1 Extended variant (`/[locale]/results/[id]`, public quiz)
-
-In deze volgorde, alleen tonen als de conditie waar is:
+### 2.1 Extended variant (publieke quiz)
 
 | # | Component | Conditie |
 |---|---|---|
 | 1 | Score-hero (cirkel + maturity-level + beschrijving) | altijd |
-| 2 | Confidentialiteits-blok (vertrouwelijkheid voor werkgever) | **niet** in extended — alleen company |
+| 2 | **"Wat jouw score je vertelt" blok** (insight + urgency per maturity-niveau) | altijd ★ NIEUW: was alleen lite |
 | 3 | Radar-chart | altijd |
-| 4 | **Shadow AI flag** | alleen als `score.shadowAI.triggered === true` |
-| 5 | Dimension-breakdown (de gekleurde balken) | altijd |
-| 6 | **Benchmark-blok** (markt / cohort / rol) | alleen als er minstens 1 andere respondent is — zie §4 |
-| 7 | Aanbevelingen (kop "Aanbevelingen voor u" + 1–3 cards) | alleen als `recommendations.length > 0` |
-| 8 | Calendly-embed (inline) | **niet** in extended — alleen company |
-| 9 | "Klaar voor de volgende stap?" CTA-blok → `/next-steps` | altijd in extended |
-| 10 | "Deel je resultaat" balk (kopieer link + LinkedIn) | altijd in extended |
-| 11 | Referral-sectie (anderen uitnodigen) | altijd |
+| 4 | Shadow AI flag | alleen als `shadowAI.triggered` |
+| 5 | Dimension-breakdown (gekleurde balken) | altijd |
+| 6 | Benchmark-blok (markt / cohort / rol) | als ≥1 andere respondent — zie §6 |
+| 7 | Aanbevelingen (1–3 cards) | als er ≥1 is |
+| 8 | "Volgende stap" CTA-blok → `/next-steps` | altijd, **tekst is maturity-band gestuurd** ★ NIEUW |
+| 9 | "Deel je resultaat" balk | altijd |
+| 10 | Referral-sectie | altijd |
 
-> **Bron:** `src/components/results/ScoreDashboard.tsx:196-396`
-
-### 2.2 Company variant (`/[locale]/quiz/[slug]` heeft hier ingevuld)
+### 2.2 Company variant
 
 Identiek aan extended, behalve:
 
-| # | Component | Conditie |
-|---|---|---|
-| 2 | **Confidentialiteits-blok** | altijd in company (NL/EN/FR teksten in `ScoreDashboard.tsx:168-177`) |
-| 8 | **Calendly-embed (inline)** | altijd in company |
-| 8b | "Prefer to explore options at your own pace?" link → `/next-steps` | alleen als `productUI.key === 'ai_maturity'` (dus niet voor PR Maturity, M&A, etc.) |
-| 9 | "Klaar voor de volgende stap?" CTA-blok | **niet** in company (Calendly heeft de plek overgenomen) |
-| 10 | "Deel je resultaat" balk | **niet** in company (deelbaarheid bewust uit) |
-| 11 | Referral-sectie | altijd, maar wijst naar `/quiz/[slug]` ipv publieke quiz |
+- **Vertrouwelijkheids-blok** wordt toegevoegd direct onder de hero (vóór "Wat jouw score je vertelt")
+- **Calendly-embed inline** ipv "Volgende stap" blok
+- **Geen deel-balk** (bewust: company-resultaten niet publiek delen)
+- **Referral wijst naar de company-quiz URL** (`/quiz/[slug]`)
 
-> **Bron:** `ScoreDashboard.tsx:255-263, 314-335, 372-394`
-
-### 2.3 Lite variant (publieke 7-vragen-versie)
-
-Volgorde, weer met conditie:
+### 2.3 Lite variant
 
 | # | Component | Conditie |
 |---|---|---|
 | 1 | Score-hero | altijd |
-| 2 | Radar-chart | altijd |
+| 2 | Radar | altijd |
 | 3 | Dimension-breakdown | altijd |
-| 4 | Shadow AI flag | alleen als `triggered` |
-| 5 | "Wat jouw score je vertelt" blok (insight + urgency) | altijd, tekst per `maturityLevel` uit `messages/{nl,fr,en}.json` |
-| 6 | Primaire aanbevelingen (1×) | alleen als `primaryRecs.length > 0` |
-| 7 | "Ook het aanpakken waard" (supporting recs, max 2×) | alleen als `supportingRecs.length > 0` |
-| 8 | "Doe de volledige assessment" CTA-blok | altijd in lite |
-| 9 | Deel-balk | altijd in lite |
-| 10 | Referral-sectie (uitklapbaar) | altijd |
+| 4 | Shadow AI-flag | alleen als triggered |
+| 5 | "Wat jouw score je vertelt" | altijd |
+| 6 | Primaire aanbeveling (1×) | altijd als er een is |
+| 7 | "Ook het aanpakken waard" (max 2× supporting) | altijd als er ≥1 is |
+| 8 | "Volgende stap" CTA-blok | altijd, **tekst is maturity-band gestuurd** ★ NIEUW |
+| 9 | "Doe de uitgebreide assessment" CTA → `/a/extended` | altijd (behalve fitness/PR products) |
+| 10 | Deel-balk | altijd |
+| 11 | Referral (uitklapbaar) | altijd |
 
-> **Bron:** `LiteResultsDashboard.tsx:196-490`. Geen Calendly, geen benchmark, geen confidentialiteits-blok.
+> **Lite heeft GEEN benchmark, GEEN inline Calendly, GEEN vertrouwelijkheidsblok** — maar **WEL** Calendly-link op iedere recommendation card (★ NIEUW: was er niet).
 
 ---
 
-## 3 · Welke aanbevelingen verschijnen?
+## 3 · Hoe worden aanbevelingen gekozen?
 
-Twee fases: (a) selectie — welke dimensies krijgen een card; (b) tekst —
-welke heading/body/cta krijgt elke card.
+Twee fases: (A) basis-selectie op dimensiescores, (B) overrides op rol + bedrijfsgrootte.
 
-### 3.1 Selectie
-
-> **Bron:** `src/lib/scoring/recommendations.ts:168-220`
+### 3.1 Basis-selectie
 
 ```
-Stap 1 — Override: Shadow AI severity = 'high'?
-  → primair = Shadow AI
-  → supporting #1 = laagst-scorende dimensie
-  → supporting #2 = op-één-na-laagst
-  → KLAAR (max 3 cards)
+1. Shadow AI severity = 'high'?
+   → primair = Shadow AI
+   → supporting #1 = laagste dimensie
+   → supporting #2 = op-één-na-laagste
+   STOP
 
-Stap 2 — Sorteer dimensies op normalized score (oplopend)
-  Tiebreak: strategy_vision → governance_risk → data_readiness
-            → talent_culture → current_usage → opportunity_awareness
+2. Anders:
+   sorteer dimensies oplopend (laagste eerst)
+   tiebreak: strategy_vision → governance_risk → data_readiness
+             → talent_culture → current_usage → opportunity_awareness
 
-Stap 3 — Primair = laagste dimensie
+3. Primair = laagste dimensie
 
-Stap 4 — Shadow AI triggered (maar niet 'high')?
-  → supporting #1 = Shadow AI
-  → supporting #2 = op-één-na-laagste dimensie
-  Anders:
-  → supporting #1 = op-één-na-laagste dimensie
-  → supporting #2 = derde-laagste dimensie
+4. Shadow AI getriggerd (maar niet 'high')?
+   → supporting #1 = Shadow AI
+   → supporting #2 = op-één-na-laagste
+   Anders:
+   → supporting #1 = op-één-na-laagste
+   → supporting #2 = derde-laagste
 
-Max 3 cards in totaal.
+Maximum 3 cards.
 ```
 
-### 3.2 Tekst per card
+### 3.2 Overrides op rol + bedrijfsgrootte ★ NIEUW
 
-`heading`, `body` en `cta` worden per dimensie + locale opgezocht in
-`RECOMMENDATION_MAP` (`recommendations.ts:14-152`). Talen: `en`, `nl`, `fr`.
+Worden toegepast NA de basis-selectie, vóór de cards op het scherm verschijnen:
 
-Bestaande database-rijen bevatten Engelstalige teksten — de results-pagina
-hervertaalt op render-moment via `localizeRecommendations()` (geen DB-migratie
-nodig).
+**Regel A — CEO-rol** (job_title bevat 'CEO', 'Chief Executive', 'Algemeen Directeur', 'General Manager', 'Directeur Eigenaar', 'Directeur Général'):
+- Voegt een **CEO MT-sessie** card toe als **PRIMAIR**
+- Demoot de bestaande primaire dimensie-aanbeveling tot supporting
+- Trimt de lijst tot max 3 cards
+- Heading: *"Lijn je MT in één werksessie uit op AI"*
+- CTA gaat naar Calendly strategy-link (30 min)
 
-### 3.3 Calendly-link onder elke recommendation
+**Regel B — Corporate bedrijfsgrootte** (`501–1000` of `1000+`):
+- Voegt een **opleiding/teamontwikkeling** card toe als supporting
+- Als er al 3 cards zijn: vervangt de laatste supporting
+- Heading: *"Investeer in AI-bekwaamheid van je teams"*
 
-> **Bron:** `ScoreDashboard.tsx:132-134, 190-192` + `src/products/types.ts:resolveCalendlyUrl()`
+### 3.3 Tekst per card
 
-| Conditie | Calendly-link |
+`heading`, `body` en `cta` worden per dimensie + locale opgezocht in `RECOMMENDATION_MAP` en `OVERRIDE_RECOMMENDATION_MAP` (`src/lib/scoring/recommendations.ts`). Talen: `en`, `nl`, `fr`.
+
+Bestaande database-rijen bevatten Engelstalige teksten — de results-pagina hervertaalt op render-moment via `localizeRecommendations()` (geen DB-migratie nodig).
+
+### 3.4 Calendly-link onder elke card
+
+| Conditie | Link |
 |---|---|
-| `productUI` heeft eigen rules (niet-AI-Maturity products) | resolveer via `productUI.calendlyRules` (per product te configureren) |
-| `productUI.key === 'ai_maturity'`, `overall < 50` | discovery (15 min, `NEXT_PUBLIC_CALENDLY_DISCOVERY_URL`) |
-| `productUI.key === 'ai_maturity'`, `overall >= 50` | strategy (30 min, `NEXT_PUBLIC_CALENDLY_STRATEGY_URL`) |
+| `productUI` heeft eigen rules (bv. M&A) | resolveer via `productUI.calendlyRules` |
+| AI Maturity, `overall < 50` | discovery (15 min) |
+| AI Maturity, `overall ≥ 50` | strategy (30 min) |
+
+**Lite cards** krijgen nu ook deze ctaHref ★ NIEUW.
 
 ---
 
-## 4 · Welke benchmark-panelen verschijnen?
+## 4 · "Volgende stap" CTA-blok — maturity-band gestuurd ★ NIEUW
 
-> **Bron:** `src/app/[locale]/results/[id]/page.tsx:184-285` + `BenchmarkComparison.tsx`
+De heading + body + CTA-tekst onder dit blok past zich aan op de maturity-band:
 
-Drie kolommen, elk onafhankelijk gegate:
-
-| Paneel | Wordt getoond als | Bron |
+| Band | Niveaus | Framing |
 |---|---|---|
-| **Markt** (alle assessments) | minstens 1 andere full-assessment respondent in DB | altijd geprobeerd |
-| **Cohort** | respondent heeft `cohort_id`, en cohort heeft minstens 1 andere persoon | alleen company variant heeft meestal `cohort_id` |
-| **Rol** | respondent heeft `job_title`, en minstens 1 andere persoon met dezelfde job_title (case-insensitive `ilike`) | overal mogelijk |
+| **Starter** | Unaware · Exploring · Experimenting | "Leg de basis voor AI in je bedrijf" — focus op richting, governance, eerste use cases |
+| **Scaler** | Scaling · Leading | "Schaal je AI-momentum op met strategische sturing" — focus op investeren, consolideren, voorsprong behouden |
 
-Het hele benchmark-blok wordt verborgen als markt < 1 (minder dan 2 respondenten totaal).
+CTA-tekst:
+- Starter → "Plan een begeleidingsgesprek →"
+- Scaler  → "Plan een strategiesessie →"
 
-> **Disclaimer-tekst** ("dit zijn gemiddelden, geen absolute oordelen") verschijnt alleen als `market.count < 10` — `BenchmarkComparison.tsx:155`.
+Geldt zowel in extended als lite. Te configureren in `getNextStepsCopy()` in `src/lib/scoring/recommendations.ts`.
 
 ---
 
-## 5 · Maturity-level (Unaware → Leading)
+## 5 · "Wat jouw score je vertelt" blok — nu overal ★ NIEUW
 
-> **Bron:** `productConfig.scoring.maturityThresholds` in elk product-config-bestand
+Dit blok stond eerder alleen in lite. Verschijnt nu ook in extended en company.
+
+Bron: `messages/{nl,fr,en}.json → results.maturityLevels.{level}.insight + .urgency`
+
+Per maturity-niveau is er een vaste insight-tekst en een urgency-tekst. Te wijzigen door alleen de messages-bestanden aan te passen — geen code-wijziging nodig.
+
+---
+
+## 6 · Welke benchmark-panelen verschijnen?
+
+Drie kolommen, elk apart gegate:
+
+| Paneel | Wordt getoond als |
+|---|---|
+| **Markt** | ≥1 andere full-assessment respondent in DB |
+| **Cohort** | respondent heeft `cohort_id` + ≥1 ander cohortlid |
+| **Rol** | respondent heeft `job_title` + ≥1 ander persoon met dezelfde job_title (case-insensitive) |
+
+Disclaimer "dit zijn gemiddelden, geen oordelen" verschijnt alleen als markt < 10 personen.
+
+> Alleen extended/company krijgt benchmark — lite niet.
+
+---
+
+## 7 · Maturity-niveau drempels
 
 Bepaald door `overall` score, in oplopende volgorde:
 
-| Score | Level (default AI Maturity) |
-|---|---|
-| ≤ 19 | Unaware |
-| 20–39 | Exploring |
-| 40–59 | Experimenting |
-| 60–79 | Scaling |
-| 80–100 | Leading |
+| Score | Niveau (default AI Maturity) | Band |
+|---|---|---|
+| ≤ 19 | Unaware | starter |
+| 20–39 | Exploring | starter |
+| 40–59 | Experimenting | starter |
+| 60–79 | Scaling | scaler |
+| 80–100 | Leading | scaler |
 
-> **Per product configureerbaar** via `src/products/{key}/config.ts → scoring.maturityThresholds`.
-> Andere products (PR Maturity, M&A, Cloud Readiness, etc.) hebben eigen niveau-namen + drempels.
-
-De **kleur** van de score-cirkel + level-naam komt uit `threshold.colorClass / bgClass / ringClass`. De **beschrijving** komt uit `productConfig.maturityDescriptions[level]`.
+Per product configureerbaar via `src/products/{key}/config.ts → scoring.maturityThresholds`.
 
 ---
 
-## 6 · Wat de rol (`job_title`) NIET stuurt
+## 8 · Wat de rol (`job_title`) wel én niet stuurt
 
-Op dit moment heeft `job_title` alleen invloed op het **rol-benchmark-paneel**
-(of er een "vs. zelfde rol" kolom verschijnt).
+**Wel** ★ NIEUW:
+- Bij CEO-achtige titel → primaire recommendation wordt MT-sessie (zie §3.2 Regel A)
+- Rol-benchmark-paneel (vergelijking met dezelfde job_title)
 
-Wat NIET door rol wordt gestuurd:
+**Niet:**
+- Welke teksten in welk component verschijnen (insights, score-vertelt, etc.)
+- Of de Shadow AI-flag verschijnt
+- Of de vertrouwelijkheids-tekst verschijnt
+- De volgorde van de blokken
 
-- Welke aanbevelingen je krijgt
-- Welke teksten in welk component verschijnen
-- Welke Calendly-link je ziet
-- Of de Shadow AI flag wordt getoond
-- Of de confidentialiteits-tekst verschijnt
-- Of de "next-steps" CTA verschijnt
+## 8b · Wat de bedrijfsgrootte (`company_size`) wel én niet stuurt
 
-Als je hier rol-gestuurd gedrag wilt (bv. "voor CEO's andere recommendations" of
-"voor engineers extra technische sectie") — dan moet er nieuwe logica bij. Geef
-aan welke regel je wilt en waar.
+**Wel** ★ NIEUW:
+- Bij `501–1000` of `1000+` → opleiding/teamontwikkeling supporting recommendation toegevoegd
+
+**Niet:**
+- Geen invloed op insights, primary recommendation, of CTA-tekst
 
 ---
 
-## 7 · Per-product overrides (white-label)
-
-Sommige regels zijn per product-config te overschrijven, andere zijn
-hardcoded in de results-component. Snel overzicht:
+## 9 · Per-product overrides (white-label)
 
 | Wat | Configureerbaar per product? | Waar |
 |---|---|---|
 | Maturity drempels + namen + kleuren | ✅ | `products/{key}/config.ts → scoring.maturityThresholds` |
 | Maturity beschrijvingen | ✅ | `products/{key}/config.ts → maturityDescriptions` |
 | Calendly URL routing | ✅ | `products/{key}/config.ts → calendly.rules` |
-| Recommendation-teksten + selectielogica | ✅ | `products/{key}/recommendations.ts` (eigen `generateRecommendations`) |
+| Recommendation-teksten + selectielogica | ✅ | `products/{key}/recommendations.ts` |
 | Score-label op de cirkel | ✅ | `defaultCopy[locale].scoreLabelOverride` |
-| Confidentialiteits-blok aan/uit | ❌ | hardcoded: alleen company-variant |
-| Shadow AI logica | ⚠️ | per product flag-detector (`products.flags`), maar UI hardcoded |
+| Maturity-band CTA-copy (Starter / Scaler) | ❌ | hardcoded in `getNextStepsCopy()` — geldt voor alle products |
+| CEO + corporate overrides | ❌ | hardcoded in `applyRoleAndSizeOverrides()` — geldt voor alle products |
+| Vertrouwelijkheids-blok aan/uit | ❌ | hardcoded: alleen company-variant |
 | Render-volgorde van blokken | ❌ | hardcoded in `ScoreDashboard.tsx` / `LiteResultsDashboard.tsx` |
-| "Klaar voor volgende stap?" CTA | ❌ | hardcoded: alleen extended-variant |
-| "Prefer to explore options" link | ❌ | hardcoded: alleen `ai_maturity` company |
-| Deel-balk | ❌ | hardcoded: alleen lite + extended (niet company) |
+| Deel-balk | ❌ | hardcoded: alleen lite + extended |
 
 ---
 
-## 8 · Wat ontbreekt — open vragen voor Mark
+## 10 · Open vragen — nog te beslissen
 
-Wat ik **niet** in de code zie, dus waar geen logica voor is:
-
-1. **Per-rol recommendations.** Als CEO en engineer dezelfde dimensiescores hebben, krijgen ze identieke recommendations. Wil je hier wel onderscheid?
-2. **Per-sector / per-industry overrides.** Geen logica die op `industry` of `company_size` reageert, hoewel die velden wel op `respondents` staan.
-3. **Dynamische CTA-tekst per maturity-level.** De "Klaar voor de volgende stap?" header is een vaste zin, niet aangepast aan score.
-4. **"Wat jouw score je vertelt"** — alleen lite-variant heeft dit blok (uit `messages/*.json` per maturity-level). De extended/company-variant heeft alleen de korte beschrijving onder de cirkel. Wil je deze block ook daar?
-5. **Score-band overrides voor recommendations** (bv. "bij score < 30 ook Shadow AI tonen ongeacht trigger"). Dat soort drempel-logica is nu strikt op dimensie-rangschikking gebaseerd.
+1. **Andere C-suite rollen?** Nu detecteren we alleen CEO-achtige titels. Wil je ook CTO/CFO/CMO/CIO andere overrides geven (bv. CFO → ROI-framed CTA, CTO → tech-stack assessment), of blijft CEO de enige rol-override?
+2. **Tussen-grootte (51–500)?** Nu krijgen alleen 501+ corporates de training-card. Moet 51–200 of 201–500 ook iets specifieks krijgen (mid-market framing)?
+3. **MT-sessie Calendly-link.** De CEO-override gebruikt nu de standaard strategy URL. Wil je een dedicated Calendly-link voor de MT-sessie?
+4. **Lite vs extended detail-niveau bij Starter-band.** Voor Unaware/Exploring is de insight-tekst nu identiek tussen lite en extended. Wil je dat extended hier rijker wordt, of houden we het simpel?
+5. **Stoppen met lite of niet.** Mark heeft eerder gezegd lite moet kans krijgen om door te gaan naar extended. Die "Doe de uitgebreide assessment" CTA staat er, maar gaat naar `/a/extended` (een nieuwe quiz). Wil je een continuatie-flow waarin de 7 lite-vragen behouden blijven en alleen de extra 19 vragen worden aangeboden?
 
 ---
 
 ## Hoe dit te updaten
 
-Streep door wat anders moet, vul aan met nieuwe regels, en vermeld bij elke
-wijziging welk gedrag je verwacht. Daarna pas ik de code aan en dit document
-mee.
-
-Als je een hele nieuwe regel wilt zoals "bij score X + rol Y → toon component
-Z" — graag concreet:
-- Wanneer (welke condities)
-- Wat (welk component, welke tekst, welke link)
-- In welke variant (lite / extended / company / alle)
+Streep door wat anders moet, vul aan met nieuwe regels. Daarna pas ik de code en dit document aan.

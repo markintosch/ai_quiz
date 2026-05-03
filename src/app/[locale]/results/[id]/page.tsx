@@ -5,7 +5,7 @@ import { createServiceClient } from '@/lib/supabase/server'
 import { ScoreDashboard } from '@/components/results/ScoreDashboard'
 import { LiteResultsDashboard } from '@/components/results/LiteResultsDashboard'
 import type { QuizScore, MaturityLevel, ShadowAIResult } from '@/types'
-import { localizeRecommendations, type Recommendation } from '@/lib/scoring/recommendations'
+import { applyRoleAndSizeOverrides, localizeRecommendations, type Recommendation } from '@/lib/scoring/recommendations'
 import type { BenchmarkData } from '@/components/results/BenchmarkComparison'
 import { getProductConfig } from '@/products'
 import { toProductUI } from '@/products/types'
@@ -87,11 +87,11 @@ export default async function ResultsPage({ params }: PageProps) {
     notFound()
   }
 
-  // Fetch respondent (name, email, company_name, job_title, cohort_id, source)
+  // Fetch respondent (name, email, company_name, job_title, company_size, cohort_id, source)
   const { data: respondent } = response.respondent_id
     ? await supabase
         .from('respondents')
-        .select('name, email, company_name, job_title, cohort_id, source')
+        .select('name, email, company_name, job_title, company_size, cohort_id, source')
         .eq('id', response.respondent_id)
         .single()
     : { data: null }
@@ -99,9 +99,21 @@ export default async function ResultsPage({ params }: PageProps) {
   // Cast stored JSON back to typed shapes
   const scores = response.scores as unknown as QuizScore
   const storedRecommendations = response.recommendation_payload as unknown as Recommendation[]
+
+  // Apply role + company-size context overrides BEFORE localising, so override
+  // copy resolves through the same locale map as the dimension-based recs.
+  const recommendationsAfterOverrides = applyRoleAndSizeOverrides(
+    storedRecommendations ?? [],
+    {
+      jobTitle:    respondent?.job_title    ?? null,
+      companySize: respondent?.company_size ?? null,
+    },
+    locale,
+  )
+
   // Re-localize stored (English) recommendations into the request locale.
   // Falls back to the stored copy for any dimension/locale without a translation.
-  const recommendations = localizeRecommendations(storedRecommendations ?? [], locale)
+  const recommendations = localizeRecommendations(recommendationsAfterOverrides, locale)
 
   // Reconstruct shadowAI from stored columns
   const shadowAI: ShadowAIResult = {
@@ -131,6 +143,20 @@ export default async function ResultsPage({ params }: PageProps) {
   const productCopy = getProductConfig(productKey).defaultCopy?.[localeKey] ?? getProductConfig(productKey).defaultCopy?.['en'] ?? {}
   const scoreLabelOverride = productCopy.scoreLabelOverride
 
+  // Pre-resolve Calendly URL — Lite needs it on its recommendation cards too.
+  const CALENDLY_DISCOVERY = process.env.NEXT_PUBLIC_CALENDLY_DISCOVERY_URL ?? 'https://calendly.com/markiesbpm/ai-intro-meeting-mark-de-kock'
+  const CALENDLY_STRATEGY  = process.env.NEXT_PUBLIC_CALENDLY_STRATEGY_URL  ?? 'https://calendly.com/markiesbpm/ai-strategy-session'
+  const calendlyHref = (() => {
+    if (productUI.calendlyRules && productUI.calendlyRules.length > 0) {
+      // Use product's own routing rules
+      for (const rule of productUI.calendlyRules) {
+        if (fullScore.overall <= rule.maxScore) return rule.url
+      }
+      return productUI.calendlyRules[productUI.calendlyRules.length - 1]?.url ?? CALENDLY_STRATEGY
+    }
+    return fullScore.overall < 50 ? CALENDLY_DISCOVERY : CALENDLY_STRATEGY
+  })()
+
   const isLite      = response.quiz_version === 'lite'
   const isCompany   = !!respondent?.source && respondent.source !== 'public'
   const companySlug = isCompany ? (respondent?.source ?? undefined) : undefined
@@ -152,6 +178,7 @@ export default async function ResultsPage({ params }: PageProps) {
             productKey={productKey}
             productName={productUI.name}
             scoreLabelOverride={scoreLabelOverride}
+            calendlyHref={calendlyHref}
           />
         ) : (
           /* Extended / company quiz → original full dashboard */

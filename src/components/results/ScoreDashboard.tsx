@@ -1,10 +1,10 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { useLocale } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { motion } from 'framer-motion'
 import type { QuizScore } from '@/types'
-import type { Recommendation } from '@/lib/scoring/recommendations'
+import { getNextStepsCopy, type Recommendation } from '@/lib/scoring/recommendations'
 import type { ProductUIConfig } from '@/products/types'
 import { resolveCalendlyUrl } from '@/products/types'
 import { DimensionBreakdown } from './DimensionBreakdown'
@@ -163,6 +163,14 @@ export function ScoreDashboard({
   const isLite    = quizVariant === 'lite'
   const isCompany = quizVariant === 'company'
   const locale    = useLocale()
+  const t         = useTranslations('results')
+
+  // "Wat jouw score je vertelt" — relevant for every variant, not just lite
+  const insightTitle = locale === 'nl'
+    ? 'Wat jouw score je vertelt'
+    : locale === 'fr'
+    ? 'Ce que votre score vous dit'
+    : 'What your score tells you'
 
   // Locale-aware confidentiality block
   const confidentialityTitle = locale === 'nl'
@@ -262,6 +270,22 @@ export function ScoreDashboard({
         </motion.div>
       )}
 
+      {/* ── "Wat jouw score je vertelt" — every variant ── */}
+      <motion.div
+        variants={fadeUp}
+        className="bg-amber-50 rounded-2xl p-5 border-l-4 border-brand-accent"
+      >
+        <p className="text-xs font-bold uppercase tracking-widest text-brand-accent mb-2">
+          {insightTitle}
+        </p>
+        <p className="text-gray-800 text-sm leading-relaxed mb-3">
+          {t(`maturityLevels.${score.maturityLevel}.insight` as Parameters<typeof t>[0])}
+        </p>
+        <p className="text-xs font-semibold text-gray-500 italic">
+          {t(`maturityLevels.${score.maturityLevel}.urgency` as Parameters<typeof t>[0])}
+        </p>
+      </motion.div>
+
       {/* ── Radar chart ── */}
       <motion.div variants={fadeUp} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col items-center">
         <RadarChart dimensionScores={score.dimensionScores} size={280} />
@@ -334,36 +358,23 @@ export function ScoreDashboard({
         </motion.div>
       )}
 
-      {/* ── Next-steps CTA (extended public only) ── */}
+      {/* ── Next-steps CTA (extended public only) — maturity-band aware ── */}
       {!isCompany && !isLite && (() => {
-        const NS_HEADING = locale === 'nl' ? 'Klaar voor de volgende stap?'
-                         : locale === 'fr' ? 'Prêt à passer à la suite ?'
-                         : 'Ready to move forward?'
-        const NS_BODY    = locale === 'nl'
-          ? 'We hebben een aantal opties klaargezet die bij jouw profiel passen. Van een kort gesprek tot gestructureerde programma’s en projecten op maat.'
-          : locale === 'fr'
-          ? "Nous avons préparé quelques options adaptées à votre profil : d'un court entretien aux programmes structurés et projets sur mesure."
-          : "We've put together a set of options matched to your profile, from a short conversation to structured programmes and custom projects."
-        const NS_CTA     = locale === 'nl' ? 'Ontdek hoe je verder gaat →'
-                         : locale === 'fr' ? 'Découvrir vos prochaines étapes →'
-                         : 'Explore how to move forward →'
-        const NS_TRUST   = locale === 'nl' ? 'Gratis · Geen verplichtingen · 2 minuten om te verkennen'
-                         : locale === 'fr' ? 'Gratuit · Sans engagement · 2 minutes pour explorer'
-                         : 'Free · No obligation · Takes 2 minutes to explore'
+        const ns = getNextStepsCopy(score.maturityLevel, locale)
         return (
           <motion.div
             variants={fadeUp}
             className="bg-brand rounded-2xl p-6 text-white text-center"
           >
-            <h3 className="text-lg font-bold mb-2">{NS_HEADING}</h3>
-            <p className="text-sm text-white/80 mb-5">{NS_BODY}</p>
+            <h3 className="text-lg font-bold mb-2">{ns.heading}</h3>
+            <p className="text-sm text-white/80 mb-5">{ns.body}</p>
             <a
               href={`/${locale}/next-steps${responseId ? `?r=${responseId}` : ''}`}
               className="inline-block px-6 py-2.5 bg-brand-accent hover:bg-orange-700 text-white font-semibold rounded-xl text-sm transition-colors"
             >
-              {NS_CTA}
+              {ns.cta}
             </a>
-            <p className="text-xs text-white/60 mt-3">{NS_TRUST}</p>
+            <p className="text-xs text-white/60 mt-3">{ns.trust}</p>
           </motion.div>
         )
       })()}

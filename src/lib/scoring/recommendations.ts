@@ -2,11 +2,22 @@ import { Dimension } from '@/data/questions'
 import { DimensionScore, ShadowAIResult } from './engine'
 
 export interface Recommendation {
-  dimension: Dimension | 'shadow_ai'
+  /**
+   * Source dimension or override key. Override keys are not real dimensions —
+   * they tag recommendations injected post-scoring (CEO MT-sessie, corporate
+   * training & team-dev). Used for tracking + locale lookup.
+   */
+  dimension: Dimension | 'shadow_ai' | 'ceo_override' | 'corporate_override'
   heading: string
   body: string
   cta: string
   priority: 'primary' | 'supporting'
+}
+
+/** Context that may override recommendation order/content based on respondent role + company size. */
+export interface RecommendationContext {
+  jobTitle?: string | null
+  companySize?: string | null
 }
 
 // Locale-aware recommendation copy. Keyed by [locale][dimension].
@@ -147,18 +158,218 @@ const RECOMMENDATION_MAP: Record<string, Record<string, Omit<Recommendation, 'pr
   },
 }
 
+// ── Context overrides (role + company-size) ─────────────────────────────────
+// Injected after the dimension-based recommendations are picked.
+// The override map is locale-aware too — same shape as RECOMMENDATION_MAP.
+const OVERRIDE_RECOMMENDATION_MAP: Record<string, Record<'ceo_override' | 'corporate_override', Omit<Recommendation, 'priority'>>> = {
+  en: {
+    ceo_override: {
+      dimension: 'ceo_override',
+      heading: 'Align your leadership team on AI in a single working session',
+      body: 'As CEO, the highest-leverage move is to bring your management team together in one focused session — set scope, build shared support, prioritise concrete opportunities. Underlying teams can then scale on one shared direction.',
+      cta: 'Book an MT alignment session',
+    },
+    corporate_override: {
+      dimension: 'corporate_override',
+      heading: 'Invest in AI capability across your teams',
+      body: 'At your size, structured training and team development deliver the biggest leverage: one coherent curriculum that brings management and operational teams to the same level of fluency, instead of scattered ad-hoc training.',
+      cta: 'Discuss a training programme',
+    },
+  },
+  nl: {
+    ceo_override: {
+      dimension: 'ceo_override',
+      heading: 'Lijn je MT in één werksessie uit op AI',
+      body: 'Als CEO heb je het meeste effect door je managementteam in één gerichte sessie samen te brengen: scope vaststellen, draagvlak creëren, concrete kansen prioriteren. Onderliggende teams schalen vervolgens door op één gedeelde richting.',
+      cta: 'Plan een MT-sessie',
+    },
+    corporate_override: {
+      dimension: 'corporate_override',
+      heading: 'Investeer in AI-bekwaamheid van je teams',
+      body: 'Bij jullie omvang levert gestructureerd opleiden en teamontwikkeling de grootste hefboom: één coherent curriculum dat management én operationele teams op hetzelfde kennisniveau brengt, ipv ad-hoc training.',
+      cta: 'Bespreek een opleidingsprogramma',
+    },
+  },
+  fr: {
+    ceo_override: {
+      dimension: 'ceo_override',
+      heading: 'Alignez votre comité de direction sur l\'IA en une seule séance de travail',
+      body: 'En tant que CEO, le meilleur levier est de rassembler votre équipe de direction en une séance focalisée : définir le périmètre, créer l\'adhésion, prioriser des opportunités concrètes. Les équipes opérationnelles peuvent ensuite passer à l\'échelle sur une direction partagée.',
+      cta: 'Planifiez une séance d\'alignement du comité',
+    },
+    corporate_override: {
+      dimension: 'corporate_override',
+      heading: 'Investissez dans la capacité IA de vos équipes',
+      body: 'À votre taille, une formation structurée et le développement d\'équipe offrent le plus grand levier : un curriculum cohérent qui amène la direction et les équipes opérationnelles au même niveau, plutôt que des formations ad hoc dispersées.',
+      cta: 'Discutez d\'un programme de formation',
+    },
+  },
+}
+
+/** Detect CEO-like job titles (case-insensitive substring match). */
+function isCeoLike(jobTitle?: string | null): boolean {
+  if (!jobTitle) return false
+  const t = jobTitle.toLowerCase()
+  return (
+    /\bceo\b/.test(t) ||
+    t.includes('chief executive') ||
+    t.includes('algemeen directeur') ||
+    t.includes('directeur-eigenaar') ||
+    t.includes('eigenaar/directeur') ||
+    t.includes('general manager') ||
+    t.includes('président-directeur') ||
+    t.includes('directeur général') ||
+    t.includes('founder') &&  // founder/CEO patterns
+      (t.includes('ceo') || t.includes('director'))
+  )
+}
+
+/** Treat 501+ as corporate — biggest training/budget lever per Mark's call. */
+function isCorporateSize(size?: string | null): boolean {
+  return size === '501–1000' || size === '1000+'
+}
+
+// ─── Maturity-band CTA copy ──────────────────────────────────────────────────
+// "Klaar voor de volgende stap?" header on the results page. Two flavours:
+//   - starter: Unaware / Exploring / Experimenting → emphasise guidance into AI
+//   - scaler:  Scaling / Leading → emphasise strategic oversight + scaling momentum
+
+export type MaturityBand = 'starter' | 'scaler'
+
+const STARTER_LEVELS = new Set(['Unaware', 'Exploring', 'Experimenting'])
+
+export function getMaturityBand(level: string | null | undefined): MaturityBand {
+  if (!level) return 'starter'
+  return STARTER_LEVELS.has(level) ? 'starter' : 'scaler'
+}
+
+export interface NextStepsCopy {
+  heading: string
+  body:    string
+  cta:     string
+  trust:   string
+}
+
+const NEXT_STEPS_COPY: Record<string, Record<MaturityBand, NextStepsCopy>> = {
+  en: {
+    starter: {
+      heading: 'Set the foundation for AI in your company',
+      body:    'You\'re at the start of integrating AI. The biggest gains come from clear direction, basic governance and one or two early use cases that prove what works. We\'ll help you find them.',
+      cta:     'Plan a guidance session →',
+      trust:   'Free · No obligation · 30 minutes',
+    },
+    scaler: {
+      heading: 'Scale your AI momentum with strategic oversight',
+      body:    'You\'re past the experiment phase. Now the question is: where to invest, where to consolidate, and how to keep your edge. A strategic working session helps you make those calls.',
+      cta:     'Plan a strategy session →',
+      trust:   'Free · No obligation · 30 minutes',
+    },
+  },
+  nl: {
+    starter: {
+      heading: 'Leg de basis voor AI in je bedrijf',
+      body:    'Je staat aan het begin van AI-integratie. De grootste winst komt uit heldere richting, basis-governance en één of twee eerste use cases die laten zien wat werkt. We helpen je die te vinden.',
+      cta:     'Plan een begeleidingsgesprek →',
+      trust:   'Gratis · Geen verplichtingen · 30 minuten',
+    },
+    scaler: {
+      heading: 'Schaal je AI-momentum op met strategische sturing',
+      body:    'Je bent voorbij de experimenteer-fase. De vraag is nu: waar investeer je, waar consolideer je, en hoe behoud je je voorsprong. Een strategische werksessie helpt je die keuzes te maken.',
+      cta:     'Plan een strategiesessie →',
+      trust:   'Gratis · Geen verplichtingen · 30 minuten',
+    },
+  },
+  fr: {
+    starter: {
+      heading: 'Posez les bases de l\'IA dans votre entreprise',
+      body:    'Vous êtes au début de l\'intégration de l\'IA. Le plus grand gain vient d\'une direction claire, d\'une gouvernance de base et d\'un ou deux premiers cas d\'usage qui montrent ce qui fonctionne. Nous vous aidons à les trouver.',
+      cta:     'Planifier une séance d\'accompagnement →',
+      trust:   'Gratuit · Sans engagement · 30 minutes',
+    },
+    scaler: {
+      heading: 'Faites passer à l\'échelle votre élan IA avec une supervision stratégique',
+      body:    'Vous êtes au-delà de la phase d\'expérimentation. La question est : où investir, où consolider, et comment garder votre avance. Une séance de travail stratégique vous aide à faire ces choix.',
+      cta:     'Planifier une séance stratégique →',
+      trust:   'Gratuit · Sans engagement · 30 minutes',
+    },
+  },
+}
+
+/** Get the next-steps CTA copy for a given maturity level + locale. */
+export function getNextStepsCopy(level: string | null | undefined, locale: string): NextStepsCopy {
+  const band = getMaturityBand(level)
+  const map  = NEXT_STEPS_COPY[locale] ?? NEXT_STEPS_COPY.en
+  return map[band]
+}
+
+/**
+ * Apply role + company-size overrides to a list of recommendations.
+ *
+ * Rules (in this order):
+ *  1. CEO-like job title → prepend a CEO MT-sessie card as PRIMARY, demote
+ *     existing primary to supporting, trim list back to max 3.
+ *  2. Corporate company size (501+) → if there's room, append a training /
+ *     team-development supporting card. If full, replace the last supporting.
+ *
+ * Pure function: returns a new array, doesn't mutate input.
+ */
+export function applyRoleAndSizeOverrides(
+  recommendations: Recommendation[],
+  context: RecommendationContext,
+  locale: string,
+): Recommendation[] {
+  const map = OVERRIDE_RECOMMENDATION_MAP[locale] ?? OVERRIDE_RECOMMENDATION_MAP.en
+  let result = [...recommendations]
+
+  // 1. CEO override
+  if (isCeoLike(context.jobTitle)) {
+    const ceoCard: Recommendation = { ...map.ceo_override, priority: 'primary' }
+    // Demote the existing primary to supporting (if any), and prepend CEO card
+    result = result.map((r, i) =>
+      i === 0 && r.priority === 'primary' ? { ...r, priority: 'supporting' } : r
+    )
+    result = [ceoCard, ...result].slice(0, 3)
+  }
+
+  // 2. Corporate override
+  if (isCorporateSize(context.companySize)) {
+    const corpCard: Recommendation = { ...map.corporate_override, priority: 'supporting' }
+    // Don't duplicate — skip if a corporate_override is already present (defensive)
+    if (!result.some(r => r.dimension === 'corporate_override')) {
+      if (result.length < 3) {
+        result.push(corpCard)
+      } else {
+        // Replace the last supporting (preserves primary at index 0)
+        result[result.length - 1] = corpCard
+      }
+    }
+  }
+
+  return result
+}
+
 /**
  * Re-localize a list of stored recommendations into the requested locale.
  * Falls back to the existing strings if no translation is registered for that
  * dimension+locale combination — keeps other products working without changes.
+ *
+ * Also handles override-key dimensions (ceo_override, corporate_override) via
+ * the OVERRIDE_RECOMMENDATION_MAP so re-localization is consistent.
  */
 export function localizeRecommendations(
   recommendations: Recommendation[],
   locale: string
 ): Recommendation[] {
   const map = RECOMMENDATION_MAP[locale]
-  if (!map) return recommendations
+  const overrideMap = OVERRIDE_RECOMMENDATION_MAP[locale]
   return recommendations.map(rec => {
+    // Override keys live in OVERRIDE_RECOMMENDATION_MAP
+    if (rec.dimension === 'ceo_override' || rec.dimension === 'corporate_override') {
+      const tr = overrideMap?.[rec.dimension]
+      if (!tr) return rec
+      return { ...rec, heading: tr.heading, body: tr.body, cta: tr.cta }
+    }
+    if (!map) return rec
     const tr = map[rec.dimension]
     if (!tr) return rec
     return { ...rec, heading: tr.heading, body: tr.body, cta: tr.cta }

@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Results-pagina regels — Preview</title>
+<style>
+  :root {
+    --brand: #354E5E; --brand-dark: #1E3340; --brand-accent: #E8611A; --brand-gold: #F5A820;
+    --ink: #1F2937; --body: #4B5468; --muted: #9CA3AF;
+    --border: #E5E7EB; --bg: #F9FAFB; --card: #FFFFFF;
+    --new: #FFF5EE;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, sans-serif;
+    color: var(--ink); background: var(--bg); line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .actions {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,0.94);
+    backdrop-filter: saturate(180%) blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 32px;
+    display: flex; gap: 12px; justify-content: flex-end; align-items: center;
+  }
+  .actions .meta { font-size: 13px; color: var(--muted); margin-right: auto; }
+  .actions .meta strong { color: var(--ink); font-weight: 600; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 14px; font-weight: 600;
+    padding: 10px 18px; border-radius: 999px;
+    text-decoration: none; border: none; cursor: pointer;
+    transition: transform .08s, box-shadow .15s, background .15s;
+  }
+  .btn-primary {
+    background: var(--brand-accent); color: white;
+    box-shadow: 0 4px 12px rgba(232,97,26,0.25);
+  }
+  .btn-primary:hover { background: #C9520F; }
+  .btn-secondary {
+    background: white; color: var(--brand-dark);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { background: #F3F4F6; border-color: #D1D5DB; }
+  .btn-icon { width: 16px; height: 16px; }
+
+  .doc {
+    max-width: 880px; margin: 32px auto 96px;
+    background: var(--card); border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 32px rgba(31,41,55,0.04);
+    padding: 56px 64px;
+  }
+  .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--brand-accent); margin: 0 0 12px; }
+  h1 { font-size: 36px; font-weight: 800; color: var(--brand-dark); margin: 0 0 16px; letter-spacing: -0.02em; line-height: 1.15; }
+  .lede { font-size: 15px; color: var(--body); margin: 0 0 8px; font-style: italic; }
+  hr.sep { border: 0; border-top: 1px solid var(--border); margin: 32px 0; }
+  h2 { font-size: 22px; font-weight: 700; color: var(--brand-dark); margin: 36px 0 14px; letter-spacing: -0.01em; }
+  h2 .num { color: var(--brand-accent); font-weight: 800; margin-right: 8px; }
+  h3 { font-size: 16px; font-weight: 700; color: var(--brand-dark); margin: 18px 0 8px; }
+  p { margin: 0 0 12px; color: var(--ink); font-size: 15px; }
+  p.muted { color: var(--body); font-size: 14px; font-style: italic; }
+  ul, ol { margin: 0 0 16px 20px; padding: 0; }
+  li { margin: 0 0 6px; font-size: 15px; }
+
+  .new-badge {
+    display: inline-block;
+    background: var(--brand-accent); color: white;
+    font-size: 10px; font-weight: 800; letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 8px; border-radius: 999px;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  tr.new-row td:first-child::before, tr.new-row td:nth-child(2)::before {
+  }
+  td.cell-new { background: var(--new) !important; }
+  .new-callout {
+    background: var(--new); border-left: 3px solid var(--brand-accent);
+    padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 16px 0;
+  }
+  .new-callout strong { color: var(--brand-accent); }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 18px; font-size: 14px; }
+  th, td { padding: 10px 14px; text-align: left; border: 1px solid var(--border); vertical-align: top; }
+  th { background: #F3F4F6; color: var(--brand-dark); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+  td.num { color: var(--muted); width: 32px; text-align: center; font-variant-numeric: tabular-nums; }
+  code { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 13px; background: #F3F4F6; padding: 1px 6px; border-radius: 4px; color: var(--brand-dark); }
+  pre.algo { background: #F8FAFC; border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 13px; line-height: 1.55; color: var(--ink); overflow-x: auto; margin: 12px 0 18px; }
+
+  .toast { position: fixed; bottom: 24px; right: 24px; background: var(--brand-dark); color: white; padding: 14px 20px; border-radius: 12px; font-size: 14px; box-shadow: 0 12px 28px rgba(0,0,0,0.18); opacity: 0; transform: translateY(8px); transition: opacity .2s, transform .2s; pointer-events: none; max-width: 360px; line-height: 1.45; }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast strong { color: var(--brand-gold); }
+
+  @media (max-width: 720px) {
+    .doc { padding: 32px 24px; margin: 16px; }
+    .actions { padding: 12px 16px; flex-wrap: wrap; }
+    .actions .meta { width: 100%; margin-bottom: 4px; }
+    h1 { font-size: 28px; }
+    h2 { font-size: 19px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="actions">
+    <div class="meta">
+      <strong>Results-pagina regels</strong> · v2 (met overrides) · 2026-05-03
+    </div>
+    <a href="/preview/results-rules.docx" download class="btn btn-secondary" id="dl-docx">
+      <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a1 1 0 011 1v9.586l2.293-2.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V3a1 1 0 011-1z"/><path d="M3 14a1 1 0 011 1v2h12v-2a1 1 0 112 0v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2a1 1 0 011-1z"/></svg>
+      Download Word (.docx)
+    </a>
+    <button type="button" class="btn btn-primary" id="save-drive">
+      <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10 3a1 1 0 011 1v8.586l1.293-1.293a1 1 0 111.414 1.414L10.707 16a1 1 0 01-1.414 0l-3-3a1 1 0 011.414-1.414L9 12.586V4a1 1 0 011-1z"/><path d="M3 16a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"/></svg>
+      Opslaan in Google Drive
+    </button>
+  </div>
+
+  <article class="doc">
+    <div class="eyebrow">Brand PWRD Media · AI Quiz · v2</div>
+    <h1>Results-pagina regels — wat zie je waar, wanneer</h1>
+    <p class="lede">Snapshot van de huidige regels in de code (gemerged 2026-05-03). <span class="new-badge">★ Nieuw</span> markeert wijzigingen op basis van Mark&rsquo;s feedback van vandaag.</p>
+
+    <hr class="sep" />
+
+    <h2><span class="num">1</span>Welke layout verschijnt?</h2>
+    <table>
+      <thead><tr><th><code>quiz_version</code></th><th><code>respondent.source</code></th><th>Variant</th></tr></thead>
+      <tbody>
+        <tr><td><code>lite</code></td><td>(eender)</td><td><strong>Lite</strong></td></tr>
+        <tr><td>niet-lite</td><td><code>'public'</code></td><td><strong>Extended</strong></td></tr>
+        <tr><td>niet-lite</td><td>bv. <code>'sbs'</code></td><td><strong>Company</strong></td></tr>
+      </tbody>
+    </table>
+
+    <h2><span class="num">2</span>Welk blok verschijnt waar — Extended variant</h2>
+    <table>
+      <thead><tr><th>#</th><th>Blok</th><th>Wanneer</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>Score-hero (cirkel, niveau, beschrijving)</td><td>altijd</td></tr>
+        <tr><td class="num">2</td><td><span class="new-badge">Nieuw</span>&ldquo;Wat jouw score je vertelt&rdquo;-blok (insight + urgency per niveau)</td><td>altijd <em>(was alleen lite)</em></td></tr>
+        <tr><td class="num">3</td><td>Radar-chart</td><td>altijd</td></tr>
+        <tr><td class="num">4</td><td>Shadow AI-flag</td><td>alleen als <code>shadowAI.triggered</code></td></tr>
+        <tr><td class="num">5</td><td>Dimension-breakdown</td><td>altijd</td></tr>
+        <tr><td class="num">6</td><td>Benchmark (markt / cohort / rol)</td><td>als ≥1 andere respondent</td></tr>
+        <tr><td class="num">7</td><td>Aanbevelingen (1–3 cards)</td><td>als er ≥1 is</td></tr>
+        <tr><td class="num">8</td><td><span class="new-badge">Nieuw</span>&ldquo;Volgende stap&rdquo; CTA — maturity-band gestuurd</td><td>altijd</td></tr>
+        <tr><td class="num">9</td><td>&ldquo;Deel je resultaat&rdquo; balk</td><td>altijd</td></tr>
+        <tr><td class="num">10</td><td>Referral-sectie</td><td>altijd</td></tr>
+      </tbody>
+    </table>
+
+    <h2><span class="num">3</span>Welk blok verschijnt waar — Company variant</h2>
+    <p>Zelfde als Extended, behalve:</p>
+    <ul>
+      <li><strong>Vertrouwelijkheids-blok</strong> direct onder de hero (vóór het nieuwe insight-blok)</li>
+      <li><strong>Calendly-embed inline</strong> ipv &ldquo;Volgende stap&rdquo;-blok</li>
+      <li><strong>Geen deel-balk</strong> (bewust)</li>
+      <li><strong>Referral wijst naar company-quiz URL</strong> (<code>/quiz/[slug]</code>)</li>
+    </ul>
+
+    <h2><span class="num">4</span>Welk blok verschijnt waar — Lite variant</h2>
+    <table>
+      <thead><tr><th>#</th><th>Blok</th><th>Wanneer</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>Score-hero</td><td>altijd</td></tr>
+        <tr><td class="num">2</td><td>Radar</td><td>altijd</td></tr>
+        <tr><td class="num">3</td><td>Dimension-breakdown</td><td>altijd</td></tr>
+        <tr><td class="num">4</td><td>Shadow AI-flag</td><td>alleen als triggered</td></tr>
+        <tr><td class="num">5</td><td>&ldquo;Wat jouw score je vertelt&rdquo;</td><td>altijd</td></tr>
+        <tr><td class="num">6</td><td>Primaire aanbeveling (1×)</td><td>altijd als er een is</td></tr>
+        <tr><td class="num">7</td><td>&ldquo;Ook het aanpakken waard&rdquo; (max 2× supporting)</td><td>altijd als er ≥1 is</td></tr>
+        <tr><td class="num">8</td><td><span class="new-badge">Nieuw</span>&ldquo;Volgende stap&rdquo; CTA — maturity-band gestuurd</td><td>altijd</td></tr>
+        <tr><td class="num">9</td><td>&ldquo;Doe de uitgebreide assessment&rdquo; CTA → <code>/a/extended</code></td><td>altijd (behalve fitness/PR)</td></tr>
+        <tr><td class="num">10</td><td>Deel-balk</td><td>altijd</td></tr>
+        <tr><td class="num">11</td><td>Referral (uitklapbaar)</td><td>altijd</td></tr>
+      </tbody>
+    </table>
+    <div class="new-callout"><strong>★ Nieuw:</strong> lite cards hebben nu een Calendly-link op de &ldquo;Bespreek dit met ons&rdquo; knop. Voorheen alleen visueel, nu klikbaar naar de juiste Calendly-URL afhankelijk van de score.</div>
+
+    <h2><span class="num">5</span>Hoe worden aanbevelingen gekozen?</h2>
+    <p>Twee fases: <strong>(A)</strong> basis-selectie op dimensiescores, <strong>(B)</strong> overrides op rol + bedrijfsgrootte.</p>
+
+    <h3>A · Basis-selectie</h3>
+    <pre class="algo">1. Shadow AI severity = 'high'?
+   → primair = Shadow AI
+   → supporting #1 = laagst-scorende dimensie
+   → supporting #2 = op-één-na-laagst
+   STOP
+
+2. Anders:
+   sorteer dimensies oplopend (laagste eerst)
+   tiebreak: strategy_vision → governance_risk → data_readiness
+             → talent_culture → current_usage → opportunity_awareness
+
+3. Primair = laagste dimensie
+
+4. Shadow AI getriggerd (maar niet 'high')?
+   → supporting #1 = Shadow AI
+   → supporting #2 = op-één-na-laagste
+   Anders:
+   → supporting #1 = op-één-na-laagste
+   → supporting #2 = derde-laagste
+
+Maximum 3 cards.</pre>
+
+    <h3><span class="new-badge">Nieuw</span>B · Overrides op rol + bedrijfsgrootte</h3>
+
+    <div class="new-callout">
+      <strong>Regel A — CEO-rol</strong> (job_title bevat <em>CEO, Chief Executive, Algemeen Directeur, General Manager, Directeur Eigenaar, Directeur Général</em>):
+      <ul>
+        <li>Voegt een <strong>MT-sessie</strong> card toe als <strong>PRIMAIR</strong></li>
+        <li>Demoot de bestaande primaire dimensie tot supporting</li>
+        <li>Trimt de lijst tot max 3 cards</li>
+        <li>Heading: &ldquo;Lijn je MT in één werksessie uit op AI&rdquo;</li>
+        <li>CTA gaat naar Calendly strategy-link (30 min)</li>
+      </ul>
+    </div>
+
+    <div class="new-callout">
+      <strong>Regel B — Corporate bedrijfsgrootte</strong> (<code>501–1000</code> of <code>1000+</code>):
+      <ul>
+        <li>Voegt een <strong>opleiding/teamontwikkeling</strong> card toe als supporting</li>
+        <li>Als er al 3 cards zijn: vervangt de laatste supporting</li>
+        <li>Heading: &ldquo;Investeer in AI-bekwaamheid van je teams&rdquo;</li>
+      </ul>
+    </div>
+
+    <h3>Calendly-link onder elke card</h3>
+    <table>
+      <thead><tr><th>Conditie</th><th>Link</th></tr></thead>
+      <tbody>
+        <tr><td><code>productUI</code> heeft eigen rules (bv. M&amp;A)</td><td>via <code>productUI.calendlyRules</code></td></tr>
+        <tr><td>AI Maturity, <code>overall &lt; 50</code></td><td>discovery (15 min)</td></tr>
+        <tr><td>AI Maturity, <code>overall ≥ 50</code></td><td>strategy (30 min)</td></tr>
+      </tbody>
+    </table>
+
+    <h2><span class="num">6</span><span class="new-badge">Nieuw</span>&ldquo;Volgende stap&rdquo; CTA — maturity-band gestuurd</h2>
+    <p>De heading + body + CTA-tekst onder dit blok past zich aan op de maturity-band:</p>
+    <table>
+      <thead><tr><th>Band</th><th>Niveaus</th><th>Framing</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Starter</strong></td><td>Unaware · Exploring · Experimenting</td><td>&ldquo;Leg de basis voor AI in je bedrijf&rdquo; — focus op richting, governance, eerste use cases</td></tr>
+        <tr><td><strong>Scaler</strong></td><td>Scaling · Leading</td><td>&ldquo;Schaal je AI-momentum op met strategische sturing&rdquo; — focus op investeren, consolideren, voorsprong behouden</td></tr>
+      </tbody>
+    </table>
+    <p class="muted">Geldt zowel in extended als lite. Te configureren in <code>getNextStepsCopy()</code>.</p>
+
+    <h2><span class="num">7</span>&ldquo;Wat jouw score je vertelt&rdquo; blok — nu overal</h2>
+    <p>Dit blok stond eerder alleen in lite. Verschijnt nu ook in extended en company.</p>
+    <p class="muted">Bron: <code>messages/{nl,fr,en}.json → results.maturityLevels.{level}.insight + .urgency</code>. Per maturity-niveau is er een vaste insight-tekst en een urgency-tekst. Wijzigen kan zonder code-wijziging.</p>
+
+    <h2><span class="num">8</span>Welke benchmark-panelen verschijnen?</h2>
+    <table>
+      <thead><tr><th>Paneel</th><th>Verschijnt als</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Markt</strong></td><td>≥1 andere full-assessment respondent in DB</td></tr>
+        <tr><td><strong>Cohort</strong></td><td>respondent heeft <code>cohort_id</code> + ≥1 ander cohortlid</td></tr>
+        <tr><td><strong>Rol</strong></td><td>respondent heeft <code>job_title</code> + ≥1 ander persoon met dezelfde job_title</td></tr>
+      </tbody>
+    </table>
+    <p class="muted">Disclaimer &ldquo;dit zijn gemiddelden, geen oordelen&rdquo; verschijnt alleen als markt &lt; 10 personen. Lite krijgt geen benchmark.</p>
+
+    <h2><span class="num">9</span>Maturity-niveau drempels</h2>
+    <table>
+      <thead><tr><th>Score</th><th>Niveau</th><th>Band</th></tr></thead>
+      <tbody>
+        <tr><td>≤ 19</td><td>Unaware</td><td>starter</td></tr>
+        <tr><td>20–39</td><td>Exploring</td><td>starter</td></tr>
+        <tr><td>40–59</td><td>Experimenting</td><td>starter</td></tr>
+        <tr><td>60–79</td><td>Scaling</td><td>scaler</td></tr>
+        <tr><td>80–100</td><td>Leading</td><td>scaler</td></tr>
+      </tbody>
+    </table>
+
+    <h2><span class="num">10</span>Wat rol + bedrijfsgrootte WEL en NIET sturen</h2>
+
+    <h3>Rol (job_title)</h3>
+    <p><strong>Wel:</strong></p>
+    <ul>
+      <li><span class="new-badge">Nieuw</span>Bij CEO-achtige titel → primaire recommendation wordt MT-sessie</li>
+      <li>Rol-benchmark-paneel (vergelijking met dezelfde job_title)</li>
+    </ul>
+    <p><strong>Niet:</strong></p>
+    <ul>
+      <li>Welke teksten in andere componenten verschijnen</li>
+      <li>Of de Shadow AI-flag verschijnt</li>
+      <li>De volgorde van de blokken</li>
+    </ul>
+
+    <h3>Bedrijfsgrootte (company_size)</h3>
+    <p><strong>Wel:</strong></p>
+    <ul>
+      <li><span class="new-badge">Nieuw</span>Bij <code>501–1000</code> of <code>1000+</code> → opleiding/teamontwikkeling supporting recommendation toegevoegd</li>
+    </ul>
+    <p><strong>Niet:</strong></p>
+    <ul>
+      <li>Geen invloed op insights, primary recommendation, of CTA-tekst</li>
+    </ul>
+
+    <h2><span class="num">11</span>Open vragen — nog te beslissen</h2>
+    <ol>
+      <li><strong>Andere C-suite rollen?</strong> Nu alleen CEO-achtige titels. Wil je ook CTO/CFO/CMO andere overrides geven (bv. CFO → ROI-framed CTA, CTO → tech-stack assessment), of blijft CEO de enige rol-override?</li>
+      <li><strong>Tussen-grootte (51–500)?</strong> Nu krijgen alleen 501+ corporates de training-card. Moet 51–200 of 201–500 ook iets specifieks krijgen (mid-market framing)?</li>
+      <li><strong>MT-sessie Calendly-link.</strong> CEO-override gebruikt nu de standaard strategy URL. Wil je een dedicated Calendly-link voor de MT-sessie?</li>
+      <li><strong>Detail-niveau Starter-band.</strong> Insight-tekst is nu identiek tussen lite en extended. Wil je extended hier rijker maken?</li>
+      <li><strong>Lite-naar-extended continuatie.</strong> CTA gaat nu naar <code>/a/extended</code> (nieuwe quiz). Wil je een continuatie-flow waarin de 7 lite-vragen behouden blijven en alleen de extra 19 worden gevraagd?</li>
+    </ol>
+  </article>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const toast = document.getElementById('toast')
+    function showToast(html, ms) {
+      toast.innerHTML = html
+      toast.classList.add('show')
+      setTimeout(() => toast.classList.remove('show'), ms || 5500)
+    }
+
+    document.getElementById('dl-docx').addEventListener('click', () => {
+      showToast('Word-document gedownload. Check je <strong>Downloads</strong> map.', 4000)
+    })
+
+    document.getElementById('save-drive').addEventListener('click', () => {
+      showToast('Stuur Mark een bericht: <strong>"upload naar drive"</strong>. Hij upload het bestand dan naar je Google Drive.', 7000)
+    })
+  </script>
+</body>
+</html>

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslations, useLocale } from 'next-intl'
 import type { QuizScore } from '@/types'
-import type { Recommendation } from '@/lib/scoring/recommendations'
+import { getNextStepsCopy, type Recommendation } from '@/lib/scoring/recommendations'
 import { RadarChart } from './RadarChart'
 import { ShadowAIFlag } from './ShadowAIFlag'
 import { RecommendationCard } from './RecommendationCard'
@@ -23,6 +23,8 @@ interface LiteResultsDashboardProps {
   productKey?: string
   productName?: string
   scoreLabelOverride?: string
+  /** Pre-resolved Calendly URL — discovery (15 min) when overall < 50, strategy (30 min) otherwise. */
+  calendlyHref?: string
 }
 
 // ── Config ────────────────────────────────────────────────────
@@ -163,6 +165,7 @@ export function LiteResultsDashboard({
   productKey,
   productName,
   scoreLabelOverride,
+  calendlyHref,
 }: LiteResultsDashboardProps) {
   const t = useTranslations('results')
   const locale = useLocale()
@@ -348,7 +351,7 @@ export function LiteResultsDashboard({
                   priority:  rec.priority,
                 })}
               >
-                <RecommendationCard recommendation={rec} softCta={true} />
+                <RecommendationCard recommendation={rec} softCta={true} ctaHref={calendlyHref} />
               </motion.div>
             ))}
           </div>
@@ -373,27 +376,32 @@ export function LiteResultsDashboard({
                   priority:  rec.priority,
                 })}
               >
-                <RecommendationCard recommendation={rec} softCta={true} />
+                <RecommendationCard recommendation={rec} softCta={true} ctaHref={calendlyHref} />
               </motion.div>
             ))}
           </div>
         </motion.div>
       )}
 
-      {/* ═══ 7. NEXT STEPS CTA — PRIMARY ═══════════════════════ */}
+      {/* ═══ 7. NEXT STEPS CTA — PRIMARY (maturity-band aware) ══ */}
+      {(() => {
+        const ns = getNextStepsCopy(score.maturityLevel, locale)
+        const eyebrow = locale === 'nl' ? 'Aanbevolen vervolgstap'
+                      : locale === 'fr' ? 'Prochaine étape recommandée'
+                      : 'Your recommended next step'
+        return (
       <motion.div
         variants={fadeUp}
         className="bg-brand rounded-2xl p-7 text-white text-center"
       >
         <p className="text-xs font-semibold uppercase tracking-widest text-white/60 mb-3">
-          Your recommended next step
+          {eyebrow}
         </p>
         <h3 className="text-xl font-bold mb-2">
-          Ready to see where to go from here?
+          {ns.heading}
         </h3>
         <p className="text-white/80 text-sm mb-6 leading-relaxed">
-          Based on your score and profile, we&apos;ve put together a set of tailored options —
-          from a quick orientation call to hands-on programmes and implementation support.
+          {ns.body}
         </p>
         <a
           href={`/${locale}/next-steps?r=${responseId}`}
@@ -404,12 +412,14 @@ export function LiteResultsDashboard({
           })}
           className="inline-block w-full text-center px-8 py-3.5 bg-brand-accent hover:bg-orange-700 text-white font-bold rounded-xl text-sm transition-colors shadow-lg shadow-orange-900/30"
         >
-          See your recommended next steps →
+          {ns.cta}
         </a>
         <p className="text-center mt-3 text-xs text-white/50">
-          Free · No obligation · Takes 2 minutes to explore
+          {ns.trust}
         </p>
       </motion.div>
+        )
+      })()}
 
       {/* ═══ 8. FULL ASSESSMENT CTA (secondary) ═════════════════ */}
       {productKey !== 'fitness_readiness' && productKey !== 'pr_maturity' && (
