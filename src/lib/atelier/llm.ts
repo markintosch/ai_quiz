@@ -5,6 +5,7 @@
 // code. Each module declares the *tier* it wants — the client maps it.
 
 import Anthropic from '@anthropic-ai/sdk'
+import { jsonrepair } from 'jsonrepair'
 
 // ── Public types ───────────────────────────────────────────────────────────
 
@@ -112,91 +113,72 @@ export async function llmCall(params: LlmCallParams): Promise<LlmCallResult> {
 
 // ── JSON helper — safely extract JSON from a model response ────────────────
 
+/**
+ * Robustly parse a JSON object/array out of a model response.
+ *
+ * Handles three real-world failure modes we've seen on Atelier:
+ *   1. Markdown code fences around the JSON (`\`\`\`json ... \`\`\``).
+ *   2. The model added prose before/after the JSON ("Here is the JSON: { ... }").
+ *   3. The response got truncated mid-string by max_tokens (no closing bracket).
+ *
+ * Strategy:
+ *   - Strip code fences if any.
+ *   - Locate the first JSON candidate by scanning bracket depth — extract just
+ *     the {...}/[...] block, ignoring any prose around it.
+ *   - Try JSON.parse. On failure, run jsonrepair (handles truncated strings,
+ *     missing brackets, single quotes, trailing commas, etc.) and try again.
+ *   - If repair also fails, throw the original error.
+ */
 export function parseJsonOutput<T>(raw: string): T {
-  // Strip optional markdown code fences (the model occasionally adds them
-  // even when told not to).
   let s = raw.trim()
   if (s.startsWith('```')) {
     s = s.replace(/^```[a-zA-Z]*\n?/, '').replace(/```\s*$/, '').trim()
   }
-  // Some models prefix a sentence before the JSON. Best-effort: find the
-  // first `{` or `[` and parse from there.
-  const start = Math.min(
-    ...['{', '['].map(c => {
-      const i = s.indexOf(c)
-      return i === -1 ? Infinity : i
-    })
-  )
-  if (start === Infinity) throw new Error(`No JSON found in model output: ${raw.slice(0, 200)}`)
-  s = s.slice(start)
 
-  // Try direct parse first
+  const candidate = extractFirstJsonCandidate(s)
+  if (!candidate) {
+    throw new Error(`No JSON found in model output: ${raw.slice(0, 200)}`)
+  }
+
   try {
-    return JSON.parse(s) as T
+    return JSON.parse(candidate) as T
   } catch (firstErr) {
-    // If the response was truncated mid-string (model ran out of tokens),
-    // attempt a salvage: cut at the last complete element/property and
-    // close the open brackets. Crude but usually works for our schemas
-    // because the early fields are the load-bearing ones.
-    const repaired = repairTruncatedJson(s)
     try {
+      const repaired = jsonrepair(candidate)
       return JSON.parse(repaired) as T
     } catch {
-      // Re-throw original error so the failure mode is clear in logs
       throw firstErr
     }
   }
 }
 
 /**
- * Best-effort repair for JSON that was cut off mid-string by max_tokens.
- *  1. Walk back to the last complete `,` or `}` or `]` we can see at the right depth.
- *  2. Close any open `{` `[` and `"`.
- * Imperfect but unlocks a usable result instead of a hard failure.
+ * Walk the string, find the first `{` or `[`, return everything from there
+ * up to (and including) the matching closing bracket. If we run off the end
+ * without closing, return everything from the opener — jsonrepair will then
+ * fix the truncation downstream.
  */
-function repairTruncatedJson(s: string): string {
-  // Walk forward, track string state + bracket depths.
-  const stack: string[] = []
+function extractFirstJsonCandidate(s: string): string | null {
+  let depth = 0
   let inString = false
   let escape = false
-  let lastSafeIdx = -1
+  let start = -1
   for (let i = 0; i < s.length; i++) {
     const ch = s[i]
     if (escape) { escape = false; continue }
     if (ch === '\\') { escape = true; continue }
     if (ch === '"') { inString = !inString; continue }
     if (inString) continue
-    if (ch === '{' || ch === '[') stack.push(ch === '{' ? '}' : ']')
-    else if (ch === '}' || ch === ']') {
-      if (stack.length > 0 && stack[stack.length - 1] === ch) stack.pop()
-    }
-    // Mark a safe truncation point: after we've completed a value at top-of-stack
-    if (!inString && (ch === ',' || ch === '}' || ch === ']') && stack.length <= 1) {
-      lastSafeIdx = i
+    if (ch === '{' || ch === '[') {
+      if (start === -1) start = i
+      depth++
+    } else if (ch === '}' || ch === ']') {
+      if (start === -1) continue
+      depth--
+      if (depth === 0) {
+        return s.slice(start, i + 1)
+      }
     }
   }
-  // If we ended inside a string, cut at lastSafeIdx and close.
-  let trimmed = lastSafeIdx >= 0 ? s.slice(0, lastSafeIdx + 1) : s
-  // Strip trailing comma if present
-  trimmed = trimmed.replace(/,\s*$/, '')
-  // Recompute open brackets
-  const openCount: Record<string, number> = { '{': 0, '[': 0 }
-  let stringMode = false
-  let esc = false
-  for (let i = 0; i < trimmed.length; i++) {
-    const ch = trimmed[i]
-    if (esc) { esc = false; continue }
-    if (ch === '\\') { esc = true; continue }
-    if (ch === '"') stringMode = !stringMode
-    if (stringMode) continue
-    if (ch === '{') openCount['{']++
-    if (ch === '}') openCount['{']--
-    if (ch === '[') openCount['[']++
-    if (ch === ']') openCount['[']--
-  }
-  if (stringMode) trimmed += '"'
-  // Close remaining brackets in reverse-LIFO order — best-effort
-  while (openCount['['] > 0) { trimmed += ']'; openCount['[']-- }
-  while (openCount['{'] > 0) { trimmed += '}'; openCount['{']-- }
-  return trimmed
+  return start !== -1 ? s.slice(start) : null
 }
