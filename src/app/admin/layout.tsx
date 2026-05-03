@@ -22,6 +22,7 @@ const NAV_LINKS = [
   { href: '/admin/sannahremco', label: 'Sannah & Remco' },
   { href: '/admin/atelier', label: 'Atelier · ops' },
   { href: '/admin/atelier/icps', label: '↳ ICP knowledge base' },
+  { href: '/admin/atelier/sources', label: '↳ Sources registry' },
 ]
 
 export default function AdminLayout({
