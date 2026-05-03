@@ -5,7 +5,7 @@ import { createServiceClient } from '@/lib/supabase/server'
 import { ScoreDashboard } from '@/components/results/ScoreDashboard'
 import { LiteResultsDashboard } from '@/components/results/LiteResultsDashboard'
 import type { QuizScore, MaturityLevel, ShadowAIResult } from '@/types'
-import type { Recommendation } from '@/lib/scoring/recommendations'
+import { localizeRecommendations, type Recommendation } from '@/lib/scoring/recommendations'
 import type { BenchmarkData } from '@/components/results/BenchmarkComparison'
 import { getProductConfig } from '@/products'
 import { toProductUI } from '@/products/types'
@@ -98,7 +98,10 @@ export default async function ResultsPage({ params }: PageProps) {
 
   // Cast stored JSON back to typed shapes
   const scores = response.scores as unknown as QuizScore
-  const recommendations = response.recommendation_payload as unknown as Recommendation[]
+  const storedRecommendations = response.recommendation_payload as unknown as Recommendation[]
+  // Re-localize stored (English) recommendations into the request locale.
+  // Falls back to the stored copy for any dimension/locale without a translation.
+  const recommendations = localizeRecommendations(storedRecommendations ?? [], locale)
 
   // Reconstruct shadowAI from stored columns
   const shadowAI: ShadowAIResult = {
