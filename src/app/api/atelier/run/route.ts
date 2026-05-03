@@ -7,6 +7,7 @@ export const maxDuration = 300  // ~5 minutes — orchestrator runs 5 LLM calls
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { waitUntil } from '@vercel/functions'
 import { orchestrateSession } from '@/lib/atelier/orchestrator'
 import { rateLimit, getClientIp } from '@/lib/rateLimit'
 
@@ -74,27 +75,32 @@ export async function POST(req: NextRequest) {
     brand_context: body.brand_context ?? null,
   })
 
-  // 3. Run orchestrator
-  try {
-    const result = await orchestrateSession({
+  // 3. Kick off orchestrator in the background (waitUntil keeps the Vercel
+  //    function alive up to maxDuration even after we return). This way:
+  //      - Client gets the session id immediately and can navigate to
+  //        /atelier/session/[id] which polls / updates as modules complete.
+  //      - A flaky network or curl timeout no longer orphans the session
+  //        because the orchestrator runs server-side independent of the
+  //        client connection.
+  waitUntil(
+    orchestrateSession({
       sessionId,
       rawBrief:     body.raw_brief,
       brandContext: body.brand_context,
       language,
+    }).catch(async (err: unknown) => {
+      const message = err instanceof Error ? err.message : 'Onbekende fout.'
+      console.error('[atelier/run] orchestrator (background)', err)
+      await supabase.from('atelier_sessions')
+        .update({ status: 'failed', updated_at: new Date().toISOString() })
+        .eq('id', sessionId)
+      return { sessionId, error: message }
     })
+  )
 
-    return NextResponse.json({
-      sessionId: result.sessionId,
-      onePager:  {
-        body_md:        result.bundle.directions.length > 0 ? null : null,  // not echoed; client fetches
-      },
-    }, { status: 200 })
-  } catch (err) {
-    const message = err instanceof Error ? err.message : 'Onbekende fout.'
-    console.error('[atelier/run] orchestrator', err)
-    await supabase.from('atelier_sessions')
-      .update({ status: 'failed', updated_at: new Date().toISOString() })
-      .eq('id', sessionId)
-    return NextResponse.json({ sessionId, error: message }, { status: 500 })
-  }
+  return NextResponse.json({
+    sessionId,
+    status:  'running',
+    message: 'Sessie gestart — open /atelier/session/<id> en de modules verschijnen één voor één.',
+  }, { status: 202 })
 }

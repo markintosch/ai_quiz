@@ -14,20 +14,27 @@ ICP is anders dan een audience picture:
 - Audience picture beschrijft de huidige observeerbare doelgroep.
 - ICP beschrijft wie de brief idealiter wíl raken — het scherpste segment waar het verhaal het hardst landt.
 
+KRITISCH ONDERSCHEID — niet vermengen:
+- De brief beschrijft de DOELGROEP van het werk (wie de campagne / propositie raakt).
+- De brief beschrijft niet noodzakelijk WAT het VENDOR-bedrijf is of doet.
+- Voorbeeld: "we richten ons op finance-leaders" zegt iets over de KOPER, niet dat het vendor-bedrijf finance-software maakt — het kan ook HR-tooling zijn die wordt verkocht aan CFO's.
+- Als de brief het product/de propositie van het vendor-bedrijf NIET noemt, vul het ICP in voor de DOELGROEP zoals beschreven en vermeld de ambiguïteit expliciet in 'rationale'. Verzin geen vendor-categorie.
+- 'industry' verwijst naar de branche van de DOELGROEP (waar zij werken), tenzij de brief expliciet beschrijft dat de vendor zelf in die branche werkt.
+
 Geef per ICP-veld:
-- business_type: b2b | b2c | b2b2c | b2g (overheid / publieke dienst). Kies wat het BEST past — geen "anders".
-- industry: branche, kort.
+- business_type: b2b | b2c | b2b2c | b2g (overheid / publieke dienst). Kies wat het BEST past — geen "anders". Dit gaat over de relatie tussen vendor en doelgroep zoals impliciet in de brief.
+- industry: branche van de doelgroep, kort.
 - role: primaire DMU-rol of beslisser.
 - company_size: bedrijfsgrootte / segment indicatief.
 - triggers: 2–4 redenen waarom ze NU openstaan voor dit verhaal / deze propositie.
-- jobs: 2–4 jobs-to-be-done die deze ICP zelf zou benoemen.
-- pains: 2–4 pijnen die ze in eigen woorden zouden uitspreken.
+- jobs: 2–4 jobs-to-be-done die deze ICP zelf zou benoemen — concreet, in eerste persoon ("Ik wil...").
+- pains: 2–4 pijnen die ze in eigen woorden zouden uitspreken — eerste persoon, niet abstract.
 - buying_committee: 2–5 leden van de bredere DMU met hun invloed (decision_maker | champion | evaluator | gatekeeper | end_user).
-- rationale: 1–2 zin waarom deze ICP logisch volgt uit de brief.
+- rationale: 1–2 zin waarom deze ICP logisch volgt uit de brief. Als je een aanname moest maken (vendor-categorie, segment-vernauwing), benoem dat expliciet hier.
 
 Regels:
 - Wees concreet en herkenbaar — geen marketingtaal.
-- Als de brief geen ICP-info geeft, expliciet je redenering tonen via 'rationale'.
+- Als je het ICP-segment hebt vernauwd (bv. "200–600 medewerkers" terwijl de brief "200–2000" zei), benoem dat in rationale en leg uit waarom.
 - Schrijf in Nederlands tenzij in een andere taal aangevraagd.
 
 Antwoord ALTIJD als geldige JSON volgens dit schema:

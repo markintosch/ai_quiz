@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase/server'
 import QaChat from '@/components/atelier/QaChat'
+import SessionAutoRefresh from '@/components/atelier/SessionAutoRefresh'
 
 export const dynamic = 'force-dynamic'
 
@@ -126,6 +127,11 @@ export default async function AtelierSessionPage({ params }: PageProps) {
         <Link href="/atelier" className="inline-flex items-center gap-1 text-sm text-slate-600 hover:text-brand-accent mb-6">
           ← Atelier
         </Link>
+
+        {/* Auto-refresh while orchestrator runs in background */}
+        {(session.status === 'running' || session.status === 'open') && (
+          <SessionAutoRefresh runsCount={moduleRuns.length} />
+        )}
 
         <header className="mb-10">
           <div className="flex items-center gap-3 mb-3">

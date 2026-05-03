@@ -119,7 +119,9 @@ export type IcpProfile = z.infer<typeof IcpProfileSchema>
 
 export const AngleEvidenceSchema = z.object({
   claim:        z.string(),
-  source_label: z.string(),
+  // source_label may be missing when the model gives a generic observation —
+  // accept that with a clear default rather than failing the whole module.
+  source_label: z.string().optional().default('Algemeen waarneembaar'),
   source_url:   z.string().url().nullable().optional(),
 })
 

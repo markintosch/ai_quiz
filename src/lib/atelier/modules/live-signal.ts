@@ -94,7 +94,10 @@ Vind 4-6 actuele Nederlandse signalen (nieuws, opinie, sociale momenten) die rak
     const toolsWithWebSearch: WebSearchTool[] = [{
       type: 'web_search_20250305',
       name: 'web_search',
-      max_uses: 5,
+      // 3 (was 5) — first production runs showed 5 web_search calls cost
+      // ~117K input tokens (€0.36) per session and added ~50s latency.
+      // 3 still gives 4–6 surfaced signals; the model batches well.
+      max_uses: 3,
     }]
 
     const response = await client.messages.create({
