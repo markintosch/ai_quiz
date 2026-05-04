@@ -35,7 +35,7 @@ export default function SessionAutoRefresh({ runsCount }: Props) {
         </span>
       </div>
       <p className="text-xs text-amber-800/80 mt-1">
-        Pagina vernieuwt automatisch elke 5 seconden. Een complete sessie duurt typisch 60–120 seconden.
+        Pagina vernieuwt automatisch elke 5 seconden. Een complete sessie duurt typisch 1–4 minuten. Sessies die langer dan 6 minuten lopen worden automatisch als afgebroken gemarkeerd.
       </p>
     </div>
   )

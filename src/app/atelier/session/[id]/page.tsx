@@ -8,6 +8,13 @@ import { createServiceClient } from '@/lib/supabase/server'
 import QaChat from '@/components/atelier/QaChat'
 import SessionAutoRefresh from '@/components/atelier/SessionAutoRefresh'
 import RefreshDataBanner from '@/components/atelier/RefreshDataBanner'
+import SessionFailedBanner from '@/components/atelier/SessionFailedBanner'
+
+// Sessions that have been "running" for longer than this are stuck — the
+// Vercel function got killed at maxDuration (5 min) and nothing updates the
+// row. We mark them failed on next page render so the user gets a recovery
+// path instead of staring at a hanging banner.
+const STUCK_AFTER_MS = 6 * 60 * 1000   // 6 minutes
 
 export const dynamic = 'force-dynamic'
 
@@ -74,12 +81,44 @@ export default async function AtelierSessionPage({ params }: PageProps) {
   const { id } = await params
   const sb = createServiceClient()
 
-  const { data: session } = await sb
+  const { data: sessionRow } = await sb
     .from('atelier_sessions')
     .select('id, status, language, brand_name, jtbd_summary, has_one_pager, total_cost_cents, created_at')
     .eq('id', id)
     .single() as { data: SessionRow | null }
-  if (!session) notFound()
+  if (!sessionRow) notFound()
+
+  // ── Auto-cleanup of stuck sessions ──────────────────────────────────────
+  // If a session is still 'running' but older than the Vercel maxDuration
+  // ceiling, the orchestrator was killed mid-flight and nothing will ever
+  // mark it complete. Flip it to 'failed' on this render so the user gets
+  // a recovery banner instead of the stuck "Sessie loopt" forever.
+  let session = sessionRow
+  let failureReason: 'timeout' | 'error' | undefined = undefined
+
+  if (session.status === 'running') {
+    const ageMs = Date.now() - new Date(session.created_at).getTime()
+    if (ageMs > STUCK_AFTER_MS) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (sb.from('atelier_sessions') as any)
+        .update({ status: 'failed', updated_at: new Date().toISOString() })
+        .eq('id', id)
+      // Also clean up any module_runs still 'running'
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (sb.from('atelier_module_runs') as any)
+        .update({
+          status:        'error',
+          error_message: 'Killed: function timeout (>5min)',
+          finished_at:   new Date().toISOString(),
+        })
+        .eq('session_id', id)
+        .eq('status', 'running')
+      session = { ...session, status: 'failed' }
+      failureReason = 'timeout'
+    }
+  } else if (session.status === 'failed') {
+    failureReason = 'error'  // generic — actual cause is in module_runs.error_message
+  }
 
   const [briefRes, refsRes, signalsRes, dirsRes, outRes, runsRes, icpRes, anglesRes, liveRes, qaRes] = await Promise.all([
     sb.from('atelier_briefs').select('raw_text, brand_context').eq('session_id', id).maybeSingle(),
@@ -156,6 +195,17 @@ export default async function AtelierSessionPage({ params }: PageProps) {
         {/* Auto-refresh while orchestrator runs in background */}
         {(session.status === 'running' || session.status === 'open') && (
           <SessionAutoRefresh runsCount={moduleRuns.length} />
+        )}
+
+        {/* Failed banner — recovery path with one-click restart of the same brief */}
+        {session.status === 'failed' && brief && (
+          <SessionFailedBanner
+            rawBrief={brief.raw_text}
+            brandContext={brief.brand_context}
+            brandName={session.brand_name}
+            language={session.language}
+            reason={failureReason}
+          />
         )}
 
         {/* Refresh-data banner — alleen voor completed sessies met externe bronnen */}
