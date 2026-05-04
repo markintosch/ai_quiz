@@ -63,13 +63,18 @@ export async function runModule<TInput, TOutput>(
   const inputJson = JSON.stringify(args.inputPayload)
   const inputHash = createHash('sha256').update(inputJson).digest('hex')
 
-  // Insert pending run row to capture started_at + dedupe attempts later
+  // Insert pending run row with status='running' so the cleanup helper
+  // (in /atelier/session/[id]/page.tsx) can detect mid-flight kills
+  // accurately. The success path flips this to 'ok' once the LLM returns;
+  // the catch path flips to 'failed'. If neither runs (Vercel maxDuration
+  // killed the whole function), the row stays 'running' and gets cleaned
+  // up on next session-page render.
   const { data: runRow, error: insertErr } = await sb()
     .from('atelier_module_runs')
     .insert({
       session_id:    args.sessionId,
       module:        args.module,
-      status:        'ok',  // optimistic; flipped to 'failed' on error
+      status:        'running',
       input_hash:    inputHash,
       input_payload: args.inputPayload,
     })

@@ -72,6 +72,12 @@ function client(): Anthropic {
 
 // ── Main entry point ───────────────────────────────────────────────────────
 
+// Per-call timeout. Without this, a single slow/hanging Anthropic response
+// blocks the entire orchestrator (Promise.allSettled waits for the slowest
+// branch). With it, that one module errors out at 90s and the rest of the
+// parallel batch continues — orchestrator stays under Vercel's 5-min ceiling.
+const LLM_CALL_TIMEOUT_MS = 90 * 1000
+
 export async function llmCall(params: LlmCallParams): Promise<LlmCallResult> {
   const start = Date.now()
   const model = ANTHROPIC_MODEL_BY_TIER[params.tier]
@@ -79,13 +85,30 @@ export async function llmCall(params: LlmCallParams): Promise<LlmCallResult> {
     ? `${params.user}\n\nGeef je antwoord uitsluitend als geldige JSON, zonder enige tekst eromheen.`
     : params.user
 
-  const response = await client().messages.create({
-    model,
-    max_tokens:  params.maxTokens ?? 2048,
-    temperature: params.temperature ?? 0.3,
-    system:      params.system,
-    messages: [{ role: 'user', content: userMessage }],
-  })
+  // AbortController with 90s ceiling. The Anthropic SDK accepts an AbortSignal
+  // and propagates aborts as a thrown DOMException — runModule catches and
+  // marks the run as failed.
+  const ac = new AbortController()
+  const timer = setTimeout(() => ac.abort(), LLM_CALL_TIMEOUT_MS)
+
+  let response
+  try {
+    response = await client().messages.create({
+      model,
+      max_tokens:  params.maxTokens ?? 2048,
+      temperature: params.temperature ?? 0.3,
+      system:      params.system,
+      messages: [{ role: 'user', content: userMessage }],
+    }, { signal: ac.signal })
+  } catch (err) {
+    if (ac.signal.aborted) {
+      const elapsed = Date.now() - start
+      throw new Error(`LLM-call (${params.module}) timed out na ${(elapsed / 1000).toFixed(1)}s — ceiling ${LLM_CALL_TIMEOUT_MS / 1000}s. Anthropic responded too slowly or hung.`)
+    }
+    throw err
+  } finally {
+    clearTimeout(timer)
+  }
 
   const text = response.content
     .filter((b): b is Anthropic.TextBlock => b.type === 'text')
