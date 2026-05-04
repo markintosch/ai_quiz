@@ -43,8 +43,9 @@ export function middleware(req: NextRequest) {
   if (pathname.startsWith('/abbvie'))    return NextResponse.next()
   if (pathname.startsWith('/mentor'))    return NextResponse.next()
   if (pathname.startsWith('/manda'))     return NextResponse.next()
-  if (pathname.startsWith('/ai_benchmark')) return NextResponse.next()
-  if (pathname.startsWith('/proserve'))     return NextResponse.next()
+  if (pathname.startsWith('/ai_benchmark'))  return NextResponse.next()
+  if (pathname.startsWith('/maritime_scan')) return NextResponse.next()
+  if (pathname.startsWith('/proserve'))      return NextResponse.next()
   if (pathname.startsWith('/SannahRemco') || pathname.startsWith('/sannahremco')) {
     return NextResponse.next()
   }
