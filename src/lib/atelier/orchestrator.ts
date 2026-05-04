@@ -11,10 +11,12 @@ import { runOutputPackaging } from './modules/output'
 import { runIcpProfile } from './modules/icp'
 import { runAllAngles } from './modules/angles'
 import { runLiveSignals } from './modules/live-signal'
+import { enrichWithCbs } from './sources/cbs'
 import { serverSupabase } from './run-logger'
 import type {
   Angle,
   AudiencePicture,
+  AudienceSignal,
   IcpProfile,
   LiveSignal,
   Reference,
@@ -52,7 +54,7 @@ export async function orchestrateSession(input: OrchestrateInput): Promise<Orche
     .update({ jtbd_summary: jtbd.brief_summary, updated_at: new Date().toISOString() })
     .eq('id', input.sessionId)
 
-  // ── Modules 2 + 3 + ICP + Angles + Live signal in parallel ─────────────
+  // ── Modules 2 + 3 + ICP + Angles + Live signal + CBS in parallel ───────
   // All depend only on JTBD (and optionally brand context). Run in parallel,
   // collect successes, log failures via runModule's own catch path.
   const settled = await Promise.allSettled([
@@ -61,6 +63,11 @@ export async function orchestrateSession(input: OrchestrateInput): Promise<Orche
     runIcpProfile(input.sessionId, jtbd, input.brandContext),     // 2: icp
     runAllAngles(input.sessionId, jtbd, input.brandContext),      // 3: angles
     runLiveSignals({ sessionId: input.sessionId, jtbd }),         // 4: live signals
+    enrichWithCbs({                                               // 5: CBS Ground Truth
+      sessionId: input.sessionId,
+      jtbdDutch: jtbd.jtbd_dutch,
+      briefSummary: jtbd.brief_summary,
+    }),
   ])
 
   const references: Reference[] = settled[0].status === 'fulfilled' ? settled[0].value : []
@@ -72,8 +79,21 @@ export async function orchestrateSession(input: OrchestrateInput): Promise<Orche
   const icp: IcpProfile | undefined = settled[2].status === 'fulfilled' ? settled[2].value : undefined
   const angles: Angle[] = settled[3].status === 'fulfilled' ? settled[3].value : []
   const liveSignals: LiveSignal[] = settled[4].status === 'fulfilled' ? settled[4].value : []
+  const cbsResult = settled[5].status === 'fulfilled' ? settled[5].value : { signals: [] as AudienceSignal[], fetched_at: new Date().toISOString() }
+  const cbsSignals: AudienceSignal[] = cbsResult.signals
+  const cbsFetchedAt: string = cbsResult.fetched_at
 
-  // Persist references
+  // Merge CBS-strong-evidence signals into the audience picture (Ground track)
+  if (cbsSignals.length > 0) {
+    audience.signals = [
+      ...cbsSignals,
+      ...audience.signals,
+    ]
+  }
+
+  // Persist references — for archive items the "fetch" is constant (it's
+  // a static seed corpus); for live_source / inferred we use 'now'.
+  const nowIso = new Date().toISOString()
   if (references.length > 0) {
     await sb.from('atelier_references').insert(
       references.map((r, i) => ({
@@ -86,22 +106,28 @@ export async function orchestrateSession(input: OrchestrateInput): Promise<Orche
         relevance_score: r.relevance_score,
         taste_note:      r.taste_note,
         position:        i,
+        data_fetched_at: nowIso,
       }))
     )
   }
 
   // Persist audience signals
+  // CBS-derived signals carry a _fetched_at; module-3 LLM signals get
+  // 'now' as their fetch time (model knowledge is current at this moment).
   if (audience.signals.length > 0) {
+    const nowIso = new Date().toISOString()
+    const cbsClaimSet = new Set(cbsSignals.map(c => c.claim))
     await sb.from('atelier_audience_signals').insert(
       audience.signals.map(s => ({
-        session_id:   input.sessionId,
-        track:        s.track,
-        claim:        s.claim,
-        evidence:     s.evidence ?? null,
-        source_label: s.source_label,
-        source_url:   s.source_url ?? null,
-        confidence:   s.confidence,
-        contradicts:  s.contradicts ?? [],
+        session_id:      input.sessionId,
+        track:           s.track,
+        claim:           s.claim,
+        evidence:        s.evidence ?? null,
+        source_label:    s.source_label,
+        source_url:      s.source_url ?? null,
+        confidence:      s.confidence,
+        contradicts:     s.contradicts ?? [],
+        data_fetched_at: cbsClaimSet.has(s.claim) ? cbsFetchedAt : nowIso,
       }))
     )
   }
@@ -135,7 +161,7 @@ export async function orchestrateSession(input: OrchestrateInput): Promise<Orche
     )
   }
 
-  // Persist live signals
+  // Persist live signals — fetched_at = right now (web_search just ran)
   if (liveSignals.length > 0) {
     await sb.from('atelier_live_signals').insert(
       liveSignals.map(s => ({
@@ -146,6 +172,7 @@ export async function orchestrateSession(input: OrchestrateInput): Promise<Orche
         source_label:    s.source_label,
         relevance_score: s.relevance_score,
         retrieved_via:   s.retrieved_via,
+        data_fetched_at: nowIso,
       }))
     )
   }

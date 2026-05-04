@@ -7,6 +7,7 @@ import { notFound } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase/server'
 import QaChat from '@/components/atelier/QaChat'
 import SessionAutoRefresh from '@/components/atelier/SessionAutoRefresh'
+import RefreshDataBanner from '@/components/atelier/RefreshDataBanner'
 
 export const dynamic = 'force-dynamic'
 
@@ -29,10 +30,12 @@ interface BriefRow { raw_text: string; brand_context: string | null }
 interface ReferenceRow {
   id: string; title: string; description: string; source_kind: string;
   source_label: string; source_url: string | null; relevance_score: number; taste_note: string;
+  data_fetched_at: string | null;
 }
 interface AudienceSignalRow {
   id: string; track: string; claim: string; evidence: string | null;
   source_label: string; source_url: string | null; confidence: string;
+  data_fetched_at: string | null;
 }
 interface DirectionRow {
   id: string; position: number; tension: string; route: string; rationale: string | null;
@@ -55,6 +58,7 @@ interface AngleRow {
 interface LiveSignalRow {
   title: string; snippet: string | null; source_url: string | null;
   source_label: string | null; relevance_score: number | null; retrieved_via: string;
+  data_fetched_at: string | null;
 }
 interface QaTurnRow { question: string; answer: string; created_at: string }
 
@@ -79,14 +83,14 @@ export default async function AtelierSessionPage({ params }: PageProps) {
 
   const [briefRes, refsRes, signalsRes, dirsRes, outRes, runsRes, icpRes, anglesRes, liveRes, qaRes] = await Promise.all([
     sb.from('atelier_briefs').select('raw_text, brand_context').eq('session_id', id).maybeSingle(),
-    sb.from('atelier_references').select('id, title, description, source_kind, source_label, source_url, relevance_score, taste_note').eq('session_id', id).order('position'),
-    sb.from('atelier_audience_signals').select('id, track, claim, evidence, source_label, source_url, confidence').eq('session_id', id),
+    sb.from('atelier_references').select('id, title, description, source_kind, source_label, source_url, relevance_score, taste_note, data_fetched_at').eq('session_id', id).order('position'),
+    sb.from('atelier_audience_signals').select('id, track, claim, evidence, source_label, source_url, confidence, data_fetched_at').eq('session_id', id),
     sb.from('atelier_directions').select('id, position, tension, route, rationale').eq('session_id', id).order('position'),
     sb.from('atelier_outputs').select('id, format, language, body_md').eq('session_id', id).order('created_at', { ascending: false }).limit(1).maybeSingle(),
     sb.from('atelier_module_runs').select('module, status, model, latency_ms, cost_cents, error_message').eq('session_id', id).order('started_at'),
     sb.from('atelier_icp_profiles').select('industry, role, company_size, triggers, jobs, pains, buying_committee, rationale').eq('session_id', id).maybeSingle(),
     sb.from('atelier_angles').select('lens, headline, body_md, evidence').eq('session_id', id),
-    sb.from('atelier_live_signals').select('title, snippet, source_url, source_label, relevance_score, retrieved_via').eq('session_id', id),
+    sb.from('atelier_live_signals').select('title, snippet, source_url, source_label, relevance_score, retrieved_via, data_fetched_at').eq('session_id', id),
     sb.from('atelier_qa_turns').select('question, answer, created_at').eq('session_id', id).order('created_at'),
   ])
 
@@ -120,6 +124,27 @@ export default async function AtelierSessionPage({ params }: PageProps) {
   const street = signals.filter(s => s.track === 'street')
   const ground = signals.filter(s => s.track === 'ground')
 
+  // Find the oldest data fetched moment across all external-source rows for
+  // the refresh banner. References + audience + live signals all carry it.
+  const allFetched = [
+    ...references.map(r => r.data_fetched_at),
+    ...signals.map(s => s.data_fetched_at),
+    ...liveSignals.map(l => l.data_fetched_at),
+  ].filter((t): t is string => !!t)
+  const oldestFetchedAt = allFetched.length > 0
+    ? allFetched.sort()[0]
+    : null
+
+  function fetchedLabel(iso: string | null): string {
+    if (!iso) return ''
+    const ageMs = Date.now() - new Date(iso).getTime()
+    const ageHours = ageMs / (1000 * 60 * 60)
+    if (ageHours < 1) return 'opgehaald < 1 u geleden'
+    if (ageHours < 24) return `opgehaald ${Math.round(ageHours)} u geleden`
+    const days = Math.round(ageHours / 24)
+    return `opgehaald ${days} dag${days === 1 ? '' : 'en'} geleden`
+  }
+
   return (
     <div className="min-h-screen bg-stone-50 text-slate-900">
       <div className="max-w-3xl mx-auto px-6 py-12">
@@ -131,6 +156,11 @@ export default async function AtelierSessionPage({ params }: PageProps) {
         {/* Auto-refresh while orchestrator runs in background */}
         {(session.status === 'running' || session.status === 'open') && (
           <SessionAutoRefresh runsCount={moduleRuns.length} />
+        )}
+
+        {/* Refresh-data banner — alleen voor completed sessies met externe bronnen */}
+        {session.status === 'completed' && oldestFetchedAt && (
+          <RefreshDataBanner sessionId={id} oldestFetchedAt={oldestFetchedAt} />
         )}
 
         <header className="mb-10">
@@ -202,6 +232,12 @@ export default async function AtelierSessionPage({ params }: PageProps) {
                     {r.source_url ? <a href={r.source_url} target="_blank" rel="noopener noreferrer" className="hover:text-brand-accent">{r.source_label} ↗</a> : r.source_label}
                     <span className="mx-2">·</span>
                     <span className="font-mono">{r.source_kind}</span>
+                    {r.data_fetched_at && (
+                      <>
+                        <span className="mx-2">·</span>
+                        <span>{fetchedLabel(r.data_fetched_at)}</span>
+                      </>
+                    )}
                   </p>
                 </div>
               ))}
@@ -226,7 +262,12 @@ export default async function AtelierSessionPage({ params }: PageProps) {
                         <p className="text-slate-800">{s.claim}</p>
                         <p className="text-xs text-slate-500 mt-0.5">
                           <span className={`font-mono mr-2 ${s.confidence === 'inferred' ? 'text-amber-700' : ''}`}>{s.confidence}</span>
-                          · {s.source_label}
+                          · {s.source_url
+                              ? <a href={s.source_url} target="_blank" rel="noopener noreferrer" className="hover:text-brand-accent">{s.source_label} ↗</a>
+                              : s.source_label}
+                          {s.data_fetched_at && (
+                            <span className="block text-[11px] text-slate-400 mt-0.5">{fetchedLabel(s.data_fetched_at)}</span>
+                          )}
                         </p>
                       </li>
                     ))}
@@ -245,7 +286,12 @@ export default async function AtelierSessionPage({ params }: PageProps) {
                         <p className="text-slate-800">{s.claim}</p>
                         <p className="text-xs text-slate-500 mt-0.5">
                           <span className={`font-mono mr-2 ${s.confidence === 'inferred' ? 'text-amber-700' : ''}`}>{s.confidence}</span>
-                          · {s.source_label}
+                          · {s.source_url
+                              ? <a href={s.source_url} target="_blank" rel="noopener noreferrer" className="hover:text-brand-accent">{s.source_label} ↗</a>
+                              : s.source_label}
+                          {s.data_fetched_at && (
+                            <span className="block text-[11px] text-slate-400 mt-0.5">{fetchedLabel(s.data_fetched_at)}</span>
+                          )}
                         </p>
                       </li>
                     ))}
@@ -397,6 +443,12 @@ export default async function AtelierSessionPage({ params }: PageProps) {
                     <span className={`font-mono ${s.retrieved_via === 'inferred_fallback' ? 'text-amber-700' : ''}`}>
                       {s.retrieved_via}
                     </span>
+                    {s.data_fetched_at && (
+                      <>
+                        <span className="mx-2">·</span>
+                        <span>{fetchedLabel(s.data_fetched_at)}</span>
+                      </>
+                    )}
                   </p>
                 </li>
               ))}
