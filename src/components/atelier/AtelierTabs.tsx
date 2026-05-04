@@ -9,7 +9,9 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 const TABS = [
-  { href: '/atelier',           label: 'Werkbank',    match: (p: string) => p === '/atelier' || p === '/atelier/new' || p.startsWith('/atelier/session') },
+  // Note: Werkbank's match excludes /atelier/sessies because both start with
+  // "/atelier/session" — the trailing slash on /atelier/session/ disambiguates.
+  { href: '/atelier',           label: 'Werkbank',    match: (p: string) => p === '/atelier' || p === '/atelier/new' || p.startsWith('/atelier/session/') },
   { href: '/atelier/sessies',   label: 'Sessies',     match: (p: string) => p.startsWith('/atelier/sessies') },
   { href: '/atelier/merken',    label: 'Merken',      match: (p: string) => p.startsWith('/atelier/merken') },
   { href: '/atelier/icps',      label: 'ICP-groepen', match: (p: string) => p.startsWith('/atelier/icps') },
