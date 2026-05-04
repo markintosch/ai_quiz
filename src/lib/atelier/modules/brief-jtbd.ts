@@ -54,7 +54,7 @@ Decodeer deze brief naar JTBD + verborgen aannames + ontbrekende stukken volgens
       system: SYSTEM_PROMPT,
       user: userPrompt,
       jsonOnly: true,
-      maxTokens: 2500,
+      maxTokens: 4000,
       temperature: 0.2,
     },
     inputPayload: input,

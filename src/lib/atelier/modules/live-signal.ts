@@ -102,7 +102,7 @@ Vind 4-6 actuele Nederlandse signalen (nieuws, opinie, sociale momenten) die rak
 
     const response = await client.messages.create({
       model,
-      max_tokens: 2000,
+      max_tokens: 4000,
       temperature: 0.3,
       system: SYSTEM_PROMPT,
       messages: [{ role: 'user', content: `${userPrompt}\n\nGeef je antwoord uitsluitend als geldige JSON.` }],
@@ -125,7 +125,7 @@ Vind 4-6 actuele Nederlandse signalen (nieuws, opinie, sociale momenten) die rak
     console.warn('[atelier/live-signal] web_search unavailable, falling back:', err instanceof Error ? err.message : err)
     const response = await client.messages.create({
       model: 'claude-sonnet-4-6',
-      max_tokens: 1500,
+      max_tokens: 3000,
       temperature: 0.3,
       system: SYSTEM_PROMPT + `\n\nLET OP: Web-search is niet beschikbaar voor deze run. Markeer ALLE signalen als retrieved_via="inferred_fallback".`,
       messages: [{ role: 'user', content: `${userPrompt}\n\nGeef je antwoord uitsluitend als geldige JSON.` }],

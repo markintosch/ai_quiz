@@ -77,7 +77,7 @@ Forceer geen claims als je geen bron hebt — markeer dan 'inferred' en wees eer
       system: SYSTEM_PROMPT,
       user: userPrompt,
       jsonOnly: true,
-      maxTokens: 3000,
+      maxTokens: 6000,
       temperature: 0.3,
     },
     inputPayload: { jtbd, brandContext },

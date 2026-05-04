@@ -78,7 +78,7 @@ Bouw het Ideal Customer Profile voor deze brief.`
       system: SYSTEM_PROMPT,
       user: userPrompt,
       jsonOnly: true,
-      maxTokens: 2500,
+      maxTokens: 4000,
       temperature: 0.3,
     },
     inputPayload: { jtbd, brandContext },

@@ -1,13 +1,18 @@
 // FILE: src/lib/atelier/orchestrator.ts
 // Single entry point: brief in → full session out.
-// Runs Module 1, then 2 + 3 in parallel, then 4, then 5. Persists at every
-// step so a partial failure leaves something readable in the DB.
+// Runs Module 1, then 2-3-ICP-angles-live-CBS in parallel, then Module 4
+// (tension). Marks session as 'completed' at that point.
+//
+// Module 5 (output packaging / one-pager) is NO LONGER part of this pipeline.
+// It runs on-demand via /api/atelier/session/[id]/finalize, triggered from
+// the session page after the orchestrator completes. This keeps the
+// orchestrator comfortably under the 5-minute Vercel function ceiling and
+// gives Module 5 its own 5-minute budget.
 
 import { runBriefJtbd } from './modules/brief-jtbd'
 import { runReferenceRetrieval } from './modules/reference'
 import { runAudienceEvidence } from './modules/audience'
 import { runTensionSynthesis } from './modules/tension'
-import { runOutputPackaging } from './modules/output'
 import { runIcpProfile } from './modules/icp'
 import { runAllAngles } from './modules/angles'
 import { runLiveSignals } from './modules/live-signal'
@@ -33,7 +38,6 @@ export interface OrchestrateInput {
 export interface OrchestrateResult {
   sessionId: string
   bundle:    SessionBundle
-  outputId:  string
 }
 
 export async function orchestrateSession(input: OrchestrateInput): Promise<OrchestrateResult> {
@@ -195,7 +199,7 @@ export async function orchestrateSession(input: OrchestrateInput): Promise<Orche
     )
   }
 
-  // ── Module 5 ──────────────────────────────────────────────────────────
+  // ── Compose bundle (used by callers who want the full structured output) ──
   const bundle: SessionBundle = {
     brief: {
       raw_text:      input.rawBrief,
@@ -211,21 +215,8 @@ export async function orchestrateSession(input: OrchestrateInput): Promise<Orche
     liveSignals,
   }
 
-  const onePager = await runOutputPackaging(input.sessionId, bundle)
-
-  // Persist output
-  const { data: outRow } = await sb.from('atelier_outputs')
-    .insert({
-      session_id:     input.sessionId,
-      format:         onePager.format,
-      language:       onePager.language,
-      body_md:        onePager.body_md,
-      provenance_map: onePager.provenance_map,
-    })
-    .select('id')
-    .single()
-
-  // Compute total cost from module_runs and write back to session
+  // Compute cost from module_runs and write back to session.
+  // (Module 5 / output_packaging will add its own cost when triggered later.)
   const { data: runs } = await sb.from('atelier_module_runs')
     .select('cost_cents')
     .eq('session_id', input.sessionId)
@@ -234,14 +225,17 @@ export async function orchestrateSession(input: OrchestrateInput): Promise<Orche
     0,
   )
 
+  // Mark session 'completed' — even though Module 5 hasn't run yet, the
+  // structured analysis is complete and renderable. The one-pager is layered
+  // on top via /api/atelier/session/[id]/finalize.
   await sb.from('atelier_sessions')
     .update({
-      status:          'completed',
-      has_one_pager:   true,
+      status:           'completed',
+      has_one_pager:    false,  // flipped to true by the finalize endpoint
       total_cost_cents: totalCostCents,
-      updated_at:      new Date().toISOString(),
+      updated_at:       new Date().toISOString(),
     })
     .eq('id', input.sessionId)
 
-  return { sessionId: input.sessionId, bundle, outputId: (outRow as { id: string }).id }
+  return { sessionId: input.sessionId, bundle }
 }

@@ -9,6 +9,7 @@ import QaChat from '@/components/atelier/QaChat'
 import SessionAutoRefresh from '@/components/atelier/SessionAutoRefresh'
 import RefreshDataBanner from '@/components/atelier/RefreshDataBanner'
 import SessionFailedBanner from '@/components/atelier/SessionFailedBanner'
+import OnePagerFinalizer from '@/components/atelier/OnePagerFinalizer'
 
 // Sessions that have been "running" for longer than this are stuck — the
 // Vercel function got killed at maxDuration (5 min) and nothing updates the
@@ -208,8 +209,15 @@ export default async function AtelierSessionPage({ params }: PageProps) {
           />
         )}
 
+        {/* One-pager finalizer — auto-trigger Module 5 when session is completed
+            but the one-pager hasn't been generated yet. Module 5 was split off
+            from the orchestrator so it gets its own 5-min function budget. */}
+        {session.status === 'completed' && !session.has_one_pager && (
+          <OnePagerFinalizer sessionId={id} />
+        )}
+
         {/* Refresh-data banner — alleen voor completed sessies met externe bronnen */}
-        {session.status === 'completed' && oldestFetchedAt && (
+        {session.status === 'completed' && session.has_one_pager && oldestFetchedAt && (
           <RefreshDataBanner sessionId={id} oldestFetchedAt={oldestFetchedAt} />
         )}
 
