@@ -950,6 +950,159 @@ export interface Database {
         }
         Relationships: []
       }
+      cycle_profiles: {
+        Row: {
+          user_id: string
+          last_period_start: string | null
+          typical_length: number
+          lat: number | null
+          lon: number | null
+          timezone: string
+          reminder_time: string
+          onboarded_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          last_period_start?: string | null
+          typical_length?: number
+          lat?: number | null
+          lon?: number | null
+          timezone?: string
+          reminder_time?: string
+          onboarded_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          user_id?: string
+          last_period_start?: string | null
+          typical_length?: number
+          lat?: number | null
+          lon?: number | null
+          timezone?: string
+          reminder_time?: string
+          onboarded_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      cycle_daily_entries: {
+        Row: {
+          id: string
+          user_id: string
+          entry_date: string
+          mood_score: number
+          mood_variable: boolean
+          sleep: number
+          stress: number
+          activity_types: string[]
+          activity_intensity: string | null
+          menstruation_flag: boolean
+          readiness_score: number | null
+          cycle_phase: string
+          score_feedback: number | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          entry_date: string
+          mood_score: number
+          mood_variable?: boolean
+          sleep: number
+          stress: number
+          activity_types?: string[]
+          activity_intensity?: string | null
+          menstruation_flag?: boolean
+          readiness_score?: number | null
+          cycle_phase: string
+          score_feedback?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          entry_date?: string
+          mood_score?: number
+          mood_variable?: boolean
+          sleep?: number
+          stress?: number
+          activity_types?: string[]
+          activity_intensity?: string | null
+          menstruation_flag?: boolean
+          readiness_score?: number | null
+          cycle_phase?: string
+          score_feedback?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      cycle_weather: {
+        Row: {
+          id: string
+          user_id: string
+          entry_date: string
+          temp_c: number | null
+          precip_mm: number | null
+          cloud_pct: number | null
+          wind_kmh: number | null
+          condition: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          entry_date: string
+          temp_c?: number | null
+          precip_mm?: number | null
+          cloud_pct?: number | null
+          wind_kmh?: number | null
+          condition?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          entry_date?: string
+          temp_c?: number | null
+          precip_mm?: number | null
+          cloud_pct?: number | null
+          wind_kmh?: number | null
+          condition?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
+      cycle_insights_seen: {
+        Row: {
+          id: string
+          user_id: string
+          rule_key: string
+          surfaced_at: string
+          dismissed_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          rule_key: string
+          surfaced_at?: string
+          dismissed_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          rule_key?: string
+          surfaced_at?: string
+          dismissed_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: Record<string, never>
     Functions: Record<string, never>

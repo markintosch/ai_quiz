@@ -50,6 +50,7 @@ export function middleware(req: NextRequest) {
     return NextResponse.next()
   }
   if (pathname.startsWith('/atelier'))    return NextResponse.next()
+  if (pathname.startsWith('/Cycle'))      return NextResponse.next()
 
   // ── markdekock.com root: handled in src/app/page.tsx via server-side headers() ─
   // (middleware hostname detection proved unreliable on Vercel for this domain)

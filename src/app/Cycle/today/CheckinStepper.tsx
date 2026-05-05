@@ -1,0 +1,324 @@
+'use client'
+
+// FILE: src/app/Cycle/today/CheckinStepper.tsx
+// 5-step daily check-in. Auto-saves nothing locally; on the final step we
+// POST the whole entry to /api/cycle/checkin which computes phase + score
+// and writes the row.
+
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import type { ActivityType, ActivityIntensity } from '@/lib/cycle/types'
+
+const ACTIVITY_LABELS: Record<ActivityType, string> = {
+  None:     'Rust',
+  Walk:     'Wandelen',
+  Run:      'Hardlopen',
+  Cycle:    'Fietsen',
+  Strength: 'Kracht',
+  Yoga:     'Yoga',
+  Other:    'Anders',
+}
+
+const INTENSITY_LABELS: Record<ActivityIntensity, string> = {
+  Low:    'Licht',
+  Medium: 'Gemiddeld',
+  High:   'Pittig',
+}
+
+interface InitialEntry {
+  mood_score: number
+  mood_variable: boolean
+  sleep: number
+  stress: number
+  activity_types: ActivityType[]
+  activity_intensity: ActivityIntensity | null
+  menstruation_flag: boolean
+}
+
+export default function CheckinStepper({
+  today,
+  initial,
+}: {
+  today: string
+  initial: InitialEntry | null
+}) {
+  const router = useRouter()
+
+  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1)
+  const [mood, setMood]                 = useState<number>(initial?.mood_score ?? 5)
+  const [moodVariable, setMoodVariable] = useState<boolean>(initial?.mood_variable ?? false)
+  const [sleep, setSleep]               = useState<number>(initial?.sleep ?? 7)
+  const [activityTypes, setTypes]       = useState<ActivityType[]>(initial?.activity_types ?? ['None'])
+  const [intensity, setIntensity]       = useState<ActivityIntensity | null>(initial?.activity_intensity ?? null)
+  const [stress, setStress]             = useState<number>(initial?.stress ?? 5)
+  const [period, setPeriod]             = useState<boolean>(initial?.menstruation_flag ?? false)
+  const [submitting, setSubmitting]     = useState(false)
+  const [error, setError]               = useState<string>('')
+
+  const isRest = activityTypes.length === 1 && activityTypes[0] === 'None'
+
+  function toggleType(t: ActivityType) {
+    setTypes(prev => {
+      if (t === 'None') return ['None']
+      const without = prev.filter(p => p !== 'None' && p !== t)
+      return prev.includes(t) ? (without.length ? without : ['None']) : [...without, t]
+    })
+  }
+
+  async function submit() {
+    setSubmitting(true)
+    setError('')
+    try {
+      const res = await fetch('/api/cycle/checkin', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          entry_date:         today,
+          mood_score:         mood,
+          mood_variable:      moodVariable,
+          sleep,
+          stress,
+          activity_types:     activityTypes,
+          activity_intensity: isRest ? null : intensity,
+          menstruation_flag:  period,
+        }),
+      })
+      if (!res.ok) {
+        setError('Opslaan mislukt. Probeer opnieuw.')
+        setSubmitting(false)
+        return
+      }
+      router.push('/Cycle/output')
+    } catch {
+      setError('Geen verbinding. Probeer opnieuw.')
+      setSubmitting(false)
+    }
+  }
+
+  const canAdvanceActivity = isRest || (intensity !== null)
+
+  return (
+    <main className="min-h-screen flex flex-col items-center justify-center px-6 py-10">
+      <div className="w-full max-w-md">
+
+        {/* Progress dots */}
+        <div className="flex justify-center gap-2 mb-7">
+          {[1, 2, 3, 4, 5].map(n => (
+            <span
+              key={n}
+              aria-hidden
+              style={{
+                width: 8,
+                height: 8,
+                borderRadius: 999,
+                background: n <= step ? 'var(--cycle-accent)' : 'var(--cycle-border)',
+              }}
+            />
+          ))}
+        </div>
+
+        <div className="cycle-card p-7">
+          {step === 1 && (
+            <Step
+              title="Hoe is je stemming?"
+              subtitle="Schuif naar wat het dichtst bij voelt."
+              onBack={null}
+              onNext={() => setStep(2)}
+              canAdvance
+            >
+              <div style={{ textAlign: 'center', marginBottom: 12 }}>
+                <span className="cycle-display" style={{ fontSize: 84 }}>{mood}</span>
+              </div>
+              <input
+                type="range"
+                min={0} max={10} step={1}
+                value={mood}
+                onChange={e => setMood(Number(e.target.value))}
+                className="cycle-slider mb-5"
+                aria-label="Stemming van 0 tot 10"
+              />
+              <label
+                className="flex items-center gap-3 mb-2 cursor-pointer"
+                style={{ fontSize: 14, color: 'var(--cycle-muted)' }}
+              >
+                <input
+                  type="checkbox"
+                  checked={moodVariable}
+                  onChange={e => setMoodVariable(e.target.checked)}
+                />
+                Mijn stemming wisselde vandaag
+              </label>
+            </Step>
+          )}
+
+          {step === 2 && (
+            <Step
+              title="Hoe heb je geslapen?"
+              subtitle="1 = beroerd, 10 = uitgerust."
+              onBack={() => setStep(1)}
+              onNext={() => setStep(3)}
+              canAdvance
+            >
+              <div style={{ textAlign: 'center', marginBottom: 12 }}>
+                <span className="cycle-display" style={{ fontSize: 84 }}>{sleep}</span>
+              </div>
+              <input
+                type="range"
+                min={1} max={10} step={1}
+                value={sleep}
+                onChange={e => setSleep(Number(e.target.value))}
+                className="cycle-slider"
+                aria-label="Slaap van 1 tot 10"
+              />
+            </Step>
+          )}
+
+          {step === 3 && (
+            <Step
+              title="Wat heb je gedaan?"
+              subtitle="Meerdere opties mogelijk."
+              onBack={() => setStep(2)}
+              onNext={() => setStep(4)}
+              canAdvance={canAdvanceActivity}
+            >
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 16 }}>
+                {(Object.keys(ACTIVITY_LABELS) as ActivityType[]).map(t => (
+                  <button
+                    key={t}
+                    type="button"
+                    className="cycle-chip"
+                    data-selected={activityTypes.includes(t) ? 'true' : 'false'}
+                    onClick={() => toggleType(t)}
+                  >
+                    {ACTIVITY_LABELS[t]}
+                  </button>
+                ))}
+              </div>
+
+              {!isRest && (
+                <>
+                  <p className="text-sm mb-2" style={{ color: 'var(--cycle-muted)' }}>
+                    Hoe intens overall?
+                  </p>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    {(['Low', 'Medium', 'High'] as ActivityIntensity[]).map(i => (
+                      <button
+                        key={i}
+                        type="button"
+                        className="cycle-chip"
+                        data-selected={intensity === i ? 'true' : 'false'}
+                        onClick={() => setIntensity(i)}
+                        style={{ flex: 1 }}
+                      >
+                        {INTENSITY_LABELS[i]}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </Step>
+          )}
+
+          {step === 4 && (
+            <Step
+              title="Hoeveel stress?"
+              subtitle="1 = ontspannen, 10 = overspoeld."
+              onBack={() => setStep(3)}
+              onNext={() => setStep(5)}
+              canAdvance
+            >
+              <div style={{ textAlign: 'center', marginBottom: 12 }}>
+                <span className="cycle-display" style={{ fontSize: 84 }}>{stress}</span>
+              </div>
+              <input
+                type="range"
+                min={1} max={10} step={1}
+                value={stress}
+                onChange={e => setStress(Number(e.target.value))}
+                className="cycle-slider"
+                aria-label="Stress van 1 tot 10"
+              />
+            </Step>
+          )}
+
+          {step === 5 && (
+            <div>
+              <h1 className="cycle-display text-3xl mb-1">Menstruatie vandaag?</h1>
+              <p className="text-sm mb-6" style={{ color: 'var(--cycle-muted)' }}>
+                Ja als er bloed is, ook bij spotting.
+              </p>
+              <div style={{ display: 'flex', gap: 10, marginBottom: 22 }}>
+                <button
+                  type="button"
+                  className="cycle-chip"
+                  data-selected={period === false ? 'true' : 'false'}
+                  onClick={() => setPeriod(false)}
+                  style={{ flex: 1 }}
+                >
+                  Nee
+                </button>
+                <button
+                  type="button"
+                  className="cycle-chip"
+                  data-selected={period === true ? 'true' : 'false'}
+                  onClick={() => setPeriod(true)}
+                  style={{ flex: 1 }}
+                >
+                  Ja
+                </button>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  className="cycle-button cycle-button-ghost flex-1"
+                  onClick={() => setStep(4)}
+                  disabled={submitting}
+                >
+                  Terug
+                </button>
+                <button
+                  className="cycle-button flex-1"
+                  onClick={submit}
+                  disabled={submitting}
+                >
+                  {submitting ? 'Bezig…' : 'Bekijk mijn dag'}
+                </button>
+              </div>
+              {error && (
+                <p className="text-sm mt-3" style={{ color: 'var(--cycle-accent)' }}>{error}</p>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </main>
+  )
+}
+
+function Step({
+  title, subtitle, children, onBack, onNext, canAdvance,
+}: {
+  title: string
+  subtitle: string
+  children: React.ReactNode
+  onBack: (() => void) | null
+  onNext: () => void
+  canAdvance: boolean
+}) {
+  return (
+    <div>
+      <h1 className="cycle-display text-3xl mb-1">{title}</h1>
+      <p className="text-sm mb-6" style={{ color: 'var(--cycle-muted)' }}>{subtitle}</p>
+      {children}
+      <div className="flex gap-3 mt-7">
+        {onBack ? (
+          <button className="cycle-button cycle-button-ghost flex-1" onClick={onBack}>Terug</button>
+        ) : (
+          <span style={{ flex: 1 }} />
+        )}
+        <button className="cycle-button flex-1" onClick={onNext} disabled={!canAdvance}>
+          Volgende
+        </button>
+      </div>
+    </div>
+  )
+}

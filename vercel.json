@@ -3,6 +3,10 @@
     {
       "path": "/api/arena/cron/daily-standings",
       "schedule": "0 7 * * *"
+    },
+    {
+      "path": "/api/cycle/cron/reminder",
+      "schedule": "*/15 * * * *"
     }
   ]
 }
