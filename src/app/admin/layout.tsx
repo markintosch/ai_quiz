@@ -20,6 +20,7 @@ const NAV_LINKS = [
   { href: '/admin/ai_benchmark/funnel', label: '↳ Funnel' },
   { href: '/admin/ai_benchmark/writeins', label: '↳ Write-ins' },
   { href: '/admin/sannahremco', label: 'Sannah & Remco' },
+  { href: '/admin/sannah', label: 'Sannah portfolio CMS' },
   { href: '/admin/atelier', label: 'Atelier · ops' },
   { href: '/admin/atelier/icps', label: '↳ ICP knowledge base' },
   { href: '/admin/atelier/sources', label: '↳ Sources registry' },
