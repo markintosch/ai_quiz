@@ -1000,6 +1000,7 @@ export interface Database {
           stress: number
           activity_types: string[]
           activity_intensity: string | null
+          alcohol_glasses: number
           menstruation_flag: boolean
           readiness_score: number | null
           cycle_phase: string
@@ -1017,6 +1018,7 @@ export interface Database {
           stress: number
           activity_types?: string[]
           activity_intensity?: string | null
+          alcohol_glasses?: number
           menstruation_flag?: boolean
           readiness_score?: number | null
           cycle_phase: string
@@ -1034,6 +1036,7 @@ export interface Database {
           stress?: number
           activity_types?: string[]
           activity_intensity?: string | null
+          alcohol_glasses?: number
           menstruation_flag?: boolean
           readiness_score?: number | null
           cycle_phase?: string

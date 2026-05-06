@@ -21,7 +21,7 @@ export default async function TimelinePage() {
 
   const [{ data: entries }, { data: weather }, { count: totalEntries }] = await Promise.all([
     supabase.from('cycle_daily_entries')
-      .select('entry_date, mood_score, mood_variable, readiness_score, cycle_phase, menstruation_flag, activity_types, activity_intensity')
+      .select('entry_date, mood_score, mood_variable, readiness_score, cycle_phase, menstruation_flag, activity_types, activity_intensity, alcohol_glasses')
       .eq('user_id', user.id)
       .gte('entry_date', startISO)
       .lte('entry_date', todayISO)
@@ -49,6 +49,7 @@ export default async function TimelinePage() {
         period: e.menstruation_flag,
         activityTypes: e.activity_types ?? [],
         intensity: e.activity_intensity,
+        alcohol: e.alcohol_glasses ?? 0,
       }))}
       weather={(weather ?? []).map(w => ({
         date: w.entry_date,

@@ -32,6 +32,7 @@ interface InitialEntry {
   stress: number
   activity_types: ActivityType[]
   activity_intensity: ActivityIntensity | null
+  alcohol_glasses: number
   menstruation_flag: boolean
 }
 
@@ -44,13 +45,14 @@ export default function CheckinStepper({
 }) {
   const router = useRouter()
 
-  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1)
+  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5 | 6>(1)
   const [mood, setMood]                 = useState<number>(initial?.mood_score ?? 5)
   const [moodVariable, setMoodVariable] = useState<boolean>(initial?.mood_variable ?? false)
   const [sleep, setSleep]               = useState<number>(initial?.sleep ?? 7)
   const [activityTypes, setTypes]       = useState<ActivityType[]>(initial?.activity_types ?? ['None'])
   const [intensity, setIntensity]       = useState<ActivityIntensity | null>(initial?.activity_intensity ?? null)
   const [stress, setStress]             = useState<number>(initial?.stress ?? 5)
+  const [alcohol, setAlcohol]           = useState<number>(initial?.alcohol_glasses ?? 0)
   const [period, setPeriod]             = useState<boolean>(initial?.menstruation_flag ?? false)
   const [submitting, setSubmitting]     = useState(false)
   const [error, setError]               = useState<string>('')
@@ -80,6 +82,7 @@ export default function CheckinStepper({
           stress,
           activity_types:     activityTypes,
           activity_intensity: isRest ? null : intensity,
+          alcohol_glasses:    alcohol,
           menstruation_flag:  period,
         }),
       })
@@ -103,7 +106,7 @@ export default function CheckinStepper({
 
         {/* Progress dots */}
         <div className="flex justify-center gap-2 mb-7">
-          {[1, 2, 3, 4, 5].map(n => (
+          {[1, 2, 3, 4, 5, 6].map(n => (
             <span
               key={n}
               aria-hidden
@@ -242,6 +245,34 @@ export default function CheckinStepper({
           )}
 
           {step === 5 && (
+            <Step
+              title="Glazen alcohol gisteren?"
+              subtitle="Wijn, bier, sterk — telt allemaal."
+              onBack={() => setStep(4)}
+              onNext={() => setStep(6)}
+              canAdvance
+            >
+              <div style={{ display: 'flex', gap: 8, marginBottom: 4 }}>
+                {[0, 1, 2, 3].map(n => (
+                  <button
+                    key={n}
+                    type="button"
+                    className="cycle-chip"
+                    data-selected={alcohol === n ? 'true' : 'false'}
+                    onClick={() => setAlcohol(n)}
+                    style={{ flex: 1 }}
+                  >
+                    {n === 3 ? '3+' : n}
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs mt-2" style={{ color: 'var(--cycle-muted)' }}>
+                Niet als oordeel — alleen om te zien wat het met je slaap doet.
+              </p>
+            </Step>
+          )}
+
+          {step === 6 && (
             <div>
               <h1 className="cycle-display text-3xl mb-1">Menstruatie vandaag?</h1>
               <p className="text-sm mb-6" style={{ color: 'var(--cycle-muted)' }}>
@@ -270,7 +301,7 @@ export default function CheckinStepper({
               <div className="flex gap-3">
                 <button
                   className="cycle-button cycle-button-ghost flex-1"
-                  onClick={() => setStep(4)}
+                  onClick={() => setStep(5)}
                   disabled={submitting}
                 >
                   Terug

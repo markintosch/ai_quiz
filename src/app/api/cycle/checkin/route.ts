@@ -39,6 +39,7 @@ export async function POST(req: Request) {
     stress?: number
     activity_types?: string[]
     activity_intensity?: string | null
+    alcohol_glasses?: number
     menstruation_flag?: boolean
   }
 
@@ -47,6 +48,7 @@ export async function POST(req: Request) {
   const mood      = Number(body.mood_score)
   const sleep     = Number(body.sleep)
   const stress    = Number(body.stress)
+  const alcohol   = Number(body.alcohol_glasses ?? 0)
   const types     = (body.activity_types ?? []).filter((t): t is ActivityType =>
     ACTIVITY_TYPES.includes(t as ActivityType))
   const intensity = body.activity_intensity ?? null
@@ -56,6 +58,7 @@ export async function POST(req: Request) {
     !Number.isFinite(mood)   || mood < 0 || mood > 10 ||
     !Number.isFinite(sleep)  || sleep < 1 || sleep > 10 ||
     !Number.isFinite(stress) || stress < 1 || stress > 10 ||
+    !Number.isFinite(alcohol) || alcohol < 0 || alcohol > 10 ||
     types.length === 0
   ) {
     return NextResponse.json({ ok: false, error: 'invalid' }, { status: 400 })
@@ -135,6 +138,7 @@ export async function POST(req: Request) {
       stress,
       activity_types:     types,
       activity_intensity: isRest ? null : (intensity as ActivityIntensity),
+      alcohol_glasses:    alcohol,
       menstruation_flag:  Boolean(body.menstruation_flag),
       readiness_score:    score.readiness,
       cycle_phase:        phaseResult.phase,

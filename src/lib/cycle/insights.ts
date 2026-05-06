@@ -11,6 +11,7 @@ export interface InsightInput {
   readiness: number | null
   activity_intensity: string | null
   activity_types: string[]
+  alcohol_glasses: number
   cycle_phase: string
   rainy: boolean
 }
@@ -103,6 +104,27 @@ export function runInsightRules(entries: InsightInput[]): Insight[] {
       rule_key: 'rain_lowers_mood',
       text:     'Regenachtige dagen lijken je stemming licht te beïnvloeden.',
     })
+  }
+
+  // Alcohol → next-day sleep
+  // Pair each day with the previous day's drink count, then compare sleep
+  // on "morning after" days vs "no drink the night before" days.
+  const sleepAfterDrink: number[] = []
+  const sleepAfterDry:   number[] = []
+  for (let i = 1; i < recent.length; i++) {
+    const yesterday = recent[i - 1]
+    const today = recent[i]
+    if (yesterday.alcohol_glasses > 0) sleepAfterDrink.push(today.sleep)
+    else                               sleepAfterDry.push(today.sleep)
+  }
+  if (sleepAfterDrink.length >= 4 && sleepAfterDry.length >= 4) {
+    const drop = avg(sleepAfterDry) - avg(sleepAfterDrink)
+    if (drop > 0.7) {
+      out.push({
+        rule_key: 'alcohol_dips_sleep',
+        text:     `Op dagen na een glas alcohol slaap je gemiddeld ${drop.toFixed(1)} punt minder goed.`,
+      })
+    }
   }
 
   return out

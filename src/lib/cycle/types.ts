@@ -44,6 +44,7 @@ export interface DailyEntry {
   stress: number             // 1-10
   activity_types: ActivityType[]
   activity_intensity: ActivityIntensity | null
+  alcohol_glasses: number    // 0-10 (3+ stored as 3)
   menstruation_flag: boolean
   readiness_score: number | null
   cycle_phase: CyclePhase

@@ -16,6 +16,7 @@ interface Entry {
   period: boolean
   activityTypes: string[]
   intensity: string | null
+  alcohol: number
 }
 
 interface Weather {
@@ -185,6 +186,19 @@ export default function TimelineClient({
               }}>
                 {dayNum}
               </div>
+              {/* Alcohol marker — small wine-red dot below the day number */}
+              {e?.alcohol && e.alcohol > 0 && (
+                <div
+                  aria-label={`${e.alcohol} ${e.alcohol === 1 ? 'glas' : 'glazen'} alcohol`}
+                  style={{
+                    width: 5,
+                    height: 5,
+                    borderRadius: '50%',
+                    background: '#7A2E2E',
+                    margin: '3px auto 0',
+                  }}
+                />
+              )}
             </button>
           )
         })}
@@ -218,6 +232,11 @@ export default function TimelineClient({
             </p>
           )}
           {sel.period && <p className="text-sm">Menstruatie ✓</p>}
+          {sel.alcohol > 0 && (
+            <p className="text-sm">
+              Alcohol: <strong>{sel.alcohol === 3 ? '3+' : sel.alcohol} {sel.alcohol === 1 ? 'glas' : 'glazen'}</strong>
+            </p>
+          )}
           {selWeather?.temp != null && (
             <p className="text-sm" style={{ color: 'var(--cycle-muted)' }}>
               {CONDITION_ICON[selWeather.condition ?? ''] ?? ''} {Math.round(selWeather.temp)}°
