@@ -1,7 +1,11 @@
 // FILE: src/app/api/cycle/cron/reminder/route.ts
-// Vercel Cron entry — fires every 15 minutes. For each cycle user whose
-// reminder window matches "now" in their timezone AND who hasn't logged
-// today, send an email nudge via Resend.
+// Vercel Cron entry — fires once daily (Hobby tier limit: one cron/day).
+// For each onboarded cycle user without an entry for today (in their
+// timezone), send an email nudge via Resend.
+//
+// Note: per-user `reminder_time` is stored in cycle_profiles for future use,
+// but ignored on Hobby. When upgraded to Pro the schedule can flip back to
+// `*/15 * * * *` and the time-window check returns.
 //
 // Authorization: Vercel Cron sends `Authorization: Bearer ${CRON_SECRET}`.
 
@@ -13,26 +17,15 @@ const REMINDER_FROM =
   process.env.CYCLE_REMINDER_FROM ?? 'Cycle <results@brandpwrdmedia.com>'
 const REMINDER_SUBJECT_NL = 'Hoe was je dag?'
 
-function nowInTimezone(timezone: string): { date: string; time: string } {
-  // Use Intl to get the current local date and HH:MM in the given timezone.
+function todayInTimezone(timezone: string): string {
   const fmt = new Intl.DateTimeFormat('en-CA', {
     timeZone: timezone,
     year: 'numeric', month: '2-digit', day: '2-digit',
-    hour: '2-digit', minute: '2-digit', hour12: false,
   })
   const parts = fmt.formatToParts(new Date())
   const map: Record<string, string> = {}
   for (const p of parts) map[p.type] = p.value
-  return {
-    date: `${map.year}-${map.month}-${map.day}`,
-    time: `${map.hour}:${map.minute}`,
-  }
-}
-
-function diffMinutes(timeA: string, timeB: string): number {
-  const [aH, aM] = timeA.split(':').map(Number)
-  const [bH, bM] = timeB.split(':').map(Number)
-  return Math.abs((aH * 60 + aM) - (bH * 60 + bM))
+  return `${map.year}-${map.month}-${map.day}`
 }
 
 export async function GET(req: Request) {
@@ -57,18 +50,14 @@ export async function GET(req: Request) {
   let sent = 0
   for (const p of profiles) {
     const tz = p.timezone || 'Europe/Amsterdam'
-    const local = nowInTimezone(tz)
-
-    // Cron fires every 15 min, so a ±10 min window around reminder_time
-    // covers exactly one tick.
-    if (diffMinutes(local.time, p.reminder_time) > 10) continue
+    const today = todayInTimezone(tz)
 
     // Skip if already entered today
     const { count } = await supabase
       .from('cycle_daily_entries')
       .select('id', { count: 'exact', head: true })
       .eq('user_id', p.user_id)
-      .eq('entry_date', local.date)
+      .eq('entry_date', today)
     if ((count ?? 0) > 0) continue
 
     // Resolve the user's email via auth.admin
