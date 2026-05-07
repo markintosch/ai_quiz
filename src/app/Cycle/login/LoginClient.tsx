@@ -21,10 +21,17 @@ export default function LoginClient() {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ password }),
       })
-      const json = await res.json().catch(() => ({})) as { ok?: boolean; action_link?: string; error?: string }
+      const json = await res.json().catch(() => ({})) as {
+        ok?: boolean; action_link?: string; error?: string; detail?: string
+      }
       if (!res.ok || !json.ok || !json.action_link) {
         setStatus('error')
-        setErrorMsg(json.error === 'rate' ? 'Te veel pogingen — wacht even.' : 'Wachtwoord klopt niet.')
+        if (json.error === 'rate')        setErrorMsg('Te veel pogingen — wacht even.')
+        else if (json.error === 'config') setErrorMsg('Server-config ontbreekt (CYCLE_PASSWORD of CYCLE_DEFAULT_EMAIL).')
+        else if (json.error === 'auth')   setErrorMsg(`Login mislukt: ${json.detail ?? 'onbekende fout'}.`)
+        else if (json.error === 'create_user') setErrorMsg(`User aanmaken mislukt: ${json.detail ?? 'onbekende fout'}.`)
+        else if (res.status === 401)      setErrorMsg('Wachtwoord klopt niet.')
+        else                              setErrorMsg('Onbekende fout. Probeer opnieuw.')
         return
       }
       window.location.href = json.action_link

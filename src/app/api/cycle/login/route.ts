@@ -44,15 +44,39 @@ export async function POST(req: Request) {
   const origin = req.headers.get('origin') ?? 'https://markdekock.com'
   const supabase = createServiceClient()
 
-  const { data, error } = await supabase.auth.admin.generateLink({
+  let { data, error } = await supabase.auth.admin.generateLink({
     type: 'magiclink',
     email: defaultEmail,
     options: { redirectTo: `${origin}/Cycle/auth/callback` },
   })
 
+  // If the configured user doesn't exist in auth.users (e.g. deleted),
+  // create it on the fly with confirmed email so the magic link can be issued.
+  if (error && /not found|does not exist|user.*not.*registered/i.test(error.message ?? '')) {
+    const { error: createErr } = await supabase.auth.admin.createUser({
+      email: defaultEmail,
+      email_confirm: true,
+    })
+    if (createErr) {
+      console.error('[cycle login] createUser failed', createErr)
+      return NextResponse.json(
+        { ok: false, error: 'create_user', detail: createErr.message },
+        { status: 500 },
+      )
+    }
+    ;({ data, error } = await supabase.auth.admin.generateLink({
+      type: 'magiclink',
+      email: defaultEmail,
+      options: { redirectTo: `${origin}/Cycle/auth/callback` },
+    }))
+  }
+
   if (error || !data?.properties?.action_link) {
     console.error('[cycle login] generateLink failed', error)
-    return NextResponse.json({ ok: false, error: 'auth' }, { status: 500 })
+    return NextResponse.json(
+      { ok: false, error: 'auth', detail: error?.message ?? 'unknown' },
+      { status: 500 },
+    )
   }
 
   return NextResponse.json({ ok: true, action_link: data.properties.action_link })
