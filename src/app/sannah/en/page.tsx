@@ -1,4 +1,4 @@
-import WorksScroll from '@/components/sannah/WorksScroll'
+import WorksGrid from '@/components/sannah/WorksGrid'
 import { getPublishedWorks, getPage } from '@/lib/sannah/server'
 
 export const dynamic = 'force-dynamic'
@@ -19,7 +19,7 @@ export default async function SannahHomeEnPage() {
           </p>
         </section>
       )}
-      <WorksScroll works={works} emptyLabel="Work appears here once published." />
+      <WorksGrid works={works} emptyLabel="Work appears here once published." />
     </>
   )
 }

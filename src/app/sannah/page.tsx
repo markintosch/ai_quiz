@@ -1,7 +1,7 @@
 // FILE: src/app/sannah/page.tsx
 // Werk-overzicht (NL) — Tarr-stijl vertical scroll.
 
-import WorksScroll from '@/components/sannah/WorksScroll'
+import WorksGrid from '@/components/sannah/WorksGrid'
 import { getPublishedWorks, getPage } from '@/lib/sannah/server'
 
 export const dynamic = 'force-dynamic'
@@ -28,7 +28,7 @@ export default async function SannahHomePage() {
           </p>
         </section>
       )}
-      <WorksScroll works={works} emptyLabel="Werk verschijnt hier zodra het is gepubliceerd." />
+      <WorksGrid works={works} emptyLabel="Werk verschijnt hier zodra het is gepubliceerd." />
     </>
   )
 }

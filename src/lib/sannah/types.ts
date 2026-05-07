@@ -19,12 +19,18 @@ export interface SannahWork {
 
 export type PageKey = 'homepage' | 'over_mij' | 'contact' | 'cv'
 
+export interface SannahPageImage {
+  path: string
+  alt?: string
+}
+
 export interface SannahPage {
   page_key:       PageKey
   body_nl:        string | null
   body_en:        string | null
   draft_body_nl:  string | null
   draft_body_en:  string | null
+  images:         SannahPageImage[]
   updated_at:     string
 }
 
