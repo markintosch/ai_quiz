@@ -95,8 +95,15 @@ export default function OnboardingClient() {
           {step === 1 && (
             <div>
               <h1 className="cycle-display text-3xl mb-1">Welkom.</h1>
-              <p className="text-sm mb-6" style={{ color: 'var(--cycle-muted)' }}>
-                We beginnen met je cyclus.
+              <p className="text-sm mb-5" style={{ color: 'var(--cycle-muted)' }}>
+                Een persoonlijke tool, alleen voor jou.
+              </p>
+
+              <p className="text-sm mb-6" style={{ lineHeight: 1.6 }}>
+                Dagelijks dertig seconden invullen — stemming, slaap, beweging, eventueel een glas wijn —
+                en je krijgt een readiness-score plus patronen die specifiek voor <em>jou</em> gelden.
+                Niets wordt gedeeld. We beginnen met je cyclus, omdat die de achtergrond is waartegen
+                alles meebeweegt.
               </p>
 
               <label className="block text-sm mb-2 font-medium">Wanneer begon je laatste menstruatie?</label>
@@ -118,8 +125,12 @@ export default function OnboardingClient() {
                 step={1}
                 value={typicalLength}
                 onChange={e => setLength(Number(e.target.value))}
-                className="cycle-slider mb-7"
+                className="cycle-slider mb-3"
               />
+
+              <p className="text-xs mb-6" style={{ color: 'var(--cycle-muted)' }}>
+                Niet zeker? Vul gewoon je beste schatting in — alle waarden zijn later aanpasbaar in Instellingen.
+              </p>
 
               <button
                 className="cycle-button w-full"
