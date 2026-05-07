@@ -1,175 +1,48 @@
 // FILE: src/app/atelier/inzichten/page.tsx
 // ──────────────────────────────────────────────────────────────────────────────
-// Inzichten tab — keyword input bar at top, "wist je dat"-cards below.
-// Cards are generated on-demand via /api/atelier/insights/generate. Each card
-// shows confidence (observed | web | inferred) and source where applicable.
+// Server wrapper for the Inzichten tab. Fetches the available ICPs (so the
+// user can pick one as audience-context) and hands them to InzichtenClient.
 
-'use client'
+import { createServiceClient } from '@/lib/supabase/server'
+import InzichtenClient, { type IcpOption } from './InzichtenClient'
 
-import { useState } from 'react'
+export const dynamic = 'force-dynamic'
 
-interface InsightCard {
-  headline:       string
-  body:           string
-  confidence:     'observed' | 'web' | 'inferred'
-  evidence_label: string | null
-  evidence_url:   string | null
+interface IcpRow {
+  id:                string
+  industry:          string | null
+  role:              string | null
+  request_keywords:  string | null
+  archetype_label:   string | null
+  business_type:     string | null
+  is_starter:        boolean | null
+  created_at:        string
 }
 
-interface ApiResponse {
-  keywords: string
-  cards:    InsightCard[]
-  meta: {
-    retrieved_count: number
-    used_web_search: boolean
-    latency_ms:      number
-  }
+function formatLabel(r: IcpRow): string {
+  if (r.archetype_label) return r.archetype_label
+  if (r.request_keywords) return `Aanvraag: ${r.request_keywords}`
+  const ind = r.industry?.trim() || 'Onbekende industry'
+  const role = r.role?.trim() || 'Rol n.t.b.'
+  return `${ind} · ${role}`
 }
 
-const CONFIDENCE_STYLE: Record<InsightCard['confidence'], { label: string; bg: string; text: string }> = {
-  observed: { label: 'Uit eigen sessies',     bg: 'bg-emerald-50 border-emerald-200', text: 'text-emerald-900' },
-  web:      { label: 'Web-bron',              bg: 'bg-sky-50 border-sky-200',         text: 'text-sky-900' },
-  inferred: { label: 'Atelier-synthese',      bg: 'bg-amber-50 border-amber-200',     text: 'text-amber-900' },
-}
+export default async function InzichtenPage() {
+  const sb = createServiceClient()
 
-const CONF_PILL: Record<InsightCard['confidence'], string> = {
-  observed: 'bg-emerald-100 text-emerald-900',
-  web:      'bg-sky-100 text-sky-900',
-  inferred: 'bg-amber-100 text-amber-900',
-}
+  const { data: icps } = await sb
+    .from('atelier_icp_profiles')
+    .select('id, industry, role, request_keywords, archetype_label, business_type, is_starter, created_at')
+    .order('is_starter', { ascending: false })
+    .order('created_at', { ascending: false })
+    .limit(200) as { data: IcpRow[] | null }
 
-export default function InzichtenPage() {
-  const [keywords, setKeywords] = useState('')
-  const [busy, setBusy]         = useState(false)
-  const [error, setError]       = useState('')
-  const [data, setData]         = useState<ApiResponse | null>(null)
+  const icpOptions: IcpOption[] = (icps ?? []).map(r => ({
+    id:            r.id,
+    label:         formatLabel(r),
+    business_type: r.business_type,
+    is_starter:    !!r.is_starter,
+  }))
 
-  async function handleGenerate(e: React.FormEvent) {
-    e.preventDefault()
-    if (busy || keywords.trim().length < 2) return
-    setBusy(true)
-    setError('')
-    try {
-      const res = await fetch('/api/atelier/insights/generate', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ keywords: keywords.trim() }),
-      })
-      const json = await res.json() as ApiResponse | { error?: string }
-      if (!res.ok || !('cards' in json)) {
-        setError((json as { error?: string }).error || 'Inzichten konden niet gegenereerd worden.')
-        setData(null)
-      } else {
-        setData(json)
-      }
-    } catch {
-      setError('Er ging iets mis. Probeer over een minuut opnieuw.')
-    } finally {
-      setBusy(false)
-    }
-  }
-
-  return (
-    <div className="min-h-screen bg-stone-50 text-slate-900">
-      <div className="max-w-5xl mx-auto px-6 py-12">
-        <header className="mb-6">
-          <h1 className="text-3xl font-bold text-brand-dark mb-2">Inzichten</h1>
-          <p className="text-slate-600">
-            Vul keywords in (bv. <em>&quot;Gen Z duurzaamheid&quot;</em> of <em>&quot;B2B SaaS sales&quot;</em>) en krijg 10–15 &quot;wist je dat&quot;-cards. Gegrond op eigen Atelier-sessies, web-search en model-kennis — elke card vertelt waar de claim vandaan komt.
-          </p>
-        </header>
-
-        {/* Input */}
-        <form onSubmit={handleGenerate} className="mb-8">
-          <div className="flex flex-col sm:flex-row gap-2">
-            <input
-              type="text"
-              value={keywords}
-              onChange={e => setKeywords(e.target.value)}
-              placeholder="Bv. Gen Z duurzaamheid mainstream consumer"
-              maxLength={200}
-              className="flex-1 px-4 py-3 rounded-xl border-2 border-stone-200 bg-white text-base focus:outline-none focus:border-brand-accent transition-colors"
-              disabled={busy}
-            />
-            <button
-              type="submit"
-              disabled={busy || keywords.trim().length < 2}
-              className="px-6 py-3 rounded-xl bg-brand-dark text-white font-semibold hover:bg-brand-accent transition-colors disabled:opacity-60 disabled:cursor-not-allowed whitespace-nowrap"
-            >
-              {busy ? 'Bezig…' : 'Genereer inzichten →'}
-            </button>
-          </div>
-          {error && <p className="mt-3 text-sm text-red-700">{error}</p>}
-          {busy && (
-            <p className="mt-3 text-sm text-slate-500 italic">
-              Doorzoekt eigen sessies en het web. Eén ronde duurt typisch 30–80 seconden.
-            </p>
-          )}
-        </form>
-
-        {/* Results meta */}
-        {data && (
-          <div className="mb-6 flex items-center justify-between flex-wrap gap-2 text-xs text-slate-500">
-            <span>
-              <strong className="text-brand-dark">{data.cards.length} cards</strong> voor{' '}
-              <strong className="text-brand-dark">&quot;{data.keywords}&quot;</strong>
-            </span>
-            <span>
-              {data.meta.retrieved_count} corpus-treffers · {data.meta.used_web_search ? 'web-search aan' : 'web-search niet beschikbaar'} · {(data.meta.latency_ms / 1000).toFixed(1)}s
-            </span>
-          </div>
-        )}
-
-        {/* Cards */}
-        {data && (
-          <div className="grid gap-4 md:grid-cols-2">
-            {data.cards.map((card, i) => {
-              const style = CONFIDENCE_STYLE[card.confidence]
-              const pill  = CONF_PILL[card.confidence]
-              return (
-                <article key={i} className={`rounded-2xl border ${style.bg} p-5`}>
-                  <div className="flex items-start justify-between gap-3 mb-2">
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">
-                      Wist je dat
-                    </span>
-                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full ${pill}`}>
-                      {style.label}
-                    </span>
-                  </div>
-                  <h3 className={`text-base font-bold leading-snug mb-2 ${style.text}`}>
-                    {card.headline}
-                  </h3>
-                  <p className="text-sm text-slate-700 leading-relaxed mb-3">
-                    {card.body}
-                  </p>
-                  {(card.evidence_label || card.evidence_url) && (
-                    <p className="text-xs text-slate-500 pt-3 border-t border-stone-200/70">
-                      bron:{' '}
-                      {card.evidence_url ? (
-                        <a href={card.evidence_url} target="_blank" rel="noopener noreferrer" className="hover:text-brand-accent underline">
-                          {card.evidence_label || card.evidence_url} ↗
-                        </a>
-                      ) : (
-                        <span>{card.evidence_label}</span>
-                      )}
-                    </p>
-                  )}
-                </article>
-              )
-            })}
-          </div>
-        )}
-
-        {/* Empty state */}
-        {!data && !busy && !error && (
-          <div className="rounded-2xl bg-white border border-stone-200 p-8 text-center">
-            <p className="text-slate-600 mb-1">Nog geen inzichten gegenereerd.</p>
-            <p className="text-xs text-slate-500">
-              Tip: hoe specifieker je keywords, hoe scherper de cards. <em>&quot;Gen Z&quot;</em> is goed; <em>&quot;Gen Z fitness Nederland 2025&quot;</em> nog beter.
-            </p>
-          </div>
-        )}
-      </div>
-    </div>
-  )
+  return <InzichtenClient icpOptions={icpOptions} />
 }

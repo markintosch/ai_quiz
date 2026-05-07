@@ -154,14 +154,17 @@ Antwoord ALTIJD als geldige JSON volgens dit schema:
   ]
 }`
 
-function buildUserPrompt(keywords: string, hits: Hit[]): string {
+function buildUserPrompt(keywords: string, hits: Hit[], icpContext: { label: string; lines: string } | null): string {
+  const icpBlock = icpContext
+    ? `\nDOELGROEP-CONTEXT (ICP — gebruik dit om cards specifiek voor deze doelgroep te framen):\n${icpContext.lines}\n`
+    : ''
   return `KEYWORDS:
 ${keywords}
-
+${icpBlock}
 LOKALE CORPUS-TREFFERS (eerdere Atelier-sessies):
 ${formatHits(hits)}
 
-Genereer 10-15 "wist je dat"-cards. Mix observed (uit corpus), web (uit web-search) en inferred (eigen kennis) — de gebruiker wil weten wat hard is en wat een leap.`
+Genereer 10-15 "wist je dat"-cards. Mix observed (uit corpus), web (uit web-search) en inferred (eigen kennis) — de gebruiker wil weten wat hard is en wat een leap.${icpContext ? ' Frame elke card met de bovenstaande ICP in gedachten — niet abstract over "Gen Z" maar concreet relevant voor déze rol/industry/pijn.' : ''}`
 }
 
 // ── Route handler ────────────────────────────────────────────────────────────
@@ -172,9 +175,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Te veel inzicht-runs deze uur.' }, { status: 429 })
   }
 
-  let body: { keywords?: string }
+  let body: { keywords?: string; icpId?: string }
   try {
-    body = (await req.json()) as { keywords?: string }
+    body = (await req.json()) as { keywords?: string; icpId?: string }
   } catch {
     return NextResponse.json({ error: 'Ongeldige JSON.' }, { status: 400 })
   }
@@ -189,12 +192,37 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'ANTHROPIC_API_KEY niet ingesteld op de server.' }, { status: 500 })
   }
 
+  // 0. (Optional) load the picked ICP so we can ground cards in their
+  //    triggers / pains / jobs — makes "voor Gen Z fashion" concrete.
+  let icpContext: { label: string; lines: string } | null = null
+  if (body.icpId) {
+    const { data: icpRow } = await sb
+      .from('atelier_icp_profiles')
+      .select('industry, role, business_type, company_size, triggers, jobs, pains, request_keywords, archetype_label')
+      .eq('id', body.icpId)
+      .maybeSingle() as { data: { industry: string | null; role: string | null; business_type: string | null; company_size: string | null; triggers: string[] | null; jobs: string[] | null; pains: string[] | null; request_keywords: string | null; archetype_label: string | null } | null }
+    if (icpRow) {
+      const label = icpRow.archetype_label
+        || (icpRow.request_keywords ? `Aanvraag: ${icpRow.request_keywords}` : `${icpRow.industry ?? '?'} · ${icpRow.role ?? '?'}`)
+      const parts: string[] = []
+      parts.push(`ICP: ${label}`)
+      if (icpRow.business_type) parts.push(`Type: ${icpRow.business_type}`)
+      if (icpRow.industry)      parts.push(`Industry: ${icpRow.industry}`)
+      if (icpRow.role)          parts.push(`Rol: ${icpRow.role}`)
+      if (icpRow.company_size)  parts.push(`Company size: ${icpRow.company_size}`)
+      if ((icpRow.triggers ?? []).length > 0) parts.push(`Triggers: ${(icpRow.triggers ?? []).join(' · ')}`)
+      if ((icpRow.jobs ?? []).length > 0)     parts.push(`Jobs: ${(icpRow.jobs ?? []).join(' · ')}`)
+      if ((icpRow.pains ?? []).length > 0)    parts.push(`Pains: ${(icpRow.pains ?? []).join(' · ')}`)
+      icpContext = { label, lines: parts.join('\n') }
+    }
+  }
+
   // 1. Local corpus search
   const hits = await searchCorpus(keywords)
 
   // 2. LLM call with web_search tool
   const client = new Anthropic({ apiKey })
-  const userPrompt = buildUserPrompt(keywords, hits)
+  const userPrompt = buildUserPrompt(keywords, hits, icpContext)
   const start = Date.now()
 
   let raw = ''
@@ -242,6 +270,7 @@ export async function POST(req: NextRequest) {
       retrieved_count: hits.length,
       used_web_search: usedWebSearch,
       latency_ms:      latencyMs,
+      icp_used:        icpContext?.label ?? null,
     },
   })
 }
