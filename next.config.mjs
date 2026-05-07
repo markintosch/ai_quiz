@@ -42,9 +42,8 @@ const nextConfig = {
       // Bas Westland pitch pages
       { source: '/bas',                destination: '/bas.html',                permanent: false },
       { source: '/recruiter-pitch',    destination: '/recruiter-pitch.html',    permanent: false },
-      // Sannah portfolio — accept capital S typo
-      { source: '/Sannah',             destination: '/sannah',                  permanent: false },
-      { source: '/Sannah/:path*',      destination: '/sannah/:path*',           permanent: false },
+      // Sannah portfolio — capital-S typo: matched case-insensitively by
+      // Next, which caused a redirect loop. Removed; route is /sannah only.
     ]
   },
 }
