@@ -1,9 +1,8 @@
 'use client'
 
 // FILE: src/components/sannah/WorksGrid.tsx
-// Tarr-stijl, maar dan met 1 hero + 3-kolomsraster.
-// Klik op een tile → lightbox (modal) met grote weergave + prev/next.
-// Hero = werk met laagste position. Mark / Sannah herordenen via /admin/sannah.
+// Layout: hero links (volledig zichtbaar, object-fit contain) + miniaturen rechts.
+// Klik op miniatuur → die wordt de nieuwe hero. Klik op hero → lightbox met grote weergave.
 
 import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
@@ -16,22 +15,22 @@ interface Props {
 }
 
 export default function WorksGrid({ works, emptyLabel }: Props) {
-  const [openIdx, setOpenIdx] = useState<number | null>(null)
+  const [heroIdx, setHeroIdx]   = useState(0)
+  const [openIdx, setOpenIdx]   = useState<number | null>(null)
 
-  const openLightbox = (i: number) => setOpenIdx(i)
-  const close       = useCallback(() => setOpenIdx(null), [])
-  const next = useCallback(() => {
+  const close = useCallback(() => setOpenIdx(null), [])
+  const next  = useCallback(() => {
     setOpenIdx(i => (i === null ? null : (i + 1) % works.length))
   }, [works.length])
-  const prev = useCallback(() => {
+  const prev  = useCallback(() => {
     setOpenIdx(i => (i === null ? null : (i - 1 + works.length) % works.length))
   }, [works.length])
 
-  // Keyboard: Esc to close, arrows to navigate
+  // Keyboard nav binnen lightbox
   useEffect(() => {
     if (openIdx === null) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') close()
+      if (e.key === 'Escape')          close()
       else if (e.key === 'ArrowRight') next()
       else if (e.key === 'ArrowLeft')  prev()
     }
@@ -51,112 +50,132 @@ export default function WorksGrid({ works, emptyLabel }: Props) {
     )
   }
 
-  const hero = works[0]
-  const rest = works.slice(1)
+  const hero = works[heroIdx]
 
   return (
     <>
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '40px 24px 0' }}>
-        {/* ── Hero ─────────────────────────────────────────────────── */}
-        <button
-          type="button"
-          onClick={() => openLightbox(0)}
+      <div
+        className="sannah-works-wrap"
+        style={{
+          maxWidth: 1180,
+          margin: '0 auto',
+          padding: '40px 64px 96px',
+        }}
+      >
+        <div
+          className="sannah-works-grid"
           style={{
-            display: 'block',
-            width: '100%',
-            background: '#f4f4f4',
-            border: 0,
-            padding: 0,
-            cursor: 'zoom-in',
-            position: 'relative',
-            overflow: 'hidden',
-            marginBottom: 64,
-          }}
-          aria-label={`Open ${hero.title ?? 'werk'} groot`}
-        >
-          <Image
-            src={publicImageUrl(hero.image_path)}
-            alt={hero.title ?? 'werk van Sannah De Zwart'}
-            width={1600}
-            height={1200}
-            sizes="(max-width: 1280px) 100vw, 1280px"
-            priority
-            style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'cover', maxHeight: '78vh' }}
-          />
-        </button>
-        {(hero.title || hero.year || hero.medium) && (
-          <div style={{
-            maxWidth: 1280, margin: '-48px auto 64px',
-            fontSize: 12, color: '#666', letterSpacing: '0.02em',
-            display: 'flex', gap: 14, flexWrap: 'wrap',
-          }}>
-            {hero.title  && <span style={{ color: '#1a1a1a' }}>{hero.title}</span>}
-            {hero.year   && <span>{hero.year}</span>}
-            {hero.medium && <span style={{ fontStyle: 'italic' }}>{hero.medium}</span>}
-          </div>
-        )}
-
-        {/* ── Grid ──────────────────────────────────────────────────── */}
-        {rest.length > 0 && (
-          <div style={{
             display: 'grid',
-            gap: 18,
-            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-            paddingBottom: 80,
-          }}>
-            {rest.map((w, i) => (
-              <button
-                key={w.id}
-                type="button"
-                onClick={() => openLightbox(i + 1)}
+            gridTemplateColumns: 'minmax(0, 1.7fr) minmax(0, 1fr)',
+            gap: 48,
+            alignItems: 'start',
+          }}
+        >
+          {/* ── Hero (links) ─────────────────────────────────────── */}
+          <div>
+            <button
+              type="button"
+              onClick={() => setOpenIdx(heroIdx)}
+              style={{
+                display: 'block',
+                width: '100%',
+                background: '#f4f4f4',
+                border: 0,
+                padding: 0,
+                cursor: 'zoom-in',
+                position: 'relative',
+                overflow: 'hidden',
+                aspectRatio: '4 / 5',
+              }}
+              aria-label={`Open ${hero.title ?? 'werk'} groot`}
+            >
+              <Image
+                key={hero.id}
+                src={publicImageUrl(hero.image_path)}
+                alt={hero.title ?? 'werk van Sannah De Zwart'}
+                fill
+                sizes="(max-width: 800px) 100vw, 60vw"
+                priority
+                style={{ objectFit: 'contain' }}
+              />
+            </button>
+            {(hero.title || hero.year || hero.medium) && (
+              <div
                 style={{
-                  display: 'block',
-                  width: '100%',
-                  aspectRatio: '1 / 1',
-                  background: '#f4f4f4',
-                  border: 0,
-                  padding: 0,
-                  cursor: 'zoom-in',
-                  position: 'relative',
-                  overflow: 'hidden',
+                  marginTop: 14,
+                  fontSize: 12,
+                  color: '#666',
+                  letterSpacing: '0.02em',
+                  display: 'flex',
+                  gap: 14,
+                  flexWrap: 'wrap',
                 }}
-                aria-label={`Open ${w.title ?? 'werk'} groot`}
               >
-                <Image
-                  src={publicImageUrl(w.image_path)}
-                  alt={w.title ?? 'werk van Sannah De Zwart'}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                  style={{ objectFit: 'cover' }}
-                />
-                {(w.title || w.year) && (
-                  <div style={{
-                    position: 'absolute', bottom: 0, left: 0, right: 0,
-                    background: 'linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 100%)',
-                    padding: '36px 14px 12px',
-                    color: '#fff',
-                    fontSize: 11,
-                    letterSpacing: '0.02em',
-                    textAlign: 'left',
-                    opacity: 0,
-                    transition: 'opacity 0.2s',
-                  }}
-                  className="sannah-tile-caption"
-                  >
-                    {w.title && <div>{w.title}</div>}
-                    {w.year   && <div style={{ opacity: 0.7 }}>{w.year}</div>}
-                  </div>
-                )}
-              </button>
-            ))}
+                {hero.title  && <span style={{ color: '#1a1a1a' }}>{hero.title}</span>}
+                {hero.year   && <span>{hero.year}</span>}
+                {hero.medium && <span style={{ fontStyle: 'italic' }}>{hero.medium}</span>}
+              </div>
+            )}
           </div>
-        )}
+
+          {/* ── Miniaturen (rechts) ──────────────────────────────── */}
+          <div
+            className="sannah-thumbs"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+              gap: 12,
+            }}
+          >
+            {works.map((w, i) => {
+              if (i === heroIdx) return null
+              return (
+                <button
+                  key={w.id}
+                  type="button"
+                  onClick={() => setHeroIdx(i)}
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    aspectRatio: '1 / 1',
+                    background: '#f4f4f4',
+                    border: 0,
+                    padding: 0,
+                    cursor: 'pointer',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    opacity: 0.88,
+                    transition: 'opacity 0.15s',
+                  }}
+                  aria-label={`Toon ${w.title ?? 'werk'} als hero`}
+                >
+                  <Image
+                    src={publicImageUrl(w.image_path)}
+                    alt={w.title ?? 'werk van Sannah De Zwart'}
+                    fill
+                    sizes="(max-width: 800px) 50vw, 20vw"
+                    style={{ objectFit: 'cover' }}
+                  />
+                </button>
+              )
+            })}
+          </div>
+        </div>
       </div>
 
-      {/* Hover-only caption styles (kan niet inline) */}
+      {/* Responsive: stack op mobiel */}
       <style>{`
-        button:hover .sannah-tile-caption,
-        button:focus-visible .sannah-tile-caption { opacity: 1; }
+        @media (max-width: 800px) {
+          .sannah-works-wrap { padding: 24px 20px 64px !important; }
+          .sannah-works-grid {
+            grid-template-columns: 1fr !important;
+            gap: 24px !important;
+          }
+          .sannah-thumbs {
+            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+          }
+        }
+        .sannah-thumbs button:hover { opacity: 1 !important; }
       `}</style>
 
       {/* ── Lightbox ─────────────────────────────────────────────── */}
@@ -201,7 +220,6 @@ function Lightbox({ work, index, total, onClose, onPrev, onNext }: LightboxProps
         cursor: 'zoom-out',
       }}
     >
-      {/* Close */}
       <button
         type="button"
         onClick={(e) => { e.stopPropagation(); onClose() }}
@@ -215,7 +233,6 @@ function Lightbox({ work, index, total, onClose, onPrev, onNext }: LightboxProps
         }}
       >×</button>
 
-      {/* Counter */}
       <div style={{
         position: 'absolute', top: 24, left: 24, color: 'rgba(255,255,255,0.6)',
         fontSize: 12, letterSpacing: '0.06em',
@@ -223,7 +240,6 @@ function Lightbox({ work, index, total, onClose, onPrev, onNext }: LightboxProps
         {index + 1} / {total}
       </div>
 
-      {/* Prev */}
       {total > 1 && (
         <button
           type="button"
@@ -238,7 +254,6 @@ function Lightbox({ work, index, total, onClose, onPrev, onNext }: LightboxProps
         >‹</button>
       )}
 
-      {/* Image */}
       <div onClick={(e) => e.stopPropagation()} style={{
         maxWidth: '92vw', maxHeight: '82vh',
         display: 'flex', flexDirection: 'column', alignItems: 'center',
@@ -278,7 +293,6 @@ function Lightbox({ work, index, total, onClose, onPrev, onNext }: LightboxProps
         )}
       </div>
 
-      {/* Next */}
       {total > 1 && (
         <button
           type="button"
