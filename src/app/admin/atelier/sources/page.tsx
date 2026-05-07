@@ -10,16 +10,20 @@ import SourceRowActions from '@/components/admin/SourceRowActions'
 export const dynamic = 'force-dynamic'
 
 interface SourceRow {
-  id:          string
-  category:    'reference' | 'street_signal' | 'ground_truth' | 'web' | 'inferred'
-  name:        string
-  description: string | null
-  url:         string | null
-  metadata:    Record<string, unknown> | null
-  active:      boolean
-  added_by:    string | null
-  notes:       string | null
-  created_at:  string
+  id:                string
+  category:          'reference' | 'street_signal' | 'ground_truth' | 'web' | 'inferred'
+  name:              string
+  description:       string | null
+  url:               string | null
+  metadata:          Record<string, unknown> | null
+  active:            boolean
+  added_by:          string | null
+  notes:             string | null
+  created_at:        string
+  last_crawled_at:   string | null
+  last_crawl_status: string | null
+  last_crawl_pages:  number | null
+  last_crawl_errors: number | null
 }
 
 interface ReferenceProvenanceRow { source_kind: string }
@@ -58,7 +62,7 @@ export default async function AdminAtelierSourcesPage() {
 
   const [sourcesRes, refsProvRes, liveProvRes, audienceProvRes] = await Promise.all([
     sb.from('atelier_sources')
-      .select('id, category, name, description, url, metadata, active, added_by, notes, created_at')
+      .select('id, category, name, description, url, metadata, active, added_by, notes, created_at, last_crawled_at, last_crawl_status, last_crawl_pages, last_crawl_errors')
       .order('category')
       .order('created_at', { ascending: false }),
     sb.from('atelier_references').select('source_kind'),
@@ -185,7 +189,16 @@ export default async function AdminAtelierSourcesPage() {
                           </p>
                         </div>
                         <div className="lg:col-span-2">
-                          <SourceRowActions sourceId={s.id} active={s.active} isSystem={isSystem} />
+                          <SourceRowActions
+                            sourceId={s.id}
+                            active={s.active}
+                            isSystem={isSystem}
+                            hasUrl={!!s.url}
+                            lastCrawledAt={s.last_crawled_at}
+                            lastCrawlStatus={s.last_crawl_status}
+                            lastCrawlPages={s.last_crawl_pages}
+                            lastCrawlErrors={s.last_crawl_errors}
+                          />
                         </div>
                       </li>
                     )

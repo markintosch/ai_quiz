@@ -66,7 +66,13 @@ interface JtbdHit {
   brief_summary: string
   session_id:    string
 }
-type Hit = AudienceHit | DirectionHit | JtbdHit
+interface ExtractHit {
+  source:        'extract'
+  claim:         string
+  url:           string
+  source_name:   string  // human label of the parent atelier_sources row
+}
+type Hit = AudienceHit | DirectionHit | JtbdHit | ExtractHit
 
 async function searchCorpus(keywords: string): Promise<Hit[]> {
   const tokens = keywords.split(/[\s,]+/).map(t => t.trim()).filter(t => t.length >= 2).slice(0, 5)
@@ -75,10 +81,17 @@ async function searchCorpus(keywords: string): Promise<Hit[]> {
   // Build OR-clauses: claim.ilike.%token1%,claim.ilike.%token2%,...
   const buildOr = (col: string) => tokens.map(t => `${col}.ilike.%${t}%`).join(',')
 
-  const [audienceRes, directionRes, sessionRes] = await Promise.all([
+  const [audienceRes, directionRes, sessionRes, extractsRes] = await Promise.all([
     sb.from('atelier_audience_signals').select('claim, source_label, source_url, session_id').or(buildOr('claim')).limit(30),
     sb.from('atelier_directions').select('tension, route, session_id').or(`${buildOr('tension')},${buildOr('route')}`).limit(20),
     sb.from('atelier_sessions').select('id, jtbd_summary').or(buildOr('jtbd_summary')).not('jtbd_summary', 'is', null).limit(15),
+    // Source extracts: search title + trend_claim. The signals JSONB array is
+    // also relevant but Postgres OR-ilike on JSON values is awkward; the
+    // title/trend_claim usually hit on keywords good enough for ranking.
+    sb.from('atelier_source_extracts')
+      .select('url, title, trend_claim, signals, atelier_sources(name)')
+      .or(`${buildOr('title')},${buildOr('trend_claim')}`)
+      .limit(40),
   ])
 
   const hits: Hit[] = []
@@ -91,6 +104,25 @@ async function searchCorpus(keywords: string): Promise<Hit[]> {
   for (const r of (sessionRes.data ?? []) as Array<{ id: string; jtbd_summary: string }>) {
     hits.push({ source: 'jtbd', brief_summary: r.jtbd_summary, session_id: r.id })
   }
+  // Each extract row carries N signals — emit one Hit per signal claim so
+  // the LLM gets the granular evidence, not just the title. Supabase types
+  // the foreign-table join as Array<>; cast via unknown to our expected shape.
+  type ExtractRow = {
+    url: string; title: string | null; trend_claim: string | null;
+    signals: Array<{ claim: string }> | null;
+    atelier_sources: { name: string } | { name: string }[] | null
+  }
+  const extractsRows = (extractsRes.data ?? []) as unknown as ExtractRow[]
+  for (const r of extractsRows) {
+    const sourceObj = Array.isArray(r.atelier_sources) ? r.atelier_sources[0] : r.atelier_sources
+    const sourceName = sourceObj?.name ?? 'External source'
+    if (r.trend_claim) {
+      hits.push({ source: 'extract', claim: r.trend_claim, url: r.url, source_name: sourceName })
+    }
+    for (const s of (r.signals ?? []).slice(0, 3)) {
+      hits.push({ source: 'extract', claim: s.claim, url: r.url, source_name: sourceName })
+    }
+  }
   return hits
 }
 
@@ -102,8 +134,11 @@ function formatHits(hits: Hit[]): string {
       lines.push(`- [audience] "${h.claim}" — bron: ${h.source_label}${h.source_url ? ` (${h.source_url})` : ''} | sessie: ${h.session_id.slice(0, 8)}`)
     } else if (h.source === 'direction') {
       lines.push(`- [direction] tension: ${h.tension} → route: ${h.route} | sessie: ${h.session_id.slice(0, 8)}`)
-    } else {
+    } else if (h.source === 'jtbd') {
       lines.push(`- [brief] ${h.brief_summary.slice(0, 200)} | sessie: ${h.session_id.slice(0, 8)}`)
+    } else {
+      // extract → cite the source name + url so observed cards point at the real publication
+      lines.push(`- [extract] "${h.claim}" — bron: ${h.source_name} (${h.url})`)
     }
   }
   return lines.join('\n')
