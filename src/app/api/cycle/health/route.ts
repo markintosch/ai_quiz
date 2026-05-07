@@ -25,6 +25,8 @@ export async function GET() {
     ok: true,
     deploy: { commit: sha, environment: env, deployed_at: new Date().toISOString() },
     config: {
+      password:          status(process.env.CYCLE_PASSWORD),
+      default_email:     status(process.env.CYCLE_DEFAULT_EMAIL),
       allowlist:         status(process.env.CYCLE_ALLOWED_EMAILS, 'csv'),
       cron_secret:       status(process.env.CRON_SECRET),
       supabase_url:      status(process.env.NEXT_PUBLIC_SUPABASE_URL),

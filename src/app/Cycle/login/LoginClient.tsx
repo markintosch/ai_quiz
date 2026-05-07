@@ -1,15 +1,15 @@
 'use client'
 
 // FILE: src/app/Cycle/login/LoginClient.tsx
-// Magic-link entry. Posts the email to /api/cycle/login which checks the
-// allowlist and triggers Supabase Auth's email OTP flow.
+// Password gate. POSTs to /api/cycle/login which validates and returns a
+// Supabase action_link; the browser follows it to establish a session.
 
 import { useState } from 'react'
 
 export default function LoginClient() {
-  const [email, setEmail] = useState('')
-  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
-  const [errorMsg, setErrorMsg] = useState<string>('')
+  const [password, setPassword] = useState('')
+  const [status, setStatus] = useState<'idle' | 'sending' | 'error'>('idle')
+  const [errorMsg, setErrorMsg] = useState('')
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -19,18 +19,18 @@ export default function LoginClient() {
       const res = await fetch('/api/cycle/login', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ password }),
       })
-      // Always show "sent" on 200 to avoid email enumeration. The actual
-      // allowlist check on the server returns 200 either way.
-      if (res.ok) setStatus('sent')
-      else {
+      const json = await res.json().catch(() => ({})) as { ok?: boolean; action_link?: string; error?: string }
+      if (!res.ok || !json.ok || !json.action_link) {
         setStatus('error')
-        setErrorMsg('Er ging iets mis. Probeer het zo opnieuw.')
+        setErrorMsg(json.error === 'rate' ? 'Te veel pogingen — wacht even.' : 'Wachtwoord klopt niet.')
+        return
       }
+      window.location.href = json.action_link
     } catch {
       setStatus('error')
-      setErrorMsg('Geen verbinding. Probeer het zo opnieuw.')
+      setErrorMsg('Geen verbinding. Probeer opnieuw.')
     }
   }
 
@@ -39,44 +39,34 @@ export default function LoginClient() {
       <div className="w-full max-w-sm cycle-card p-7">
         <h1 className="cycle-display text-3xl mb-1">Cycle Companion</h1>
         <p className="text-sm mb-7" style={{ color: 'var(--cycle-muted)' }}>
-          Voer je e-mailadres in. Je ontvangt een link om in te loggen.
+          Voer het wachtwoord in om in te loggen.
         </p>
 
-        {status === 'sent' ? (
-          <div>
-            <p className="mb-4">📨 Check je inbox.</p>
-            <p className="text-sm" style={{ color: 'var(--cycle-muted)' }}>
-              Geen mail? Wacht een minuut en probeer opnieuw.
+        <form onSubmit={handleSubmit}>
+          <input
+            type="password"
+            required
+            autoFocus
+            autoComplete="current-password"
+            className="cycle-input mb-4"
+            placeholder="Wachtwoord"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            disabled={status === 'sending'}
+          />
+          <button
+            type="submit"
+            className="cycle-button w-full"
+            disabled={status === 'sending' || !password}
+          >
+            {status === 'sending' ? 'Bezig…' : 'Inloggen'}
+          </button>
+          {errorMsg && (
+            <p className="text-sm mt-3" style={{ color: 'var(--cycle-accent)' }}>
+              {errorMsg}
             </p>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit}>
-            <input
-              type="email"
-              required
-              autoFocus
-              autoComplete="email"
-              inputMode="email"
-              className="cycle-input mb-4"
-              placeholder="jouw@email.nl"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              disabled={status === 'sending'}
-            />
-            <button
-              type="submit"
-              className="cycle-button w-full"
-              disabled={status === 'sending' || !email}
-            >
-              {status === 'sending' ? 'Bezig…' : 'Stuur link'}
-            </button>
-            {errorMsg && (
-              <p className="text-sm mt-3" style={{ color: 'var(--cycle-accent)' }}>
-                {errorMsg}
-              </p>
-            )}
-          </form>
-        )}
+          )}
+        </form>
       </div>
       <p className="text-xs mt-6" style={{ color: 'var(--cycle-muted)' }}>
         Persoonlijke tool — geen medisch advies.
