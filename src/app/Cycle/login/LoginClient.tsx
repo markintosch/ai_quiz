@@ -3,13 +3,49 @@
 // FILE: src/app/Cycle/login/LoginClient.tsx
 // Password gate. POSTs to /api/cycle/login which validates and returns a
 // Supabase action_link; the browser follows it to establish a session.
+//
+// Supabase may return tokens via PKCE query (?code=...) or implicit flow
+// hash (#access_token=...). The query path is handled in /Cycle/auth/callback;
+// the hash path is handled here on mount because hash fragments aren't sent
+// to the server.
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
 
 export default function LoginClient() {
   const [password, setPassword] = useState('')
-  const [status, setStatus] = useState<'idle' | 'sending' | 'error'>('idle')
+  const [status, setStatus] = useState<'idle' | 'sending' | 'error' | 'completing'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
+
+  // Detect implicit-flow hash on first render and complete the sign-in.
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const hash = window.location.hash.replace(/^#/, '')
+    if (!hash || !hash.includes('access_token=')) return
+    const params = new URLSearchParams(hash)
+    const accessToken  = params.get('access_token')
+    const refreshToken = params.get('refresh_token')
+    if (!accessToken || !refreshToken) return
+
+    setStatus('completing')
+    // Clean the hash so a reload doesn't re-trigger.
+    window.history.replaceState({}, '', '/Cycle/login')
+    const supabase = createClient()
+    supabase.auth
+      .setSession({ access_token: accessToken, refresh_token: refreshToken })
+      .then(({ error }) => {
+        if (error) {
+          setStatus('error')
+          setErrorMsg(`Sessie zetten mislukt: ${error.message}`)
+          return
+        }
+        window.location.href = '/Cycle'
+      })
+      .catch(err => {
+        setStatus('error')
+        setErrorMsg(`Sessie zetten mislukt: ${String(err)}`)
+      })
+  }, [])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -39,6 +75,17 @@ export default function LoginClient() {
       setStatus('error')
       setErrorMsg('Geen verbinding. Probeer opnieuw.')
     }
+  }
+
+  if (status === 'completing') {
+    return (
+      <main className="min-h-screen flex flex-col items-center justify-center px-6">
+        <div className="w-full max-w-sm cycle-card p-7 text-center">
+          <p className="cycle-display text-3xl mb-2">Sessie zetten…</p>
+          <p className="text-sm" style={{ color: 'var(--cycle-muted)' }}>Een seconde.</p>
+        </div>
+      </main>
+    )
   }
 
   return (
