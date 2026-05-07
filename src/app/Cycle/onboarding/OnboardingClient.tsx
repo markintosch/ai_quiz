@@ -100,10 +100,11 @@ export default function OnboardingClient() {
               </p>
 
               <p className="text-sm mb-6" style={{ lineHeight: 1.6 }}>
-                Dagelijks dertig seconden invullen — stemming, slaap, beweging, eventueel een glas wijn —
-                en je krijgt een readiness-score plus patronen die specifiek voor <em>jou</em> gelden.
-                Niets wordt gedeeld. We beginnen met je cyclus, omdat die de achtergrond is waartegen
-                alles meebeweegt.
+                Dagelijks dertig seconden invullen — stemming, slaap, beweging, eventueel een glas wijn.
+                Per dag krijg je een readiness-score, en over de weken heen ontstaat een tijdlijn
+                waarin trends zichtbaar worden die specifiek voor <em>jou</em> gelden. Niets wordt
+                gedeeld. We beginnen met je cyclus, omdat die de achtergrond is waartegen alles
+                meebeweegt.
               </p>
 
               <label className="block text-sm mb-2 font-medium">Wanneer begon je laatste menstruatie?</label>
