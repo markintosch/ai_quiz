@@ -38,7 +38,7 @@ const T = {
   nl: {
     navName:    'Mark de Kock',
     navRole:    'AI strategie & executie',
-    navPartner: 'Partner · Kirk & Blackbeard',
+    navPartner: 'Partner · Brand PWRD Media',
     navCta:     'Plan gesprek →',
     heroBadge:  'Persoonlijke begeleiding · Beperkt beschikbaar',
     heroH1a:    'Van AI-ambitie naar',
@@ -112,6 +112,7 @@ const T = {
       { icon: '♻️', color: '#398684', sector: 'Vastgoed & Duurzaamheid',     body: 'Van externe druk en CSRD-verplichtingen naar een praktisch model waarmee directie en operatie naar dezelfde werkelijkheid kijken.' },
       { icon: '⭐', color: '#1D4ED8', sector: 'Customer Experience',         body: 'Van abstracte klantambitie naar een meet- en sturingsmodel dat helpt om prioriteiten te kiezen en intern draagvlak op te bouwen.' },
       { icon: '🏦', color: '#374151', sector: 'Finance & gereguleerde context', body: 'Van voorzichtigheid en compliance-zorgen naar een werkbare manier om AI toch verantwoord te verkennen en toe te passen.' },
+      { icon: '🤖', color: '#1F2937', sector: 'Marketing & Sales Operatie',     body: 'Van handmatige campagne-oplevering naar een systeem dat intelligence, content en performance in één doorlopende workflow verbindt. Gebouwd en ingezet voor eigen klanten.' },
     ],
 
     collabLabel: 'Samenwerking',
@@ -121,7 +122,7 @@ const T = {
     collabPeople: [
       { initials: 'WB',   name: 'Wouter Blok',     url: 'https://www.linkedin.com/in/wouterblok/', role: 'Marketing en commerciële groei',       bio: 'Wouter combineert merkstrategie met commerciële uitvoering. Met zijn Growth Flywheel aanpak brengt hij mensen, processen en platforms op één lijn zodat marketinginspanningen daadwerkelijk door de organisatie heen werken. Brede ervaring in Travel en retailomgevingen.' },
       { initials: 'BvdB', name: 'Ben van der Burg',  url: 'https://www.benvanderburg.nl/', role: 'Technologie en digitale strategie',    bio: 'Podcast-host van De Technoloog en BNR Digitaal, spreker en tech-expert. Ben vertaalt technologische complexiteit naar strategisch inzicht voor leiders die de juiste vragen willen stellen zonder techneut te worden.' },
-      { initials: 'FM',   name: 'Frank Meeuwsen',    url: 'https://frankmeeuwsen.com/', role: 'AI-trainer en consultant',              bio: '30 jaar digitale ervaring. Frank helpt professionals en teams om AI praktisch te integreren in hun dagelijkse werk. Zonder hype, zonder jargon. Scherp op toepassing, eerlijk over wat wel en niet werkt.' },
+      { initials: 'FM',   name: 'Frank Meeuwsen',    url: 'https://frankmeeuwsen.com/', role: 'AI-trainer en consultant',              bio: '30 jaar digitale ervaring. Frank helpt professionals en teams om AI praktisch te integreren in hun dagelijkse werk. Zonder hype, zonder jargon. Scherp op toepassing, eerlijk over wat wel en niet werkt. Samen ontwikkelden we cursusclaudecode.nl — een praktijkcursus voor professionals die AI willen gebruiken, niet bespreken.' },
       { initials: 'SH',   name: 'Sandra Hofstede',   role: 'Strategisch leiderschap en integratie', bio: '20 jaar ervaring in governance, M&A-integratie en turnaround. Sandra stapt in als er beweging nodig is. Bij fusies, schaalvraagstukken of organisaties die vastlopen. Ze herstelt eigenaarschap en brengt structuur waar de druk het hoogst is.' },
     ],
 
@@ -130,7 +131,7 @@ const T = {
     aboutBody1: 'In mijn loopbaan heb ik veel gewerkt op het snijvlak van strategie, groei en uitvoering. AI is voor mij geen los onderwerp bovenop, maar de nieuwste realiteit op een vertrouwd snijvlak: hoe zorg je dat goede ideeën ook landen?',
     aboutBody2: 'Wat ik meebreng: hands-on ervaring met AI in de praktijk én jarenlange ervaring met organisaties die moeten bewegen maar vastlopen. Ik weet wanneer een plan haalbaar is. En wanneer het mooi klinkt maar nooit landt.',
     aboutCredentials: [
-      'Partner bij Kirk & Blackbeard',
+      'Partner bij Brand PWRD Media',
       'Senior ervaring in strategie, groei, klantbeleving en executie',
       'Hands-on ontwikkeling en toepassing van AI in meerdere sectoren',
       'Werkt in Nederlands en Engels',
@@ -153,7 +154,7 @@ const T = {
   en: {
     navName:    'Mark de Kock',
     navRole:    'AI strategy & execution',
-    navPartner: 'Partner · Kirk & Blackbeard',
+    navPartner: 'Partner · Brand PWRD Media',
     navCta:     'Book a call →',
     heroBadge:  'Personal guidance · Limited availability',
     heroH1a:    'From AI ambition to',
@@ -227,6 +228,7 @@ const T = {
       { icon: '♻️', color: '#398684', sector: 'Real estate & Sustainability', body: 'From external pressure and CSRD obligations to a practical model that gives leadership and operations the same picture of reality.' },
       { icon: '⭐', color: '#1D4ED8', sector: 'Customer Experience',          body: 'From abstract customer ambition to a measurement and steering model that helps prioritise and build internal support for the right choices.' },
       { icon: '🏦', color: '#374151', sector: 'Finance & regulated sectors',  body: 'From caution and compliance concerns to a workable way to explore and apply AI responsibly.' },
+      { icon: '🤖', color: '#1F2937', sector: 'Marketing & Sales Operations', body: 'From manual campaign delivery to a system that connects intelligence, content and performance in one continuous workflow. Built and deployed for our own clients.' },
     ],
 
     collabLabel: 'Collaboration',
@@ -236,7 +238,7 @@ const T = {
     collabPeople: [
       { initials: 'WB',   name: 'Wouter Blok',     url: 'https://www.linkedin.com/in/wouterblok/', role: 'Marketing and commercial growth',       bio: 'Wouter combines brand strategy with commercial execution. His Growth Flywheel approach aligns people, processes and platforms so that marketing efforts actually work through the organisation. Broad experience in Travel and retail environments.' },
       { initials: 'BvdB', name: 'Ben van der Burg',  url: 'https://www.benvanderburg.nl/', role: 'Technology and digital strategy',       bio: 'Podcast host of De Technoloog and BNR Digitaal, speaker and tech expert. Ben translates technological complexity into clear strategic insight for leaders who want to ask the right questions without becoming technical experts.' },
-      { initials: 'FM',   name: 'Frank Meeuwsen',    url: 'https://frankmeeuwsen.com/', role: 'AI trainer and consultant',             bio: '30 years of digital experience. Frank helps professionals and teams integrate AI practically into their daily work. No hype, no jargon. Sharp on application, honest about what works and what does not.' },
+      { initials: 'FM',   name: 'Frank Meeuwsen',    url: 'https://frankmeeuwsen.com/', role: 'AI trainer and consultant',             bio: '30 years of digital experience. Frank helps professionals and teams integrate AI practically into their daily work. No hype, no jargon. Sharp on application, honest about what works and what does not. Together we built cursusclaudecode.nl — a practical course for professionals who want to use AI, not just discuss it.' },
       { initials: 'SH',   name: 'Sandra Hofstede',   role: 'Strategic leadership and integration',  bio: '20 years of experience in governance, M&A integration and turnaround. Sandra steps in when movement is needed. In mergers, scaling challenges or organisations that have stalled. She restores ownership and brings structure under pressure.' },
     ],
 
@@ -245,7 +247,7 @@ const T = {
     aboutBody1: 'I\'ve spent a lot of my career at the intersection of strategy, growth and execution. For me, AI isn\'t a separate topic layered on top. It\'s the latest challenge on a familiar question: how do you make sure good ideas actually land?',
     aboutBody2: 'What I bring: hands-on experience building and applying AI in practice, and years of experience with organisations that need to move but keep getting stuck. I know the difference between a plan that sounds right and one that will actually hold.',
     aboutCredentials: [
-      'Partner at Kirk & Blackbeard',
+      'Partner at Brand PWRD Media',
       'Senior experience in strategy, growth, customer experience and execution',
       'Hands-on development and application of AI across multiple sectors',
       'Works in Dutch and English',
@@ -268,7 +270,7 @@ const T = {
   de: {
     navName:    'Mark de Kock',
     navRole:    'KI-Strategie & Umsetzung',
-    navPartner: 'Partner · Kirk & Blackbeard',
+    navPartner: 'Partner · Brand PWRD Media',
     navCta:     'Gespräch vereinbaren →',
     heroBadge:  'Persönliche Begleitung · Begrenzte Verfügbarkeit',
     heroH1a:    'Von KI-Ambitionen zu',
@@ -330,6 +332,7 @@ const T = {
       { icon: '♻️', color: '#398684', sector: 'Immobilien & Nachhaltigkeit', body: 'Von externem Druck und CSRD-Verpflichtungen zu einem praktischen Modell, mit dem Führung und operatives Team auf dieselbe Realität blicken.' },
       { icon: '⭐', color: '#1D4ED8', sector: 'Customer Experience', body: 'Von abstrakter Kundenambition zu einem Mess- und Steuerungsmodell, das hilft, Prioritäten zu setzen und intern Rückhalt für die richtigen Entscheidungen aufzubauen.' },
       { icon: '🏦', color: '#374151', sector: 'Finance & reguliertes Umfeld', body: 'Von Vorsicht und Compliance-Bedenken zu einem praktikablen Weg, KI verantwortungsvoll zu erkunden und einzusetzen.' },
+      { icon: '🤖', color: '#1F2937', sector: 'Marketing & Sales Operationen', body: 'Von manueller Kampagnenabwicklung zu einem System, das Intelligence, Content und Performance in einem durchgehenden Workflow verbindet. Gebaut und für eigene Kunden eingesetzt.' },
     ],
 
     collabLabel: 'Zusammenarbeit',
@@ -348,7 +351,7 @@ const T = {
     aboutBody1: 'In meiner Laufbahn habe ich viel an der Schnittstelle von Strategie, Wachstum und Umsetzung gearbeitet. KI ist für mich kein separates Thema obendrauf, sondern die neueste Realität an einer vertrauten Schnittstelle: Wie sorgt man dafür, dass gute Ideen wirklich landen?',
     aboutBody2: 'Was ich mitbringe: praktische Erfahrung mit KI in der Realität und jahrelange Erfahrung mit Organisationen, die sich bewegen müssen, aber immer wieder steckenbleiben. Ich weiss, wann ein Plan tragfähig ist. Und wann er gut klingt, aber nie umgesetzt wird.',
     aboutCredentials: [
-      'Partner bei Kirk & Blackbeard',
+      'Partner bei Brand PWRD Media',
       'Umfangreiche Erfahrung in Strategie, Wachstum, Customer Experience und Umsetzung',
       'Praktische Entwicklung und Anwendung von KI in mehreren Sektoren',
       'Arbeitet auf Niederländisch und Englisch (internationale Projekte)',
@@ -433,6 +436,19 @@ function MentorPageInner() {
                 </button>
               ))}
             </div>
+            <a
+              href="/oplossingen"
+              onClick={() => trackEvent('mentor_nav_solutions_clicked')}
+              style={{
+                fontSize: 13, fontWeight: 600, color: BODY, textDecoration: 'none',
+                whiteSpace: 'nowrap',
+                borderBottom: '1px solid transparent',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.borderBottomColor = WARM)}
+              onMouseLeave={e => (e.currentTarget.style.borderBottomColor = 'transparent')}
+            >
+              {lang === 'nl' ? 'Oplossingen' : lang === 'de' ? 'Lösungen' : 'Solutions'}
+            </a>
             <a
               href="/werk"
               onClick={() => trackEvent('mentor_nav_projects_clicked')}
@@ -611,6 +627,46 @@ function MentorPageInner() {
                 </motion.div>
               ))}
             </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── Wat ik bouw — bridge to /oplossingen ─────────────────────────── */}
+      <section style={{ background: INK, padding: '64px 24px', color: WHITE }}>
+        <div className="max-w-3xl mx-auto" style={{ textAlign: 'center' }}>
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
+            <motion.p variants={fadeUp} style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: WARM, marginBottom: 14 }}>
+              {lang === 'nl' ? 'Wat ik bouw' : lang === 'de' ? 'Was ich baue' : 'What I build'}
+            </motion.p>
+            <motion.h2 variants={fadeUp} style={{ fontSize: 'clamp(22px, 3vw, 32px)', fontWeight: 800, lineHeight: 1.25, marginBottom: 18, color: WHITE }}>
+              {lang === 'nl'
+                ? 'Naast persoonlijke begeleiding bouw ik systemen die marketing- en salesteams direct inzetten.'
+                : lang === 'de'
+                ? 'Neben persönlicher Begleitung baue ich Systeme, die Marketing- und Salesteams direkt einsetzen.'
+                : 'Alongside personal guidance, I build systems that marketing and sales teams put to work directly.'}
+            </motion.h2>
+            <motion.p variants={fadeUp} style={{ fontSize: 16, color: 'rgba(255,255,255,0.75)', lineHeight: 1.7, maxWidth: 560, margin: '0 auto 28px' }}>
+              {lang === 'nl'
+                ? 'AI-agents die samenwerken. Niet als vervanging van je team, maar als versnelling. Van concurrentie-analyse tot content tot CRM-automatisering — elk systeem is gebouwd rond een concreet bedrijfsprobleem.'
+                : lang === 'de'
+                ? 'KI-Agents, die zusammenarbeiten. Nicht als Ersatz für dein Team, sondern als Beschleunigung. Von Wettbewerbsanalyse über Content bis CRM-Automatisierung — jedes System ist um ein konkretes Geschäftsproblem herum gebaut.'
+                : 'AI agents that work together. Not as a replacement for your team, as an accelerator. From competitive analysis to content to CRM automation — each system is built around a concrete business problem.'}
+            </motion.p>
+            <motion.div variants={fadeUp}>
+              <a
+                href="/oplossingen"
+                onClick={() => trackEvent('mentor_what_i_build_to_solutions_clicked')}
+                style={{
+                  display: 'inline-block',
+                  background: WARM,
+                  color: WHITE, fontWeight: 700, fontSize: 15,
+                  padding: '13px 30px', borderRadius: 100, textDecoration: 'none',
+                  boxShadow: `0 8px 24px ${WARM}55`,
+                }}
+              >
+                {lang === 'nl' ? 'Bekijk de oplossingen →' : lang === 'de' ? 'Zu den Lösungen →' : 'See the solutions →'}
+              </a>
+            </motion.div>
           </motion.div>
         </div>
       </section>
