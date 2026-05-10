@@ -28,13 +28,25 @@ export default async function TodayPage({
 
   const { data: existing } = await supabase
     .from('cycle_daily_entries')
-    .select('mood_score, mood_variable, sleep, stress, activity_types, activity_intensity, alcohol_glasses, symptoms, nap_taken, busy_day, menstruation_flag')
+    .select('mood_score, mood_variable, sleep, stress, activity_types, activity_intensity, alcohol_glasses, symptoms, symptom_intensities, nap_taken, busy_day, menstruation_flag')
     .eq('user_id', user.id)
     .eq('entry_date', today)
     .maybeSingle()
 
   // If already entered today and not editing, send to the output screen.
   if (existing && searchParams.edit !== '1') redirect('/Cycle/output')
+
+  // Reconstruct the intensity map from either symptom_intensities (preferred)
+  // or fall back to a default-3 map keyed by the symptoms array.
+  let symptomsInit: Record<string, number> = {}
+  if (existing) {
+    const intensitiesObj = existing.symptom_intensities as Record<string, number> | null
+    if (intensitiesObj && typeof intensitiesObj === 'object' && Object.keys(intensitiesObj).length > 0) {
+      symptomsInit = intensitiesObj
+    } else if (Array.isArray(existing.symptoms)) {
+      for (const k of existing.symptoms) symptomsInit[k] = 3
+    }
+  }
 
   const initial = existing
     ? {
@@ -45,7 +57,7 @@ export default async function TodayPage({
         activity_types:     (existing.activity_types as any[] satisfies any[]) as any,
         activity_intensity: existing.activity_intensity as any,
         alcohol_glasses:    existing.alcohol_glasses ?? 0,
-        symptoms:           (existing.symptoms ?? []) as any,
+        symptoms:           symptomsInit as any,
         nap_taken:          existing.nap_taken ?? false,
         busy_day:           existing.busy_day ?? false,
         menstruation_flag:  existing.menstruation_flag,

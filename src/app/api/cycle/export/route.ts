@@ -38,19 +38,24 @@ export async function GET(req: Request) {
     const headers = [
       'entry_date', 'mood_score', 'mood_variable', 'sleep', 'stress',
       'activity_types', 'activity_intensity', 'alcohol_glasses',
-      'symptoms', 'nap_taken', 'busy_day', 'menstruation_flag',
+      'symptoms', 'symptom_intensities', 'nap_taken', 'busy_day', 'menstruation_flag',
       'readiness_score', 'cycle_phase', 'score_feedback',
       'temp_c', 'condition',
     ]
     const weatherByDate: Record<string, WeatherRow> = Object.fromEntries(weather.map(w => [w.entry_date, w]))
     const rows = entries.map(e => {
       const w = weatherByDate[e.entry_date]
+      const intensities = (e.symptom_intensities ?? {}) as Record<string, number>
+      const intensitiesSerialized = Object.entries(intensities)
+        .map(([k, v]) => `${k}:${v}`)
+        .join('|')
       return [
         e.entry_date, e.mood_score, e.mood_variable, e.sleep, e.stress,
         (e.activity_types ?? []).join('|'),
         e.activity_intensity ?? '',
         e.alcohol_glasses ?? 0,
         (e.symptoms ?? []).join('|'),
+        intensitiesSerialized,
         e.nap_taken,
         e.busy_day,
         e.menstruation_flag,
