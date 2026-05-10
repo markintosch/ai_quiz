@@ -45,6 +45,9 @@ export interface DailyEntry {
   activity_types: ActivityType[]
   activity_intensity: ActivityIntensity | null
   alcohol_glasses: number    // 0-10 (3+ stored as 3)
+  symptoms: string[]         // SymptomKey[] — kept as string[] here to avoid circular dep
+  nap_taken: boolean
+  busy_day: boolean
   menstruation_flag: boolean
   readiness_score: number | null
   cycle_phase: CyclePhase

@@ -1001,6 +1001,9 @@ export interface Database {
           activity_types: string[]
           activity_intensity: string | null
           alcohol_glasses: number
+          symptoms: string[]
+          nap_taken: boolean
+          busy_day: boolean
           menstruation_flag: boolean
           readiness_score: number | null
           cycle_phase: string
@@ -1019,6 +1022,9 @@ export interface Database {
           activity_types?: string[]
           activity_intensity?: string | null
           alcohol_glasses?: number
+          symptoms?: string[]
+          nap_taken?: boolean
+          busy_day?: boolean
           menstruation_flag?: boolean
           readiness_score?: number | null
           cycle_phase: string
@@ -1037,6 +1043,9 @@ export interface Database {
           activity_types?: string[]
           activity_intensity?: string | null
           alcohol_glasses?: number
+          symptoms?: string[]
+          nap_taken?: boolean
+          busy_day?: boolean
           menstruation_flag?: boolean
           readiness_score?: number | null
           cycle_phase?: string

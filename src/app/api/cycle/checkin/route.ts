@@ -9,6 +9,7 @@ import { detectPhase, inferPeriodStarts } from '@/lib/cycle/phase'
 import { computeReadiness } from '@/lib/cycle/score'
 import type { ActivityIntensity, ActivityType, CyclePhase } from '@/lib/cycle/types'
 import { fetchWeather } from '@/lib/cycle/weather'
+import { isValidSymptom, type SymptomKey } from '@/lib/cycle/symptoms'
 
 const ACTIVITY_TYPES: ActivityType[] = ['None', 'Walk', 'Run', 'Cycle', 'Strength', 'Yoga', 'Other']
 const INTENSITIES: ActivityIntensity[] = ['Low', 'Medium', 'High']
@@ -40,6 +41,9 @@ export async function POST(req: Request) {
     activity_types?: string[]
     activity_intensity?: string | null
     alcohol_glasses?: number
+    symptoms?: string[]
+    nap_taken?: boolean
+    busy_day?: boolean
     menstruation_flag?: boolean
   }
 
@@ -52,6 +56,9 @@ export async function POST(req: Request) {
   const types     = (body.activity_types ?? []).filter((t): t is ActivityType =>
     ACTIVITY_TYPES.includes(t as ActivityType))
   const intensity = body.activity_intensity ?? null
+  const symptoms  = (body.symptoms ?? []).filter(isValidSymptom) as SymptomKey[]
+  const napTaken  = Boolean(body.nap_taken)
+  const busyDay   = Boolean(body.busy_day)
 
   if (
     !isISODate(entryDate) ||
@@ -139,6 +146,9 @@ export async function POST(req: Request) {
       activity_types:     types,
       activity_intensity: isRest ? null : (intensity as ActivityIntensity),
       alcohol_glasses:    alcohol,
+      symptoms,
+      nap_taken:          napTaken,
+      busy_day:           busyDay,
       menstruation_flag:  Boolean(body.menstruation_flag),
       readiness_score:    score.readiness,
       cycle_phase:        phaseResult.phase,

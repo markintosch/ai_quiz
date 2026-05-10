@@ -28,7 +28,7 @@ export default async function TodayPage({
 
   const { data: existing } = await supabase
     .from('cycle_daily_entries')
-    .select('mood_score, mood_variable, sleep, stress, activity_types, activity_intensity, alcohol_glasses, menstruation_flag')
+    .select('mood_score, mood_variable, sleep, stress, activity_types, activity_intensity, alcohol_glasses, symptoms, nap_taken, busy_day, menstruation_flag')
     .eq('user_id', user.id)
     .eq('entry_date', today)
     .maybeSingle()
@@ -45,6 +45,9 @@ export default async function TodayPage({
         activity_types:     (existing.activity_types as any[] satisfies any[]) as any,
         activity_intensity: existing.activity_intensity as any,
         alcohol_glasses:    existing.alcohol_glasses ?? 0,
+        symptoms:           (existing.symptoms ?? []) as any,
+        nap_taken:          existing.nap_taken ?? false,
+        busy_day:           existing.busy_day ?? false,
         menstruation_flag:  existing.menstruation_flag,
       }
     : null

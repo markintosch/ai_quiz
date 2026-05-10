@@ -12,6 +12,9 @@ export interface InsightInput {
   activity_intensity: string | null
   activity_types: string[]
   alcohol_glasses: number
+  symptoms: string[]
+  nap_taken: boolean
+  busy_day: boolean
   cycle_phase: string
   rainy: boolean
 }
@@ -123,6 +126,90 @@ export function runInsightRules(entries: InsightInput[]): Insight[] {
       out.push({
         rule_key: 'alcohol_dips_sleep',
         text:     `Op dagen na een glas alcohol slaap je gemiddeld ${drop.toFixed(1)} punt minder goed.`,
+      })
+    }
+  }
+
+  // Symptom × cycle-phase frequency
+  // For each symptom that appears at least 3x in the window, find the phase
+  // where it concentrates most. Surface the strongest concentration.
+  const SYMPTOM_LABEL: Record<string, string> = {
+    brain_fog:         'brain fog',
+    dizzy:             'duizeligheid',
+    headache:          'hoofdpijn',
+    overstimulated:    'overprikkeling',
+    sad:               'somberheid',
+    tired:             'vermoeidheid',
+    exhausted:         'uitputting',
+    interrupted_sleep: 'onderbroken slaap',
+    restless_legs:     'rusteloze benen',
+    joint_pain:        'gewrichtspijn',
+    back_pain:         'rugpijn',
+    bloating:          'opgeblazen gevoel',
+    cramps:            'menstruatiekramp',
+    cold:              'koud gevoel',
+  }
+  const PHASE_LABEL: Record<string, string> = {
+    menstrual:      'menstruatie',
+    follicular:     'folliculaire fase',
+    ovulation:      'ovulatie',
+    'luteal-early': 'vroege luteale fase',
+    'luteal-late':  'late luteale fase',
+  }
+
+  type SymphCount = { symptom: string; phase: string; ratio: number; total: number }
+  const sympPhase: SymphCount[] = []
+  for (const sym of Object.keys(SYMPTOM_LABEL)) {
+    const daysWith = recent.filter(e => Array.isArray(e.symptoms) && e.symptoms.includes(sym))
+    if (daysWith.length < 3) continue
+    const phaseCounts: Record<string, number> = {}
+    for (const d of daysWith) phaseCounts[d.cycle_phase] = (phaseCounts[d.cycle_phase] ?? 0) + 1
+    const totalDaysWith = daysWith.length
+    for (const phase of Object.keys(PHASE_LABEL)) {
+      const inPhase = phaseCounts[phase] ?? 0
+      if (inPhase < 2) continue
+      const phaseDaysAll = recent.filter(e => e.cycle_phase === phase).length || 1
+      const ratio = inPhase / phaseDaysAll  // fraction of phase days with this symptom
+      sympPhase.push({ symptom: sym, phase, ratio, total: inPhase })
+    }
+  }
+  sympPhase.sort((a, b) => b.ratio - a.ratio)
+  if (sympPhase[0] && sympPhase[0].ratio > 0.5) {
+    const top = sympPhase[0]
+    out.push({
+      rule_key: `symptom_phase_${top.symptom}_${top.phase}`,
+      text:     `${SYMPTOM_LABEL[top.symptom][0].toUpperCase()}${SYMPTOM_LABEL[top.symptom].slice(1)} komt vooral voor in je ${PHASE_LABEL[top.phase]}.`,
+    })
+  }
+
+  // Symptom × sleep: bloating, interrupted_sleep, restless_legs often dip sleep
+  for (const sym of ['bloating', 'interrupted_sleep', 'restless_legs', 'cramps']) {
+    const withSleep    = recent.filter(e => Array.isArray(e.symptoms) && e.symptoms.includes(sym)).map(e => e.sleep)
+    const withoutSleep = recent.filter(e => !(Array.isArray(e.symptoms) && e.symptoms.includes(sym))).map(e => e.sleep)
+    if (withSleep.length < 3 || withoutSleep.length < 5) continue
+    const drop = avg(withoutSleep) - avg(withSleep)
+    if (drop > 0.7) {
+      out.push({
+        rule_key: `symptom_sleep_${sym}`,
+        text:     `Op dagen met ${SYMPTOM_LABEL[sym]} slaap je gemiddeld ${drop.toFixed(1)} punt minder goed.`,
+      })
+      break  // one symptom-sleep insight is enough at a time
+    }
+  }
+
+  // Busy day → next-day sleep
+  const busyToSleep:    number[] = []
+  const calmToSleep:    number[] = []
+  for (let i = 1; i < recent.length; i++) {
+    if (recent[i - 1].busy_day) busyToSleep.push(recent[i].sleep)
+    else                        calmToSleep.push(recent[i].sleep)
+  }
+  if (busyToSleep.length >= 4 && calmToSleep.length >= 4) {
+    const drop = avg(calmToSleep) - avg(busyToSleep)
+    if (drop > 0.7) {
+      out.push({
+        rule_key: 'busy_dips_sleep',
+        text:     `Na een drukke dag slaap je gemiddeld ${drop.toFixed(1)} punt minder goed.`,
       })
     }
   }
