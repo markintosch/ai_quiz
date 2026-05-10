@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PEO Product Matrix — Preview · Brand PWRD Media</title>
+  <meta name="description" content="Strategische product-matrix voor PEO Medical, Detection en Photonics. TAM BeNeLux + DE + Nordics, concurrenten, pricing, tone-of-voice en reasons to win." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bpm-blue:      #0F2E4C;
+      --bpm-blue-d:    #08182A;
+      --bpm-blue-mid:  #2A4F73;
+      --bpm-orange:    #F0801F;
+      --bpm-yellow:    #F4C430;
+      --paper:         #FAF7F2;
+      --paper-dim:     #F2EEE6;
+      --line:          #E2DCD0;
+      --ink:           #14181F;
+      --ink-soft:      #4B5563;
+      --ink-mute:      #7C8794;
+      --green:         #2E8540;
+      --amber:         #C77700;
+      --red:           #B5341B;
+      --shadow-sm:     0 1px 2px rgba(15,46,76,0.06);
+      --shadow-md:     0 4px 16px rgba(15,46,76,0.08);
+      --shadow-lg:     0 14px 40px rgba(15,46,76,0.10);
+    }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
+      color: var(--ink);
+      background: var(--paper);
+    }
+
+    .container { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+    .narrow    { max-width: 760px; margin: 0 auto; padding: 0 32px; }
+
+    /* ─── Top bar ─── */
+    .topbar {
+      background: var(--bpm-blue);
+      color: #fff;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 14px 0;
+    }
+    .topbar .row {
+      display: flex; justify-content: space-between; align-items: center;
+      font-weight: 600;
+    }
+    .topbar a { color: #fff; text-decoration: none; opacity: 0.85; }
+    .topbar a:hover { opacity: 1; }
+
+    /* ─── Logo ─── */
+    .logo {
+      display: inline-flex; align-items: baseline; gap: 4px;
+      font-family: 'Inter', sans-serif; font-weight: 800;
+      letter-spacing: 0.02em; line-height: 1;
+    }
+    .logo .l-brand { color: var(--bpm-blue); font-size: 22px; }
+    .logo .l-pwrd  { color: var(--bpm-orange); font-size: 22px; }
+    .logo .l-media { color: var(--bpm-blue); font-size: 13px; margin-left: 2px; letter-spacing: 0.18em; }
+    .topbar .logo .l-brand,
+    .topbar .logo .l-media { color: #fff; }
+    .topbar .logo .l-pwrd  { color: var(--bpm-yellow); }
+
+    /* ─── Hero ─── */
+    .hero {
+      padding: 100px 0 64px;
+      border-bottom: 1px solid var(--line);
+      background:
+        radial-gradient(900px 420px at 90% 0%, rgba(240,128,31,0.07), transparent 60%),
+        radial-gradient(700px 380px at 5% 100%, rgba(15,46,76,0.06), transparent 65%),
+        var(--paper);
+    }
+    .hero .eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--bpm-blue);
+      color: #fff;
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .hero .eyebrow .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--bpm-orange);
+      box-shadow: 0 0 0 3px rgba(240,128,31,0.25);
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 3px rgba(240,128,31,0.25); }
+      50%      { box-shadow: 0 0 0 7px rgba(240,128,31,0.05); }
+    }
+    .hero h1 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-weight: 600;
+      font-size: clamp(40px, 5.4vw, 68px);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--bpm-blue);
+      margin: 22px 0 16px;
+      max-width: 18ch;
+    }
+    .hero h1 em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--bpm-orange);
+    }
+    .hero .lede {
+      font-family: 'Fraunces', Georgia, serif;
+      font-weight: 400;
+      font-size: 21px;
+      line-height: 1.5;
+      color: var(--ink-soft);
+      max-width: 56ch;
+      margin-bottom: 36px;
+    }
+    .hero .meta {
+      display: flex; flex-wrap: wrap; gap: 32px 48px;
+      padding-top: 28px;
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+    }
+    .hero .meta div { line-height: 1.4; }
+    .hero .meta .k {
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--ink-mute);
+      font-weight: 600;
+      font-size: 11px;
+      margin-bottom: 6px;
+    }
+    .hero .meta .v {
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    /* ─── Section ─── */
+    section { padding: 88px 0; border-bottom: 1px solid var(--line); }
+    section:last-of-type { border-bottom: none; }
+
+    .section-num {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      color: var(--bpm-orange);
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-weight: 600;
+      font-size: clamp(30px, 3.6vw, 44px);
+      line-height: 1.1;
+      letter-spacing: -0.018em;
+      color: var(--bpm-blue);
+      margin-bottom: 16px;
+      max-width: 22ch;
+    }
+    .section-intro {
+      font-size: 17px;
+      color: var(--ink-soft);
+      max-width: 62ch;
+      margin-bottom: 40px;
+    }
+
+    h3 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-weight: 600;
+      font-size: 24px;
+      letter-spacing: -0.01em;
+      color: var(--bpm-blue);
+      margin: 32px 0 12px;
+    }
+
+    p { margin-bottom: 14px; }
+    p strong { color: var(--bpm-blue); font-weight: 600; }
+
+    /* ─── Callout / pull-quote ─── */
+    .callout {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--bpm-orange);
+      padding: 22px 26px;
+      border-radius: 6px;
+      box-shadow: var(--shadow-sm);
+      margin: 24px 0;
+    }
+    .callout .label {
+      font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--bpm-orange); font-weight: 700; margin-bottom: 8px;
+    }
+    .callout p:last-child { margin-bottom: 0; }
+
+    /* ─── Confidence pill ─── */
+    .conf {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 700;
+      padding: 3px 9px; border-radius: 999px;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .conf::before {
+      content: ""; width: 7px; height: 7px; border-radius: 50%;
+    }
+    .conf.high   { background: rgba(46,133,64,0.12);  color: var(--green);  }
+    .conf.high::before   { background: var(--green); }
+    .conf.med    { background: rgba(199,119,0,0.13); color: var(--amber); }
+    .conf.med::before    { background: var(--amber); }
+    .conf.low    { background: rgba(181,52,27,0.10); color: var(--red); }
+    .conf.low::before    { background: var(--red); }
+
+    /* ─── Matrix table ─── */
+    .matrix-wrap {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    .matrix-scroll { overflow-x: auto; }
+    table.matrix {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      min-width: 1100px;
+    }
+    table.matrix thead th {
+      background: var(--bpm-blue);
+      color: #fff;
+      text-align: left;
+      padding: 14px 14px;
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      border-right: 1px solid rgba(255,255,255,0.10);
+      vertical-align: middle;
+    }
+    table.matrix thead th:last-child { border-right: none; }
+    table.matrix tbody td {
+      padding: 14px 14px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    table.matrix tbody tr:nth-child(even) { background: var(--paper-dim); }
+    table.matrix tbody tr:hover           { background: rgba(240,128,31,0.06); }
+    table.matrix .num    { color: var(--ink-mute); font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+    table.matrix .sku    { font-weight: 700; color: var(--bpm-blue); }
+    table.matrix .partner { font-style: italic; color: var(--ink-soft); }
+    table.matrix .pill {
+      display: inline-block;
+      padding: 2px 8px; border-radius: 999px;
+      background: var(--paper-dim);
+      color: var(--ink-soft);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    table.matrix .pill.medical    { background: rgba(15,46,76,0.10); color: var(--bpm-blue); }
+    table.matrix .pill.detection  { background: rgba(181,52,27,0.10); color: var(--red); }
+    table.matrix .pill.photonics  { background: rgba(244,196,48,0.18); color: var(--amber); }
+    table.matrix .tam {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 12.5px;
+      color: var(--bpm-blue);
+      white-space: nowrap;
+    }
+
+    /* ─── Charts ─── */
+    .chart-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 28px 28px 18px;
+      box-shadow: var(--shadow-md);
+      margin: 24px 0 32px;
+    }
+    .chart-card h3 { margin-top: 0; }
+    .chart-card .desc {
+      font-size: 14px;
+      color: var(--ink-soft);
+      margin-bottom: 12px;
+      max-width: 70ch;
+    }
+    .chart-card .src {
+      font-size: 12px;
+      color: var(--ink-mute);
+      border-top: 1px dashed var(--line);
+      padding-top: 12px;
+      margin-top: 16px;
+    }
+    .mermaid {
+      background: var(--paper);
+      border-radius: 6px;
+      padding: 18px 12px;
+    }
+
+    .grid-2 {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 28px;
+    }
+    @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    /* ─── Gaps list ─── */
+    .gaps {
+      counter-reset: gap;
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+      margin-top: 12px;
+    }
+    .gaps li {
+      counter-increment: gap;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px 22px 22px 64px;
+      position: relative;
+      box-shadow: var(--shadow-sm);
+    }
+    .gaps li::before {
+      content: counter(gap);
+      position: absolute;
+      top: 18px; left: 18px;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--bpm-blue);
+      color: #fff;
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .gaps li b {
+      display: block;
+      color: var(--bpm-blue);
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+    .gaps li p {
+      font-size: 13.5px;
+      color: var(--ink-soft);
+      margin: 0;
+    }
+
+    /* ─── Checklist ─── */
+    .checklist {
+      list-style: none;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 24px 28px;
+      box-shadow: var(--shadow-sm);
+    }
+    .checklist li {
+      padding: 12px 0;
+      border-bottom: 1px dashed var(--line);
+      display: flex; align-items: flex-start; gap: 12px;
+      font-size: 15px;
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist li::before {
+      content: "";
+      flex-shrink: 0;
+      width: 18px; height: 18px;
+      border: 2px solid var(--bpm-blue);
+      border-radius: 4px;
+      margin-top: 3px;
+    }
+
+    /* ─── Footer ─── */
+    footer {
+      background: var(--bpm-blue);
+      color: #fff;
+      padding: 56px 0 36px;
+    }
+    footer h4 {
+      font-family: 'Fraunces', serif;
+      font-size: 18px;
+      margin-bottom: 16px;
+      color: #fff;
+      font-weight: 600;
+    }
+    footer .src-list {
+      list-style: none; columns: 2; column-gap: 36px;
+      font-size: 13px; line-height: 1.6;
+    }
+    @media (max-width: 700px) { footer .src-list { columns: 1; } }
+    footer .src-list li { margin-bottom: 6px; break-inside: avoid; }
+    footer a {
+      color: var(--bpm-yellow);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(244,196,48,0.3);
+    }
+    footer a:hover { border-bottom-color: var(--bpm-yellow); }
+    footer .colophon {
+      margin-top: 36px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      display: flex; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="container row">
+      <span class="logo">
+        <span class="l-brand">BRAND</span><span class="l-pwrd">PWRD</span><span class="l-media">MEDIA</span>
+      </span>
+      <span>Strategic Briefs · Vol. 01 / 2026</span>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="container">
+      <span class="eyebrow"><span class="dot"></span>Preview · Sanity check</span>
+      <h1>PEO Product Matrix <em>— Medical · Detection · Photonics</em></h1>
+      <p class="lede">
+        Strategische SKU-matrix voor het volledige PEO-portfolio — TAM voor BeNeLux, DE en Nordics,
+        concurrent-landschap, pricing-strategie, tone-of-voice en reasons to win, met expliciete
+        confidence-rating per cel.
+      </p>
+      <div class="meta">
+        <div><span class="k">Voor</span><span class="v">PEO B.V.</span></div>
+        <div><span class="k">Door</span><span class="v">Brand PWRD Media</span></div>
+        <div><span class="k">Datum</span><span class="v">10 mei 2026</span></div>
+        <div><span class="k">Status</span><span class="v">Preview — vraagt validatie</span></div>
+        <div><span class="k">Scope</span><span class="v">Sample 10 SKU's · finaal ~80-100</span></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Executive summary -->
+  <section>
+    <div class="container narrow" style="padding-left:0;padding-right:0;">
+      <span class="section-num">00 · Executive summary</span>
+      <h2 class="section-title">Wat krijg je in deze preview, en waarom een tussenstap?</h2>
+      <p class="section-intro">
+        Een full-scope SKU-matrix voor drie verticals × drie regio's is fors werk. Liever één keer
+        de juiste vorm vaststellen dan na 100 rijen ontdekken dat een kolom mist of dat de TAM-heuristiek
+        niet bruikbaar is. Vandaar deze preview: 10 representatieve SKU's, twee markttrends en twee
+        Gartner-stijl quadrants, plus een open agenda met de gaps die ik nu zie.
+      </p>
+      <div class="callout">
+        <div class="label">TAM-benadering</div>
+        <p>
+          BeNeLux + DE + Nordics samen ~150 M inwoners, bovengemiddelde healthcare-spend en een
+          industriële cluster die zwaar leunt op semicon (NL/DE), defence (DE/Nordics) en optics (DE).
+          Ik schat dat ~25-30% van het Europese TAM hier landt. Confidence per cel:
+          <span class="conf high">High</span> publieke bron ·
+          <span class="conf med">Medium</span> extrapolatie ·
+          <span class="conf low">Low</span> zachte schatting.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 1: Matrix -->
+  <section>
+    <div class="container">
+      <span class="section-num">01 · Sample matrix</span>
+      <h2 class="section-title">Tien SKU's, negen kolommen, drie verticals</h2>
+      <p class="section-intro">
+        Tien SKU's verspreid over Medical, Detection en Photonics. Bedoeld om de kolomkeuze te valideren —
+        níet om strategische conclusies op te baseren. Kandidaten voor extra kolommen: <em>lead time, service-contract,
+        marge-indicatie, A/B/C-prioriteit, cross-sell</em>.
+      </p>
+
+      <div class="matrix-wrap">
+        <div class="matrix-scroll">
+          <table class="matrix">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>SKU</th>
+                <th>Vertical</th>
+                <th>Partner</th>
+                <th>TAM (€/jr)</th>
+                <th>Top-3 concurrenten</th>
+                <th>Pricing</th>
+                <th>Tone of voice</th>
+                <th>Reden om PEO te kiezen</th>
+                <th>Conf.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="num">01</td>
+                <td><span class="sku">SunCHECK Patient</span></td>
+                <td><span class="pill medical">Medical</span></td>
+                <td class="partner">Sun Nuclear</td>
+                <td class="tam">€18-25 M</td>
+                <td>Mobius3D (Varian) · RadCalc (LAP) · Delta4 Discover (ScandiDos)</td>
+                <td>Software-licentie + 18-22% SMA · ~€25-60k initieel</td>
+                <td>Klinisch, evidence-based, "1 platform voor alles"</td>
+                <td>Lokale klinische support, 100+ NL/BE-ziekenhuis-referenties, training in NL</td>
+                <td><span class="conf high">High</span></td>
+              </tr>
+              <tr>
+                <td class="num">02</td>
+                <td><span class="sku">SunCHECK Machine</span></td>
+                <td><span class="pill medical">Medical</span></td>
+                <td class="partner">Sun Nuclear</td>
+                <td class="tam">€12-18 M</td>
+                <td>Mobius FX · ArcCheck-workflow · IBA myQA Machines</td>
+                <td>Bundle-korting met Patient-licentie</td>
+                <td>Workflow-efficiëntie, machine-uptime</td>
+                <td>Eén database voor Patient + Machine QA bij dezelfde fysicus</td>
+                <td><span class="conf high">High</span></td>
+              </tr>
+              <tr>
+                <td class="num">03</td>
+                <td><span class="sku">3D Cylindrical Water Tank Scanner (SunSCAN)</span></td>
+                <td><span class="pill medical">Medical</span></td>
+                <td class="partner">Sun Nuclear</td>
+                <td class="tam">€6-10 M</td>
+                <td>PTW Beamscan · IBA Blue Phantom 2 · Standard Imaging DoseView</td>
+                <td>CapEx ~€80-150k</td>
+                <td>Snelheid + nauwkeurigheid bij commissioning</td>
+                <td>Vervangt full-week commissioning, bewezen workflow</td>
+                <td><span class="conf high">High</span></td>
+              </tr>
+              <tr>
+                <td class="num">04</td>
+                <td><span class="sku">Gafchromic EBT3 / MD-V3 film</span></td>
+                <td><span class="pill medical">Medical</span></td>
+                <td class="partner">Ashland</td>
+                <td class="tam">€1.5-3 M</td>
+                <td>EBT-XD (Ashland zelf) · Dosimetry Solutions · GAFchromic XR-RV3</td>
+                <td>Verbruiksgoed, marge ~25-35%</td>
+                <td>Pragmatisch, "real-world dose verification"</td>
+                <td>Kennis van scanner-protocol + film-handling, voorraad in NL</td>
+                <td><span class="conf high">High</span></td>
+              </tr>
+              <tr>
+                <td class="num">05</td>
+                <td><span class="sku">PED — Personal Electronic Dosimeter</span></td>
+                <td><span class="pill detection">Detection</span></td>
+                <td class="partner">Mirion / Tracerco / Polimaster</td>
+                <td class="tam">€8-15 M</td>
+                <td>Thermo EPD-Mk2 · RaySafe i3 · Polimaster PM1610</td>
+                <td>Per-stuk €600-2.500 · vaak frame-contracten</td>
+                <td>Compliance, regulatory, "always on"</td>
+                <td>EU-kalibratiecertificering + service-loaner-pool</td>
+                <td><span class="conf med">Medium</span></td>
+              </tr>
+              <tr>
+                <td class="num">06</td>
+                <td><span class="sku">HPGe Detector (coaxiaal, 30-50% rel. eff.)</span></td>
+                <td><span class="pill detection">Detection</span></td>
+                <td class="partner">Mirion (Canberra) / ORTEC</td>
+                <td class="tam">€12-20 M</td>
+                <td>Mirion Broad-Energy · ORTEC GMX/GEM · Baltic Scientific BSI · CAEN HEXAGON</td>
+                <td>CapEx €40-90k + LN2/electric cooling</td>
+                <td>Wetenschappelijk, traceerbaarheid, IAEA-conform</td>
+                <td>Kalibratiedienst on-site + LN2-logistiek BeNeLux</td>
+                <td><span class="conf med">Medium</span></td>
+              </tr>
+              <tr>
+                <td class="num">07</td>
+                <td><span class="sku">Magnetic Static Detector (MSD)</span></td>
+                <td><span class="pill detection">Detection</span></td>
+                <td class="partner">CEIA</td>
+                <td class="tam">€4-8 M</td>
+                <td>Smiths Detection HI-SCAN · Garrett MZ-6100 · Rapiscan Metor</td>
+                <td>Per-poort €8-25k · bundles met WTMD</td>
+                <td>Trust, zekerheid, security-grade</td>
+                <td>Defence/customs-referenties + tender-ondersteuning</td>
+                <td><span class="conf low">Low</span></td>
+              </tr>
+              <tr>
+                <td class="num">08</td>
+                <td><span class="sku">Silicon Photodiode w/ integrated amplifier</span></td>
+                <td><span class="pill photonics">Photonics</span></td>
+                <td class="partner">Centronic</td>
+                <td class="tam">€5-9 M</td>
+                <td>Hamamatsu S5973 · OSRAM BPW34 · Vishay BPV10NF · First Sensor (TE)</td>
+                <td>Per-stuk €15-150 · volume tiered</td>
+                <td>Technisch/specsheet, engineer-to-engineer</td>
+                <td>Hoge SKU-coverage + sample-/loaner-snelheid</td>
+                <td><span class="conf high">High</span></td>
+              </tr>
+              <tr>
+                <td class="num">09</td>
+                <td><span class="sku">PSD — Position Sensitive Detector (1D/2D)</span></td>
+                <td><span class="pill photonics">Photonics</span></td>
+                <td class="partner">SiTek</td>
+                <td class="tam">€6-10 M</td>
+                <td>Hamamatsu PSD-series · OSI Optoelectronics · Quantar · iC-Haus</td>
+                <td>Per-stuk €120-1.200 · custom-batch op offerte</td>
+                <td>Sub-micron precisie, wetenschappelijk</td>
+                <td>Custom-design met SiTek + EU-lead-time-voordeel</td>
+                <td><span class="conf high">High</span></td>
+              </tr>
+              <tr>
+                <td class="num">10</td>
+                <td><span class="sku">GL Photometer 3.0 + Flicker</span></td>
+                <td><span class="pill photonics">Photonics</span></td>
+                <td class="partner">GL Optic</td>
+                <td class="tam">€2-5 M</td>
+                <td>Konica Minolta CL-200 · Gigahertz-Optik BTS256 · TechnoTeam LMK · Instrument Systems CAS 140D</td>
+                <td>CapEx €4-9k</td>
+                <td>Speed + accuracy, "lab-grade portable"</td>
+                <td>Combinatie photometer + integrating sphere uit één hand</td>
+                <td><span class="conf high">High</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: Trends -->
+  <section>
+    <div class="container">
+      <span class="section-num">02 · Markttrends</span>
+      <h2 class="section-title">Twee groeicurves om de matrix in context te zetten</h2>
+      <p class="section-intro">
+        Top-down TAM-projecties op basis van publieke marktrapporten, met extrapolatie naar Europa en
+        BeNeLux + DE + Nordics op basis van healthcare-spend per capita (Medical) en industriële clusterdichtheid
+        (Photonics).
+      </p>
+
+      <div class="grid-2">
+        <div class="chart-card">
+          <h3>Radiation Therapy Software</h3>
+          <p class="desc">
+            Globale markt in EUR M, 2024-2033. CAGR 9.1% globaal; BeNeLux + DE + Nordics samen
+            ~28% van EU.
+          </p>
+          <div class="mermaid">
+xychart-beta
+    title "Radiation Therapy Software (€M)"
+    x-axis [2024, 2026, 2028, 2030, 2033]
+    y-axis "Market value (€M)" 0 --> 1500
+    line "Global" [635, 756, 901, 1073, 1391]
+    line "Europe (~32%)" [203, 242, 288, 343, 445]
+    line "BeNeLux+DE+Nordics" [57, 68, 81, 96, 125]
+          </div>
+          <p class="src">Bron: Custom Market Insights, FMI, PharmiWeb. Confidence: medium — groei-rate is hard, regio-split is extrapolatie.</p>
+        </div>
+
+        <div class="chart-card">
+          <h3>Silicon Photodiodes</h3>
+          <p class="desc">
+            Globale markt in EUR M, 2024-2030. CAGR 6.7% globaal; deze regio is overrepresented in
+            silicon-photodiode-vraag door semicon-cluster (ASML, imec, Infineon, NXP).
+          </p>
+          <div class="mermaid">
+xychart-beta
+    title "Silicon Photodiodes (€M)"
+    x-axis [2024, 2025, 2027, 2028, 2030]
+    y-axis "Market value (€M)" 0 --> 500
+    line "Global" [334, 356, 405, 433, 492]
+    line "Europe (~35%)" [117, 125, 142, 151, 172]
+    line "BeNeLux+DE+Nordics" [53, 56, 64, 68, 77]
+          </div>
+          <p class="src">Bron: Business Research Insights, Mordor Intelligence. Confidence: medium.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: Quadrants -->
+  <section>
+    <div class="container">
+      <span class="section-num">03 · Concurrent-landschap</span>
+      <h2 class="section-title">Gartner-stijl quadrants per productcategorie</h2>
+      <p class="section-intro">
+        Twee voorbeelden van competitor-quadrants. In de finale matrix krijgt elke productfamilie een
+        eigen quadrant — hier alleen Patient QA Software (Medical) en Position Sensitive Detectors (Photonics)
+        ter validatie van de aanpak.
+      </p>
+
+      <div class="grid-2">
+        <div class="chart-card">
+          <h3>Patient QA Software (Radiotherapy)</h3>
+          <p class="desc">
+            Marktpenetratie BeNeLux + DE + Nordics op de X-as · platform-volwassenheid op de Y-as.
+            Sun Nuclear positioneert in Leaders door SunCHECK platform-strategie.
+          </p>
+          <div class="mermaid">
+quadrantChart
+    title "Patient QA — Penetratie vs. Platform-volwassenheid"
+    x-axis "Lage penetratie" --> "Hoge penetratie"
+    y-axis "Conventioneel" --> "Innovatief"
+    quadrant-1 "Leaders"
+    quadrant-2 "Visionaries"
+    quadrant-3 "Niche players"
+    quadrant-4 "Challengers"
+    "SunCHECK (Sun Nuclear / PEO)": [0.72, 0.78]
+    "Mobius3D (Varian)": [0.78, 0.55]
+    "RadCalc (LAP)": [0.65, 0.45]
+    "Delta4 Discover (ScandiDos)": [0.52, 0.72]
+    "myQA iON (IBA)": [0.48, 0.68]
+    "Octavius 4D (PTW)": [0.55, 0.40]
+    "DoseLab (Mobius/Varian)": [0.30, 0.35]
+          </div>
+          <p class="src">Beoordeling op basis van publieke installed-base, productroadmap en analyst-coverage. Confidence: medium.</p>
+        </div>
+
+        <div class="chart-card">
+          <h3>Position Sensitive Detectors (Photonics)</h3>
+          <p class="desc">
+            Portfolio-breedte op de X-as · custom- en large-area-capability op de Y-as. SiTek's positie
+            (custom + grote oppervlaktes) is exact de differentiatie van PEO Photonics.
+          </p>
+          <div class="mermaid">
+quadrantChart
+    title "PSDs — Portfolio-breedte vs. Custom + Large-area"
+    x-axis "Smal portfolio" --> "Breed portfolio"
+    y-axis "Standaardproducten" --> "Custom + grote oppervlaktes"
+    quadrant-1 "Custom leaders"
+    quadrant-2 "Custom niches"
+    quadrant-3 "Standard niches"
+    quadrant-4 "Standard leaders"
+    "Hamamatsu": [0.92, 0.55]
+    "First Sensor (TE)": [0.62, 0.35]
+    "OSI Optoelectronics": [0.45, 0.40]
+    "SiTek (PEO)": [0.38, 0.85]
+    "iC-Haus": [0.30, 0.60]
+    "Quantar": [0.18, 0.55]
+    "Teledyne Judson": [0.40, 0.45]
+          </div>
+          <p class="src">Confidence: medium. Hamamatsu is volume-leider; SiTek is custom-leider — daar zit de PEO-edge.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: Observations -->
+  <section>
+    <div class="container narrow" style="padding-left:0;padding-right:0;">
+      <span class="section-num">04 · Observaties</span>
+      <h2 class="section-title">Drie verticals, drie verschillende data-realiteiten</h2>
+      <p>
+        <strong>Medical</strong> is het best te modelleren: relatief geconsolideerde concurrenten
+        (Sun Nuclear / IBA / PTW / Varian / ScandiDos) en goede publieke marktrapporten. Hier landt
+        confidence vooral op <span class="conf high">High</span>.
+      </p>
+      <p>
+        <strong>Detection</strong> is het lastigst: TAM-cijfers zijn op productcategorie-niveau bekend
+        ($12.7 B globaal voor explosive detection), maar regio-splits naar BeNeLux + DE + Nordics komen
+        vooral uit defence-budgetten en tender-archieven. Veel cellen zullen op
+        <span class="conf low">Low</span> uitkomen tenzij we interne tender-data toevoegen.
+      </p>
+      <p>
+        <strong>Photonics</strong> zit ertussenin: photodiode- en PSD-markten zijn goed gedocumenteerd,
+        maar niches als SEEPOS, electron/ion sensors en custom backscatter-detectoren hebben weinig
+        publieke benchmarks. Daar wordt het veel <span class="conf med">Medium</span>.
+      </p>
+    </div>
+  </section>
+
+  <!-- Section 5: Gaps -->
+  <section>
+    <div class="container">
+      <span class="section-num">05 · Validatie nodig</span>
+      <h2 class="section-title">Vijf gaps voordat ik schaal naar het hele portfolio</h2>
+      <p class="section-intro">
+        Niet alle gaps blokkeren — maar 1 en 5 maken het verschil tussen 70% coverage met gokwerk en
+        een matrix die in een board-meeting overleeft.
+      </p>
+      <ol class="gaps">
+        <li>
+          <b>Volledige SKU-lijst per vertical</b>
+          <p>Nu ~50 producten via Google's index. Voor SKU-niveau (~70-100 rijen) is een XML-sitemap
+          of handmatige product-export nodig. Anders ~70% coverage.</p>
+        </li>
+        <li>
+          <b>Partner-mapping per SKU</b>
+          <p>Niet altijd expliciet op de site (bijv. PED: Mirion of Polimaster?). Bepaalt direct het
+          concurrent-veld in de matrix.</p>
+        </li>
+        <li>
+          <b>Distributierechten per regio</b>
+          <p>TAM in Nordics is alleen relevant voor SAM als PEO daar mag verkopen. Per merk verschilt
+          dat — soms BeNeLux exclusief, soms DE/AT erbij.</p>
+        </li>
+        <li>
+          <b>Pricing-realiteit</b>
+          <p>Alle prijzen zijn nu publieke list- of extrapolatie-cijfers. Voor échte pricing-strategie
+          zijn jullie list-prijzen of recent-deal-data nodig (NDA OK).</p>
+        </li>
+        <li>
+          <b>Strategische A/B/C-prioriteit per SKU</b>
+          <p>Niet elk SKU verdient een diepe analyse. Een A/B/C-classificatie van jullie kant maakt
+          de finale matrix 10× bruikbaarder voor de sales-organisatie.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Section 6: Validation checkpoint -->
+  <section>
+    <div class="container narrow" style="padding-left:0;padding-right:0;">
+      <span class="section-num">06 · Checkpoint</span>
+      <h2 class="section-title">Geef groen licht — of wijzig richting</h2>
+      <p class="section-intro">
+        Als deze preview het juiste format heeft, lever ik na groen licht een Excel-werkbestand met
+        alle ~80-100 SKU's plus een Word-management-summary met huisstijl-header en de grafieken
+        ingebakken als afbeeldingen.
+      </p>
+      <ul class="checklist">
+        <li>Kolommen kloppen (of: ik wil nog kolom <em>X</em> erbij)</li>
+        <li>Visuele stijl werkt (publicatie-format, Mermaid in browser) — of liever PNG-export voor in Word</li>
+        <li>Granulariteit is goed (10 hier; finaal 70-100 rijen)</li>
+        <li>TAM-extrapolatie (~28% EU-share voor BeNeLux + DE + Nordics) is bruikbaar als heuristiek</li>
+        <li>Ik kan gap 1 (SKU-lijst) en/of gap 5 (A/B/C) aanleveren</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <h4>Bronnen voor deze preview</h4>
+      <ul class="src-list">
+        <li><a href="https://www.custommarketinsights.com/report/radiation-therapy-software-market/">Custom Market Insights — Radiation Therapy Software</a></li>
+        <li><a href="https://www.pharmiweb.com/press-release/2023-11-21/global-radiation-therapy-software-industry-reaching-a-robust-value-of-us-8479-million-at-a-cagr-o">PharmiWeb — RT Software market</a></li>
+        <li><a href="https://www.futuremarketinsights.com/reports/radiation-therapy-software-market">Future Market Insights — RT Software</a></li>
+        <li><a href="https://www.radcalc.com/">LAP RadCalc — 2.300+ installs</a></li>
+        <li><a href="https://www.sunnuclear.com/suncheck">Sun Nuclear — SunCHECK</a></li>
+        <li><a href="https://www.sunnuclear.com/about/news/comparison-chart-radiation-therapy-quality-assurance-platforms">Sun Nuclear — vendor comparison</a></li>
+        <li><a href="https://www.iba-worldwide.com/iba-and-scandidos-form-strategic-alliance-increase-access-safe-radiotherapy">IBA + ScandiDos alliance</a></li>
+        <li><a href="https://www.businessresearchinsights.com/market-reports/silicon-photodiodes-market-104921">Business Research Insights — Silicon Photodiodes</a></li>
+        <li><a href="https://www.mordorintelligence.com/industry-reports/photodiode-sensors-market">Mordor — Photodiode Sensors</a></li>
+        <li><a href="https://www.verifiedmarketreports.com/product/2d-position-sensitive-detector-market/">Verified Market Reports — 2D PSD</a></li>
+        <li><a href="https://industryarc.com/Report/18595/optical-position-sensing-detector-market.html">IndustryARC — Optical PSD</a></li>
+        <li><a href="https://straitsresearch.com/report/explosive-detector-market">Straits Research — Explosive Detector</a></li>
+        <li><a href="https://www.mordorintelligence.com/industry-reports/explosive-trace-detection-market">Mordor — ETD market</a></li>
+        <li><a href="https://reports.valuates.com/market-reports/QYRE-Auto-23H14241/global-high-purity-germanium-hpge-detectors">Valuates — HPGe Detectors</a></li>
+        <li><a href="https://peomedical.com/products/">PEO Medical — Products</a></li>
+        <li><a href="https://peomedical.com/radiotherapy/qa-measurement-systems/suncheck-platform/">PEO Medical — SunCHECK</a></li>
+      </ul>
+
+      <div class="colophon">
+        <span>BRAND PWRD MEDIA · STRATEGIC BRIEFS · VOL. 01 / 2026</span>
+        <span>Preview · niet voor externe distributie</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mermaid -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        fontFamily: 'Inter, system-ui, sans-serif',
+        primaryColor: '#0F2E4C',
+        primaryTextColor: '#0F2E4C',
+        primaryBorderColor: '#0F2E4C',
+        lineColor: '#0F2E4C',
+        secondaryColor: '#F0801F',
+        tertiaryColor: '#F4C430',
+        background: '#FAF7F2',
+        mainBkg: '#0F2E4C',
+        xyChart: {
+          backgroundColor: '#FAF7F2',
+          titleColor: '#0F2E4C',
+          xAxisLabelColor: '#0F2E4C',
+          yAxisLabelColor: '#0F2E4C',
+          xAxisTitleColor: '#0F2E4C',
+          yAxisTitleColor: '#0F2E4C',
+          plotColorPalette: '#0F2E4C, #F0801F, #F4C430'
+        },
+        quadrantChart: {
+          quadrantPointFill: '#F0801F',
+          quadrantPointTextFill: '#0F2E4C',
+          quadrantTitleFill: '#0F2E4C',
+          quadrantXAxisTextFill: '#0F2E4C',
+          quadrantYAxisTextFill: '#0F2E4C',
+          quadrantInternalBorderStrokeFill: '#E2DCD0',
+          quadrantExternalBorderStrokeFill: '#0F2E4C',
+          quadrant1Fill: 'rgba(15,46,76,0.06)',
+          quadrant2Fill: 'rgba(240,128,31,0.06)',
+          quadrant3Fill: 'rgba(244,196,48,0.06)',
+          quadrant4Fill: 'rgba(15,46,76,0.03)'
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
