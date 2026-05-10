@@ -37,7 +37,8 @@ export async function GET(req: Request) {
   if (format === 'csv') {
     const headers = [
       'entry_date', 'mood_score', 'mood_variable', 'sleep', 'stress',
-      'activity_types', 'activity_intensity', 'alcohol_glasses', 'menstruation_flag',
+      'activity_types', 'activity_intensity', 'alcohol_glasses',
+      'symptoms', 'nap_taken', 'busy_day', 'menstruation_flag',
       'readiness_score', 'cycle_phase', 'score_feedback',
       'temp_c', 'condition',
     ]
@@ -49,6 +50,9 @@ export async function GET(req: Request) {
         (e.activity_types ?? []).join('|'),
         e.activity_intensity ?? '',
         e.alcohol_glasses ?? 0,
+        (e.symptoms ?? []).join('|'),
+        e.nap_taken,
+        e.busy_day,
         e.menstruation_flag,
         e.readiness_score ?? '',
         e.cycle_phase,

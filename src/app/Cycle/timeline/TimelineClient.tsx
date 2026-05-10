@@ -17,6 +17,26 @@ interface Entry {
   activityTypes: string[]
   intensity: string | null
   alcohol: number
+  symptoms: string[]
+  napTaken: boolean
+  busyDay: boolean
+}
+
+const SYMPTOM_LABEL_NL: Record<string, string> = {
+  brain_fog:         'Brain fog',
+  dizzy:             'Duizelig',
+  headache:          'Hoofdpijn',
+  overstimulated:    'Overprikkeld',
+  sad:               'Somber',
+  tired:             'Vermoeid',
+  exhausted:         'Uitgeput',
+  interrupted_sleep: 'Onderbroken slaap',
+  restless_legs:     'Rusteloze benen',
+  joint_pain:        'Gewrichtspijn',
+  back_pain:         'Rugpijn',
+  bloating:          'Opgeblazen buik',
+  cramps:            'Menstruatiekramp',
+  cold:              'Koud',
 }
 
 interface Weather {
@@ -199,6 +219,21 @@ export default function TimelineClient({
                   }}
                 />
               )}
+              {/* Symptom count badge — tiny number when 1+ symptoms */}
+              {e?.symptoms && e.symptoms.length > 0 && (
+                <div
+                  aria-label={`${e.symptoms.length} symptom${e.symptoms.length === 1 ? '' : 'en'}`}
+                  style={{
+                    fontSize: 9,
+                    lineHeight: 1,
+                    marginTop: 2,
+                    color: 'var(--cycle-accent)',
+                    fontWeight: 600,
+                  }}
+                >
+                  •{e.symptoms.length}
+                </div>
+              )}
             </button>
           )
         })}
@@ -235,6 +270,13 @@ export default function TimelineClient({
           {sel.alcohol > 0 && (
             <p className="text-sm">
               Alcohol: <strong>{sel.alcohol === 3 ? '3+' : sel.alcohol} {sel.alcohol === 1 ? 'glas' : 'glazen'}</strong>
+            </p>
+          )}
+          {sel.napTaken && <p className="text-sm">Dutje gehad ✓</p>}
+          {sel.busyDay && <p className="text-sm">Drukke dag ✓</p>}
+          {sel.symptoms.length > 0 && (
+            <p className="text-sm mt-2">
+              Symptomen: <strong>{sel.symptoms.map(s => SYMPTOM_LABEL_NL[s] ?? s).join(', ')}</strong>
             </p>
           )}
           {selWeather?.temp != null && (
