@@ -42,6 +42,7 @@ export async function POST(req: Request) {
     activity_intensity?: string | null
     alcohol_glasses?: number
     symptoms?: string[]
+    symptom_intensities?: Record<string, number>
     nap_taken?: boolean
     busy_day?: boolean
     menstruation_flag?: boolean
@@ -57,6 +58,14 @@ export async function POST(req: Request) {
     ACTIVITY_TYPES.includes(t as ActivityType))
   const intensity = body.activity_intensity ?? null
   const symptoms  = (body.symptoms ?? []).filter(isValidSymptom) as SymptomKey[]
+  // Build a clean intensities object: only keys that ARE in the symptoms
+  // array AND whose intensity is an integer 1-5. Anything else is dropped.
+  const intensitiesIn = body.symptom_intensities ?? {}
+  const symptomIntensities: Record<string, number> = {}
+  for (const key of symptoms) {
+    const v = intensitiesIn[key]
+    if (Number.isInteger(v) && v >= 1 && v <= 5) symptomIntensities[key] = v
+  }
   const napTaken  = Boolean(body.nap_taken)
   const busyDay   = Boolean(body.busy_day)
 
@@ -147,6 +156,7 @@ export async function POST(req: Request) {
       activity_intensity: isRest ? null : (intensity as ActivityIntensity),
       alcohol_glasses:    alcohol,
       symptoms,
+      symptom_intensities: symptomIntensities,
       nap_taken:          napTaken,
       busy_day:           busyDay,
       menstruation_flag:  Boolean(body.menstruation_flag),

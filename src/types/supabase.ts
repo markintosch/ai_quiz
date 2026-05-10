@@ -1002,6 +1002,7 @@ export interface Database {
           activity_intensity: string | null
           alcohol_glasses: number
           symptoms: string[]
+          symptom_intensities: Json
           nap_taken: boolean
           busy_day: boolean
           menstruation_flag: boolean
@@ -1023,6 +1024,7 @@ export interface Database {
           activity_intensity?: string | null
           alcohol_glasses?: number
           symptoms?: string[]
+          symptom_intensities?: Json
           nap_taken?: boolean
           busy_day?: boolean
           menstruation_flag?: boolean
@@ -1044,6 +1046,7 @@ export interface Database {
           activity_intensity?: string | null
           alcohol_glasses?: number
           symptoms?: string[]
+          symptom_intensities?: Json
           nap_taken?: boolean
           busy_day?: boolean
           menstruation_flag?: boolean

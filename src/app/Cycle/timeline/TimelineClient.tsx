@@ -18,6 +18,7 @@ interface Entry {
   intensity: string | null
   alcohol: number
   symptoms: string[]
+  symptomIntensities: Record<string, number>
   napTaken: boolean
   busyDay: boolean
 }
@@ -276,7 +277,11 @@ export default function TimelineClient({
           {sel.busyDay && <p className="text-sm">Drukke dag ✓</p>}
           {sel.symptoms.length > 0 && (
             <p className="text-sm mt-2">
-              Symptomen: <strong>{sel.symptoms.map(s => SYMPTOM_LABEL_NL[s] ?? s).join(', ')}</strong>
+              Symptomen: <strong>{sel.symptoms.map(s => {
+                const label = SYMPTOM_LABEL_NL[s] ?? s
+                const i = sel.symptomIntensities[s]
+                return i ? `${label} (${i})` : label
+              }).join(', ')}</strong>
             </p>
           )}
           {selWeather?.temp != null && (
