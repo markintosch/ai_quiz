@@ -56,7 +56,7 @@ const OPERATIONAL: Product[] = [
     num: '01',
     name: 'Performance Ops',
     tagline: 'Je team rapporteert. Onze agents optimaliseren.',
-    body: "Je performance marketeer besteedt 60% van de week aan rapportages die 's maandags al verouderd zijn. Performance Ops draait dagelijks: campagne-analyse, anomaly detection, budget-herverdeling, trend-narratief. Je team opent 's ochtends een briefing. Niet drie dashboards.",
+    body: "Je performance marketeer besteedt 60% van de week aan rapportages die 's maandags al verouderd zijn. Performance Ops draait dagelijks: campagne-analyse, anomaliedetectie, budget-herverdeling, trend-narratief. Je team opent 's ochtends een briefing. Niet drie dashboards.",
     result: 'Dagelijkse performance briefing, wekelijkse optimalisatie-aanbevelingen, maandelijkse trend-analyse — zonder handmatig werk.',
     agents: 'Lookout · Helmsman · Chronicle',
   },
@@ -65,14 +65,14 @@ const OPERATIONAL: Product[] = [
     name: 'Content Engine',
     tagline: 'Van strategie naar 30 dagen content in één sessie.',
     body: 'De meeste contentkalenders zijn dood bij week twee. Niet omdat de ideeën op zijn, maar omdat niemand de vertaling maakt van strategie naar kanaal-specifieke content. Content Engine doet die vertaling: positionering → thema\'s → copy per kanaal → performance feedback → bijsturen.',
-    result: 'Contentkalender, copy-varianten per platform, en een feedback loop die leert wat werkt.',
+    result: 'Contentkalender, copy-varianten per platform, en een terugkoppeling-lus die leert wat werkt.',
     agents: 'Quill · Slogger · Lookout',
   },
   {
     num: '03',
     name: 'CRM Autopilot',
     tagline: 'Van lead naar klant zonder dat iemand iets vergeet.',
-    body: 'Elke organisatie heeft leads die weglekken. Niet door slechte sales, maar door gaten in het systeem. CRM Autopilot bouwt het volledige pad: lead scoring, automated nurture flows, sales handoff triggers, en re-engagement voor leads die stil zijn gevallen.',
+    body: 'Elke organisatie heeft leads die weglekken. Niet door slechte sales, maar door gaten in het systeem. CRM Autopilot bouwt het volledige pad: lead-scoring, geautomatiseerde opvolgstromen, overdrachtmomenten naar sales, en heractivatie voor leads die stil zijn gevallen.',
     result: 'Een compleet acquisitiesysteem — van onbekende bezoeker tot terugkerende klant.',
     agents: 'Navigator · Quill · Helmsman',
   },
@@ -91,8 +91,8 @@ const STRATEGIC: Product[] = [
     num: '05',
     name: 'Market Intelligence',
     tagline: 'Weet wat er in je markt verandert. Voordat je concurrent het vertelt.',
-    body: 'De meeste teams doen concurrentie-analyse als ze een pitch moeten winnen. Market Intelligence draait continu: competitor monitoring, positioning gaps, pricing shifts, en markttrends die relevant zijn voor jouw categorie.',
-    result: 'Maandelijks intelligence-rapport, real-time alerts bij significante verschuivingen, en een positioning gap-analyse die je strategie voedt.',
+    body: 'De meeste teams doen concurrentie-analyse als ze een pitch moeten winnen. Market Intelligence draait continu: concurrenten volgen, positionerings-witte-vlekken, prijsverschuivingen, en markttrends die relevant zijn voor jouw categorie.',
+    result: 'Maandelijks intelligence-rapport, directe meldingen bij significante verschuivingen, en een positionerings-analyse die je strategie voedt.',
     agents: 'Spy · Lookout · Sage',
   },
   {
@@ -157,7 +157,7 @@ const CASES: Case[] = [
       'Performance: Chronicle meet, Lookout monitort, terugkoppeling voedt de volgende ronde',
       'Geen spreadsheets als tussenlaag, geen handmatige overdracht tussen disciplines',
     ],
-    result: 'Eén operationeel systeem dat dagelijks marketing-werk doet voor een handvol klanten parallel — zonder ploeg-uitbreiding.',
+    result: 'Eén operationeel systeem dat dagelijks marketing-werk doet voor een handvol klanten parallel — zonder team-uitbreiding.',
     source: 'Brand PWRD Media',
     isCrew: true,
   },
@@ -258,7 +258,7 @@ export default function OplossingenPage() {
             Tier 2 · Voor strategische momenten
           </p>
           <h2 style={{ fontSize: 'clamp(22px, 3vw, 30px)', fontWeight: 800, marginBottom: 36, color: INK, letterSpacing: '-0.015em' }}>
-            Twee systemen voor de keuzes die telken.
+            Twee systemen voor de keuzes die tellen.
           </h2>
           <div className="grid md:grid-cols-2 gap-5">
             {STRATEGIC.map(p => <ProductCard key={p.num} p={p} accent={WARM} />)}

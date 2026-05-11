@@ -38,7 +38,7 @@ const T = {
   nl: {
     navName:    'Mark de Kock',
     navRole:    'AI strategie & executie',
-    navPartner: 'Partner · Brand PWRD Media',
+    navPartner: 'Oprichter · Brand PWRD Media',
     navCta:     'Plan gesprek →',
     heroBadge:  'Persoonlijke begeleiding · Beperkt beschikbaar',
     heroH1a:    'Van AI-ambitie naar',
@@ -131,7 +131,7 @@ const T = {
     aboutBody1: 'In mijn loopbaan heb ik veel gewerkt op het snijvlak van strategie, groei en uitvoering. AI is voor mij geen los onderwerp bovenop, maar de nieuwste realiteit op een vertrouwd snijvlak: hoe zorg je dat goede ideeën ook landen?',
     aboutBody2: 'Wat ik meebreng: hands-on ervaring met AI in de praktijk én jarenlange ervaring met organisaties die moeten bewegen maar vastlopen. Ik weet wanneer een plan haalbaar is. En wanneer het mooi klinkt maar nooit landt.',
     aboutCredentials: [
-      'Partner bij Brand PWRD Media',
+      'Oprichter Brand PWRD Media',
       'Senior ervaring in strategie, groei, klantbeleving en executie',
       'Hands-on ontwikkeling en toepassing van AI in meerdere sectoren',
       'Werkt in Nederlands en Engels',
@@ -154,7 +154,7 @@ const T = {
   en: {
     navName:    'Mark de Kock',
     navRole:    'AI strategy & execution',
-    navPartner: 'Partner · Brand PWRD Media',
+    navPartner: 'Founder · Brand PWRD Media',
     navCta:     'Book a call →',
     heroBadge:  'Personal guidance · Limited availability',
     heroH1a:    'From AI ambition to',
@@ -247,7 +247,7 @@ const T = {
     aboutBody1: 'I\'ve spent a lot of my career at the intersection of strategy, growth and execution. For me, AI isn\'t a separate topic layered on top. It\'s the latest challenge on a familiar question: how do you make sure good ideas actually land?',
     aboutBody2: 'What I bring: hands-on experience building and applying AI in practice, and years of experience with organisations that need to move but keep getting stuck. I know the difference between a plan that sounds right and one that will actually hold.',
     aboutCredentials: [
-      'Partner at Brand PWRD Media',
+      'Founder of Brand PWRD Media',
       'Senior experience in strategy, growth, customer experience and execution',
       'Hands-on development and application of AI across multiple sectors',
       'Works in Dutch and English',
@@ -270,7 +270,7 @@ const T = {
   de: {
     navName:    'Mark de Kock',
     navRole:    'KI-Strategie & Umsetzung',
-    navPartner: 'Partner · Brand PWRD Media',
+    navPartner: 'Gründer · Brand PWRD Media',
     navCta:     'Gespräch vereinbaren →',
     heroBadge:  'Persönliche Begleitung · Begrenzte Verfügbarkeit',
     heroH1a:    'Von KI-Ambitionen zu',
@@ -351,14 +351,14 @@ const T = {
     aboutBody1: 'In meiner Laufbahn habe ich viel an der Schnittstelle von Strategie, Wachstum und Umsetzung gearbeitet. KI ist für mich kein separates Thema obendrauf, sondern die neueste Realität an einer vertrauten Schnittstelle: Wie sorgt man dafür, dass gute Ideen wirklich landen?',
     aboutBody2: 'Was ich mitbringe: praktische Erfahrung mit KI in der Realität und jahrelange Erfahrung mit Organisationen, die sich bewegen müssen, aber immer wieder steckenbleiben. Ich weiss, wann ein Plan tragfähig ist. Und wann er gut klingt, aber nie umgesetzt wird.',
     aboutCredentials: [
-      'Partner bei Brand PWRD Media',
+      'Gründer Brand PWRD Media',
       'Umfangreiche Erfahrung in Strategie, Wachstum, Customer Experience und Umsetzung',
       'Praktische Entwicklung und Anwendung von KI in mehreren Sektoren',
       'Arbeitet auf Niederländisch und Englisch (internationale Projekte)',
       'Erfahrung in Gesundheitswesen, Finance, FMCG, Nachhaltigkeit, CX und mehr',
     ],
 
-    programCta:  'Trajektoptionen ansehen →',
+    programCta:  'Begleitungsoptionen ansehen →',
 
     spotsLabel:  'Verfügbarkeit',
     spotsTitle:  'Ich arbeite mit einer kleinen Anzahl von Begleitungen gleichzeitig.',
