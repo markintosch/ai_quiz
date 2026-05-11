@@ -6,11 +6,14 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
+import { movingAverage, findOutlierIndex, pearson } from '@/lib/cycle/stats'
 
 interface Entry {
   date: string
   mood: number
   moodVariable: boolean
+  sleep: number
+  stress: number
   readiness: number | null
   phase: string
   period: boolean
@@ -95,13 +98,16 @@ export default function TimelineClient({
   const entryByDate = useMemo(() => Object.fromEntries(entries.map(e => [e.date, e])), [entries])
   const weatherByDate = useMemo(() => Object.fromEntries(weather.map(w => [w.date, w])), [weather])
   const [selected, setSelected] = useState<string | null>(null)
+  const [view, setView] = useState<'days' | 'patronen'>('days')
 
   const sel = selected ? entryByDate[selected] : null
   const selWeather = selected ? weatherByDate[selected] : null
 
+  const enoughForPatterns = entries.length >= 14
+
   return (
     <main className="min-h-screen flex flex-col px-4 py-8">
-      <header className="px-2 mb-6 flex items-center justify-between">
+      <header className="px-2 mb-4 flex items-center justify-between">
         <h1 className="cycle-display text-3xl">Tijdlijn</h1>
         <Link
           href="/Cycle/output"
@@ -111,6 +117,38 @@ export default function TimelineClient({
           Terug
         </Link>
       </header>
+
+      {/* View toggle — only show Patronen once there's enough data */}
+      {enoughForPatterns && (
+        <div style={{ display: 'flex', gap: 6, padding: '0 8px 14px' }}>
+          <button
+            type="button"
+            className="cycle-chip"
+            data-selected={view === 'days' ? 'true' : 'false'}
+            onClick={() => setView('days')}
+            style={{ minHeight: 'auto', padding: '8px 16px', fontSize: 14, flex: 1 }}
+          >
+            Dagen
+          </button>
+          <button
+            type="button"
+            className="cycle-chip"
+            data-selected={view === 'patronen' ? 'true' : 'false'}
+            onClick={() => setView('patronen')}
+            style={{ minHeight: 'auto', padding: '8px 16px', fontSize: 14, flex: 1 }}
+          >
+            Patronen
+          </button>
+        </div>
+      )}
+
+      {view === 'patronen' ? (
+        <PatternsView days={days} entryByDate={entryByDate} />
+      ) : null}
+
+      {view === 'days' && (
+        <>
+        {/* Days view (existing bar grid) */}
 
       <div
         style={{
@@ -291,6 +329,8 @@ export default function TimelineClient({
           )}
         </div>
       )}
+        </>
+      )}
 
       {canShowInsights && (
         <div style={{ marginTop: 'auto', paddingTop: 30, display: 'flex', justifyContent: 'center' }}>
@@ -304,5 +344,201 @@ export default function TimelineClient({
         </div>
       )}
     </main>
+  )
+}
+
+// ── Patronen view: small multiples with phase tints + outlier annotations ──
+const METRIC_COLOR_PROD = {
+  mood:      '#B86A64',
+  sleep:     '#7A9A8A',
+  readiness: '#D4847E',
+  stress:    '#8B6B85',
+} as const
+
+function PatternsView({
+  days, entryByDate,
+}: {
+  days: string[]
+  entryByDate: Record<string, Entry>
+}) {
+  // Extract per-day series, leaving gaps as null
+  const mood:      (number | null)[] = days.map(d => entryByDate[d]?.mood ?? null)
+  const sleep:     (number | null)[] = days.map(d => entryByDate[d]?.sleep ?? null)
+  const readiness: (number | null)[] = days.map(d => entryByDate[d]?.readiness ?? null)
+  const stress:    (number | null)[] = days.map(d => entryByDate[d]?.stress ?? null)
+  const phases: string[] = days.map(d => entryByDate[d]?.phase ?? 'unknown')
+
+  // ── Pattern story: find the strongest correlation among the 4 metrics ────
+  const pairs: { a: string; b: string; series: { x: number[]; y: number[] }; r: number }[] = []
+  const seriesByLabel = {
+    stemming: mood,
+    slaap:    sleep,
+    energie:  readiness,
+    kalmte:   stress,   // higher score = less stress, calmer
+  } as const
+  const labels = Object.keys(seriesByLabel) as (keyof typeof seriesByLabel)[]
+  for (let i = 0; i < labels.length; i++) {
+    for (let j = i + 1; j < labels.length; j++) {
+      const aSeries = seriesByLabel[labels[i]]
+      const bSeries = seriesByLabel[labels[j]]
+      const x: number[] = []
+      const y: number[] = []
+      for (let k = 0; k < aSeries.length; k++) {
+        const av = aSeries[k]
+        const bv = bSeries[k]
+        if (av != null && bv != null && Number.isFinite(av) && Number.isFinite(bv)) {
+          x.push(av)
+          y.push(bv)
+        }
+      }
+      if (x.length < 7) continue
+      pairs.push({ a: labels[i], b: labels[j], series: { x, y }, r: pearson(x, y) })
+    }
+  }
+  pairs.sort((p, q) => Math.abs(q.r) - Math.abs(p.r))
+  const top = pairs[0]
+  let narrative: string | null = null
+  if (top && Math.abs(top.r) > 0.35) {
+    const dir = top.r > 0
+      ? 'bewegen samen op en neer'
+      : 'bewegen in tegengestelde richting'
+    const strength = Math.abs(top.r) > 0.6 ? 'sterk' : Math.abs(top.r) > 0.45 ? 'duidelijk' : 'licht'
+    narrative = `Deze weken ${dir} je ${top.a} en ${top.b} — ${strength}.`
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      {narrative && (
+        <div style={{
+          background: 'var(--cycle-card)',
+          borderRadius: 18,
+          padding: 18,
+          border: '1px solid var(--cycle-border)',
+          marginBottom: 4,
+        }}>
+          <p className="cycle-display" style={{ fontSize: 20, lineHeight: 1.3, margin: 0, color: 'var(--cycle-fg)' }}>
+            {narrative}
+          </p>
+          <p className="text-xs mt-2" style={{ color: 'var(--cycle-muted)' }}>
+            Gebaseerd op je laatste 28 dagen · r = {top.r.toFixed(2)}
+          </p>
+        </div>
+      )}
+
+      <MiniMetric label="Stemming"  values={mood}      phases={phases} color={METRIC_COLOR_PROD.mood}      max={10}  noteHigh="hoogste stemming" noteLow="laagste stemming" />
+      <MiniMetric label="Slaap"     values={sleep}     phases={phases} color={METRIC_COLOR_PROD.sleep}     max={10}  noteHigh="beste slaap"      noteLow="slechtste slaap" />
+      <MiniMetric label="Readiness" values={readiness} phases={phases} color={METRIC_COLOR_PROD.readiness} max={100} noteHigh="hoogste energie"  noteLow="laagste energie" />
+      <MiniMetric label="Stress"    values={stress}    phases={phases} color={METRIC_COLOR_PROD.stress}    max={10}  noteHigh="meest ontspannen" noteLow="meest gestrest" inverted />
+      <p className="text-xs text-center mt-2" style={{ color: 'var(--cycle-muted)' }}>
+        28 dagen · 5-daags voortschrijdend gemiddelde · oranje punt = opvallendste dag
+      </p>
+    </div>
+  )
+}
+
+function MiniMetric({
+  label, values, phases, color, max, noteHigh, noteLow, inverted,
+}: {
+  label: string
+  values: (number | null)[]
+  phases: string[]
+  color: string
+  max: number
+  noteHigh: string
+  noteLow: string
+  inverted?: boolean    // if true, "high" means low score (e.g. stress)
+}) {
+  const W = 1000, H = 200, PAD_L = 80, PAD_R = 16, PAD_T = 18, PAD_B = 30
+  const innerW = W - PAD_L - PAD_R
+  const innerH = H - PAD_T - PAD_B
+  const x = (i: number) => PAD_L + (i / Math.max(1, values.length - 1)) * innerW
+  const y = (v: number) => PAD_T + (1 - v / max) * innerH
+
+  // Build a continuous series with gap-handling: skip nulls
+  const known: { i: number; v: number }[] = []
+  values.forEach((v, i) => { if (v != null && Number.isFinite(v)) known.push({ i, v }) })
+  if (known.length < 3) return (
+    <div style={{ background: 'var(--cycle-card)', borderRadius: 14, padding: '8px 14px', border: '1px solid var(--cycle-border)' }}>
+      <span className="cycle-display" style={{ fontSize: 18 }}>{label}</span>
+      <span className="text-xs" style={{ color: 'var(--cycle-muted)', marginLeft: 12 }}>nog niet genoeg data</span>
+    </div>
+  )
+
+  const ma = movingAverage(known.map(k => k.v), 5)
+  const outlierIdx = findOutlierIndex(ma)
+  const path = ma.map((v, j) => `${j === 0 ? 'M' : 'L'} ${x(known[j].i).toFixed(1)} ${y(v).toFixed(1)}`).join(' ')
+
+  // Phase bands across full timeline
+  const bands: { start: number; end: number; phase: string }[] = []
+  phases.forEach((p, i) => {
+    const last = bands[bands.length - 1]
+    if (last && last.phase === p) last.end = i
+    else bands.push({ start: i, end: i, phase: p })
+  })
+
+  const hx = x(known[outlierIdx].i)
+  const hy = y(ma[outlierIdx])
+  const isHigh = inverted
+    ? ma[outlierIdx] === Math.max(...ma)
+    : ma[outlierIdx] === Math.max(...ma)
+  // For "inverted" metrics (stress): high score = low actual stress = "calm"
+  const note = isHigh
+    ? (inverted ? noteHigh : noteHigh)
+    : (inverted ? noteLow : noteLow)
+  // Compute the actual date for the annotation
+  const dateForLabel = `dag ${known[outlierIdx].i + 1}`
+
+  return (
+    <div style={{ background: 'var(--cycle-card)', borderRadius: 14, padding: '6px 10px', border: '1px solid var(--cycle-border)' }}>
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" preserveAspectRatio="none" style={{ display: 'block' }}>
+        {/* Label */}
+        <text x={12} y={H / 2 - 4} fontSize={26} fill="var(--cycle-fg)" fontFamily="Cormorant Garamond, Georgia, serif">{label}</text>
+        <text x={12} y={H / 2 + 22} fontSize={16} fill="var(--cycle-muted)" fontFamily="Inter, system-ui">
+          {Math.round(ma[ma.length - 1])}
+        </text>
+
+        {/* Phase bands */}
+        {bands.map((b, i) => (
+          <rect
+            key={i}
+            x={x(b.start) - (b.start === 0 ? 0 : innerW / (Math.max(1, values.length - 1) * 2))}
+            y={PAD_T}
+            width={x(b.end) - x(b.start) + innerW / Math.max(1, values.length - 1)}
+            height={innerH}
+            fill={PHASE_COLOR[b.phase] ?? 'var(--cycle-border)'}
+            opacity={0.12}
+          />
+        ))}
+
+        {/* Daily dots */}
+        {known.map(({ i, v }) => (
+          <circle key={i} cx={x(i)} cy={y(v)} r={2.4} fill={color} opacity={0.4} />
+        ))}
+
+        {/* Moving average */}
+        <path d={path} fill="none" stroke={color} strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" />
+
+        {/* Outlier marker + callout */}
+        <circle cx={hx} cy={hy} r={7} fill="none" stroke={color} strokeWidth={2.2} />
+        <circle cx={hx} cy={hy} r={3.6} fill={color} />
+        <line x1={hx} y1={hy} x2={hx} y2={PAD_T + 12} stroke={color} strokeDasharray="3 3" strokeWidth={1.4} />
+        <text
+          x={hx < W / 2 ? hx + 10 : hx - 10}
+          y={PAD_T + 12}
+          fontSize={16}
+          fill="var(--cycle-fg)"
+          textAnchor={hx < W / 2 ? 'start' : 'end'}
+          fontFamily="Inter, system-ui"
+          fontWeight={500}
+        >
+          {note} ({dateForLabel})
+        </text>
+
+        {/* Day labels */}
+        {[1, 7, 14, 21, 28].map(d => values[d - 1] !== undefined && (
+          <text key={d} x={x(d - 1)} y={H - 6} fontSize={14} fill="var(--cycle-muted)" textAnchor="middle">{d}</text>
+        ))}
+      </svg>
+    </div>
   )
 }
