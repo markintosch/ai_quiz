@@ -185,14 +185,14 @@ import {
 // Per-product author lists for richer schema
 const PRODUCT_AUTHORS: Record<string, Array<{ name: string; jobTitle?: string; url?: string; orgName?: string }>> = {
   ai_maturity: [
-    { name: 'Mark de Kock',    jobTitle: 'Strategisch mentor AI & executie',  orgName: 'Brand PWRD Media' },
+    { name: 'Mark de Kock',    jobTitle: 'Founder · AI strategie & executie',  orgName: 'Brand PWRD Media' },
     { name: 'Frank Meeuwsen',  jobTitle: 'AI Trainer & Consultant',           url: 'https://frankmeeuwsen.com' },
   ],
   cloud_readiness: [
     { name: 'TrueFullstaq',    jobTitle: 'Cloud & Platform Engineering',      orgName: 'TrueFullstaq' },
   ],
   manda_readiness: [
-    { name: 'Mark de Kock',    jobTitle: 'Strategisch mentor AI & executie',  orgName: 'Brand PWRD Media' },
+    { name: 'Mark de Kock',    jobTitle: 'Founder · AI strategie & executie',  orgName: 'Brand PWRD Media' },
     { name: 'Sandra Hofstede', jobTitle: 'Strategisch leiderschap',           orgName: 'Hofstede & de Kock' },
   ],
   hr_readiness: [

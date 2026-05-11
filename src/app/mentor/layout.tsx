@@ -121,10 +121,10 @@ const jsonLd = serializeJsonLd([
   buildPersonSchema({
     name:        'Mark de Kock',
     url:         'https://markdekock.com',
-    jobTitle:    'AI strategie & executie',
-    description: 'Senior operator en partner bij Kirk & Blackbeard. Twintig jaar ervaring in strategie, groei, klantbeleving en executie. Begeleidt leidinggevenden bij het vertalen van AI-ambitie naar richting, draagvlak en een eerste werkende use case.',
-    orgName:     'Kirk & Blackbeard',
-    orgUrl:      'https://kirkandblackbeard.com',
+    jobTitle:    'Founder · AI strategie & executie',
+    description: 'Founder van Brand PWRD Media. Twintig jaar ervaring in strategie, groei, klantbeleving en executie. Begeleidt leidinggevenden bij het vertalen van AI-ambitie naar richting, draagvlak en een eerste werkende use case.',
+    orgName:     'Brand PWRD Media',
+    orgUrl:      'https://brandpwrdmedia.com',
     country:     'NL',
     knowsAbout:  [
       'AI strategie', 'Digitale transformatie', 'Verandermanagement', 'Executie', 'Klantbeleving', 'Groei',
