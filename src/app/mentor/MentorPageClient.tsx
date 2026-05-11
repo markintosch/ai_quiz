@@ -983,17 +983,17 @@ function MentorPageInner() {
               </p>
               <h3 style={{ fontSize: 'clamp(20px, 2.5vw, 26px)', fontWeight: 800, color: INK, lineHeight: 1.3, letterSpacing: '-0.01em', margin: 0 }}>
                 {lang === 'nl'
-                  ? 'Niet ready voor begeleiding? Geef je team een praktijkcursus.'
+                  ? 'Liever eerst zelf aan de slag? Er is ook een praktijkcursus.'
                   : lang === 'de'
-                  ? 'Noch nicht bereit für Begleitung? Gib deinem Team einen Praxiskurs.'
-                  : "Not ready for guidance? Give your team a practical course."}
+                  ? 'Lieber erst selbst loslegen? Es gibt auch einen Praxiskurs.'
+                  : "Prefer to roll up your sleeves first? There's also a practical course."}
               </h3>
               <p style={{ fontSize: 15, color: BODY, lineHeight: 1.65, margin: 0 }}>
                 {lang === 'nl'
-                  ? 'Samen met Frank Meeuwsen ontwikkelden we cursusclaudecode.nl — een hands-on cursus voor professionals die AI willen gebruiken, niet bespreken. Past goed naast strategische begeleiding, of als startpunt op zich.'
+                  ? 'Samen met Frank Meeuwsen ontwikkelden we cursusclaudecode.nl — een praktijkcursus voor professionals die AI willen gebruiken, niet bespreken. Voor jezelf, of voor mensen in je team. Naast begeleiding of als eigen startpunt.'
                   : lang === 'de'
-                  ? 'Gemeinsam mit Frank Meeuwsen haben wir cursusclaudecode.nl entwickelt — ein praxisnaher Kurs für Profis, die KI nutzen, nicht besprechen wollen. Passt neben strategischer Begleitung oder als Einstieg für sich.'
-                  : 'Together with Frank Meeuwsen we built cursusclaudecode.nl — a hands-on course for professionals who want to use AI, not just discuss it. Works alongside strategic guidance or as a standalone first step.'}
+                  ? 'Gemeinsam mit Frank Meeuwsen haben wir cursusclaudecode.nl entwickelt — ein Praxiskurs für Profis, die KI nutzen statt nur darüber zu sprechen. Für dich selbst oder für Menschen in deinem Team. Neben Begleitung oder als eigener Einstieg.'
+                  : "Together with Frank Meeuwsen we built cursusclaudecode.nl — a practical course for professionals who want to use AI, not just discuss it. For yourself, or for people in your team. Alongside guidance or as your own starting point."}
               </p>
               <a
                 href="https://cursusclaudecode.nl/mdk?utm_source=markdekock_mentor&utm_medium=cta_block&utm_campaign=mdk_affiliate"
