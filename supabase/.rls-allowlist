@@ -23,8 +23,9 @@ pulse_anomaly_flags
 # ── Cohort + arena + site_content — RLS enabled in supabase/migration_rls_security_audit.sql
 cohort_waves
 cohort_responses
+arena_questions
 arena_sessions
 arena_participants
-arena_responses
+arena_answers
 arena_subscribers
 site_content

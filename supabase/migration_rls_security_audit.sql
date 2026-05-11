@@ -4,43 +4,61 @@
 -- 2026-05-09 that these tables were created without ENABLE ROW LEVEL SECURITY
 -- in their original migrations:
 --
---   - arena_sessions, arena_participants, arena_responses (arena games)
+--   - arena_questions, arena_sessions, arena_participants, arena_answers
+--     (cloud arena games)
+--   - arena_subscribers (arena scheduled notifications)
 --   - cohort_waves, cohort_responses (cohort dashboard)
+--   - site_content (whitelabel CMS)
 --
--- Mark already ran the equivalent of this in the Supabase SQL editor on
--- 2026-05-09. This file exists in source control so:
---   1. Future fresh deploys reproduce the same state
---   2. Anyone reviewing the codebase sees the audit happened
---   3. The pre-commit RLS check (scripts/check-rls.sh) won't flag a gap
---
--- Pulse tables (pulse_*) are handled separately via migration_rls_pulse.sql.
+-- Each ALTER TABLE is wrapped in its own DO block with EXCEPTION handler so
+-- ONE missing table doesn't abort the others. Re-runnable / idempotent.
 
-DO $$
-BEGIN
-  -- Arena game tables — multi-player live quiz
-  EXECUTE 'ALTER TABLE arena_sessions       ENABLE ROW LEVEL SECURITY';
-  EXECUTE 'ALTER TABLE arena_participants   ENABLE ROW LEVEL SECURITY';
-  EXECUTE 'ALTER TABLE arena_responses      ENABLE ROW LEVEL SECURITY';
-  EXECUTE 'ALTER TABLE arena_subscribers    ENABLE ROW LEVEL SECURITY';
-
-  -- Cohort dashboard tables — used by /admin/cohorts/[id]
-  EXECUTE 'ALTER TABLE cohort_waves         ENABLE ROW LEVEL SECURITY';
-  EXECUTE 'ALTER TABLE cohort_responses     ENABLE ROW LEVEL SECURITY';
-
-  -- Whitelabel content registry — used by /admin/content
-  EXECUTE 'ALTER TABLE site_content         ENABLE ROW LEVEL SECURITY';
-EXCEPTION
-  WHEN undefined_table THEN
-    -- If a table doesn't exist (e.g. fresh deploy where the original
-    -- migration hasn't run yet), skip silently. The original migration's
-    -- CREATE will run later; the rule still holds.
-    RAISE NOTICE 'Skipped — one or more tables not yet created';
+DO $$ BEGIN
+  EXECUTE 'ALTER TABLE arena_questions     ENABLE ROW LEVEL SECURITY';
+EXCEPTION WHEN undefined_table THEN RAISE NOTICE 'arena_questions does not exist — skipped';
 END $$;
 
--- Verify (run manually after this migration):
+DO $$ BEGIN
+  EXECUTE 'ALTER TABLE arena_sessions      ENABLE ROW LEVEL SECURITY';
+EXCEPTION WHEN undefined_table THEN RAISE NOTICE 'arena_sessions does not exist — skipped';
+END $$;
+
+DO $$ BEGIN
+  EXECUTE 'ALTER TABLE arena_participants  ENABLE ROW LEVEL SECURITY';
+EXCEPTION WHEN undefined_table THEN RAISE NOTICE 'arena_participants does not exist — skipped';
+END $$;
+
+DO $$ BEGIN
+  EXECUTE 'ALTER TABLE arena_answers       ENABLE ROW LEVEL SECURITY';
+EXCEPTION WHEN undefined_table THEN RAISE NOTICE 'arena_answers does not exist — skipped';
+END $$;
+
+DO $$ BEGIN
+  EXECUTE 'ALTER TABLE arena_subscribers   ENABLE ROW LEVEL SECURITY';
+EXCEPTION WHEN undefined_table THEN RAISE NOTICE 'arena_subscribers does not exist — skipped';
+END $$;
+
+DO $$ BEGIN
+  EXECUTE 'ALTER TABLE cohort_waves        ENABLE ROW LEVEL SECURITY';
+EXCEPTION WHEN undefined_table THEN RAISE NOTICE 'cohort_waves does not exist — skipped';
+END $$;
+
+DO $$ BEGIN
+  EXECUTE 'ALTER TABLE cohort_responses    ENABLE ROW LEVEL SECURITY';
+EXCEPTION WHEN undefined_table THEN RAISE NOTICE 'cohort_responses does not exist — skipped';
+END $$;
+
+DO $$ BEGIN
+  EXECUTE 'ALTER TABLE site_content        ENABLE ROW LEVEL SECURITY';
+EXCEPTION WHEN undefined_table THEN RAISE NOTICE 'site_content does not exist — skipped';
+END $$;
+
+-- Verify after running:
 --   SELECT schemaname, tablename, rowsecurity
 --   FROM   pg_tables
---   WHERE  schemaname = 'public' AND tablename IN
---          ('arena_sessions','arena_participants','arena_responses',
---           'cohort_waves','cohort_responses');
--- All five should report rowsecurity = true.
+--   WHERE  schemaname = 'public'
+--     AND  tablename IN (
+--       'arena_questions','arena_sessions','arena_participants','arena_answers',
+--       'arena_subscribers','cohort_waves','cohort_responses','site_content'
+--     );
+-- Each should report rowsecurity = true.
