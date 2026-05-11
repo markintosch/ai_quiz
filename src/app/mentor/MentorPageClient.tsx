@@ -965,6 +965,59 @@ function MentorPageInner() {
         </div>
       </section>
 
+      {/* ── Cursus alternatief — voor wie nog niet ready is voor begeleiding ── */}
+      <section style={{ background: LIGHT, padding: '64px 24px', borderTop: `1px solid ${BORDER}` }}>
+        <div className="max-w-3xl mx-auto">
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
+            <motion.div variants={fadeUp} style={{
+              background: WHITE,
+              border: `1px solid ${BORDER}`,
+              borderRadius: 16,
+              padding: '32px 32px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 14,
+            }}>
+              <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: ACCENT, marginBottom: 0 }}>
+                {lang === 'nl' ? 'Voor je team' : lang === 'de' ? 'Für dein Team' : 'For your team'}
+              </p>
+              <h3 style={{ fontSize: 'clamp(20px, 2.5vw, 26px)', fontWeight: 800, color: INK, lineHeight: 1.3, letterSpacing: '-0.01em', margin: 0 }}>
+                {lang === 'nl'
+                  ? 'Niet ready voor begeleiding? Geef je team een praktijkcursus.'
+                  : lang === 'de'
+                  ? 'Noch nicht bereit für Begleitung? Gib deinem Team einen Praxiskurs.'
+                  : "Not ready for guidance? Give your team a practical course."}
+              </h3>
+              <p style={{ fontSize: 15, color: BODY, lineHeight: 1.65, margin: 0 }}>
+                {lang === 'nl'
+                  ? 'Samen met Frank Meeuwsen ontwikkelden we cursusclaudecode.nl — een hands-on cursus voor professionals die AI willen gebruiken, niet bespreken. Past goed naast strategische begeleiding, of als startpunt op zich.'
+                  : lang === 'de'
+                  ? 'Gemeinsam mit Frank Meeuwsen haben wir cursusclaudecode.nl entwickelt — ein praxisnaher Kurs für Profis, die KI nutzen, nicht besprechen wollen. Passt neben strategischer Begleitung oder als Einstieg für sich.'
+                  : 'Together with Frank Meeuwsen we built cursusclaudecode.nl — a hands-on course for professionals who want to use AI, not just discuss it. Works alongside strategic guidance or as a standalone first step.'}
+              </p>
+              <a
+                href="https://cursusclaudecode.nl/mdk?utm_source=markdekock_mentor&utm_medium=cta_block&utm_campaign=mdk_affiliate"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackEvent('mentor_cursus_block_clicked')}
+                style={{
+                  alignSelf: 'flex-start',
+                  marginTop: 4,
+                  color: ACCENT,
+                  fontWeight: 700,
+                  fontSize: 14,
+                  textDecoration: 'none',
+                  borderBottom: `2px solid ${ACCENT}55`,
+                  paddingBottom: 2,
+                }}
+              >
+                {lang === 'nl' ? 'Bekijk de cursus' : lang === 'de' ? 'Zum Kurs' : 'See the course'} ↗
+              </a>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* ── Spots + CTA ── */}
       <section style={{ background: INK, padding: '100px 24px' }}>
         <div className="max-w-xl mx-auto text-center">
@@ -1022,8 +1075,20 @@ function MentorPageInner() {
             <div style={{ width: 24, height: 24, borderRadius: 6, background: INK, border: '1px solid #1E293B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: WHITE, fontFamily: 'serif' }}>M</div>
             <span style={{ fontSize: 13, color: '#475569' }}>{t.navName} — {t.footerCopy}</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
+            <a href="/oplossingen" onClick={() => trackEvent('mentor_footer_solutions_clicked')} style={{ fontSize: 12, color: '#64748B', textDecoration: 'none' }}>
+              {lang === 'nl' ? 'Oplossingen' : lang === 'de' ? 'Lösungen' : 'Solutions'}
+            </a>
             <a href="/werk" onClick={() => trackEvent('mentor_footer_projects_clicked')} style={{ fontSize: 12, color: '#64748B', textDecoration: 'none' }}>{t.footerWerk}</a>
+            <a
+              href="https://cursusclaudecode.nl/mdk?utm_source=markdekock_mentor&utm_medium=footer&utm_campaign=mdk_affiliate"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackEvent('mentor_footer_cursus_clicked')}
+              style={{ fontSize: 12, color: '#64748B', textDecoration: 'none' }}
+            >
+              {lang === 'nl' ? 'Praktijkcursus AI' : lang === 'de' ? 'KI-Praxiskurs' : 'Practical AI course'} ↗
+            </a>
             <p style={{ fontSize: 12, color: '#334155', margin: 0 }}>{t.footerSub} · {new Date().getFullYear()}</p>
           </div>
         </div>

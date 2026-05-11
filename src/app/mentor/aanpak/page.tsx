@@ -655,7 +655,17 @@ export default function AanpakPage() {
             </div>
             <span style={{ fontSize: 13, color: '#475569' }}>{t.navName} — {t.footerCopy}</span>
           </div>
-          <p style={{ fontSize: 12, color: '#334155' }}>{t.footerSub} · {new Date().getFullYear()}</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
+            <a
+              href="https://cursusclaudecode.nl/mdk?utm_source=markdekock_aanpak&utm_medium=footer&utm_campaign=mdk_affiliate"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ fontSize: 12, color: '#64748B', textDecoration: 'none' }}
+            >
+              Praktijkcursus AI ↗
+            </a>
+            <p style={{ fontSize: 12, color: '#334155', margin: 0 }}>{t.footerSub} · {new Date().getFullYear()}</p>
+          </div>
         </div>
       </footer>
 

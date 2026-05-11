@@ -694,6 +694,79 @@ export default async function ResultsPage({
         )
       })()}
 
+      {/* ── Cursus aanvulling — voor je team / als basis ──────────────────── */}
+      {(() => {
+        const tier = getScoreTier(data.total_score)
+        const cursusCopy = lang === 'nl'
+          ? {
+              eyebrow: 'Voor je team',
+              headline: tier === 'low'
+                ? 'Begin met de basics — voor jezelf én je team.'
+                : tier === 'mid'
+                ? 'Geef je team dezelfde sprong.'
+                : 'Geef je team de hands-on basis zodat ze niet achterblijven.',
+              body: 'Samen met Frank Meeuwsen ontwikkelden we cursusclaudecode.nl — een praktijkcursus voor professionals die AI willen gebruiken, niet bespreken.',
+              cta: 'Bekijk de cursus ↗',
+            }
+          : lang === 'fr'
+          ? {
+              eyebrow: 'Pour votre équipe',
+              headline: tier === 'low'
+                ? 'Commencez par les bases — pour vous et votre équipe.'
+                : tier === 'mid'
+                ? 'Faites faire le même saut à votre équipe.'
+                : "Donnez à votre équipe la base pratique pour qu'elle ne reste pas derrière.",
+              body: "Avec Frank Meeuwsen, nous avons développé cursusclaudecode.nl — une formation pratique pour les professionnels qui veulent utiliser l'IA, pas en discuter.",
+              cta: 'Voir le cours ↗',
+            }
+          : {
+              eyebrow: 'For your team',
+              headline: tier === 'low'
+                ? 'Start with the basics — for yourself and your team.'
+                : tier === 'mid'
+                ? 'Give your team the same leap.'
+                : 'Give your team the hands-on foundation so they don\'t fall behind.',
+              body: 'Together with Frank Meeuwsen we built cursusclaudecode.nl — a practical course for professionals who want to use AI, not just discuss it.',
+              cta: 'See the course ↗',
+            }
+        return (
+          <section style={{ background: '#fff', padding: '36px 24px', borderTop: `1px solid ${BORDER}` }}>
+            <div style={{ maxWidth: 760, margin: '0 auto' }}>
+              <div style={{
+                background: LIGHT, border: `1px solid ${BORDER}`, borderRadius: 12,
+                padding: '20px 24px',
+                display: 'flex', flexDirection: 'column', gap: 8,
+              }}>
+                <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', color: ACCENT, margin: 0 }}>
+                  {cursusCopy.eyebrow}
+                </p>
+                <p style={{ fontSize: 17, fontWeight: 700, color: INK, lineHeight: 1.35, margin: 0, letterSpacing: '-0.01em' }}>
+                  {cursusCopy.headline}
+                </p>
+                <p style={{ fontSize: 14, color: BODY, lineHeight: 1.55, margin: 0 }}>
+                  {cursusCopy.body}
+                </p>
+                <a
+                  href={`https://cursusclaudecode.nl/mdk?utm_source=ai_benchmark_results&utm_medium=cta_block&utm_campaign=mdk_affiliate&utm_content=${tier}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    alignSelf: 'flex-start',
+                    color: ACCENT, fontWeight: 700, fontSize: 13,
+                    textDecoration: 'none',
+                    borderBottom: `2px solid ${ACCENT}55`,
+                    paddingBottom: 2,
+                    marginTop: 4,
+                  }}
+                >
+                  {cursusCopy.cta}
+                </a>
+              </div>
+            </div>
+          </section>
+        )
+      })()}
+
       {/* ── The Crew teaser (brief, links to detail page) ─────────────────── */}
       {(() => {
         const acq = getAcqCopy(lang)

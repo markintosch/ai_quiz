@@ -342,6 +342,48 @@ export default function OplossingenPage() {
         </div>
       </section>
 
+      {/* ── Extra: voor je team — praktijkcursus AI ─────────────────────── */}
+      <section style={{ background: LIGHT, padding: '64px 24px', borderTop: `1px solid ${BORDER}` }}>
+        <div className="max-w-3xl mx-auto">
+          <div style={{
+            background: WHITE,
+            border: `1px solid ${BORDER}`,
+            borderRadius: 14,
+            padding: '28px 32px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 12,
+          }}>
+            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: ACCENT, margin: 0 }}>
+              Extra · Voor je team
+            </p>
+            <h3 style={{ fontSize: 20, fontWeight: 800, color: INK, lineHeight: 1.3, margin: 0, letterSpacing: '-0.01em' }}>
+              De systemen werken beter als je team weet wat AI is.
+            </h3>
+            <p style={{ fontSize: 15, color: BODY, lineHeight: 1.65, margin: 0 }}>
+              Samen met Frank Meeuwsen ontwikkelden we cursusclaudecode.nl — een praktijkcursus voor professionals die AI willen gebruiken, niet bespreken. Past goed naast deze oplossingen, of als startpunt voor je team voordat we systemen bouwen.
+            </p>
+            <a
+              href="https://cursusclaudecode.nl/mdk?utm_source=markdekock_oplossingen&utm_medium=cta_block&utm_campaign=mdk_affiliate"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                alignSelf: 'flex-start',
+                marginTop: 4,
+                color: ACCENT,
+                fontWeight: 700,
+                fontSize: 14,
+                textDecoration: 'none',
+                borderBottom: `2px solid ${ACCENT}55`,
+                paddingBottom: 2,
+              }}
+            >
+              Bekijk de cursus ↗
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* ── CTA ────────────────────────────────────────────────────────── */}
       <section style={{ background: WHITE, padding: '96px 24px' }}>
         <div className="max-w-2xl mx-auto" style={{ textAlign: 'center' }}>
@@ -374,10 +416,18 @@ export default function OplossingenPage() {
       <footer style={{ background: '#000', color: 'rgba(255,255,255,0.7)', padding: '32px 24px', fontSize: 12 }}>
         <div className="max-w-5xl mx-auto flex items-center justify-between flex-wrap gap-3">
           <span>© {new Date().getFullYear()} Mark de Kock · Brand PWRD Media</span>
-          <span style={{ display: 'flex', gap: 16 }}>
+          <span style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
             <Link href="/mentor" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>Adviestrajecten</Link>
             <Link href="/werk"   style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>Projecten</Link>
             <a href="/thecrew/nl" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>The Crew</a>
+            <a
+              href="https://cursusclaudecode.nl/mdk?utm_source=markdekock_oplossingen&utm_medium=footer&utm_campaign=mdk_affiliate"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}
+            >
+              Praktijkcursus AI ↗
+            </a>
           </span>
         </div>
       </footer>
