@@ -13,6 +13,7 @@ export interface InsightInput {
   activity_types: string[]
   alcohol_glasses: number
   symptoms: string[]
+  symptom_intensities: Record<string, number>  // { key: 1..5 }
   nap_taken: boolean
   busy_day: boolean
   cycle_phase: string
@@ -182,8 +183,29 @@ export function runInsightRules(entries: InsightInput[]): Insight[] {
     })
   }
 
-  // Symptom × sleep: bloating, interrupted_sleep, restless_legs often dip sleep
-  for (const sym of ['bloating', 'interrupted_sleep', 'restless_legs', 'cramps']) {
+  // Symptom × sleep — first try the intensity-aware version: compare days
+  // where the symptom is "high" (intensity ≥4) to days without that symptom.
+  // Falls back to presence-only if intensity data is missing.
+  for (const sym of ['bloating', 'interrupted_sleep', 'restless_legs', 'cramps', 'headache', 'exhausted']) {
+    const intensityFor = (e: InsightInput): number => {
+      const v = e.symptom_intensities?.[sym]
+      if (typeof v === 'number' && v >= 1 && v <= 5) return v
+      // No intensity stored → if symptom is present we treat as default 3
+      return Array.isArray(e.symptoms) && e.symptoms.includes(sym) ? 3 : 0
+    }
+    const highSleep = recent.filter(e => intensityFor(e) >= 4).map(e => e.sleep)
+    const zeroSleep = recent.filter(e => intensityFor(e) === 0).map(e => e.sleep)
+    if (highSleep.length >= 3 && zeroSleep.length >= 5) {
+      const drop = avg(zeroSleep) - avg(highSleep)
+      if (drop > 0.7) {
+        out.push({
+          rule_key: `symptom_sleep_high_${sym}`,
+          text:     `Op dagen dat je ${SYMPTOM_LABEL[sym]} ≥4 hebt, slaap je gemiddeld ${drop.toFixed(1)} punt minder goed.`,
+        })
+        break
+      }
+    }
+    // fallback to presence-only check if intensity-data is too thin
     const withSleep    = recent.filter(e => Array.isArray(e.symptoms) && e.symptoms.includes(sym)).map(e => e.sleep)
     const withoutSleep = recent.filter(e => !(Array.isArray(e.symptoms) && e.symptoms.includes(sym))).map(e => e.sleep)
     if (withSleep.length < 3 || withoutSleep.length < 5) continue
@@ -193,7 +215,29 @@ export function runInsightRules(entries: InsightInput[]): Insight[] {
         rule_key: `symptom_sleep_${sym}`,
         text:     `Op dagen met ${SYMPTOM_LABEL[sym]} slaap je gemiddeld ${drop.toFixed(1)} punt minder goed.`,
       })
-      break  // one symptom-sleep insight is enough at a time
+      break
+    }
+  }
+
+  // Symptom intensity × mood: when high-intensity symptoms occur, mood drops.
+  // Generic: across all symptoms, is average mood lower on high-symptom days?
+  {
+    const highSymDays = recent.filter(e => {
+      const intensities = e.symptom_intensities ?? {}
+      return Object.values(intensities).some(v => typeof v === 'number' && v >= 4)
+    }).map(e => e.mood)
+    const calmDays = recent.filter(e => {
+      const syms = Array.isArray(e.symptoms) ? e.symptoms.length : 0
+      return syms === 0
+    }).map(e => e.mood)
+    if (highSymDays.length >= 4 && calmDays.length >= 5) {
+      const drop = avg(calmDays) - avg(highSymDays)
+      if (drop > 1.0) {
+        out.push({
+          rule_key: 'high_symptom_mood_drop',
+          text:     `Op dagen met heftige symptomen (≥4) zakt je stemming gemiddeld ${drop.toFixed(1)} punt.`,
+        })
+      }
     }
   }
 

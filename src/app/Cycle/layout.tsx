@@ -14,6 +14,14 @@ export const metadata: Metadata = {
     capable: true,
     title:   'Cycle',
     statusBarStyle: 'default',
+    startupImage: '/Cycle/apple-touch-icon.png',
+  },
+  icons: {
+    icon: [
+      { url: '/Cycle/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/Cycle/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: '/Cycle/apple-touch-icon.png',
   },
 }
 
