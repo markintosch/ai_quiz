@@ -9,6 +9,12 @@
 
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import {
+  buildBreadcrumbSchema,
+  buildOrganizationSchema,
+  buildPersonSchema,
+  serializeJsonLd,
+} from '@/lib/seo/structured-data'
 
 const BASE = 'https://markdekock.com'
 const CALENDLY_INTAKE = 'https://calendly.com/markiesbpm/ai-intro-meeting-mark-de-kock'
@@ -164,9 +170,62 @@ const CASES: Case[] = [
 ]
 
 // ── Page ─────────────────────────────────────────────────────────────────────
+// ── JSON-LD structured data (computed once at module load) ─────────────────
+// Helps both classic search engines (rich snippets via ItemList) and LLMs
+// (Claude/ChatGPT/Perplexity ground their answers on schema.org).
+const ALL_PRODUCTS = [...OPERATIONAL, ...STRATEGIC]
+const STRUCTURED_DATA = serializeJsonLd([
+  buildBreadcrumbSchema([
+    { name: 'Home',         url: BASE },
+    { name: 'Oplossingen',  url: `${BASE}/oplossingen` },
+  ]),
+  buildOrganizationSchema({
+    name: 'Brand PWRD Media',
+    url:  BASE,
+  }),
+  buildPersonSchema({
+    name:        'Mark de Kock',
+    url:         BASE,
+    jobTitle:    'Founder · AI strategie & executie',
+    description: 'Founder van Brand PWRD Media. Bouwt AI-agent-systemen voor marketing- en salesteams.',
+    orgName:     'Brand PWRD Media',
+    orgUrl:      BASE,
+    country:     'NL',
+    knowsAbout:  ['AI agents', 'Marketing automation', 'Sales operations', 'AI implementation', 'Generative AI', 'Brand strategy'],
+    linkedin:    'https://www.linkedin.com/in/markdekock/',
+  }),
+  // ItemList of the 6 products — gives Google rich-snippet eligibility
+  // and gives LLMs a clean, citable list to reference in answers.
+  {
+    '@context': 'https://schema.org',
+    '@type':    'ItemList',
+    name:        'AI-agent oplossingen voor marketing & sales',
+    description: 'Zes productized AI-agent oplossingen, gebouwd op The Crew framework.',
+    numberOfItems: ALL_PRODUCTS.length,
+    itemListElement: ALL_PRODUCTS.map((p, i) => ({
+      '@type':   'ListItem',
+      position:  i + 1,
+      item: {
+        '@type':       'Service',
+        name:          p.name,
+        description:   p.tagline + ' ' + p.body,
+        serviceType:   'AI marketing & sales automation',
+        provider: {
+          '@type': 'Organization',
+          name:    'Brand PWRD Media',
+          url:     BASE,
+        },
+        areaServed:    'Netherlands',
+        url:           `${BASE}/oplossingen#${p.name.toLowerCase().replace(/\s+/g, '-')}`,
+      },
+    })),
+  },
+])
+
 export default function OplossingenPage() {
   return (
     <div style={{ background: WHITE, color: INK, fontFamily: FONT, minHeight: '100vh' }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA }} />
 
       {/* ── Slim nav (consistent met mentor) ───────────────────────────── */}
       <nav style={{ background: WHITE, borderBottom: `1px solid ${BORDER}`, position: 'sticky', top: 0, zIndex: 50 }}>
