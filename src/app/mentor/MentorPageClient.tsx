@@ -284,7 +284,7 @@ const T = {
     probTitle:  'Die Ambition ist nicht das Problem. Der Weg dorthin schon.',
     probItems: [
       { icon: '🎯', title: 'Die Richtung fehlt nicht. Die Orientierung schon.', body: 'Teams greifen unter Druck zu Tools. Das fühlt sich nach Bewegung an. Aber ein Tool ist keine Antwort auf eine Frage, die noch nicht gestellt wurde.' },
-      { icon: '📋', title: 'Strategische Entscheidungen landen nicht in der Organisation.', body: 'Marketing, Vertrieb und Operations arbeiten weiterhin auf eigene Rechnung. Die KI-Entscheidung wurde nie in Ziele übersetzt, an denen sie arbeiten. Es fehlt ein gemeinsamer Rahmen zur Steuerung.' },
+      { icon: '📋', title: 'Strategische Entscheidungen landen nicht in der Organisation.', body: 'Marketing, Vertrieb und Operations folgen weiterhin ihrer eigenen Agenda. Die KI-Entscheidung wurde nie in Ziele übersetzt, an denen sie arbeiten. Es fehlt ein gemeinsamer Rahmen zur Steuerung.' },
       { icon: '💼', title: 'Die Führungskraft hat bereits genug auf dem Tisch.', body: 'Von Marke bis Vertrieb bis Bestandskunden. Eine klare KI-Strategie klingt logisch, fühlt sich aber wie ein weiteres Risiko an. Was fehlt, ist jemand, dem man vertrauen kann, um das geordnet zu halten.' },
     ],
 
