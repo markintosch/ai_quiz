@@ -7,11 +7,20 @@ import { createServiceClient } from '@/lib/supabase/server'
 import { calculateArenaPoints } from '@/products/cloud_arena/types'
 import type { ArenaQuestion, ArenaDifficulty } from '@/products/cloud_arena/types'
 import { CLOUD_ARENA_CONFIG } from '@/products/cloud_arena/config'
+import { rateLimit, getClientIp } from '@/lib/rateLimit'
 
 export async function POST(
   req: NextRequest,
   { params }: { params: { code: string } }
 ) {
+  // Bot/spam protection — 60 answers per 5 min generously covers a real
+  // 30-question game with retries; blocks scripted spam.
+  const ip = getClientIp(req.headers)
+  const rl = rateLimit(`arena_answer:${ip}`, 60, 5 * 60 * 1000)
+  if (!rl.allowed) {
+    return NextResponse.json({ error: 'Too many answer submissions.' }, { status: 429 })
+  }
+
   const supabase = createServiceClient()
   const code = params.code.toUpperCase()
   const body = await req.json() as {
