@@ -64,6 +64,7 @@ const SUBDOMAIN_MAP: Record<string, string> = {
   'hc45':         'fitness_readiness',  // hc45.brandpwrdmedia.nl (Healthclub45 alias)
   'prevo':        'pr_maturity',        // prevo.brandpwrdmedia.nl (Mareille Prevo)
   'pr':           'pr_maturity',        // pr.brandpwrdmedia.nl (alias)
+  'proserve':     'cloud_readiness',    // proserve.brandpwrdmedia.nl (ProServe NL partnership)
   // 'digital-readiness': 'digital_readiness',  ← add when product is launched
 }
 

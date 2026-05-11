@@ -50,6 +50,7 @@ export function middleware(req: NextRequest) {
     return NextResponse.next()
   }
   if (pathname.startsWith('/atelier'))    return NextResponse.next()
+  if (pathname.startsWith('/oplossingen')) return NextResponse.next()
   if (pathname.startsWith('/Cycle'))      return NextResponse.next()
   if (pathname.startsWith('/sannah') || pathname.startsWith('/Sannah')) return NextResponse.next()
 

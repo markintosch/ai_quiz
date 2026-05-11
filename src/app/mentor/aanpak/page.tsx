@@ -32,8 +32,8 @@ const stagger = {
 const T = {
   nl: {
     navName:    'Mark de Kock',
-    navRole:    'Strategisch mentor voor AI & executie',
-    navPartner: 'Partner · Kirk & Blackbeard',
+    navRole:    'AI strategie & executie',
+    navPartner: 'Oprichter · Brand PWRD Media',
     navCta:     'Plan gesprek →',
 
     heroLabel: 'Drie manieren van werken',
@@ -86,7 +86,7 @@ const T = {
           'Alles uit de Begeleiding',
           'Begeleiding bij boardpresentaties en governance',
           'Team- en managementsessies',
-          'Inzet van het Kirk & Blackbeard netwerk waar relevant',
+          'Inzet van het Brand PWRD Media-netwerk waar relevant',
           'Duidelijke checkpunten en flexibele doorloop',
         ],
         cta:      'Plan gratis intake →',
@@ -104,7 +104,7 @@ const T = {
       { feature: 'Eerste concrete use case',          cols: [false, true,  true]  },
       { feature: 'Managementteam betrekken',          cols: [false, true,  true]  },
       { feature: 'Boardpresentaties en governance',   cols: [false, false, true]  },
-      { feature: 'Kirk & Blackbeard netwerk',         cols: [false, false, true]  },
+      { feature: 'Brand PWRD Media-netwerk',         cols: [false, false, true]  },
       { feature: 'Doorlopend partnerschap',           cols: [false, false, true]  },
     ],
 
@@ -137,13 +137,13 @@ const T = {
     bottomCta:   'Plan gratis intake →',
     bottomTrust: 'Gratis · Geen verplichting · 30 minuten',
 
-    footerCopy: 'Strategisch mentor voor AI & executie',
+    footerCopy: 'AI strategie & executie',
     footerSub:  'markdekock.com',
   },
   en: {
     navName:    'Mark de Kock',
-    navRole:    'Strategic mentor for AI & execution',
-    navPartner: 'Partner · Kirk & Blackbeard',
+    navRole:    'AI strategy & execution',
+    navPartner: 'Founder · Brand PWRD Media',
     navCta:     'Book a call →',
 
     heroLabel: 'Three ways of working',
@@ -196,7 +196,7 @@ const T = {
           'Everything from the Guidance engagement',
           'Support with board presentations and governance',
           'Team and management sessions',
-          'Access to the Kirk & Blackbeard network where relevant',
+          'Access to the Brand PWRD Media network where relevant',
           'Clear checkpoints and flexible continuation',
         ],
         cta:      'Book free intake →',
@@ -214,7 +214,7 @@ const T = {
       { feature: 'First concrete use case',              cols: [false, true,  true]  },
       { feature: 'Involving the management team',        cols: [false, true,  true]  },
       { feature: 'Board presentations and governance',   cols: [false, false, true]  },
-      { feature: 'Kirk & Blackbeard network',            cols: [false, false, true]  },
+      { feature: 'Brand PWRD Media network',            cols: [false, false, true]  },
       { feature: 'Ongoing partnership',                  cols: [false, false, true]  },
     ],
 
@@ -247,7 +247,7 @@ const T = {
     bottomCta:   'Book free intake →',
     bottomTrust: 'Free · No commitment · 30 minutes',
 
-    footerCopy: 'Strategic mentor for AI & execution',
+    footerCopy: 'AI strategy & execution',
     footerSub:  'markdekock.com',
   },
 }
