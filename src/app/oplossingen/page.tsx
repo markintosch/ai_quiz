@@ -28,12 +28,12 @@ const FONT    = "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-seri
 
 export const metadata: Metadata = {
   title:       'AI-agents voor marketing & sales | Mark de Kock',
-  description: 'Werkende systemen die je marketing- en salesteam versnellen. 6 productized agent-oplossingen, gebouwd op The Crew. Geen dashboards, geen tooling-advies.',
+  description: 'Werkende systemen die leren en je marketing- en salesteam verder versnellen. 6 productized agent-oplossingen, gebouwd op The Crew.',
   metadataBase: new URL(BASE),
   alternates:  { canonical: `${BASE}/oplossingen` },
   openGraph: {
     title:       'AI-agents voor marketing & sales',
-    description: 'Geen dashboards. Geen tooling-advies. Werkende systemen die je team versnellen.',
+    description: 'Werkende systemen die leren en je team verder versnellen.',
     url:         `${BASE}/oplossingen`,
     siteName:    'Mark de Kock',
     type:        'website',
@@ -56,7 +56,7 @@ const OPERATIONAL: Product[] = [
     num: '01',
     name: 'Performance Ops',
     tagline: 'Je team rapporteert. Onze agents optimaliseren.',
-    body: "Je performance marketeer besteedt 60% van de week aan rapportages die 's maandags al verouderd zijn. Performance Ops draait dagelijks: campagne-analyse, anomaliedetectie, budget-herverdeling, trend-narratief. Je team opent 's ochtends een briefing. Niet drie dashboards.",
+    body: "Je performance marketeer besteedt 60% van de week aan rapportages die 's maandags al verouderd zijn. Performance Ops draait dagelijks: campagne-analyse, anomaliedetectie, budget-herverdeling, trend-narratief. Je team opent 's ochtends één briefing met de essentie — naast de dashboards die ze al hebben voor de dieptecontroles.",
     result: 'Dagelijkse performance briefing, wekelijkse optimalisatie-aanbevelingen, maandelijkse trend-analyse — zonder handmatig werk.',
     agents: 'Lookout · Helmsman · Chronicle',
   },
@@ -208,7 +208,7 @@ export default function OplossingenPage() {
             AI-agents voor marketing- en salesteams.
           </h1>
           <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.7)', lineHeight: 1.65, maxWidth: 560 }}>
-            Geen dashboards. Geen tooling-advies. Werkende systemen die je team versnellen.
+            Werkende systemen die leren en je team verder versnellen.
           </p>
         </div>
       </section>
