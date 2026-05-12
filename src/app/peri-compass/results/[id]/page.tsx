@@ -1,4 +1,4 @@
-// FILE: src/app/perimenopause-compass/results/[id]/page.tsx
+// FILE: src/app/peri-compass/results/[id]/page.tsx
 // ─────────────────────────────────────────────────────────────────────────────
 // Results page voor één Compass-afname.
 // Toont: overall score, dimensie-radar (visueel met bars), AI-paragraaf,
@@ -9,7 +9,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase/server'
-import { BAND_COPY, type Band } from '@/lib/perimenopause-compass/scoring'
+import { BAND_COPY, type Band } from '@/lib/peri-compass/scoring'
 
 export const dynamic = 'force-dynamic'
 

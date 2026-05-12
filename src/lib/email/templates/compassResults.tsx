@@ -5,9 +5,9 @@ import {
   Body, Button, Container, Head, Heading,
   Hr, Html, Preview, Section, Text,
 } from '@react-email/components'
-import type { CompassScore } from '@/lib/perimenopause-compass/scoring'
-import type { CompassAiOutput } from '@/lib/perimenopause-compass/ai'
-import { BAND_COPY } from '@/lib/perimenopause-compass/scoring'
+import type { CompassScore } from '@/lib/peri-compass/scoring'
+import type { CompassAiOutput } from '@/lib/peri-compass/ai'
+import { BAND_COPY } from '@/lib/peri-compass/scoring'
 
 interface Props {
   firstName:     string | null

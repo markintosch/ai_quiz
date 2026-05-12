@@ -1,4 +1,4 @@
-// FILE: src/app/admin/perimenopause-compass/page.tsx
+// FILE: src/app/admin/peri-compass/page.tsx
 // Admin: lijst van alle Compass assessments.
 
 'use client'
@@ -57,7 +57,7 @@ export default function AdminCompassListPage() {
     if (stage !== 'all') params.set('stage', stage)
     if (hasEmail !== 'all') params.set('email', hasEmail)
     try {
-      const r = await fetch(`/api/admin/perimenopause-compass?${params}`, { cache: 'no-store' })
+      const r = await fetch(`/api/admin/peri-compass?${params}`, { cache: 'no-store' })
       const j = await r.json()
       if (!r.ok) {
         setError(j.error ?? `HTTP ${r.status}`)
@@ -153,7 +153,7 @@ export default function AdminCompassListPage() {
                     {r.email_sent_at ? '✓' : (r.email ? 'pending' : '—')}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <Link href={`/perimenopause-compass/results/${r.id}`} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-brand-accent hover:underline">
+                    <Link href={`/peri-compass/results/${r.id}`} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-brand-accent hover:underline">
                       Bekijk →
                     </Link>
                   </td>

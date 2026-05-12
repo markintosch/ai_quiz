@@ -3,7 +3,7 @@
 //
 // Volgorde:
 //   1. Niet ingelogd → /Cycle/login
-//   2. Ingelogd maar geen Perimenopause Compass gedaan → /perimenopause-compass
+//   2. Ingelogd maar geen Perimenopause Compass gedaan → /peri-compass
 //      (Compass is sinds v2 de poort tot de Cycle app — eerst nulmeting
 //       voordat je daily kunt tracken)
 //   3. Wel Compass, geen technische onboarding (locatie, cyclus-datum) → /Cycle/onboarding
@@ -29,7 +29,7 @@ export default async function CycleEntryPage() {
     .maybeSingle()
 
   if (!compass) {
-    redirect(`/perimenopause-compass?source=cycle&email=${encodeURIComponent(user.email)}`)
+    redirect(`/peri-compass?source=cycle&email=${encodeURIComponent(user.email)}`)
   }
 
   // Technische onboarding (locatie, cyclus-datum)

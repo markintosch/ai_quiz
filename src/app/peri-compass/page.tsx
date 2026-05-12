@@ -1,7 +1,7 @@
-// FILE: src/app/perimenopause-compass/page.tsx
+// FILE: src/app/peri-compass/page.tsx
 // ─────────────────────────────────────────────────────────────────────────────
 // Landing page voor Perimenopause Compass.
-// Marketing-CTA → "Start de assessment" → /perimenopause-compass/assess
+// Marketing-CTA → "Start de assessment" → /peri-compass/assess
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { Metadata } from 'next'
@@ -12,11 +12,11 @@ const BASE = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://markdekock.com'
 export const metadata: Metadata = {
   title:       'Perimenopause Compass — een nulmeting voor je dagelijkse tracking',
   description: 'Een eenmalige instap-assessment van 15 minuten. Krijg je baseline-score op 6 dimensies, drie hypothesen voor wat je ziet en een eerste experiment voor de komende 30 dagen.',
-  alternates:  { canonical: `${BASE}/perimenopause-compass` },
+  alternates:  { canonical: `${BASE}/peri-compass` },
   openGraph: {
     title:       'Perimenopause Compass',
     description: 'Een nulmeting voor je perimenopauze. 15 minuten, 6 dimensies, je startpunt voor dagelijks tracken.',
-    url:         `${BASE}/perimenopause-compass`,
+    url:         `${BASE}/peri-compass`,
     siteName:    'Mark de Kock — Brand PWRD Media',
     type:        'website',
     images:      [{ url: `${BASE}/markdekock_2026.png` }],
@@ -46,7 +46,7 @@ export default function CompassLandingPage() {
             en een eerste experiment voor de komende 30 dagen.
           </p>
           <Link
-            href="/perimenopause-compass/assess"
+            href="/peri-compass/assess"
             className="inline-block rounded-md bg-brand-accent px-7 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-brand-accent/90"
           >
             Start je Compass →
@@ -109,7 +109,7 @@ export default function CompassLandingPage() {
             Klaar voor je nulmeting?
           </p>
           <Link
-            href="/perimenopause-compass/assess"
+            href="/peri-compass/assess"
             className="inline-block rounded-md bg-brand-accent px-7 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-brand-accent/90"
           >
             Start je Compass →

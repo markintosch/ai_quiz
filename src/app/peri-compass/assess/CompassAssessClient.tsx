@@ -1,4 +1,4 @@
-// FILE: src/app/perimenopause-compass/assess/CompassAssessClient.tsx
+// FILE: src/app/peri-compass/assess/CompassAssessClient.tsx
 // ─────────────────────────────────────────────────────────────────────────────
 // Client component — runs the question stepper.
 //
@@ -21,8 +21,8 @@ import {
   questionsForStage,
   type CompassQuestion,
   type Stage,
-} from '@/lib/perimenopause-compass/questions'
-import type { ResponseValue } from '@/lib/perimenopause-compass/scoring'
+} from '@/lib/peri-compass/questions'
+import type { ResponseValue } from '@/lib/peri-compass/scoring'
 
 const STORAGE_KEY = 'pmcompass:v1'
 
@@ -141,7 +141,7 @@ export default function CompassAssessClient() {
     }
     setPhase('submitting')
     try {
-      const r = await fetch('/api/perimenopause-compass/submit', {
+      const r = await fetch('/api/peri-compass/submit', {
         method:  'POST',
         headers: { 'content-type': 'application/json' },
         body:    JSON.stringify({
@@ -162,7 +162,7 @@ export default function CompassAssessClient() {
       }
       // Clear storage en redirect
       try { sessionStorage.removeItem(STORAGE_KEY) } catch { /* ignore */ }
-      router.push(`/perimenopause-compass/results/${j.id}`)
+      router.push(`/peri-compass/results/${j.id}`)
     } catch (err) {
       setError(`Netwerkfout: ${err instanceof Error ? err.message : 'onbekend'}`)
       setPhase('lead')

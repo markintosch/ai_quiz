@@ -1,6 +1,6 @@
-// FILE: src/app/api/admin/perimenopause-compass/route.ts
+// FILE: src/app/api/admin/peri-compass/route.ts
 // Admin: list of all Compass assessments. Filter by stage / has-email.
-// DELETE single assessment via /api/admin/perimenopause-compass/[id].
+// DELETE single assessment via /api/admin/peri-compass/[id].
 
 import { NextResponse } from 'next/server'
 import { isAuthorised } from '@/lib/admin/auth'

@@ -1,6 +1,6 @@
-// FILE: src/app/api/perimenopause-compass/submit/route.ts
+// FILE: src/app/api/peri-compass/submit/route.ts
 // ─────────────────────────────────────────────────────────────────────────────
-// POST /api/perimenopause-compass/submit
+// POST /api/peri-compass/submit
 //
 // Body: {
 //   stage:     Stage,
@@ -17,7 +17,7 @@
 //   3. Assessment-rij opslaan + responses (rauwe antwoorden voor audit)
 //   4. Profile-rij upserten als email gegeven (recommended tracking onthouden)
 //   5. Als email gegeven én consent ja: Resend email sturen
-//   6. Returns: { id } — frontend redirect naar /perimenopause-compass/results/[id]
+//   6. Returns: { id } — frontend redirect naar /peri-compass/results/[id]
 //
 // Rate limit: 5 per IP per uur (assessment is een serieuze daad).
 // ─────────────────────────────────────────────────────────────────────────────
@@ -27,9 +27,9 @@ import { Resend } from 'resend'
 import { render } from '@react-email/render'
 import { rateLimit, getClientIp } from '@/lib/rateLimit'
 import { createServiceClient } from '@/lib/supabase/server'
-import { scoreResponses, type ResponseMap, type ResponseValue } from '@/lib/perimenopause-compass/scoring'
-import { generateCompassInsight } from '@/lib/perimenopause-compass/ai'
-import { ALL_QUESTIONS, type Stage } from '@/lib/perimenopause-compass/questions'
+import { scoreResponses, type ResponseMap, type ResponseValue } from '@/lib/peri-compass/scoring'
+import { generateCompassInsight } from '@/lib/peri-compass/ai'
+import { ALL_QUESTIONS, type Stage } from '@/lib/peri-compass/questions'
 import { CompassResultsEmail } from '@/lib/email/templates/compassResults'
 
 export const dynamic     = 'force-dynamic'
@@ -153,7 +153,7 @@ export async function POST(req: Request) {
     consent_at:             email ? new Date().toISOString() : null,
     consent_text:           body.consentText?.slice(0, 1000) ?? null,
     source_ip:              ip,
-    source_path:            '/perimenopause-compass',
+    source_path:            '/peri-compass',
   }
 
   const { data: assessment, error: aerr } = await supabase
@@ -198,7 +198,7 @@ export async function POST(req: Request) {
 
   // ── Email (best-effort, faalt nooit de submit) ────────────────────────
   if (email && process.env.RESEND_API_KEY) {
-    const resultsUrl = `${BASE}/perimenopause-compass/results/${assessmentId}`
+    const resultsUrl = `${BASE}/peri-compass/results/${assessmentId}`
     const cycleLogin = `${BASE}/Cycle/login?email=${encodeURIComponent(email)}`
     try {
       const html = await render(

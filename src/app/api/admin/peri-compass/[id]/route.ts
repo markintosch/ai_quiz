@@ -1,4 +1,4 @@
-// FILE: src/app/api/admin/perimenopause-compass/[id]/route.ts
+// FILE: src/app/api/admin/peri-compass/[id]/route.ts
 // GET volledig assessment + responses. DELETE = AVG hard-delete.
 
 import { NextResponse } from 'next/server'

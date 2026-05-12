@@ -1,4 +1,4 @@
-// FILE: src/app/perimenopause-compass/assess/page.tsx
+// FILE: src/app/peri-compass/assess/page.tsx
 // Server-component shell — laadt het client-component dat alle state managet.
 
 import type { Metadata } from 'next'
