@@ -107,42 +107,73 @@ export async function POST(req: Request) {
 
   const supabase = createServiceClient()
 
-  const { data: assessment, error: aerr } = await supabase
-    .from('perimenopause_compass_assessments')
-    .insert({
-      email,
-      display_name:           displayName,
-      stage:                  body.stage,
-      age_band:               ageBand ?? null,
-      hrt_status:             hrtStatus ?? null,
-      language:               lang,
-      score_overall:          score.overall,
-      score_symptom_burden:   score.byDimension.symptom_burden,
-      score_sleep_recovery:   score.byDimension.sleep_recovery,
-      score_energy_capacity:  score.byDimension.energy_capacity,
-      score_stress_context:   score.byDimension.stress_context,
-      score_lifestyle:        score.byDimension.lifestyle,
-      score_self_awareness:   score.byDimension.self_awareness,
-      band:                   score.band,
-      goal_90d:               goal90d ?? null,
-      ai_observation:                 ai.observation,
-      ai_hypotheses:                  ai.hypotheses,
-      ai_micro_experiment:            ai.microExperiment,
-      ai_micro_experiment_code:       ai.experimentCode       ?? null,
-      ai_micro_experiment_source:     ai.experimentSource     ?? null,
-      ai_micro_experiment_source_url: ai.experimentSourceUrl  ?? null,
-      ai_recommended_tracking:        ai.recommendedTracking,
-      consent_at:             email ? new Date().toISOString() : null,
-      consent_text:           body.consentText?.slice(0, 1000) ?? null,
-      source_ip:              ip,
-      source_path:            '/peri-compass',
-    } as never)
-    .select('id')
-    .single()
+  // Bouw insert-payload. We splitsen 'core' fields (zonder die kan een Compass
+  // niet bestaan) en 'optional' fields (nieuwe kolommen die nog niet altijd in
+  // het schema zitten — bv. tijdens uitrol van een migratie). Bij PGRST204
+  // (kolom niet gevonden) retryen we zónder de optionele velden, zodat een
+  // respondent NOOIT haar 15 minuten arbeid kwijt is door een schema-cache miss.
+  const corePayload = {
+    email,
+    display_name:           displayName,
+    stage:                  body.stage,
+    age_band:               ageBand ?? null,
+    hrt_status:             hrtStatus ?? null,
+    language:               lang,
+    score_overall:          score.overall,
+    score_symptom_burden:   score.byDimension.symptom_burden,
+    score_sleep_recovery:   score.byDimension.sleep_recovery,
+    score_energy_capacity:  score.byDimension.energy_capacity,
+    score_stress_context:   score.byDimension.stress_context,
+    score_lifestyle:        score.byDimension.lifestyle,
+    score_self_awareness:   score.byDimension.self_awareness,
+    band:                   score.band,
+    goal_90d:               goal90d ?? null,
+    ai_observation:         ai.observation,
+    ai_hypotheses:          ai.hypotheses,
+    ai_micro_experiment:    ai.microExperiment,
+    ai_recommended_tracking:ai.recommendedTracking,
+    consent_at:             email ? new Date().toISOString() : null,
+    consent_text:           body.consentText?.slice(0, 1000) ?? null,
+    source_ip:              ip,
+    source_path:            '/peri-compass',
+  }
+  const optionalPayload = {
+    ai_micro_experiment_code:       ai.experimentCode      ?? null,
+    ai_micro_experiment_source:     ai.experimentSource    ?? null,
+    ai_micro_experiment_source_url: ai.experimentSourceUrl ?? null,
+  }
+
+  let assessment: { id: string } | null = null
+  let aerr: { code?: string; message?: string } | null = null
+
+  // Eerste poging: full payload
+  {
+    const r = await supabase
+      .from('perimenopause_compass_assessments')
+      .insert({ ...corePayload, ...optionalPayload } as never)
+      .select('id')
+      .single()
+    assessment = (r.data as { id: string } | null) ?? null
+    aerr       = r.error as { code?: string; message?: string } | null
+  }
+
+  // Retry zonder optionele velden bij PGRST204 (schema-cache mist nieuwe kolom)
+  // of bij 42703 (Postgres "column does not exist")
+  if ((aerr?.code === 'PGRST204' || aerr?.code === '42703' || (aerr?.message ?? '').toLowerCase().includes('schema cache'))) {
+    console.warn('[peri-compass/submit] retry without optional source fields:', aerr?.message)
+    const r2 = await supabase
+      .from('perimenopause_compass_assessments')
+      .insert(corePayload as never)
+      .select('id')
+      .single()
+    assessment = (r2.data as { id: string } | null) ?? null
+    aerr       = r2.error as { code?: string; message?: string } | null
+  }
+
   if (aerr || !assessment) {
     return NextResponse.json({ error: aerr?.message ?? 'opslaan mislukt' }, { status: 500 })
   }
-  const assessmentId = (assessment as { id: string }).id
+  const assessmentId = assessment.id
 
   const rows = Object.entries(responses)
     .filter((entry): entry is [string, ResponseValue] => entry[1] !== undefined)
