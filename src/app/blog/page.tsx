@@ -23,6 +23,7 @@ import type { BlogPostRow, BlogFormat } from '@/types/blog'
 import SubscribeForm from '@/components/blog/SubscribeForm'
 import { BlogCover } from '@/components/blog/BlogCover'
 import { RenderTiptap } from '@/lib/blog/renderTiptap'
+import { pickOgImage } from '@/lib/blog/cover'
 
 export const dynamic = 'force-dynamic'
 
@@ -37,6 +38,13 @@ export async function generateMetadata({
   const lang = pickLang(searchParams.lang)
   const s    = STRINGS[lang]
   const canonical = lang === 'nl' ? `${BASE}/blog` : `${BASE}/blog?lang=${lang}`
+
+  // og:image — kies de cover van de laatste post (afbeelding of poster van een
+  // video). Als die er niet is, fallback naar Mark's portret. Zorgt voor een
+  // visuele preview in LinkedIn / WhatsApp / Slack / Twitter.
+  const latest    = await fetchLatestPostForOgImage(lang)
+  const dynamicOg = latest ? pickOgImage(latest.cover_image, latest.cover_poster) : null
+  const ogImage   = dynamicOg ?? `${BASE}/markdekock_2026.png`
 
   return {
     title:       s.metaTitle,
@@ -57,13 +65,31 @@ export async function generateMetadata({
       siteName:    'Mark de Kock — Brand PWRD Media',
       locale:      s.ogLocale,
       type:        'website',
+      images:      [{ url: ogImage, alt: latest?.title ?? 'Mark de Kock — Blog' }],
     },
     twitter: {
       card:        'summary_large_image',
       title:       s.metaTitle,
       description: s.metaDescription,
+      images:      [ogImage],
     },
   }
+}
+
+/** Slim lookup voor og:image — alleen cover-velden ophalen, niet de hele content. */
+async function fetchLatestPostForOgImage(lang: Lang): Promise<
+  { title: string; cover_image: string | null; cover_poster: string | null } | null
+> {
+  const supabase = createServiceClient()
+  const { data } = await supabase
+    .from('blog_posts')
+    .select('title, cover_image, cover_poster')
+    .eq('status', 'published')
+    .eq('locale', lang)
+    .order('published_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+  return (data as { title: string; cover_image: string | null; cover_poster: string | null } | null) ?? null
 }
 
 // ── Page ────────────────────────────────────────────────────────────────────
