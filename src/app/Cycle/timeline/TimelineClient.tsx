@@ -107,15 +107,25 @@ export default function TimelineClient({
 
   return (
     <main className="min-h-screen flex flex-col px-4 py-8">
-      <header className="px-2 mb-4 flex items-center justify-between">
+      <header className="px-2 mb-4 flex items-center justify-between gap-3">
         <h1 className="cycle-display text-3xl">Tijdlijn</h1>
-        <Link
-          href="/Cycle/output"
-          className="text-sm underline"
-          style={{ color: 'var(--cycle-muted)' }}
-        >
-          Terug
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/Cycle/export"
+            className="text-sm underline"
+            style={{ color: 'var(--cycle-muted)' }}
+            title="Print-vriendelijk overzicht voor je arts"
+          >
+            🩺 Voor je arts
+          </Link>
+          <Link
+            href="/Cycle/output"
+            className="text-sm underline"
+            style={{ color: 'var(--cycle-muted)' }}
+          >
+            Terug
+          </Link>
+        </div>
       </header>
 
       {/* View toggle — only show Patronen once there's enough data */}
