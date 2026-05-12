@@ -26,6 +26,7 @@ const NAV_LINKS = [
   { href: '/admin/atelier/sources', label: '↳ Sources registry' },
   { href: '/admin/blog', label: '📝 Blog' },
   { href: '/admin/blog/subscribers', label: '↳ Abonnees' },
+  { href: '/admin/perimenopause-compass', label: '🧭 Perimenopause Compass' },
 ]
 
 export default function AdminLayout({
