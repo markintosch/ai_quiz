@@ -249,6 +249,7 @@ export default function OplossingenPage() {
               Oplossingen
             </Link>
             <Link href="/werk" style={{ fontSize: 13, fontWeight: 600, color: BODY, textDecoration: 'none' }}>Projecten</Link>
+            <Link href="/blog" style={{ fontSize: 13, fontWeight: 600, color: BODY, textDecoration: 'none' }}>Blog</Link>
             <a
               href={CALENDLY_INTAKE}
               target="_blank"
@@ -506,6 +507,7 @@ export default function OplossingenPage() {
             <Link href="/mentor"      style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>Adviestrajecten</Link>
             <Link href="/oplossingen" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>Oplossingen</Link>
             <Link href="/werk"        style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>Projecten</Link>
+            <Link href="/blog"        style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>Blog</Link>
             <a href="/thecrew/nl" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>The Crew</a>
             <a
               href="https://cursusclaudecode.nl/mdk?utm_source=markdekock_oplossingen&utm_medium=footer&utm_campaign=mdk_affiliate"

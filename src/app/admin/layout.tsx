@@ -24,6 +24,7 @@ const NAV_LINKS = [
   { href: '/admin/atelier', label: 'Atelier · ops' },
   { href: '/admin/atelier/icps', label: '↳ ICP knowledge base' },
   { href: '/admin/atelier/sources', label: '↳ Sources registry' },
+  { href: '/admin/blog', label: '📝 Blog' },
 ]
 
 export default function AdminLayout({

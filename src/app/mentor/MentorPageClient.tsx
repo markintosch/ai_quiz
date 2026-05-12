@@ -463,6 +463,19 @@ function MentorPageInner() {
               {lang === 'nl' ? 'Projecten' : lang === 'de' ? 'Projekte' : 'Projects'}
             </a>
             <a
+              href={lang === 'nl' ? '/blog' : `/blog?lang=${lang}`}
+              onClick={() => trackEvent('mentor_nav_blog_clicked')}
+              style={{
+                fontSize: 13, fontWeight: 600, color: BODY, textDecoration: 'none',
+                whiteSpace: 'nowrap',
+                borderBottom: '1px solid transparent',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.borderBottomColor = WARM)}
+              onMouseLeave={e => (e.currentTarget.style.borderBottomColor = 'transparent')}
+            >
+              Blog
+            </a>
+            <a
               href={CALENDLY_INTAKE}
               target="_blank"
               rel="noopener noreferrer"
@@ -1080,6 +1093,9 @@ function MentorPageInner() {
               {lang === 'nl' ? 'Oplossingen' : lang === 'de' ? 'Lösungen' : 'Solutions'}
             </a>
             <a href="/werk" onClick={() => trackEvent('mentor_footer_projects_clicked')} style={{ fontSize: 12, color: '#64748B', textDecoration: 'none' }}>{t.footerWerk}</a>
+            <a href={lang === 'nl' ? '/blog' : `/blog?lang=${lang}`} onClick={() => trackEvent('mentor_footer_blog_clicked')} style={{ fontSize: 12, color: '#64748B', textDecoration: 'none' }}>
+              Blog
+            </a>
             <a
               href="https://cursusclaudecode.nl/mdk?utm_source=markdekock_mentor&utm_medium=footer&utm_campaign=mdk_affiliate"
               target="_blank"

@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next'
+import { createServiceClient } from '@/lib/supabase/server'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://markdekock.com'
 const LOCALES  = ['en', 'nl', 'fr'] as const
@@ -40,7 +41,7 @@ const THECREW_PAGES: Array<{ en: string; nl: string; priority: number; changeFre
   { en: '/thecrew/en/commercial-term-sheet.html', nl: '/thecrew/nl/commercial-term-sheet.html', priority: 0.5, changeFrequency: 'monthly' },
 ]
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = []
 
   // Mentor pages — no locale prefix, high priority
@@ -141,5 +142,90 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority:        0.5,
   })
 
+  // ── Blog index (NL/EN/DE) ───────────────────────────────────────────────
+  entries.push({
+    url:             `${BASE_URL}/blog`,
+    lastModified:    new Date(),
+    changeFrequency: 'weekly',
+    priority:        0.9,
+    alternates: {
+      languages: {
+        nl:          `${BASE_URL}/blog`,
+        en:          `${BASE_URL}/blog?lang=en`,
+        de:          `${BASE_URL}/blog?lang=de`,
+        'x-default': `${BASE_URL}/blog`,
+      },
+    },
+  })
+
+  // ── Blog posts ──────────────────────────────────────────────────────────
+  // Pull every published post + its translations, group by translation graph,
+  // and emit one sitemap entry per locale variant with hreflang alternates.
+  try {
+    const blogEntries = await fetchBlogSitemapEntries()
+    entries.push(...blogEntries)
+  } catch {
+    // Sitemap should not 500 if Supabase is unreachable — skip blog entries.
+  }
+
   return entries
+}
+
+// ── Blog ────────────────────────────────────────────────────────────────────
+interface BlogSitemapRow {
+  id:           string
+  parent_id:    string | null
+  locale:       'nl' | 'en' | 'de'
+  slug:         string
+  noindex:      boolean
+  updated_at:   string
+}
+
+async function fetchBlogSitemapEntries(): Promise<MetadataRoute.Sitemap> {
+  const supabase = createServiceClient()
+  const { data, error } = await supabase
+    .from('blog_posts')
+    .select('id, parent_id, locale, slug, noindex, updated_at')
+    .eq('status', 'published')
+    .order('published_at', { ascending: false })
+    .limit(2000)
+  if (error || !data) return []
+
+  const rows = data as unknown as BlogSitemapRow[]
+  // Group by translation graph (parent_id ?? id)
+  const graphs = new Map<string, BlogSitemapRow[]>()
+  for (const r of rows) {
+    if (r.noindex) continue
+    const root = r.parent_id ?? r.id
+    if (!graphs.has(root)) graphs.set(root, [])
+    graphs.get(root)!.push(r)
+  }
+
+  const out: MetadataRoute.Sitemap = []
+  for (const group of Array.from(graphs.values())) {
+    // Build hreflang map for this graph
+    const langMap: Record<string, string> = {}
+    for (const r of group) {
+      langMap[r.locale] = r.locale === 'nl'
+        ? `${BASE_URL}/blog/${r.slug}`
+        : `${BASE_URL}/blog/${r.slug}?lang=${r.locale}`
+    }
+    if (!langMap['x-default']) {
+      langMap['x-default'] = langMap['nl'] ?? Object.values(langMap)[0]
+    }
+
+    // One entry per locale variant, sharing the hreflang alternates
+    for (const r of group) {
+      out.push({
+        url:             r.locale === 'nl'
+          ? `${BASE_URL}/blog/${r.slug}`
+          : `${BASE_URL}/blog/${r.slug}?lang=${r.locale}`,
+        lastModified:    new Date(r.updated_at),
+        changeFrequency: 'monthly',
+        priority:        0.7,
+        alternates:      { languages: langMap },
+      })
+    }
+  }
+  return out
 }

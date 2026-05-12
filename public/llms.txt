@@ -19,6 +19,10 @@
   - Strategic Scan: second-opinion systeem voor kwartaalplannen, marktentrees, herpositionering
 - [The Crew architectuur](https://markdekock.com/thecrew/nl/): Tien gespecialiseerde AI-agents in drie fasen (Intelligence, Execution, Performance) die samen één marketing-systeem vormen.
 
+## Blog & schrijfwerk
+
+- [Blog](https://markdekock.com/blog): Korte updates en lange essays over AI in marketing & sales — wat werkt, wat ik bouw, wat ik zie veranderen. Gepubliceerd in NL, EN en DE.
+
 ## Onafhankelijk onderzoek
 
 - [AI-benchmark voor marketing & sales](https://markdekock.com/ai_benchmark): Onafhankelijk onderzoek naar hoe marketing- en sales-professionals AI gebruiken. Vergelijk je eigen gebruik met dat van vakgenoten. Anoniem, 6 minuten.
