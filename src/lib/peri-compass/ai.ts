@@ -92,17 +92,17 @@ function buildSystem(lang: Lang): string {
   const libraryBlock = experimentsForPrompt()
 
   const langInstructions: Record<Lang, { lang: string; observationLabel: string; hypothesisLabel: string; experimentLabel: string }> = {
-    nl: { lang: 'NEDERLANDS', observationLabel: '1 paragraaf van 3-5 zinnen die het patroon in de scores beschrijft, met expliciete koppeling tussen 2-3 dimensies. Geen advies hier.',
-          hypothesisLabel: 'feitelijk geformuleerd, 1 zin',
+    nl: { lang: 'NEDERLANDS', observationLabel: 'KORT en SCANBAAR: 2-4 zinnen die het patroon in de scores beschrijven, met expliciete koppeling tussen 2 dimensies. Geen advies. Geen lijstjes. Geen jargon. Lees als een rustige observatie.',
+          hypothesisLabel: 'ZACHT geformuleerd, 1 zin. Gebruik woorden als "lijkt", "kan erop wijzen", "mogelijk", "lijkt samen te hangen met". Nooit absoluut.',
           experimentLabel: 'lichte personalisatie van de gekozen library-tekst (max 1-2 zinnen extra context). Geef het zo terug dat het natuurlijk leest in het Nederlands.' },
-    en: { lang: 'ENGLISH (US)', observationLabel: '1 paragraph of 3-5 sentences describing the pattern across the scores, explicitly connecting 2-3 dimensions. No advice here.',
-          hypothesisLabel: 'factually formulated, 1 sentence',
+    en: { lang: 'ENGLISH (US)', observationLabel: 'SHORT and SCANNABLE: 2-4 sentences describing the pattern across the scores, explicitly connecting 2 dimensions. No advice. No lists. No jargon. Reads as a calm observation.',
+          hypothesisLabel: 'SOFTLY formulated, 1 sentence. Use words like "seems", "may indicate", "possibly", "appears to coincide with". Never absolute.',
           experimentLabel: 'light personalisation of the chosen library text (max 1-2 extra sentences of context). Return it so it reads naturally in English.' },
-    fr: { lang: 'FRANÇAIS', observationLabel: '1 paragraphe de 3-5 phrases décrivant le schéma dans les scores, reliant explicitement 2-3 dimensions. Pas de conseil ici.',
-          hypothesisLabel: 'formulée factuellement, 1 phrase',
+    fr: { lang: 'FRANÇAIS', observationLabel: 'COURT et SCANNABLE : 2-4 phrases décrivant le schéma dans les scores, reliant explicitement 2 dimensions. Pas de conseil. Pas de listes. Pas de jargon. Se lit comme une observation calme.',
+          hypothesisLabel: 'formulée DOUCEMENT, 1 phrase. Utilisez "semble", "pourrait indiquer", "possiblement", "semble coïncider avec". Jamais absolu.',
           experimentLabel: 'légère personnalisation du texte de bibliothèque choisi (max 1-2 phrases supplémentaires de contexte). Retournez-le pour qu\'il se lise naturellement en français.' },
-    de: { lang: 'DEUTSCH', observationLabel: '1 Absatz von 3-5 Sätzen, der das Muster in den Scores beschreibt und 2-3 Dimensionen explizit verknüpft. Hier keine Empfehlung.',
-          hypothesisLabel: 'sachlich formuliert, 1 Satz',
+    de: { lang: 'DEUTSCH', observationLabel: 'KURZ und SCANBAR: 2-4 Sätze, die das Muster in den Scores beschreiben und 2 Dimensionen explizit verknüpfen. Keine Empfehlung. Keine Listen. Kein Jargon. Liest sich als ruhige Beobachtung.',
+          hypothesisLabel: 'WEICH formuliert, 1 Satz. Verwende "scheint", "kann hindeuten auf", "möglicherweise", "scheint zusammenzuhängen mit". Nie absolut.',
           experimentLabel: 'leichte Personalisierung des gewählten Library-Textes (max 1-2 zusätzliche Kontextsätze). Gib es so zurück, dass es natürlich auf Deutsch liest.' },
   }
 

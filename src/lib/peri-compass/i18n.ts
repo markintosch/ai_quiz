@@ -44,7 +44,7 @@ export const LANDING: Record<Lang, {
     metaDesc:    'Een eenmalige instap-assessment van 15 minuten. Krijg je baseline-score op 6 dimensies, drie hypothesen voor wat je ziet en een eerste experiment voor de komende 30 dagen.',
     eyebrow:     'Een nulmeting voor je transitie',
     title:       'Perimenopause Compass',
-    intro:       'Een eenmalige assessment van 15 minuten. Daarna weet je waar je staat op zes dimensies, krijg je drie hypothesen die je antwoorden verklaren, en een eerste experiment voor de komende 30 dagen.',
+    intro:       'Voelt je energie, slaap of stemming ineens minder voorspelbaar? Met één nulmeting van ~15 minuten krijg je inzicht in je belangrijkste patronen én een praktisch experiment voor de komende 30 dagen.',
     cta:         'Start je Compass →',
     ctaSub:      '~15 minuten · anoniem starten · e-mail pas bij resultaten',
     whatHeading: 'Wat krijg je terug',
@@ -74,7 +74,7 @@ export const LANDING: Record<Lang, {
     metaDesc:    'A one-time 15-minute assessment. Get your baseline score across 6 dimensions, three hypotheses for what you observe, and a first experiment for the next 30 days.',
     eyebrow:     'A baseline for your transition',
     title:       'Perimenopause Compass',
-    intro:       'A one-time 15-minute assessment. Afterwards you know where you stand on six dimensions, get three hypotheses that explain your answers, and a first experiment for the next 30 days.',
+    intro:       'Does your energy, sleep or mood feel suddenly less predictable? A one-time ~15-minute baseline gives you insight into your key patterns and a practical experiment for the next 30 days.',
     cta:         'Start your Compass →',
     ctaSub:      '~15 minutes · start anonymously · email only at results',
     whatHeading: 'What you get back',
@@ -104,7 +104,7 @@ export const LANDING: Record<Lang, {
     metaDesc:    'Un questionnaire unique de 15 minutes. Obtenez votre score de référence sur 6 dimensions, trois hypothèses pour ce que vous observez, et une première expérimentation pour les 30 prochains jours.',
     eyebrow:     'Un point de départ pour votre transition',
     title:       'Perimenopause Compass',
-    intro:       'Un questionnaire unique de 15 minutes. Vous saurez où vous en êtes sur six dimensions, vous recevrez trois hypothèses qui expliquent vos réponses, et une première expérimentation pour les 30 prochains jours.',
+    intro:       'Votre énergie, votre sommeil ou votre humeur semblent soudainement moins prévisibles ? Un questionnaire unique de ~15 minutes vous donne un aperçu de vos schémas clés et une expérimentation pratique pour les 30 prochains jours.',
     cta:         'Commencer votre Compass →',
     ctaSub:      '~15 minutes · démarrer anonymement · e-mail uniquement aux résultats',
     whatHeading: 'Ce que vous recevez',
@@ -134,7 +134,7 @@ export const LANDING: Record<Lang, {
     metaDesc:    'Ein einmaliger 15-Minuten-Fragebogen. Erhalte deinen Ausgangswert auf 6 Dimensionen, drei Hypothesen für das, was du beobachtest, und ein erstes Experiment für die nächsten 30 Tage.',
     eyebrow:     'Eine Standortbestimmung für deine Transition',
     title:       'Perimenopause Compass',
-    intro:       'Ein einmaliger 15-Minuten-Fragebogen. Danach weisst du, wo du auf sechs Dimensionen stehst, bekommst drei Hypothesen, die deine Antworten erklären, und ein erstes Experiment für die nächsten 30 Tage.',
+    intro:       'Fühlt sich deine Energie, dein Schlaf oder deine Stimmung plötzlich weniger vorhersehbar an? Ein einmaliger ~15-Minuten-Fragebogen gibt dir Einblick in deine wichtigsten Muster und ein praktisches Experiment für die nächsten 30 Tage.',
     cta:         'Starte deinen Compass →',
     ctaSub:      '~15 Minuten · anonym starten · E-Mail erst bei den Ergebnissen',
     whatHeading: 'Was du zurückbekommst',
@@ -312,6 +312,13 @@ export const RESULTS: Record<Lang, {
   emailSentErr:      string
   ageLabel:          string
   hrtLabel:          string
+  /** Sectie tussen score-card en dimensie-bars: dominante dimensie als focus */
+  topLeverHeading:   string
+  topLeverFor:       Record<string, string>      // dimension code → korte uitleg
+  meaningHeading:    string                       // 'Wat dit kan betekenen' subkop
+  whyExperimentLabel:string                       // 'Waarom dit experiment?'
+  startCheckinCta:   string                       // Lagere-drempel CTA
+  startCheckinSub:   string                       // '60 sec/dag, kun altijd stoppen'
 }> = {
   nl: {
     eyebrow:              'Je Peri-Compass',
@@ -350,6 +357,19 @@ export const RESULTS: Record<Lang, {
     emailSentErr:         'Er ging iets mis. Probeer het zo opnieuw.',
     ageLabel:             'leeftijd',
     hrtLabel:             'HRT',
+    topLeverHeading:      'Je grootste hefboom nu',
+    topLeverFor: {
+      symptom_burden:  'Je symptomen vragen het meest aandacht. Begin daar — kleine afkoeling-, ademhaling- of vermijdings-experimenten kunnen snel verschil maken.',
+      sleep_recovery:  'Je herstel staat onder druk. Slaap is meestal de hoeksteen — als die rust krijgt, volgen energie en stemming vaak vanzelf.',
+      energy_capacity: 'Je energie zakt eerder weg dan je zou willen. Vaak heeft dat te maken met slaap, daglicht of recoverytijd na drukke dagen.',
+      stress_context:  'Je systeem staat onder druk van buitenaf. Een dagelijkse rust-anker (5 min) kan het meest opleveren voor wat verder ook speelt.',
+      lifestyle:       'Hier zit nog ongebruikte ruimte. Eén kleine, herhaalbare aanpassing (beweging, eiwit, alcoholvrije nachten) kan over weken stapelen.',
+      self_awareness:  'Je hebt nog weinig zicht op je eigen patronen. Dat geeft de Compass juist ruimte: in 30 dagen zie je vaak meer dan in een jaar terugkijken.',
+    },
+    meaningHeading:       'Wat dit kan betekenen',
+    whyExperimentLabel:   'Waarom dit experiment?',
+    startCheckinCta:      'Start met je eerste check-in →',
+    startCheckinSub:      '60 seconden per dag. Je kunt altijd stoppen.',
   },
   en: {
     eyebrow:              'Your Peri-Compass',
@@ -388,6 +408,19 @@ export const RESULTS: Record<Lang, {
     emailSentErr:         'Something went wrong. Please try again.',
     ageLabel:             'age',
     hrtLabel:             'HRT',
+    topLeverHeading:      'Your biggest lever right now',
+    topLeverFor: {
+      symptom_burden:  'Your symptoms need the most attention. Start there — small cooling, breathing or trigger-avoidance experiments can make quick differences.',
+      sleep_recovery:  'Your recovery is under pressure. Sleep is usually the cornerstone — when it gets rest, energy and mood often follow.',
+      energy_capacity: 'Your energy fades faster than you\'d like. Often this connects to sleep, daylight, or recovery time after busy days.',
+      stress_context:  'Your system is under external pressure. A daily 5-minute rest anchor often delivers most for whatever else is going on.',
+      lifestyle:       'There\'s unused space here. One small repeatable change (movement, protein, alcohol-free nights) can compound over weeks.',
+      self_awareness:  'You don\'t yet have much sight on your own patterns. That\'s exactly the Compass\'s opening: in 30 days you often see more than in a year of looking back.',
+    },
+    meaningHeading:       'What this might mean',
+    whyExperimentLabel:   'Why this experiment?',
+    startCheckinCta:      'Start with your first check-in →',
+    startCheckinSub:      '60 seconds per day. You can stop any time.',
   },
   fr: {
     eyebrow:              'Votre Peri-Compass',
@@ -426,6 +459,19 @@ export const RESULTS: Record<Lang, {
     emailSentErr:         'Une erreur s\'est produite. Réessayez.',
     ageLabel:             'âge',
     hrtLabel:             'THS',
+    topLeverHeading:      'Votre principal levier actuel',
+    topLeverFor: {
+      symptom_burden:  'Vos symptômes demandent le plus d\'attention. Commencez là — de petites expérimentations de rafraîchissement, respiration ou évitement des déclencheurs font vite la différence.',
+      sleep_recovery:  'Votre récupération est sous pression. Le sommeil est souvent la pierre angulaire — quand il se calme, l\'énergie et l\'humeur suivent.',
+      energy_capacity: 'Votre énergie chute plus vite que vous ne le souhaiteriez. Cela tient souvent au sommeil, à la lumière du jour ou au temps de récupération après des journées chargées.',
+      stress_context:  'Votre système subit une pression externe. Un ancrage de repos quotidien de 5 min peut faire le plus de différence pour tout le reste.',
+      lifestyle:       'Il y a ici de l\'espace inexploité. Un petit changement répétable (mouvement, protéines, nuits sans alcool) peut s\'accumuler sur des semaines.',
+      self_awareness:  'Vous n\'avez pas encore beaucoup de visibilité sur vos propres schémas. C\'est précisément l\'ouverture du Compass : en 30 jours, vous voyez souvent plus qu\'en un an de rétrospective.',
+    },
+    meaningHeading:       'Ce que cela peut signifier',
+    whyExperimentLabel:   'Pourquoi cette expérimentation ?',
+    startCheckinCta:      'Commencer par votre premier check-in →',
+    startCheckinSub:      '60 secondes par jour. Vous pouvez arrêter à tout moment.',
   },
   de: {
     eyebrow:              'Dein Peri-Compass',
@@ -464,6 +510,19 @@ export const RESULTS: Record<Lang, {
     emailSentErr:         'Etwas ist schiefgegangen. Bitte erneut versuchen.',
     ageLabel:             'Alter',
     hrtLabel:             'HRT',
+    topLeverHeading:      'Dein grösster Hebel jetzt',
+    topLeverFor: {
+      symptom_burden:  'Deine Symptome brauchen die meiste Aufmerksamkeit. Fang dort an — kleine Abkühlungs-, Atem- oder Trigger-Vermeidungs-Experimente können schnell einen Unterschied machen.',
+      sleep_recovery:  'Deine Erholung steht unter Druck. Schlaf ist meist der Eckpfeiler — wenn er Ruhe bekommt, folgen Energie und Stimmung oft von selbst.',
+      energy_capacity: 'Deine Energie sackt schneller ab als du möchtest. Oft hängt das mit Schlaf, Tageslicht oder Erholungszeit nach vollen Tagen zusammen.',
+      stress_context:  'Dein System steht unter äusserem Druck. Ein täglicher 5-Minuten-Ruhe-Anker kann am meisten bringen für alles, was sonst noch spielt.',
+      lifestyle:       'Hier liegt noch ungenutzter Raum. Eine kleine, wiederholbare Anpassung (Bewegung, Eiweiss, alkoholfreie Nächte) kann sich über Wochen aufstapeln.',
+      self_awareness:  'Du hast noch wenig Blick auf deine eigenen Muster. Das ist genau die Öffnung des Compass: in 30 Tagen siehst du oft mehr als in einem Jahr Rückblick.',
+    },
+    meaningHeading:       'Was das bedeuten kann',
+    whyExperimentLabel:   'Warum dieses Experiment?',
+    startCheckinCta:      'Starte mit deinem ersten Check-in →',
+    startCheckinSub:      '60 Sekunden pro Tag. Du kannst jederzeit aufhören.',
   },
 }
 

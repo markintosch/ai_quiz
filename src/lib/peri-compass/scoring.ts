@@ -183,29 +183,32 @@ export function scoreResponses(responses: ResponseMap, _stage: Stage, lang: Lang
 }
 
 // ── Band copy per locale ────────────────────────────────────────────────────
+// Band-codes blijven hetzelfde (thriving/navigating/struggling/depleted) voor
+// backwards-compat in de DB, maar de DISPLAY-LABELS zijn herzien naar
+// menselijker tone (review Mark): Grounded / Navigating / Searching / Overloaded.
 export const BAND_COPY: Record<Lang, Record<Band, { title: string; sub: string }>> = {
   nl: {
-    thriving:   { title: 'Thriving',   sub: 'Je staat er sterk voor. De Compass helpt je deze uitgangspositie te bewaken en kleine optimalisaties zichtbaar te maken.' },
-    navigating: { title: 'Navigating', sub: 'Je voelt de transitie maar houdt het in de hand. Daily check-ins kunnen je helpen patronen te zien voordat ze je verrassen.' },
-    struggling: { title: 'Struggling', sub: 'Meerdere fronten vragen aandacht. Met dagelijkse data heb je binnen 4 weken concrete hefbomen om mee te beginnen.' },
-    depleted:   { title: 'Depleted',   sub: 'Je systeem staat onder hoge belasting. Tracken kan inzicht geven, maar overweeg ook professionele ondersteuning (huisarts, menopauze-arts, coach).' },
+    thriving:   { title: 'Grounded',   sub: 'Je voelt waar je staat. De patronen zijn er, en je hebt nu een goede uitgangspositie om ze te bewaken. Kleine signalen worden duidelijker als je ze rustig blijft volgen.' },
+    navigating: { title: 'Navigating', sub: 'Je lichaam geeft duidelijke signalen, maar de patronen zijn nog niet voorspelbaar. Je zit in een fase waarin kleine dagelijkse observaties veel kunnen helpen.' },
+    struggling: { title: 'Searching',  sub: 'Veel speelt tegelijk. Het is normaal om nu het overzicht kwijt te zijn. Met een paar weken zachte tracking komt er rust in wat er echt speelt.' },
+    depleted:   { title: 'Overloaded', sub: 'Je systeem staat onder hoge druk. Tracken kan helpen om patronen te zien, maar overweeg ook professionele ondersteuning (huisarts, menopauze-arts, coach) — je hoeft dit niet alleen te doen.' },
   },
   en: {
-    thriving:   { title: 'Thriving',   sub: 'You\'re in a strong position. The Compass helps you preserve this baseline and make small optimisations visible.' },
-    navigating: { title: 'Navigating', sub: 'You feel the transition but you\'re managing. Daily check-ins help you spot patterns before they catch you off guard.' },
-    struggling: { title: 'Struggling', sub: 'Multiple fronts need attention. With daily data you\'ll have concrete levers to act on within 4 weeks.' },
-    depleted:   { title: 'Depleted',   sub: 'Your system is under heavy load. Tracking can provide insight, but also consider professional support (GP, menopause specialist, coach).' },
+    thriving:   { title: 'Grounded',   sub: 'You feel where you stand. The patterns are there, and you have a good starting position to maintain. Small signals get clearer when you keep watching them gently.' },
+    navigating: { title: 'Navigating', sub: 'Your body sends clear signals, but the patterns aren\'t predictable yet. You\'re in a phase where small daily observations can help a lot.' },
+    struggling: { title: 'Searching',  sub: 'A lot is happening at once. It\'s normal to lose the overview right now. A few weeks of gentle tracking brings clarity to what\'s really going on.' },
+    depleted:   { title: 'Overloaded', sub: 'Your system is under high pressure. Tracking can help reveal patterns, but also consider professional support (GP, menopause specialist, coach) — you don\'t have to do this alone.' },
   },
   fr: {
-    thriving:   { title: 'Thriving',   sub: 'Vous êtes en bonne position. Le Compass vous aide à préserver ce point de départ et à rendre visibles les petites optimisations.' },
-    navigating: { title: 'Navigating', sub: 'Vous sentez la transition mais vous gérez. Les check-ins quotidiens vous aident à repérer les schémas avant qu\'ils ne vous surprennent.' },
-    struggling: { title: 'Struggling', sub: 'Plusieurs fronts demandent de l\'attention. Avec des données quotidiennes, vous aurez des leviers concrets en 4 semaines.' },
-    depleted:   { title: 'Depleted',   sub: 'Votre système est sous forte charge. Le suivi peut donner des insights, mais envisagez aussi un soutien professionnel (médecin, spécialiste de la ménopause, coach).' },
+    thriving:   { title: 'Grounded',   sub: 'Vous sentez où vous en êtes. Les schémas sont là, et vous avez une bonne base à préserver. Les petits signaux se clarifient si vous continuez à les observer doucement.' },
+    navigating: { title: 'Navigating', sub: 'Votre corps envoie des signaux clairs, mais les schémas ne sont pas encore prévisibles. Vous êtes dans une phase où de petites observations quotidiennes peuvent beaucoup aider.' },
+    struggling: { title: 'Searching',  sub: 'Beaucoup de choses se passent en même temps. Il est normal de perdre la vue d\'ensemble en ce moment. Quelques semaines de suivi doux clarifient ce qui se joue vraiment.' },
+    depleted:   { title: 'Overloaded', sub: 'Votre système est sous forte pression. Le suivi peut révéler des schémas, mais envisagez aussi un soutien professionnel (médecin, spécialiste de la ménopause, coach) — vous n\'êtes pas seule.' },
   },
   de: {
-    thriving:   { title: 'Thriving',   sub: 'Du stehst stark da. Der Compass hilft dir, diese Ausgangslage zu bewahren und kleine Optimierungen sichtbar zu machen.' },
-    navigating: { title: 'Navigating', sub: 'Du spürst die Transition, hast sie aber im Griff. Tägliche Check-ins helfen dir, Muster zu erkennen, bevor sie dich überraschen.' },
-    struggling: { title: 'Struggling', sub: 'Mehrere Fronten verlangen Aufmerksamkeit. Mit täglichen Daten hast du innerhalb von 4 Wochen konkrete Hebel.' },
-    depleted:   { title: 'Depleted',   sub: 'Dein System steht unter hoher Belastung. Tracking kann Einblicke geben, aber erwäge auch professionelle Unterstützung (Hausarzt, Menopause-Spezialist, Coach).' },
+    thriving:   { title: 'Grounded',   sub: 'Du spürst, wo du stehst. Die Muster sind da, und du hast eine gute Ausgangslage zum Bewahren. Kleine Signale werden klarer, wenn du sie sanft weiter beobachtest.' },
+    navigating: { title: 'Navigating', sub: 'Dein Körper sendet klare Signale, aber die Muster sind noch nicht vorhersehbar. Du bist in einer Phase, in der kleine tägliche Beobachtungen viel helfen können.' },
+    struggling: { title: 'Searching',  sub: 'Vieles passiert gleichzeitig. Es ist normal, gerade den Überblick zu verlieren. Ein paar Wochen sanftes Tracking bringen Ruhe in das, was wirklich spielt.' },
+    depleted:   { title: 'Overloaded', sub: 'Dein System steht unter hohem Druck. Tracking kann Muster sichtbar machen, aber erwäge auch professionelle Unterstützung (Hausarzt, Menopause-Spezialist, Coach) — du musst das nicht alleine tun.' },
   },
 }

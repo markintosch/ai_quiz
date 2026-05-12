@@ -8,6 +8,7 @@ import {
 import type { CompassScore } from '@/lib/peri-compass/scoring'
 import type { CompassAiOutput } from '@/lib/peri-compass/ai'
 import { BAND_COPY } from '@/lib/peri-compass/scoring'
+import { getExperimentByCode } from '@/lib/peri-compass/experiments'
 import type { Lang } from '@/lib/peri-compass/i18n'
 
 interface Props {
@@ -152,6 +153,15 @@ export function CompassResultsEmail({
           <Section style={experimentSection}>
             <Heading as="h2" style={experimentHeading}>{t.experimentLabel}</Heading>
             <Text style={experimentBody}>{ai.microExperiment}</Text>
+            {ai.experimentCode && (() => {
+              const exp = getExperimentByCode(ai.experimentCode)
+              if (!exp?.rationale) return null
+              return (
+                <Text style={experimentRationale}>
+                  <strong style={{ color: '#E8611A' }}>{whyLabel(lang)}:</strong> {exp.rationale}
+                </Text>
+              )
+            })()}
             {ai.experimentSource && (
               <Text style={experimentSource}>
                 {sourceLabel(lang)}: {ai.experimentSource}
@@ -209,6 +219,9 @@ const experimentSource: React.CSSProperties = { fontSize: '12px', fontStyle: 'it
 
 const SOURCE_LABEL: Record<Lang, string> = { nl: 'Bron', en: 'Source', fr: 'Source', de: 'Quelle' }
 function sourceLabel(lang: Lang): string { return SOURCE_LABEL[lang] }
+const WHY_LABEL: Record<Lang, string> = { nl: 'Waarom dit experiment', en: 'Why this experiment', fr: 'Pourquoi cette expérimentation', de: 'Warum dieses Experiment' }
+function whyLabel(lang: Lang): string { return WHY_LABEL[lang] }
+const experimentRationale: React.CSSProperties = { fontSize: '13px', color: '#374151', lineHeight: 1.55, margin: '12px 0 0' }
 const EVIDENCE_FOOTER: Record<Lang, string> = {
   nl: 'Alle voorgestelde experimenten zijn gekozen uit erkende menopauze-richtlijnen (NAMS, NICE, IMS, NHS, AASM, ACSM, WHO).',
   en: 'All suggested experiments are chosen from recognised menopause guidelines (NAMS, NICE, IMS, NHS, AASM, ACSM, WHO).',
