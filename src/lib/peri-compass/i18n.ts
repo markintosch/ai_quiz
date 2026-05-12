@@ -51,7 +51,8 @@ export const LANDING: Record<Lang, {
     feat: [
       { num: '01', title: 'Score op 6 dimensies',  body: 'Symptomen · slaap · energie · stress · leefstijl · zelfkennis. Met radar-grafiek zodat je in één blik ziet waar je zit.' },
       { num: '02', title: 'Drie hypothesen',        body: 'Wat verklaart wat je ervaart? Drie geformuleerde hypothesen op basis van je antwoorden. Geen diagnose — startpunten voor zelfregie.' },
-      { num: '03', title: 'Eerste experiment',      body: 'Eén concreet experiment voor de komende 30 dagen. Niet meer dan 5 min/dag. Iets dat zich in de Cycle app laat tracken.' },
+      { num: '03', title: 'Een evidence-based experiment', body: 'Eén concreet experiment voor 30 dagen, gekozen uit erkende menopauze-richtlijnen (NAMS, NICE, IMS, NHS). Met expliciete bronvermelding.' },
+      { num: '04', title: 'Een logboek voor je arts', body: 'Het experiment log je in de Cycle app. Na 4 weken heb je objectieve data om mee te nemen naar je huisarts of menopauze-arts.' },
     ],
     forWhomHeading: 'Voor wie?',
     forWhom: [
@@ -64,7 +65,7 @@ export const LANDING: Record<Lang, {
       'Geen medische diagnose. We schrijven niets voor en stellen geen toestand vast.',
       'Geen vervanging voor je huisarts of menopauze-arts.',
       'Geen therapeutische ruimte. Voor zware mentale klachten: zoek persoonlijke begeleiding.',
-      'Geen dataverkoop — je antwoorden blijven privé en zijn alleen toegankelijk voor jou en Mark de Kock (eigenaar).',
+      'Geen dataverkoop. Het platform en je antwoorden worden beheerd door Brand PWRD Media — zie het privacybeleid voor details.',
     ],
     finalLine: 'Klaar voor je nulmeting?',
   },
@@ -80,7 +81,8 @@ export const LANDING: Record<Lang, {
     feat: [
       { num: '01', title: 'Score on 6 dimensions', body: 'Symptoms · sleep · energy · stress · lifestyle · self-knowledge. With a radar chart so you see at a glance where you stand.' },
       { num: '02', title: 'Three hypotheses',      body: 'What explains what you experience? Three formulated hypotheses based on your answers. Not a diagnosis — starting points for self-direction.' },
-      { num: '03', title: 'First experiment',      body: 'One concrete experiment for the next 30 days. No more than 5 min/day. Something that fits in the Cycle app.' },
+      { num: '03', title: 'An evidence-based experiment', body: 'One concrete experiment for 30 days, chosen from recognised menopause guidelines (NAMS, NICE, IMS, NHS). Source attribution included.' },
+      { num: '04', title: 'A logbook for your doctor', body: 'You track the experiment in the Cycle app. After 4 weeks you have objective data to bring to your GP or menopause specialist.' },
     ],
     forWhomHeading: 'For whom?',
     forWhom: [
@@ -93,7 +95,7 @@ export const LANDING: Record<Lang, {
       'No medical diagnosis. We do not prescribe or determine any condition.',
       'No replacement for your GP or menopause specialist.',
       'No therapeutic space. For serious mental health concerns: seek personal support.',
-      'No data sales — your answers remain private and accessible only to you and Mark de Kock (owner).',
+      'No data sales. The platform and your answers are managed by Brand PWRD Media — see the privacy policy for details.',
     ],
     finalLine: 'Ready for your baseline?',
   },
@@ -109,7 +111,8 @@ export const LANDING: Record<Lang, {
     feat: [
       { num: '01', title: 'Score sur 6 dimensions', body: 'Symptômes · sommeil · énergie · stress · mode de vie · connaissance de soi. Avec un graphique radar pour visualiser en un coup d\'œil.' },
       { num: '02', title: 'Trois hypothèses',       body: 'Qu\'est-ce qui explique ce que vous vivez ? Trois hypothèses formulées à partir de vos réponses. Pas un diagnostic — des points de départ pour l\'autonomie.' },
-      { num: '03', title: 'Première expérimentation', body: 'Une expérimentation concrète pour les 30 prochains jours. Pas plus de 5 min/jour. Quelque chose qui s\'intègre dans l\'app Cycle.' },
+      { num: '03', title: 'Une expérimentation evidence-based', body: 'Une expérimentation concrète pour 30 jours, choisie dans des recommandations menopause reconnues (NAMS, NICE, IMS, NHS). Source citée explicitement.' },
+      { num: '04', title: 'Un journal pour votre médecin', body: 'Vous suivez l\'expérimentation dans l\'app Cycle. Après 4 semaines, vous avez des données objectives à apporter à votre médecin ou spécialiste de la ménopause.' },
     ],
     forWhomHeading: 'Pour qui ?',
     forWhom: [
@@ -122,7 +125,7 @@ export const LANDING: Record<Lang, {
       'Pas un diagnostic médical. Nous ne prescrivons rien et n\'établissons aucun état.',
       'Pas un substitut à votre médecin généraliste ou spécialiste de la ménopause.',
       'Pas un espace thérapeutique. Pour des troubles mentaux sérieux : cherchez un accompagnement personnel.',
-      'Pas de vente de données — vos réponses restent privées et accessibles uniquement à vous et à Mark de Kock (propriétaire).',
+      'Pas de vente de données. La plateforme et vos réponses sont gérées par Brand PWRD Media — voir la politique de confidentialité pour plus de détails.',
     ],
     finalLine: 'Prête pour votre point de départ ?',
   },
@@ -138,7 +141,8 @@ export const LANDING: Record<Lang, {
     feat: [
       { num: '01', title: 'Score auf 6 Dimensionen', body: 'Symptome · Schlaf · Energie · Stress · Lebensstil · Selbstkenntnis. Mit Radar-Diagramm, damit du auf einen Blick siehst, wo du stehst.' },
       { num: '02', title: 'Drei Hypothesen',          body: 'Was erklärt, was du erlebst? Drei formulierte Hypothesen auf Basis deiner Antworten. Keine Diagnose — Ausgangspunkte für Selbstregie.' },
-      { num: '03', title: 'Erstes Experiment',        body: 'Ein konkretes Experiment für die nächsten 30 Tage. Nicht mehr als 5 Min./Tag. Etwas, das in die Cycle-App passt.' },
+      { num: '03', title: 'Ein evidenzbasiertes Experiment', body: 'Ein konkretes Experiment für 30 Tage, ausgewählt aus anerkannten Menopause-Leitlinien (NAMS, NICE, IMS, NHS). Mit expliziter Quellenangabe.' },
+      { num: '04', title: 'Ein Logbuch für deinen Arzt', body: 'Du trackst das Experiment in der Cycle-App. Nach 4 Wochen hast du objektive Daten, die du zu deinem Hausarzt oder Menopause-Spezialisten mitnehmen kannst.' },
     ],
     forWhomHeading: 'Für wen?',
     forWhom: [
@@ -151,7 +155,7 @@ export const LANDING: Record<Lang, {
       'Keine medizinische Diagnose. Wir verschreiben nichts und stellen keinen Zustand fest.',
       'Kein Ersatz für deinen Hausarzt oder Menopause-Spezialisten.',
       'Kein therapeutischer Raum. Bei schweren mentalen Beschwerden: persönliche Begleitung suchen.',
-      'Kein Datenverkauf — deine Antworten bleiben privat und sind nur für dich und Mark de Kock (Eigentümer) zugänglich.',
+      'Kein Datenverkauf. Plattform und deine Antworten werden von Brand PWRD Media verwaltet — Details in der Datenschutzerklärung.',
     ],
     finalLine: 'Bereit für deine Standortbestimmung?',
   },

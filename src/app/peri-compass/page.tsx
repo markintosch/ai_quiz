@@ -80,9 +80,9 @@ export default function CompassLandingPage({
         </div>
       </section>
 
-      <section className="mx-auto max-w-4xl px-6 py-16">
+      <section className="mx-auto max-w-5xl px-6 py-16">
         <h2 className="mb-8 text-center text-2xl font-bold text-brand">{t.whatHeading}</h2>
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {t.feat.map((f) => (
             <div key={f.num} className="rounded-lg border border-gray-200 bg-white p-6">
               <p className="mb-3 font-mono text-xs text-brand-accent">{f.num}</p>

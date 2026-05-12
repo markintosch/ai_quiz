@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy — Brand PWRD Media AI Maturity Assessment',
-  description: 'How Brand PWRD Media collects, uses and protects your personal data when you take the AI Maturity Assessment.',
+  title: 'Privacy Policy — Brand PWRD Media',
+  description: 'How Brand PWRD Media — owner and operator of this platform (including the AI Maturity Assessment, Peri-Compass and Cycle) — collects, uses and protects your personal data.',
 }
 
 export default function PrivacyPage() {
@@ -26,10 +26,22 @@ export default function PrivacyPage() {
 
           {/* 1 */}
           <section>
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">1. Who we are</h2>
+            <h2 className="text-lg font-semibold text-gray-900 mb-2">1. Who we are &amp; what we own</h2>
             <p>
-              Brand PWRD Media B.V. ("we", "us", "our") is the data controller for personal
-              data collected through the AI Maturity Assessment at this website. You can reach us at{' '}
+              <strong>Brand PWRD Media B.V.</strong> ("we", "us", "our", "Brand PWRD Media") is the
+              <strong> owner and operator</strong> of this platform and the
+              <strong> data controller</strong> for all personal data collected through it. The platform
+              includes — but is not limited to — the following products:
+            </p>
+            <ul className="list-disc pl-5 mt-2 mb-3 space-y-1">
+              <li><strong>AI Maturity Assessment</strong> &amp; AI-benchmark</li>
+              <li><strong>Peri-Compass</strong> — perimenopause baseline assessment</li>
+              <li><strong>Cycle</strong> — daily-tracking companion app</li>
+              <li>Other assessments &amp; tools available under markdekock.com</li>
+            </ul>
+            <p>
+              All personal data submitted via these products is held under Brand PWRD Media's responsibility
+              and processed under the terms set out in this policy. You can reach us at{' '}
               <a href="mailto:mark@brandpwrdmedia.com"
                  className="text-blue-600 underline hover:text-blue-800">
                 mark@brandpwrdmedia.com
