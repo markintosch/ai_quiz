@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { getLocale } from 'next-intl/server'
+import { headers } from 'next/headers'
 import Script from 'next/script'
 import CookieConsent from '@/components/CookieConsent'
 import './globals.css'
@@ -25,8 +26,27 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     // admin / api routes have no locale context — default to 'en'
   }
 
+  // ── Host + path detection for markdekock.com-only third-party widgets ────
+  // Skip third-party JS on (a) any host that isn't markdekock.com, (b) /admin/*
+  // routes (privacy + don't pollute external dashboards with our own traffic).
+  let host = ''
+  let pathname = ''
+  try {
+    const h    = headers()
+    host       = h.get('host')                 ?? ''
+    pathname   = h.get('x-invoke-path')        ?? h.get('x-pathname') ?? ''
+  } catch { /* not available in some build contexts */ }
+  const isMarkdekockHost = host.endsWith('markdekock.com')
+  const isAdminPath      = pathname.startsWith('/admin')
+  const loadStardust     = isMarkdekockHost && !isAdminPath
+
   return (
     <html lang={locale}>
+      {loadStardust && (
+        <head>
+          <link rel="stylesheet" href="https://css.jsapis.com/controls.css" />
+        </head>
+      )}
       <body className={inter.className}>
         {children}
 
@@ -61,6 +81,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
         {/* ── Cookie consent banner (GDPR) ── */}
         <CookieConsent />
+
+        {/* ── Stardust (strds.nl) — markdekock.com only, skipped on /admin ── */}
+        {/* If you want this to wait for cookie consent, change strategy to    */}
+        {/* a manual `window.__loadStardust()` block (same pattern as LinkedIn) */}
+        {loadStardust && (
+          <Script
+            id="stardust-strds"
+            src="https://cdn.strds.nl/jq_bfacd86f.js"
+            strategy="afterInteractive"
+          />
+        )}
 
         {/* ── LinkedIn Insight Tag — suspended pending consent mechanism ── */}
         {/* LinkedIn has no consent mode equivalent (no cookieless fallback).       */}
