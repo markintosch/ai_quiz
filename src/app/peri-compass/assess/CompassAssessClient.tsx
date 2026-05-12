@@ -1,55 +1,50 @@
 // FILE: src/app/peri-compass/assess/CompassAssessClient.tsx
-// ─────────────────────────────────────────────────────────────────────────────
-// Client component — runs the question stepper.
-//
-// State machine:
-//   1. Stage selection (Q0)            → bepaalt skip-logic voor de rest
-//   2. Loop door visible questions (één-voor-één, met progress bar)
-//   3. Lead-capture page (e-mail + AVG checkbox)
-//   4. Submit → Claude doet zijn werk → redirect naar /results/[id]
-//
-// Persists to sessionStorage zodat een refresh niet alle antwoorden wist.
-// ─────────────────────────────────────────────────────────────────────────────
+// Client stepper — meertalig (NL/EN/FR/DE).
 
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
-  ALL_QUESTIONS,
-  STAGE_QUESTION,
   questionsForStage,
-  type CompassQuestion,
+  stageQuestion,
+  type LocalizedQuestion,
   type Stage,
 } from '@/lib/peri-compass/questions'
 import type { ResponseValue } from '@/lib/peri-compass/scoring'
+import { STEPPER, type Lang } from '@/lib/peri-compass/i18n'
 
-const STORAGE_KEY = 'pmcompass:v1'
+const STORAGE_KEY = 'pmcompass:v2'
 
 type ResponseMap = Record<string, ResponseValue>
 
 interface PersistShape {
   stage:     Stage | null
   responses: ResponseMap
-  step:      number                    // index in questions
+  step:      number
   email:     string
   consent:   boolean
 }
 
-const CONSENT_TEXT = 'Ik ga akkoord met het privacybeleid en het ontvangen van mijn Compass-resultaten per e-mail.'
+interface Props {
+  lang:           Lang
+  prefilledEmail: string
+}
 
-export default function CompassAssessClient() {
+type StepperT = typeof STEPPER['nl']
+
+export default function CompassAssessClient({ lang, prefilledEmail }: Props) {
   const router = useRouter()
+  const t: StepperT = STEPPER[lang]
   const [stage,     setStage]     = useState<Stage | null>(null)
   const [responses, setResponses] = useState<ResponseMap>({})
   const [step,      setStep]      = useState(0)
   const [phase,     setPhase]     = useState<'stage' | 'questions' | 'lead' | 'submitting'>('stage')
-  const [email,     setEmail]     = useState('')
+  const [email,     setEmail]     = useState(prefilledEmail)
   const [consent,   setConsent]   = useState(false)
   const [error,     setError]     = useState<string | null>(null)
   const [hydrated,  setHydrated]  = useState(false)
 
-  // ── Hydrate from sessionStorage ───────────────────────────────────────
   useEffect(() => {
     try {
       const raw = sessionStorage.getItem(STORAGE_KEY)
@@ -58,15 +53,14 @@ export default function CompassAssessClient() {
         if (p.stage) setStage(p.stage)
         setResponses(p.responses ?? {})
         setStep(p.step ?? 0)
-        setEmail(p.email ?? '')
+        if (p.email) setEmail(p.email)
         setConsent(!!p.consent)
-        if (p.stage) setPhase(p.step >= 999 ? 'lead' : 'questions')
+        if (p.stage) setPhase('questions')
       }
     } catch { /* ignore */ }
     setHydrated(true)
   }, [])
 
-  // Persist
   useEffect(() => {
     if (!hydrated) return
     try {
@@ -76,21 +70,18 @@ export default function CompassAssessClient() {
     } catch { /* ignore */ }
   }, [stage, responses, step, email, consent, hydrated])
 
-  // ── Visible questions na stage-keuze (excl. STAGE_QUESTION zelf) ─────
   const visibleQuestions = useMemo(() => {
-    if (!stage) return [] as CompassQuestion[]
-    return questionsForStage(stage).filter((q) => q.code !== STAGE_QUESTION.code)
-  }, [stage])
+    if (!stage) return [] as LocalizedQuestion[]
+    return questionsForStage(stage, lang).filter((q) => q.code !== 'stage')
+  }, [stage, lang])
 
-  const currentQ: CompassQuestion | undefined = visibleQuestions[step]
-  const totalQ = visibleQuestions.length
-  const progress = totalQ === 0 ? 0 : Math.round(((step + 1) / totalQ) * 100)
+  const sq         = useMemo(() => stageQuestion(lang), [lang])
+  const currentQ: LocalizedQuestion | undefined = visibleQuestions[step]
+  const totalQ     = visibleQuestions.length
+  const progress   = totalQ === 0 ? 0 : Math.round(((step + 1) / totalQ) * 100)
 
-  // ── Stage selection ───────────────────────────────────────────────────
   function selectStage(s: Stage) {
     setStage(s)
-    // Save stage as response too — server gebruikt zowel het 'stage' field
-    // als de aparte responses[stage] niet, dus deze is alleen ter informatie.
     setResponses((r) => ({ ...r, stage: { kind: 'single', value: s } }))
     setPhase('questions')
     setStep(0)
@@ -102,33 +93,22 @@ export default function CompassAssessClient() {
 
   function next() {
     setError(null)
-    // Validate required
     if (currentQ?.required) {
       const r = responses[currentQ.code]
       if (!r || (r.kind === 'multi' && r.value.length === 0) ||
           (r.kind === 'text'  && r.value.trim() === '')) {
-        setError('Deze vraag is verplicht. Selecteer of vul iets in.')
+        setError(t.errRequired)
         return
       }
     }
-    if (step + 1 >= totalQ) {
-      setPhase('lead')
-    } else {
-      setStep(step + 1)
-    }
+    if (step + 1 >= totalQ) setPhase('lead')
+    else                     setStep(step + 1)
   }
 
   function back() {
     setError(null)
-    if (phase === 'lead') {
-      setPhase('questions')
-      return
-    }
-    if (step === 0) {
-      setPhase('stage')
-      setStage(null)
-      return
-    }
+    if (phase === 'lead') { setPhase('questions'); return }
+    if (step === 0) { setPhase('stage'); setStage(null); return }
     setStep(step - 1)
   }
 
@@ -136,8 +116,7 @@ export default function CompassAssessClient() {
     setError(null)
     if (!stage) return
     if (email && !consent) {
-      setError('Vink het AVG-vakje aan om je resultaten per mail te ontvangen.')
-      return
+      setError(t.errConsent); return
     }
     setPhase('submitting')
     try {
@@ -145,52 +124,43 @@ export default function CompassAssessClient() {
         method:  'POST',
         headers: { 'content-type': 'application/json' },
         body:    JSON.stringify({
-          stage,
-          responses,
+          stage, responses,
+          language:    lang,
           email:       email.trim() || undefined,
           consent:     email ? consent : false,
-          consentText: email ? CONSENT_TEXT : undefined,
+          consentText: email ? t.consentText : undefined,
         }),
       })
       const text = await r.text()
       let j: { id?: string; error?: string }
       try { j = JSON.parse(text) } catch { j = { error: text || `HTTP ${r.status}` } }
       if (!r.ok || !j.id) {
-        setError(j.error ?? `Er ging iets mis (HTTP ${r.status})`)
-        setPhase('lead')
-        return
+        setError(j.error ?? t.errNetwork)
+        setPhase('lead'); return
       }
-      // Clear storage en redirect
       try { sessionStorage.removeItem(STORAGE_KEY) } catch { /* ignore */ }
-      router.push(`/peri-compass/results/${j.id}`)
-    } catch (err) {
-      setError(`Netwerkfout: ${err instanceof Error ? err.message : 'onbekend'}`)
+      router.push(`/peri-compass/results/${j.id}?lang=${lang}`)
+    } catch {
+      setError(t.errNetwork)
       setPhase('lead')
     }
   }
 
   if (!hydrated) {
-    return <div className="mx-auto max-w-2xl px-6 py-24 text-center text-gray-600">Laden…</div>
+    return <div className="mx-auto max-w-2xl px-6 py-24 text-center text-gray-600">{t.loading}</div>
   }
 
   return (
     <main className="min-h-screen bg-gray-50">
       <div className="mx-auto max-w-2xl px-6 py-10">
-        {/* Top progress + back */}
         <div className="mb-6 flex items-center justify-between text-sm">
           {phase !== 'stage' && (
-            <button
-              type="button"
-              onClick={back}
-              className="text-gray-600 hover:text-brand"
-            >
-              ← Vorige
+            <button type="button" onClick={back} className="text-gray-600 hover:text-brand">
+              {t.back}
             </button>
           )}
           {phase === 'questions' && (
-            <span className="font-mono text-xs text-gray-600">
-              {step + 1} / {totalQ}
-            </span>
+            <span className="font-mono text-xs text-gray-600">{step + 1} / {totalQ}</span>
           )}
         </div>
         {phase === 'questions' && (
@@ -201,7 +171,7 @@ export default function CompassAssessClient() {
 
         <div className="rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
           {phase === 'stage' && (
-            <StageStep onSelect={selectStage} />
+            <StageStep onSelect={selectStage} q={sq} firstLabel={t.firstQuestion} />
           )}
 
           {phase === 'questions' && currentQ && (
@@ -214,21 +184,19 @@ export default function CompassAssessClient() {
 
           {phase === 'lead' && (
             <LeadCaptureStep
+              t={t}
               email={email}
               setEmail={setEmail}
               consent={consent}
               setConsent={setConsent}
-              consentText={CONSENT_TEXT}
             />
           )}
 
           {phase === 'submitting' && (
             <div className="py-12 text-center">
               <div className="mx-auto mb-6 h-12 w-12 animate-spin rounded-full border-4 border-brand-accent/20 border-t-brand-accent" />
-              <p className="mb-2 text-lg font-semibold text-brand">Even geduld…</p>
-              <p className="text-sm text-gray-700">
-                Je resultaat wordt berekend en Claude formuleert je hypothesen. Dit kan 30-60 seconden duren.
-              </p>
+              <p className="mb-2 text-lg font-semibold text-brand">{t.submitting1}</p>
+              <p className="text-sm text-gray-700">{t.submitting2}</p>
             </div>
           )}
 
@@ -239,7 +207,6 @@ export default function CompassAssessClient() {
           )}
         </div>
 
-        {/* Footer actions */}
         {phase === 'questions' && currentQ && (
           <div className="mt-6 flex justify-end">
             <button
@@ -247,7 +214,7 @@ export default function CompassAssessClient() {
               onClick={next}
               className="rounded-md bg-brand-accent px-6 py-2.5 text-sm font-semibold text-white hover:bg-brand-accent/90"
             >
-              {step + 1 === totalQ ? 'Naar resultaten →' : 'Volgende →'}
+              {step + 1 === totalQ ? t.toResults : t.nextDefault}
             </button>
           </div>
         )}
@@ -258,14 +225,14 @@ export default function CompassAssessClient() {
               onClick={() => { setEmail(''); setConsent(false); submit() }}
               className="rounded-md border border-gray-300 bg-white px-5 py-2 text-sm text-gray-700 hover:bg-gray-50"
             >
-              Sla over (anoniem afronden)
+              {t.skip}
             </button>
             <button
               type="button"
               onClick={submit}
               className="rounded-md bg-brand-accent px-6 py-2.5 text-sm font-semibold text-white hover:bg-brand-accent/90"
             >
-              Mijn resultaten →
+              {t.myResults}
             </button>
           </div>
         )}
@@ -274,17 +241,22 @@ export default function CompassAssessClient() {
   )
 }
 
-// ── Stage step ─────────────────────────────────────────────────────────────
-function StageStep({ onSelect }: { onSelect: (s: Stage) => void }) {
+function StageStep({
+  onSelect, q, firstLabel,
+}: {
+  onSelect:    (s: Stage) => void
+  q:           LocalizedQuestion
+  firstLabel:  string
+}) {
   return (
     <div>
       <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-brand-accent">
-        Eerste vraag
+        {firstLabel}
       </p>
-      <h2 className="mb-3 text-2xl font-bold text-brand">{STAGE_QUESTION.prompt}</h2>
-      {STAGE_QUESTION.help && <p className="mb-6 text-sm text-gray-600">{STAGE_QUESTION.help}</p>}
+      <h2 className="mb-3 text-2xl font-bold text-brand">{q.prompt}</h2>
+      {q.help && <p className="mb-6 text-sm text-gray-600">{q.help}</p>}
       <div className="space-y-2">
-        {STAGE_QUESTION.options?.map((o) => (
+        {q.options?.map((o) => (
           <button
             key={o.value}
             type="button"
@@ -299,11 +271,10 @@ function StageStep({ onSelect }: { onSelect: (s: Stage) => void }) {
   )
 }
 
-// ── Question step ──────────────────────────────────────────────────────────
 function QuestionStep({
   q, value, onChange,
 }: {
-  q:        CompassQuestion
+  q:        LocalizedQuestion
   value:    ResponseValue | undefined
   onChange: (v: ResponseValue) => void
 }) {
@@ -384,7 +355,6 @@ function QuestionStep({
           onChange={(e) => onChange({ kind: 'text', value: e.target.value })}
           rows={4}
           maxLength={600}
-          placeholder="Vrij tekstveld…"
           className="w-full rounded-md border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-brand-accent focus:outline-none focus:ring-2 focus:ring-brand-accent/20"
         />
       )}
@@ -429,35 +399,29 @@ function LikertScale({
   )
 }
 
-// ── Lead capture ──────────────────────────────────────────────────────────
 function LeadCaptureStep({
-  email, setEmail, consent, setConsent, consentText,
+  t, email, setEmail, consent, setConsent,
 }: {
+  t:           StepperT
   email:       string
   setEmail:    (s: string) => void
   consent:     boolean
   setConsent:  (b: boolean) => void
-  consentText: string
 }) {
   return (
     <div>
-      <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-brand-accent">
-        Bijna klaar
-      </p>
-      <h2 className="mb-3 text-2xl font-bold text-brand">Waar mogen we je resultaten heen sturen?</h2>
-      <p className="mb-6 text-sm leading-relaxed text-gray-700">
-        Vul je e-mail in om een samenvatting te ontvangen en de Cycle app te kunnen gebruiken voor dagelijkse tracking.
-        Sla over voor anoniem afronden — je krijgt je resultaat dan alleen op het scherm.
-      </p>
+      <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-brand-accent">{t.almostDone}</p>
+      <h2 className="mb-3 text-2xl font-bold text-brand">{t.leadHeading}</h2>
+      <p className="mb-6 text-sm leading-relaxed text-gray-700">{t.leadIntro}</p>
 
       <label className="mb-3 block">
-        <span className="mb-1 block text-sm font-medium text-gray-700">E-mail (optioneel)</span>
+        <span className="mb-1 block text-sm font-medium text-gray-700">{t.emailLabel}</span>
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="email"
-          placeholder="naam@bedrijf.nl"
+          placeholder={t.emailPlaceholder}
           className="w-full rounded-md border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-brand-accent focus:outline-none focus:ring-2 focus:ring-brand-accent/20"
         />
       </label>
@@ -470,7 +434,7 @@ function LeadCaptureStep({
             onChange={(e) => setConsent(e.target.checked)}
             className="mt-0.5 h-4 w-4 cursor-pointer accent-brand-accent"
           />
-          <span className="leading-relaxed">{consentText}</span>
+          <span className="leading-relaxed">{t.consentText}</span>
         </label>
       )}
     </div>
