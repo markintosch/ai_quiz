@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { isAuthorised } from '@/lib/admin/auth'
+import { isSannahAuthorised } from '@/lib/sannah/auth'
 
 const sb = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -16,7 +16,7 @@ const BUCKET = 'sannah-portfolio'
 
 /** POST: upload a new image and create a sannah_works row (unpublished by default). */
 export async function POST(req: NextRequest) {
-  if (!(await isAuthorised())) {
+  if (!(await isSannahAuthorised())) {
     return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
   }
 

@@ -26,7 +26,7 @@ export default function WorksScroll({ works, emptyLabel }: Props) {
         <figure key={w.id} className="sannah-scroll-figure" style={{
           margin: 0,
           marginBottom: i === works.length - 1 ? 80 : 96,
-          animationDelay: `${Math.min(i, 4) * 80}ms`,
+          animationDelay: `${Math.min(i, 5) * 180}ms`,
         }}>
           <div style={{
             position: 'relative',
