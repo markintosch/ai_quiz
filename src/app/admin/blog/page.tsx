@@ -32,34 +32,80 @@ const LOCALE_LABEL: Record<PostListItem['locale'], string> = {
 
 export default function AdminBlogList() {
   const router = useRouter()
-  const [posts,   setPosts]   = useState<PostListItem[]>([])
-  const [loading, setLoading] = useState(true)
-  const [creating,setCreating]= useState(false)
+  const [posts,    setPosts]    = useState<PostListItem[]>([])
+  const [loading,  setLoading]  = useState(true)
+  const [creating, setCreating] = useState(false)
+  const [loadError,setLoadError]= useState<string | null>(null)
   const [filterStatus, setFilterStatus] = useState<'all' | 'draft' | 'published'>('all')
   const [filterLocale, setFilterLocale] = useState<'all' | PostListItem['locale']>('all')
 
   async function load() {
     setLoading(true)
+    setLoadError(null)
     const params = new URLSearchParams()
     if (filterStatus !== 'all') params.set('status', filterStatus)
     if (filterLocale !== 'all') params.set('locale', filterLocale)
-    const r = await fetch(`/api/admin/blog?${params.toString()}`, { cache: 'no-store' })
-    const j = await r.json()
-    setPosts(Array.isArray(j.posts) ? j.posts : [])
-    setLoading(false)
+    try {
+      const r = await fetch(`/api/admin/blog?${params.toString()}`, { cache: 'no-store' })
+      const text = await r.text()
+      let j: { posts?: PostListItem[]; error?: string }
+      try { j = JSON.parse(text) } catch { j = { error: text || `HTTP ${r.status}` } }
+      if (r.status === 401) {
+        setLoadError('Niet ingelogd of sessie verlopen — log opnieuw in via /admin/login.')
+        setPosts([])
+      } else if (!r.ok) {
+        const tableMissing = (j.error ?? '').toLowerCase().includes('blog_posts')
+                          || (j.error ?? '').toLowerCase().includes('does not exist')
+                          || (j.error ?? '').toLowerCase().includes('schema cache')
+        setLoadError(tableMissing
+          ? 'De `blog_posts` tabel bestaat nog niet. Run eerst de SQL: supabase/migration_blog.sql in de Supabase SQL editor.'
+          : `Laden mislukt (HTTP ${r.status}): ${j.error ?? 'onbekende fout'}`)
+        setPosts([])
+      } else {
+        setPosts(Array.isArray(j.posts) ? j.posts : [])
+      }
+    } catch (err) {
+      setLoadError(`Netwerkfout: ${err instanceof Error ? err.message : 'onbekend'}`)
+    } finally {
+      setLoading(false)
+    }
   }
   useEffect(() => { void load() }, [filterStatus, filterLocale])
 
   async function createPost() {
     setCreating(true)
-    const r = await fetch('/api/admin/blog', {
-      method:  'POST',
-      headers: { 'content-type': 'application/json' },
-      body:    JSON.stringify({ title: 'Nieuwe post', locale: 'nl', format: 'article' }),
-    })
-    const j = await r.json()
+    let r: Response
+    try {
+      r = await fetch('/api/admin/blog', {
+        method:  'POST',
+        headers: { 'content-type': 'application/json' },
+        body:    JSON.stringify({ title: 'Nieuwe post', locale: 'nl', format: 'article' }),
+      })
+    } catch (err) {
+      setCreating(false)
+      alert(`Netwerkfout: ${err instanceof Error ? err.message : 'onbekend'}`)
+      return
+    }
+
+    const text = await r.text()
+    let j: { post?: { id?: string }; error?: string }
+    try { j = JSON.parse(text) } catch { j = { error: text || `HTTP ${r.status}` } }
     setCreating(false)
-    if (j?.post?.id) router.push(`/admin/blog/${j.post.id}`)
+
+    if (r.status === 401) {
+      alert('Niet ingelogd of sessie verlopen. Login opnieuw via /admin/login.')
+      return
+    }
+    if (!r.ok || !j?.post?.id) {
+      const friendly = (j.error ?? '').toLowerCase().includes('blog_posts')
+                    || (j.error ?? '').toLowerCase().includes('does not exist')
+        ? 'De `blog_posts` tabel bestaat nog niet. Run eerst de SQL: supabase/migration_blog.sql in de Supabase SQL editor.'
+        : `Aanmaken mislukt (HTTP ${r.status}): ${j.error ?? 'onbekende fout'}`
+      console.error('createPost failed', { status: r.status, body: j })
+      alert(friendly)
+      return
+    }
+    router.push(`/admin/blog/${j.post!.id}`)
   }
 
   // Group by translation graph: rootId = parent_id ?? id
@@ -81,6 +127,14 @@ export default function AdminBlogList() {
           {creating ? 'Bezig…' : '+ Nieuwe post'}
         </button>
       </div>
+
+      {/* Error banner — toont SQL-migratie / login / netwerk fouten */}
+      {loadError && (
+        <div className="mb-4 rounded-md border border-red-300 bg-red-50 p-4 text-sm text-red-900">
+          <p className="font-semibold">Oeps:</p>
+          <p className="mt-1">{loadError}</p>
+        </div>
+      )}
 
       {/* Filters */}
       <div className="mb-4 flex flex-wrap gap-3 text-sm">
