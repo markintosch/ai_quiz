@@ -105,8 +105,11 @@ export default async function BlogIndexPage({
       {/* ── Header ───────────────────────────────────────────── */}
       <header className="border-b border-gray-100 bg-white">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
-          <Link href={lang === 'nl' ? '/' : `/?lang=${lang}`} className="text-sm font-medium text-gray-700 hover:text-brand">
-            ← Mark de Kock
+          <Link
+            href={lang === 'nl' ? '/mentor' : `/mentor?lang=${lang}`}
+            className="text-sm font-medium text-gray-700 hover:text-brand"
+          >
+            {s.homeLink}
           </Link>
           <LanguagePicker lang={lang} format={filterFormat} />
         </div>

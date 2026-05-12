@@ -37,6 +37,7 @@ export const STRINGS: Record<Lang, {
   latestPost:       string
   earlierPosts:     string
   openInOwnPage:    string
+  homeLink:         string
 }> = {
   nl: {
     pageTitle:       'Blog',
@@ -58,6 +59,7 @@ export const STRINGS: Record<Lang, {
     latestPost:      'Laatste post',
     earlierPosts:    'Eerder verschenen',
     openInOwnPage:   'Lees op eigen pagina →',
+    homeLink:        '← Terug naar markdekock.com',
   },
   en: {
     pageTitle:       'Blog',
@@ -79,6 +81,7 @@ export const STRINGS: Record<Lang, {
     latestPost:      'Latest post',
     earlierPosts:    'Earlier posts',
     openInOwnPage:   'Read on its own page →',
+    homeLink:        '← Back to markdekock.com',
   },
   de: {
     pageTitle:       'Blog',
@@ -100,6 +103,7 @@ export const STRINGS: Record<Lang, {
     latestPost:      'Letzter Beitrag',
     earlierPosts:    'Frühere Beiträge',
     openInOwnPage:   'Auf eigener Seite lesen →',
+    homeLink:        '← Zurück zu markdekock.com',
   },
 }
 
