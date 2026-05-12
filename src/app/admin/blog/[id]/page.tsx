@@ -69,6 +69,8 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
   const [savedAt, setSavedAt]         = useState<string | null>(null)
   const [translating, setTranslating] = useState<BlogLocale | null>(null)
   const [tagsInput, setTagsInput]     = useState('')
+  const [coverUpload,  setCoverUpload]  = useState<{ pct: number; status: 'uploading'|'error'; msg?: string } | null>(null)
+  const [posterUpload, setPosterUpload] = useState<{ pct: number; status: 'uploading'|'error'; msg?: string } | null>(null)
 
   // Load post.
   useEffect(() => {
@@ -124,28 +126,33 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
     setSavedAt(new Date().toISOString())
   }, [post])
 
-  // ── Cover upload (image OR video) ─────────────────────────────────────
+  // ── Cover upload (image OR video) — signed URL direct naar Supabase ───
+  // Bypasst Vercel's 4.5 MB Edge body limit; werkt tot 50 MB.
   async function uploadCover(file: File) {
-    const fd = new FormData()
-    fd.append('file', file)
-    const r = await fetch('/api/admin/blog/upload', { method: 'POST', body: fd })
-    const j = await r.json()
-    if (!r.ok) { alert(`Upload mislukt: ${j.error ?? r.status}`); return }
-    await save({ cover_image: j.url })
+    setCoverUpload({ pct: 0, status: 'uploading' })
+    try {
+      const url = await uploadToSupabase(file, (pct) => setCoverUpload({ pct, status: 'uploading' }))
+      await save({ cover_image: url })
+      setCoverUpload(null)
+    } catch (err) {
+      setCoverUpload({ pct: 0, status: 'error', msg: err instanceof Error ? err.message : 'onbekend' })
+    }
   }
 
   // ── Poster upload (alleen image; voor og:image als cover een video is) ─
   async function uploadPoster(file: File) {
     if (!file.type.startsWith('image/')) {
-      alert('Het poster-frame moet een afbeelding zijn (jpg/png/webp).')
+      setPosterUpload({ pct: 0, status: 'error', msg: 'Het poster-frame moet een afbeelding zijn (jpg/png/webp).' })
       return
     }
-    const fd = new FormData()
-    fd.append('file', file)
-    const r = await fetch('/api/admin/blog/upload', { method: 'POST', body: fd })
-    const j = await r.json()
-    if (!r.ok) { alert(`Upload mislukt: ${j.error ?? r.status}`); return }
-    await save({ cover_poster: j.url })
+    setPosterUpload({ pct: 0, status: 'uploading' })
+    try {
+      const url = await uploadToSupabase(file, (pct) => setPosterUpload({ pct, status: 'uploading' }))
+      await save({ cover_poster: url })
+      setPosterUpload(null)
+    } catch (err) {
+      setPosterUpload({ pct: 0, status: 'error', msg: err instanceof Error ? err.message : 'onbekend' })
+    }
   }
 
   // ── Translate ──────────────────────────────────────────────────────────
@@ -275,12 +282,13 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
                 <input
                   type="file"
                   accept="image/*,video/*"
+                  disabled={coverUpload?.status === 'uploading'}
                   onChange={(e) => {
                     const f = e.target.files?.[0]
                     if (f) void uploadCover(f)
                     e.target.value = ''
                   }}
-                  className="text-sm text-gray-700"
+                  className="text-sm text-gray-700 disabled:opacity-50"
                 />
                 {post.cover_image && (
                   <button
@@ -292,6 +300,44 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
                   </button>
                 )}
               </div>
+
+              {/* Upload progress / error feedback */}
+              {coverUpload && (
+                <div className={
+                  'rounded-md border p-3 text-sm ' +
+                  (coverUpload.status === 'error'
+                    ? 'border-red-300 bg-red-50 text-red-800'
+                    : 'border-blue-200 bg-blue-50 text-blue-800')
+                }>
+                  {coverUpload.status === 'uploading' ? (
+                    <>
+                      <div className="mb-1 flex items-center justify-between">
+                        <span>Uploaden naar Supabase Storage…</span>
+                        <span className="font-mono text-xs">{coverUpload.pct}%</span>
+                      </div>
+                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-blue-200">
+                        <div
+                          className="h-full bg-blue-600 transition-all"
+                          style={{ width: `${coverUpload.pct}%` }}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <p className="font-semibold">Upload mislukt:</p>
+                      <p className="mt-1">{coverUpload.msg}</p>
+                      <button
+                        type="button"
+                        onClick={() => setCoverUpload(null)}
+                        className="mt-2 text-xs underline"
+                      >
+                        Verberg
+                      </button>
+                    </>
+                  )}
+                </div>
+              )}
+
               {post.cover_image && (
                 <input
                   type="text"
@@ -324,12 +370,13 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
                   <input
                     type="file"
                     accept="image/*"
+                    disabled={posterUpload?.status === 'uploading'}
                     onChange={(e) => {
                       const f = e.target.files?.[0]
                       if (f) void uploadPoster(f)
                       e.target.value = ''
                     }}
-                    className="text-sm text-gray-700"
+                    className="text-sm text-gray-700 disabled:opacity-50"
                   />
                   {post.cover_poster && (
                     <button
@@ -341,7 +388,37 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
                     </button>
                   )}
                 </div>
-                {!post.cover_poster && (
+
+                {posterUpload && (
+                  <div className={
+                    'rounded-md border p-3 text-sm ' +
+                    (posterUpload.status === 'error'
+                      ? 'border-red-300 bg-red-50 text-red-800'
+                      : 'border-blue-200 bg-blue-50 text-blue-800')
+                  }>
+                    {posterUpload.status === 'uploading' ? (
+                      <>
+                        <div className="mb-1 flex items-center justify-between">
+                          <span>Uploaden…</span>
+                          <span className="font-mono text-xs">{posterUpload.pct}%</span>
+                        </div>
+                        <div className="h-1.5 w-full overflow-hidden rounded-full bg-blue-200">
+                          <div className="h-full bg-blue-600 transition-all" style={{ width: `${posterUpload.pct}%` }} />
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <p className="font-semibold">Upload mislukt:</p>
+                        <p className="mt-1">{posterUpload.msg}</p>
+                        <button type="button" onClick={() => setPosterUpload(null)} className="mt-2 text-xs underline">
+                          Verberg
+                        </button>
+                      </>
+                    )}
+                  </div>
+                )}
+
+                {!post.cover_poster && !posterUpload && (
                   <p className="text-xs text-amber-800">
                     Zonder poster heeft je post geen preview-afbeelding op LinkedIn / Twitter.
                   </p>
@@ -549,4 +626,61 @@ function timeAgo(iso: string): string {
   const min = Math.round(sec / 60)
   if (min < 60) return `${min} min geleden`
   return new Date(iso).toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })
+}
+
+/**
+ * Twee-staps upload met signed URL (bypasst Vercel 4.5 MB Edge limit).
+ *
+ * 1. POST /api/admin/blog/upload-init → server geeft signed Storage URL
+ * 2. PUT direct naar Supabase Storage met de file body (XHR voor progress)
+ *
+ * Gooit Error met human-readable bericht bij elke faal-stap.
+ */
+async function uploadToSupabase(
+  file:       File,
+  onProgress: (pct: number) => void,
+): Promise<string> {
+  // ── Stap 1: signed URL ophalen ──────────────────────────────────────
+  const initRes = await fetch('/api/admin/blog/upload-init', {
+    method:  'POST',
+    headers: { 'content-type': 'application/json' },
+    body:    JSON.stringify({
+      filename:    file.name,
+      contentType: file.type || 'application/octet-stream',
+      size:        file.size,
+    }),
+  })
+  const initText = await initRes.text()
+  let init: { uploadUrl?: string; publicUrl?: string; error?: string }
+  try { init = JSON.parse(initText) } catch { init = { error: initText || `HTTP ${initRes.status}` } }
+
+  if (initRes.status === 401) throw new Error('Niet ingelogd. Login opnieuw via /admin/login.')
+  if (!initRes.ok || !init.uploadUrl || !init.publicUrl) {
+    throw new Error(init.error ?? `Init mislukt (HTTP ${initRes.status})`)
+  }
+
+  // ── Stap 2: PUT met XHR voor progress events ─────────────────────────
+  await new Promise<void>((resolve, reject) => {
+    const xhr = new XMLHttpRequest()
+    xhr.open('PUT', init.uploadUrl!)
+    // Supabase signed upload accepteert raw body met deze headers:
+    xhr.setRequestHeader('Content-Type',  file.type || 'application/octet-stream')
+    xhr.setRequestHeader('Cache-Control', 'max-age=3600')
+    xhr.setRequestHeader('x-upsert',      'false')
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable) onProgress(Math.round((e.loaded / e.total) * 100))
+    }
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        onProgress(100)
+        resolve()
+      } else {
+        reject(new Error(`Upload naar Storage mislukt (HTTP ${xhr.status}): ${xhr.responseText.slice(0, 200)}`))
+      }
+    }
+    xhr.onerror = () => reject(new Error('Netwerkfout tijdens upload.'))
+    xhr.send(file)
+  })
+
+  return init.publicUrl
 }
