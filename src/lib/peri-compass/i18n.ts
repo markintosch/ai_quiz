@@ -40,10 +40,10 @@ export const LANDING: Record<Lang, {
   finalLine:    string
 }> = {
   nl: {
-    metaTitle:   'Peri-Compass — een nulmeting voor je dagelijkse tracking',
+    metaTitle:   'Perimenopause Compass — een nulmeting voor je dagelijkse tracking',
     metaDesc:    'Een eenmalige instap-assessment van 15 minuten. Krijg je baseline-score op 6 dimensies, drie hypothesen voor wat je ziet en een eerste experiment voor de komende 30 dagen.',
     eyebrow:     'Een nulmeting voor je transitie',
-    title:       'Peri-Compass',
+    title:       'Perimenopause Compass',
     intro:       'Een eenmalige assessment van 15 minuten. Daarna weet je waar je staat op zes dimensies, krijg je drie hypothesen die je antwoorden verklaren, en een eerste experiment voor de komende 30 dagen.',
     cta:         'Start je Compass →',
     ctaSub:      '~15 minuten · anoniem starten · e-mail pas bij resultaten',
@@ -69,10 +69,10 @@ export const LANDING: Record<Lang, {
     finalLine: 'Klaar voor je nulmeting?',
   },
   en: {
-    metaTitle:   'Peri-Compass — a baseline before you start daily tracking',
+    metaTitle:   'Perimenopause Compass — a baseline before you start daily tracking',
     metaDesc:    'A one-time 15-minute assessment. Get your baseline score across 6 dimensions, three hypotheses for what you observe, and a first experiment for the next 30 days.',
     eyebrow:     'A baseline for your transition',
-    title:       'Peri-Compass',
+    title:       'Perimenopause Compass',
     intro:       'A one-time 15-minute assessment. Afterwards you know where you stand on six dimensions, get three hypotheses that explain your answers, and a first experiment for the next 30 days.',
     cta:         'Start your Compass →',
     ctaSub:      '~15 minutes · start anonymously · email only at results',
@@ -98,10 +98,10 @@ export const LANDING: Record<Lang, {
     finalLine: 'Ready for your baseline?',
   },
   fr: {
-    metaTitle:   'Peri-Compass — un point de départ avant le suivi quotidien',
+    metaTitle:   'Perimenopause Compass — un point de départ avant le suivi quotidien',
     metaDesc:    'Un questionnaire unique de 15 minutes. Obtenez votre score de référence sur 6 dimensions, trois hypothèses pour ce que vous observez, et une première expérimentation pour les 30 prochains jours.',
     eyebrow:     'Un point de départ pour votre transition',
-    title:       'Peri-Compass',
+    title:       'Perimenopause Compass',
     intro:       'Un questionnaire unique de 15 minutes. Vous saurez où vous en êtes sur six dimensions, vous recevrez trois hypothèses qui expliquent vos réponses, et une première expérimentation pour les 30 prochains jours.',
     cta:         'Commencer votre Compass →',
     ctaSub:      '~15 minutes · démarrer anonymement · e-mail uniquement aux résultats',
@@ -127,10 +127,10 @@ export const LANDING: Record<Lang, {
     finalLine: 'Prête pour votre point de départ ?',
   },
   de: {
-    metaTitle:   'Peri-Compass — eine Standortbestimmung vor dem täglichen Tracking',
+    metaTitle:   'Perimenopause Compass — eine Standortbestimmung vor dem täglichen Tracking',
     metaDesc:    'Ein einmaliger 15-Minuten-Fragebogen. Erhalte deinen Ausgangswert auf 6 Dimensionen, drei Hypothesen für das, was du beobachtest, und ein erstes Experiment für die nächsten 30 Tage.',
     eyebrow:     'Eine Standortbestimmung für deine Transition',
-    title:       'Peri-Compass',
+    title:       'Perimenopause Compass',
     intro:       'Ein einmaliger 15-Minuten-Fragebogen. Danach weisst du, wo du auf sechs Dimensionen stehst, bekommst drei Hypothesen, die deine Antworten erklären, und ein erstes Experiment für die nächsten 30 Tage.',
     cta:         'Starte deinen Compass →',
     ctaSub:      '~15 Minuten · anonym starten · E-Mail erst bei den Ergebnissen',
