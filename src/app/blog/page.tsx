@@ -15,6 +15,7 @@ import { createServiceClient } from '@/lib/supabase/server'
 import { pickLang, STRINGS, formatDate, type Lang } from '@/lib/blog/strings'
 import type { BlogPostRow, BlogFormat } from '@/types/blog'
 import SubscribeForm from '@/components/blog/SubscribeForm'
+import { BlogCover } from '@/components/blog/BlogCover'
 
 export const dynamic = 'force-dynamic'                  // always read latest from DB
 
@@ -158,13 +159,14 @@ function PostCard({ post, lang }: { post: BlogPostRow; lang: Lang }) {
         className="block h-full rounded-lg border border-gray-200 bg-white transition-all hover:-translate-y-0.5 hover:border-brand-accent/40 hover:shadow-md"
       >
         {post.cover_image && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={post.cover_image}
-            alt={post.cover_alt ?? ''}
-            className="aspect-[16/9] w-full rounded-t-lg object-cover"
-            loading="lazy"
-          />
+          <div className="overflow-hidden rounded-t-lg">
+            <BlogCover
+              src={post.cover_image}
+              alt={post.cover_alt}
+              poster={post.cover_poster}
+              aspect="16/9"
+            />
+          </div>
         )}
         <div className="p-6">
           <div className="mb-2 flex items-center gap-3 text-xs">

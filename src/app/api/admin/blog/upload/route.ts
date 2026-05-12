@@ -14,14 +14,21 @@ import { createServiceClient } from '@/lib/supabase/server'
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'                 // Buffer-based ops below need Node runtime
 
-const MAX_BYTES = 8 * 1024 * 1024               // 8 MB
+const MAX_BYTES = 50 * 1024 * 1024               // 50 MB (voor cover-video's)
 const ALLOWED_MIME = new Set([
+  // Afbeeldingen
   'image/jpeg',
   'image/png',
   'image/webp',
   'image/gif',
   'image/avif',
   'image/svg+xml',
+  // Video — als cover hero of inline
+  'video/mp4',         // H.264, werkt in alle browsers — beste keuze
+  'video/webm',        // VP9, werkt in alle moderne browsers
+  'video/quicktime',   // .mov van iPhone/Mac
+  'video/mpeg',        // .mpg/.mpeg — speelt niet altijd in browsers
+  'video/x-m4v',       // .m4v
 ])
 
 export async function POST(req: Request) {
@@ -90,12 +97,17 @@ function inferExt(name: string, mime: string): string {
   const fromName = name.split('.').pop()?.toLowerCase()
   if (fromName && /^[a-z0-9]{2,5}$/.test(fromName)) return fromName
   switch (mime) {
-    case 'image/jpeg':    return 'jpg'
-    case 'image/png':     return 'png'
-    case 'image/webp':    return 'webp'
-    case 'image/gif':     return 'gif'
-    case 'image/avif':    return 'avif'
-    case 'image/svg+xml': return 'svg'
-    default:              return 'bin'
+    case 'image/jpeg':       return 'jpg'
+    case 'image/png':        return 'png'
+    case 'image/webp':       return 'webp'
+    case 'image/gif':        return 'gif'
+    case 'image/avif':       return 'avif'
+    case 'image/svg+xml':    return 'svg'
+    case 'video/mp4':        return 'mp4'
+    case 'video/webm':       return 'webm'
+    case 'video/quicktime':  return 'mov'
+    case 'video/mpeg':       return 'mpg'
+    case 'video/x-m4v':      return 'm4v'
+    default:                 return 'bin'
   }
 }

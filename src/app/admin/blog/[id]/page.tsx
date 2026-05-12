@@ -24,6 +24,8 @@ import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import BlogEditor from '@/components/admin/blog/BlogEditor'
+import { BlogCover } from '@/components/blog/BlogCover'
+import { isVideoUrl } from '@/lib/blog/cover'
 import {
   EMPTY_TIPTAP_DOC,
   type BlogFormat,
@@ -42,6 +44,7 @@ interface Post {
   content:          TiptapDoc
   cover_image:      string | null
   cover_alt:        string | null
+  cover_poster:     string | null
   format:           BlogFormat
   status:           BlogStatus
   published_at:     string | null
@@ -97,6 +100,7 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
       content:          overrides?.content          ?? post.content,
       cover_image:      overrides?.cover_image      ?? post.cover_image,
       cover_alt:        overrides?.cover_alt        ?? post.cover_alt,
+      cover_poster:     overrides?.cover_poster     ?? post.cover_poster,
       format:           overrides?.format           ?? post.format,
       status:           overrides?.status           ?? post.status,
       tags:             overrides?.tags             ?? post.tags,
@@ -120,7 +124,7 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
     setSavedAt(new Date().toISOString())
   }, [post])
 
-  // ── Cover image upload ─────────────────────────────────────────────────
+  // ── Cover upload (image OR video) ─────────────────────────────────────
   async function uploadCover(file: File) {
     const fd = new FormData()
     fd.append('file', file)
@@ -128,6 +132,20 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
     const j = await r.json()
     if (!r.ok) { alert(`Upload mislukt: ${j.error ?? r.status}`); return }
     await save({ cover_image: j.url })
+  }
+
+  // ── Poster upload (alleen image; voor og:image als cover een video is) ─
+  async function uploadPoster(file: File) {
+    if (!file.type.startsWith('image/')) {
+      alert('Het poster-frame moet een afbeelding zijn (jpg/png/webp).')
+      return
+    }
+    const fd = new FormData()
+    fd.append('file', file)
+    const r = await fetch('/api/admin/blog/upload', { method: 'POST', body: fd })
+    const j = await r.json()
+    if (!r.ok) { alert(`Upload mislukt: ${j.error ?? r.status}`); return }
+    await save({ cover_poster: j.url })
   }
 
   // ── Translate ──────────────────────────────────────────────────────────
@@ -238,16 +256,25 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
             />
           </Field>
 
-          <Field label="Coverbeeld" hint="Aanbevolen: 1600 × 900 px. JPG/PNG/WebP, max 8 MB.">
+          <Field
+            label="Coverbeeld of -video"
+            hint="Afbeelding (1600 × 900 px aanbevolen) of video (MP4 werkt overal — MPEG/MOV niet altijd). Max 50 MB. Video's lopen automatisch als hero-beeld (muted, loop)."
+          >
             <div className="space-y-3">
               {post.cover_image && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={post.cover_image} alt={post.cover_alt ?? ''} className="w-full max-w-md rounded-md border border-gray-200" />
+                <div className="max-w-md overflow-hidden rounded-md border border-gray-200">
+                  <BlogCover
+                    src={post.cover_image}
+                    alt={post.cover_alt}
+                    poster={post.cover_poster}
+                    aspect="16/9"
+                  />
+                </div>
               )}
               <div className="flex flex-wrap items-center gap-3">
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/*,video/*"
                   onChange={(e) => {
                     const f = e.target.files?.[0]
                     if (f) void uploadCover(f)
@@ -258,7 +285,7 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
                 {post.cover_image && (
                   <button
                     type="button"
-                    onClick={() => save({ cover_image: null, cover_alt: null })}
+                    onClick={() => save({ cover_image: null, cover_alt: null, cover_poster: null })}
                     className="text-sm text-red-600 hover:text-red-700"
                   >
                     Verwijderen
@@ -268,7 +295,7 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
               {post.cover_image && (
                 <input
                   type="text"
-                  placeholder="Alt-tekst voor cover (SEO + toegankelijkheid)"
+                  placeholder="Alt-tekst (SEO + toegankelijkheid)"
                   value={post.cover_alt ?? ''}
                   onChange={(e) => setPost({ ...post, cover_alt: e.target.value })}
                   onBlur={() => save({ cover_alt: post.cover_alt })}
@@ -277,6 +304,51 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
               )}
             </div>
           </Field>
+
+          {/* Poster — alleen tonen als de cover een video is */}
+          {post.cover_image && isVideoUrl(post.cover_image) && (
+            <Field
+              label="Poster-afbeelding (LinkedIn/Twitter preview)"
+              hint="LinkedIn en Twitter kunnen geen video's tonen in de social-card preview — alleen afbeeldingen. Upload hier een still (1200 × 630 px) die als preview-image dient."
+            >
+              <div className="space-y-3">
+                {post.cover_poster && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={post.cover_poster}
+                    alt="Poster preview"
+                    className="w-full max-w-md rounded-md border border-gray-200"
+                  />
+                )}
+                <div className="flex flex-wrap items-center gap-3">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const f = e.target.files?.[0]
+                      if (f) void uploadPoster(f)
+                      e.target.value = ''
+                    }}
+                    className="text-sm text-gray-700"
+                  />
+                  {post.cover_poster && (
+                    <button
+                      type="button"
+                      onClick={() => save({ cover_poster: null })}
+                      className="text-sm text-red-600 hover:text-red-700"
+                    >
+                      Verwijderen
+                    </button>
+                  )}
+                </div>
+                {!post.cover_poster && (
+                  <p className="text-xs text-amber-800">
+                    Zonder poster heeft je post geen preview-afbeelding op LinkedIn / Twitter.
+                  </p>
+                )}
+              </div>
+            </Field>
+          )}
 
           <Field label="Inhoud">
             <BlogEditor

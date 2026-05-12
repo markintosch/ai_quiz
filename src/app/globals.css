@@ -18,3 +18,81 @@
     text-wrap: balance;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Tiptap editor (.ProseMirror) — herstelt list-styling die Tailwind preflight
+   resette. Zonder dit zie je geen bullets/nummers tijdens het typen, hoewel
+   de structuur in de JSON wel klopt.
+   Geldt alleen IN de editor — de publieke render heeft eigen Tailwind classes.
+   ───────────────────────────────────────────────────────────────────────── */
+.ProseMirror { outline: none; }
+
+.ProseMirror ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin: 0.5rem 0 1rem;
+}
+.ProseMirror ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+  margin: 0.5rem 0 1rem;
+}
+.ProseMirror ul ul,
+.ProseMirror ol ol,
+.ProseMirror ul ol,
+.ProseMirror ol ul { margin: 0.25rem 0; }
+.ProseMirror li      { margin: 0.25rem 0; }
+.ProseMirror li > p  { margin: 0; }            /* StarterKit wraps li-content in <p> */
+
+.ProseMirror h1 { font-size: 2rem;    font-weight: 700; margin: 1.5rem 0 1rem;    line-height: 1.2; color: #354E5E; }
+.ProseMirror h2 { font-size: 1.5rem;  font-weight: 700; margin: 1.5rem 0 0.75rem; line-height: 1.3; color: #354E5E; }
+.ProseMirror h3 { font-size: 1.25rem; font-weight: 600; margin: 1.25rem 0 0.5rem; color: #354E5E; }
+.ProseMirror h4 { font-size: 1.1rem;  font-weight: 600; margin: 1rem 0 0.5rem;    color: #354E5E; }
+.ProseMirror p  { margin: 0.5rem 0 1rem; line-height: 1.65; }
+
+.ProseMirror blockquote {
+  border-left: 4px solid #E8611A;
+  background: #F9FAFB;
+  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+  color: #4B5563;
+}
+.ProseMirror code {
+  background: #F3F4F6;
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+  font-size: 0.9em;
+  color: #354E5E;
+}
+.ProseMirror pre {
+  background: #111827;
+  color: #F9FAFB;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+.ProseMirror pre code { background: transparent; color: inherit; padding: 0; }
+.ProseMirror a {
+  color: #E8611A;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid #E5E7EB;
+}
+.ProseMirror hr { border: none; border-top: 1px solid #E5E7EB; margin: 1.5rem 0; }
+
+/* Placeholder voor lege editor — Tiptap's Placeholder extensie genereert
+   een data-placeholder attribute op de eerste lege node. */
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: #9CA3AF;
+  pointer-events: none;
+  height: 0;
+  float: left;
+}

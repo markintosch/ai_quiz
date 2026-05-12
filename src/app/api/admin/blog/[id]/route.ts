@@ -54,6 +54,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     content:          TiptapDoc
     cover_image:      string | null
     cover_alt:        string | null
+    cover_poster:     string | null
     format:           BlogFormat
     status:           BlogStatus
     published_at:     string | null
@@ -79,6 +80,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   if (body.excerpt !== undefined)          update.excerpt          = body.excerpt
   if (body.cover_image !== undefined)      update.cover_image      = body.cover_image
   if (body.cover_alt !== undefined)        update.cover_alt        = body.cover_alt
+  if (body.cover_poster !== undefined)     update.cover_poster     = body.cover_poster
   if (body.format !== undefined)           update.format           = body.format
   if (body.tags !== undefined)             update.tags             = Array.isArray(body.tags) ? body.tags : []
   if (body.meta_title !== undefined)       update.meta_title       = body.meta_title

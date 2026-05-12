@@ -20,6 +20,8 @@ export interface BlogPostRow {
   content:           TiptapDoc                              // JSONB
   cover_image:       string | null
   cover_alt:         string | null
+  /** Optional poster image — used as og:image when cover_image is a video. */
+  cover_poster:      string | null
   format:            BlogFormat
   status:            BlogStatus
   published_at:      string | null

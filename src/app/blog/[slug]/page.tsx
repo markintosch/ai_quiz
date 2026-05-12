@@ -21,6 +21,8 @@ import { pickLang, STRINGS, formatDate, type Lang } from '@/lib/blog/strings'
 import { RenderTiptap, tiptapToPlainText } from '@/lib/blog/renderTiptap'
 import type { BlogPostRow } from '@/types/blog'
 import SubscribeForm from '@/components/blog/SubscribeForm'
+import { BlogCover } from '@/components/blog/BlogCover'
+import { pickOgImage } from '@/lib/blog/cover'
 
 export const dynamic = 'force-dynamic'
 
@@ -85,17 +87,25 @@ export async function generateMetadata({
       url:         canonical,
       siteName:    'Mark de Kock — Brand PWRD Media',
       locale:      s.ogLocale,
-      images:      post.cover_image ? [{ url: post.cover_image, alt: post.cover_alt ?? title }] : undefined,
+      // Social previews kunnen geen video tonen — kies cover_image (als die een
+      // afbeelding is) of cover_poster als fallback. Anders geen og:image.
+      images:      (() => {
+        const og = pickOgImage(post.cover_image, post.cover_poster)
+        return og ? [{ url: og, alt: post.cover_alt ?? title }] : undefined
+      })(),
       publishedTime:  post.published_at ?? undefined,
       modifiedTime:   post.updated_at,
       authors:        [post.author_name],
       tags:           post.tags,
     },
     twitter: {
-      card:        post.cover_image ? 'summary_large_image' : 'summary',
+      card:        pickOgImage(post.cover_image, post.cover_poster) ? 'summary_large_image' : 'summary',
       title,
       description,
-      images:      post.cover_image ? [post.cover_image] : undefined,
+      images:      (() => {
+        const og = pickOgImage(post.cover_image, post.cover_poster)
+        return og ? [og] : undefined
+      })(),
     },
   }
 }
@@ -125,7 +135,10 @@ export default async function BlogPostPage({
     '@type':          'Article',
     headline:         post.title,
     description:      post.meta_description ?? post.excerpt ?? '',
-    image:            post.cover_image ? [post.cover_image] : undefined,
+    image:            (() => {
+      const og = pickOgImage(post.cover_image, post.cover_poster)
+      return og ? [og] : undefined
+    })(),
     datePublished:    post.published_at,
     dateModified:     post.updated_at,
     author: {
@@ -204,12 +217,13 @@ export default async function BlogPostPage({
         )}
 
         {post.cover_image && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={post.cover_image}
-            alt={post.cover_alt ?? ''}
-            className="mb-10 w-full rounded-md border border-gray-200"
-          />
+          <div className="mb-10 overflow-hidden rounded-md border border-gray-200">
+            <BlogCover
+              src={post.cover_image}
+              alt={post.cover_alt}
+              poster={post.cover_poster}
+            />
+          </div>
         )}
 
         {/* ── Body — server-rendered Tiptap JSON ──────────── */}
