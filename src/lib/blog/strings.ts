@@ -33,6 +33,10 @@ export const STRINGS: Record<Lang, {
   newsletterCta:    string
   shareThis:        string
   ogLocale:         string
+  /** Magazine-layout extras */
+  latestPost:       string
+  earlierPosts:     string
+  openInOwnPage:    string
 }> = {
   nl: {
     pageTitle:       'Blog',
@@ -51,6 +55,9 @@ export const STRINGS: Record<Lang, {
     newsletterCta:   'Wil je dit in je inbox? Stuur me een mail.',
     shareThis:       'Deel dit',
     ogLocale:        'nl_NL',
+    latestPost:      'Laatste post',
+    earlierPosts:    'Eerder verschenen',
+    openInOwnPage:   'Lees op eigen pagina →',
   },
   en: {
     pageTitle:       'Blog',
@@ -69,6 +76,9 @@ export const STRINGS: Record<Lang, {
     newsletterCta:   'Want this in your inbox? Send me an email.',
     shareThis:       'Share this',
     ogLocale:        'en_US',
+    latestPost:      'Latest post',
+    earlierPosts:    'Earlier posts',
+    openInOwnPage:   'Read on its own page →',
   },
   de: {
     pageTitle:       'Blog',
@@ -87,6 +97,9 @@ export const STRINGS: Record<Lang, {
     newsletterCta:   'Möchtest du das in deinem Posteingang? Schreib mir eine Mail.',
     shareThis:       'Teilen',
     ogLocale:        'de_DE',
+    latestPost:      'Letzter Beitrag',
+    earlierPosts:    'Frühere Beiträge',
+    openInOwnPage:   'Auf eigener Seite lesen →',
   },
 }
 

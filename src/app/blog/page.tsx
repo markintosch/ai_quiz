@@ -1,12 +1,18 @@
 // FILE: src/app/blog/page.tsx
 // ─────────────────────────────────────────────────────────────────────────────
-// Public /blog index — list of published posts in the requested locale.
-// URL pattern matches /mentor: NL is the default at /blog, EN/DE via ?lang=
-// query string. Card layout supports both 'article' (long-form) and 'update'
-// (short news) formats with a small badge.
+// Public /blog index — magazine-stijl.
 //
-// SEO: per-locale title/description, hreflang for the three locales, JSON-LD
-// ItemList of the visible posts so AI crawlers can summarise the feed.
+// Layout:
+//   1. Header + locale switcher
+//   2. Hero (intro)
+//   3. Filter tabs (Alles / Essays / Updates) — bepaalt welke posts in beeld
+//   4. FEATURED — laatste post volledig leesbaar (cover, body via RenderTiptap)
+//      met "Lees op eigen pagina →" deeplink (canonical blijft /blog/[slug])
+//   5. EARLIER POSTS — grid met cards van oudere posts
+//   6. Subscribe form
+//
+// SEO: per-locale title/description, hreflang, ItemList JSON-LD.
+// Geen Article JSON-LD op /blog — die hoort bij de canonical /blog/[slug] page.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { Metadata } from 'next'
@@ -16,8 +22,9 @@ import { pickLang, STRINGS, formatDate, type Lang } from '@/lib/blog/strings'
 import type { BlogPostRow, BlogFormat } from '@/types/blog'
 import SubscribeForm from '@/components/blog/SubscribeForm'
 import { BlogCover } from '@/components/blog/BlogCover'
+import { RenderTiptap } from '@/lib/blog/renderTiptap'
 
-export const dynamic = 'force-dynamic'                  // always read latest from DB
+export const dynamic = 'force-dynamic'
 
 const BASE = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://markdekock.com'
 
@@ -75,6 +82,10 @@ export default async function BlogIndexPage({
       : 'all'
   const filtered = filterFormat === 'all' ? posts : posts.filter((p) => p.format === filterFormat)
 
+  // Magazine split: latest is featured (full body), rest goes in the grid below.
+  const featured = filtered[0]
+  const older    = filtered.slice(1)
+
   // ── JSON-LD ItemList for AI crawlers / GEO ─────────────────────────────
   const itemListJsonLd = {
     '@context':       'https://schema.org',
@@ -109,30 +120,121 @@ export default async function BlogIndexPage({
         </div>
       </section>
 
-      {/* ── Filter tabs ──────────────────────────────────────── */}
-      <nav className="border-b border-gray-100 bg-white">
-        <div className="mx-auto flex max-w-5xl gap-6 px-6 py-4 text-sm">
-          <FilterTab href={tabUrl(lang, 'all')}      active={filterFormat === 'all'}>{s.filterAll}</FilterTab>
-          <FilterTab href={tabUrl(lang, 'article')}  active={filterFormat === 'article'}>{s.filterArticles}</FilterTab>
-          <FilterTab href={tabUrl(lang, 'update')}   active={filterFormat === 'update'}>{s.filterUpdates}</FilterTab>
-        </div>
-      </nav>
+      {/* ── Filter tabs (alleen tonen als er meer dan 1 post is) ── */}
+      {filtered.length > 1 && (
+        <nav className="border-b border-gray-100 bg-white">
+          <div className="mx-auto flex max-w-5xl gap-6 px-6 py-4 text-sm">
+            <FilterTab href={tabUrl(lang, 'all')}      active={filterFormat === 'all'}>{s.filterAll}</FilterTab>
+            <FilterTab href={tabUrl(lang, 'article')}  active={filterFormat === 'article'}>{s.filterArticles}</FilterTab>
+            <FilterTab href={tabUrl(lang, 'update')}   active={filterFormat === 'update'}>{s.filterUpdates}</FilterTab>
+          </div>
+        </nav>
+      )}
 
-      {/* ── Post grid ────────────────────────────────────────── */}
-      <section className="mx-auto max-w-5xl px-6 py-12">
-        {filtered.length === 0 ? (
-          <p className="py-16 text-center text-gray-600">{s.noPostsYet}</p>
-        ) : (
-          <ul className="grid gap-8 md:grid-cols-2">
-            {filtered.map((p) => (
-              <PostCard key={p.id} post={p} lang={lang} />
-            ))}
-          </ul>
-        )}
-      </section>
+      {/* ── No posts ─────────────────────────────────────────── */}
+      {filtered.length === 0 && (
+        <section className="mx-auto max-w-3xl px-6 py-24 text-center">
+          <p className="text-gray-600">{s.noPostsYet}</p>
+        </section>
+      )}
+
+      {/* ── Featured (latest, volledig leesbaar) ─────────────── */}
+      {featured && (
+        <section className="mx-auto max-w-3xl px-6 pt-12 pb-8">
+          {/* Latest-post badge + deep link to canonical */}
+          <div className="mb-4 flex items-center justify-between gap-4">
+            <span className="rounded-full bg-brand-accent/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-accent">
+              {s.latestPost}
+            </span>
+            <Link
+              href={postUrl(featured, lang, /*relative*/ true)}
+              className="text-xs font-medium text-brand-accent hover:underline"
+              title={s.openInOwnPage}
+            >
+              {s.openInOwnPage}
+            </Link>
+          </div>
+
+          <article>
+            <div className="mb-5 flex flex-wrap items-center gap-3 text-sm">
+              <span className={featured.format === 'update'
+                ? 'rounded-full bg-brand-gold/15 px-2.5 py-0.5 font-medium text-brand-dark'
+                : 'rounded-full bg-brand/10 px-2.5 py-0.5 font-medium text-brand'
+              }>
+                {featured.format === 'update' ? s.filterUpdates : s.filterArticles}
+              </span>
+              {featured.published_at && (
+                <span className="text-gray-600">{formatDate(featured.published_at, lang)}</span>
+              )}
+              {featured.reading_minutes && (
+                <span className="text-gray-600">· {s.readingMinutes(featured.reading_minutes)}</span>
+              )}
+              <span className="text-gray-600">· {s.byAuthor} {featured.author_name}</span>
+            </div>
+
+            <h2 className="mb-5 text-3xl font-bold leading-tight text-brand md:text-4xl">
+              <Link href={postUrl(featured, lang, true)} className="hover:underline">
+                {featured.title}
+              </Link>
+            </h2>
+
+            {featured.excerpt && (
+              <p className="mb-7 text-lg leading-relaxed text-gray-700">{featured.excerpt}</p>
+            )}
+
+            {featured.cover_image && (
+              <div className="mb-8 overflow-hidden rounded-md border border-gray-200">
+                <BlogCover
+                  src={featured.cover_image}
+                  alt={featured.cover_alt}
+                  poster={featured.cover_poster}
+                />
+              </div>
+            )}
+
+            <div className="prose-blog">
+              <RenderTiptap doc={featured.content} />
+            </div>
+
+            {featured.tags.length > 0 && (
+              <div className="mt-10 flex flex-wrap gap-2 border-t border-gray-100 pt-5">
+                {featured.tags.map((t) => (
+                  <span key={t} className="rounded bg-gray-100 px-2.5 py-1 text-xs text-gray-700">
+                    #{t}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Bottom-of-article deep link (ook handig voor delen) */}
+            <div className="mt-6 text-center">
+              <Link
+                href={postUrl(featured, lang, true)}
+                className="inline-block text-sm font-medium text-brand-accent hover:underline"
+              >
+                {s.openInOwnPage}
+              </Link>
+            </div>
+          </article>
+        </section>
+      )}
+
+      {/* ── Earlier posts grid ───────────────────────────────── */}
+      {older.length > 0 && (
+        <section className="border-t border-gray-100 bg-gray-50">
+          <div className="mx-auto max-w-5xl px-6 py-14">
+            <h2 className="mb-6 text-xl font-semibold text-brand">{s.earlierPosts}</h2>
+            <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {older.map((p) => (
+                <PostCard key={p.id} post={p} lang={lang} />
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
 
       {/* ── Subscribe ───────────────────────────────────────── */}
-      <section className="border-t border-gray-100 bg-gray-50">
+      <section className="border-t border-gray-100 bg-white">
         <div className="mx-auto max-w-2xl px-6 py-14">
           <SubscribeForm lang={lang} sourcePath="/blog" />
         </div>
@@ -168,33 +270,24 @@ function PostCard({ post, lang }: { post: BlogPostRow; lang: Lang }) {
             />
           </div>
         )}
-        <div className="p-6">
-          <div className="mb-2 flex items-center gap-3 text-xs">
+        <div className="p-5">
+          <div className="mb-2 flex items-center gap-2 text-xs">
             <span className={post.format === 'update'
-              ? 'rounded-full bg-brand-gold/15 px-2.5 py-0.5 font-medium text-brand-dark'
-              : 'rounded-full bg-brand/10 px-2.5 py-0.5 font-medium text-brand'
+              ? 'rounded-full bg-brand-gold/15 px-2 py-0.5 font-medium text-brand-dark'
+              : 'rounded-full bg-brand/10 px-2 py-0.5 font-medium text-brand'
             }>
               {post.format === 'update' ? s.filterUpdates : s.filterArticles}
             </span>
             {post.published_at && (
               <span className="text-gray-600">{formatDate(post.published_at, lang)}</span>
             )}
-            {post.reading_minutes && (
-              <span className="text-gray-600">· {s.readingMinutes(post.reading_minutes)}</span>
-            )}
           </div>
-          <h2 className="mb-2 text-xl font-bold leading-tight text-brand">{post.title}</h2>
+          <h3 className="mb-1.5 text-base font-bold leading-tight text-brand">{post.title}</h3>
           {post.excerpt && (
-            <p className="mb-3 line-clamp-3 text-sm leading-relaxed text-gray-700">{post.excerpt}</p>
+            <p className="line-clamp-3 text-sm leading-relaxed text-gray-700">{post.excerpt}</p>
           )}
-          {post.tags.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-1.5">
-              {post.tags.slice(0, 4).map((t) => (
-                <span key={t} className="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-700">
-                  #{t}
-                </span>
-              ))}
-            </div>
+          {post.reading_minutes && (
+            <p className="mt-3 text-xs text-gray-600">{s.readingMinutes(post.reading_minutes)}</p>
           )}
         </div>
       </Link>
@@ -260,8 +353,6 @@ function postUrl(post: BlogPostRow, lang: Lang, relative = false): string {
 }
 
 async function fetchPublishedPosts(lang: Lang): Promise<BlogPostRow[]> {
-  // Service role client — RLS on blog_posts allows public SELECT for status='published',
-  // but service role keeps this consistent with /admin and avoids any anon-key surprises.
   const supabase = createServiceClient()
   const { data, error } = await supabase
     .from('blog_posts')
