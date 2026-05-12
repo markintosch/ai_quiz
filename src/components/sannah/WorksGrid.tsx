@@ -44,7 +44,7 @@ export default function WorksGrid({ works, emptyLabel }: Props) {
 
   if (works.length === 0) {
     return (
-      <div style={{ textAlign: 'center', padding: '120px 24px', color: '#bdbdbd', fontSize: 14 }}>
+      <div style={{ textAlign: 'center', padding: '120px 24px', color: 'var(--sannah-text-faded)', fontSize: 14 }}>
         {emptyLabel ?? 'Nog geen werk gepubliceerd.'}
       </div>
     )
@@ -79,7 +79,7 @@ export default function WorksGrid({ works, emptyLabel }: Props) {
               style={{
                 display: 'block',
                 width: '100%',
-                background: '#f4f4f4',
+                background: 'var(--sannah-bg-soft)',
                 border: 0,
                 padding: 0,
                 cursor: 'zoom-in',
@@ -92,10 +92,11 @@ export default function WorksGrid({ works, emptyLabel }: Props) {
               <Image
                 key={hero.id}
                 src={publicImageUrl(hero.image_path)}
-                alt={hero.title ?? 'werk van Sannah De Zwart'}
+                alt={hero.title ?? 'werk van Sannah de Zwart'}
                 fill
                 sizes="(max-width: 800px) 100vw, 60vw"
                 priority
+                className="sannah-hero-img"
                 style={{ objectFit: 'contain' }}
               />
             </button>
@@ -104,17 +105,28 @@ export default function WorksGrid({ works, emptyLabel }: Props) {
                 style={{
                   marginTop: 14,
                   fontSize: 12,
-                  color: '#666',
+                  color: 'var(--sannah-text-muted)',
                   letterSpacing: '0.02em',
                   display: 'flex',
                   gap: 14,
                   flexWrap: 'wrap',
                 }}
               >
-                {hero.title  && <span style={{ color: '#1a1a1a' }}>{hero.title}</span>}
+                {hero.title  && <span style={{ color: 'var(--sannah-text)' }}>{hero.title}</span>}
                 {hero.year   && <span>{hero.year}</span>}
                 {hero.medium && <span style={{ fontStyle: 'italic' }}>{hero.medium}</span>}
               </div>
+            )}
+            {hero.description && (
+              <p style={{
+                marginTop: 12,
+                maxWidth: 720,
+                fontSize: 14,
+                lineHeight: 1.6,
+                color: 'var(--sannah-text-muted)',
+              }}>
+                {hero.description}
+              </p>
             )}
           </div>
 
@@ -138,7 +150,7 @@ export default function WorksGrid({ works, emptyLabel }: Props) {
                     display: 'block',
                     width: '100%',
                     aspectRatio: '1 / 1',
-                    background: '#f4f4f4',
+                    background: 'var(--sannah-bg-soft)',
                     border: 0,
                     padding: 0,
                     cursor: 'pointer',
@@ -151,7 +163,7 @@ export default function WorksGrid({ works, emptyLabel }: Props) {
                 >
                   <Image
                     src={publicImageUrl(w.image_path)}
-                    alt={w.title ?? 'werk van Sannah De Zwart'}
+                    alt={w.title ?? 'werk van Sannah de Zwart'}
                     fill
                     sizes="(max-width: 800px) 50vw, 20vw"
                     style={{ objectFit: 'cover' }}
@@ -208,6 +220,7 @@ function Lightbox({ work, index, total, onClose, onPrev, onNext }: LightboxProps
       role="dialog"
       aria-modal="true"
       onClick={onClose}
+      className="sannah-lightbox"
       style={{
         position: 'fixed',
         inset: 0,
@@ -259,11 +272,13 @@ function Lightbox({ work, index, total, onClose, onPrev, onNext }: LightboxProps
         display: 'flex', flexDirection: 'column', alignItems: 'center',
       }}>
         <Image
+          key={work.image_path}
           src={publicImageUrl(work.image_path)}
-          alt={work.title ?? 'werk van Sannah De Zwart'}
+          alt={work.title ?? 'werk van Sannah de Zwart'}
           width={2000}
           height={2000}
           sizes="92vw"
+          className="sannah-lightbox-img"
           style={{ maxWidth: '92vw', maxHeight: '78vh', width: 'auto', height: 'auto', objectFit: 'contain' }}
         />
         {(work.title || work.year || work.medium) && (

@@ -1,0 +1,63 @@
+/* FILE: src/app/sannah/sannah.css
+ * Theme variables voor Sannah portfolio — light + dark.
+ * Theme wordt geactiveerd via data-theme attribute op <html>.
+ */
+
+:root[data-sannah="light"] {
+  --sannah-bg:           #ffffff;
+  --sannah-bg-soft:      #f4f4f4;
+  --sannah-text:         #1a1a1a;
+  --sannah-text-muted:   #666666;
+  --sannah-text-faded:   #bdbdbd;
+  --sannah-border:       #e5e5e5;
+  --sannah-nav-bg:       #ffffff;
+  --sannah-link-hover:   #0a0a0a;
+  --sannah-shadow:       rgba(0, 0, 0, 0.04);
+}
+
+:root[data-sannah="dark"] {
+  --sannah-bg:           #0e0e0e;
+  --sannah-bg-soft:      #1a1a1a;
+  --sannah-text:         #f4f4f4;
+  --sannah-text-muted:   #a8a8a8;
+  --sannah-text-faded:   #595959;
+  --sannah-border:       #262626;
+  --sannah-nav-bg:       #0e0e0e;
+  --sannah-link-hover:   #ffffff;
+  --sannah-shadow:       rgba(0, 0, 0, 0.6);
+}
+
+/* Sannah-pagina's worden door de Sannah layout omhuld met
+   class .sannah-root — die zet de globale background + text-color */
+.sannah-root {
+  background: var(--sannah-bg);
+  color:      var(--sannah-text);
+  min-height: 100vh;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Crossfade voor werk-hero in WorksGrid */
+.sannah-hero-img {
+  animation: sannah-fade-in 0.45s ease-out;
+}
+@keyframes sannah-fade-in {
+  from { opacity: 0; transform: scale(1.01); }
+  to   { opacity: 1; transform: scale(1);    }
+}
+
+/* Subtiele fade-up voor scroll-werken (WorksScroll) */
+.sannah-scroll-figure {
+  animation: sannah-rise 0.55s ease-out both;
+}
+@keyframes sannah-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* Lightbox fade */
+.sannah-lightbox {
+  animation: sannah-fade-in 0.2s ease-out;
+}
+.sannah-lightbox-img {
+  animation: sannah-fade-in 0.3s ease-out;
+}
