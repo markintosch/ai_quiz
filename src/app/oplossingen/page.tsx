@@ -152,6 +152,20 @@ const CASES: Case[] = [
     result: 'Verschuiving van tech-first naar benefit-first messaging. Nieuwe doelgroep-laag ontsloten zonder merkidentiteit te veranderen.',
     source: 'Marketing lead, mobiliteits-scale-up',
   },
+  {
+    sector:  'D2C E-commerce / Mode',
+    scope:   'Scale-up · €5–15M omzet',
+    quote:   'Het paid budget liep van Meta naar Google naar TikTok zonder dat iemand precies kon zeggen welke creatives werkten. We rapporteerden meer dan we optimaliseerden.',
+    product: 'Performance Ops + Campaign Architect',
+    approach: [
+      'Dagelijkse anomaliedetectie op campagne-niveau (CPM-spikes, ROAS-drops)',
+      'Automatische budget-herverdeling op basis van rolling 7-dagen ROAS',
+      'Creative-performance loop: dagelijkse winners genereren een nieuwe variant-briefing',
+      'Wekelijkse strategische review met hierarchisch zicht in plaats van losse kanaal-rapporten',
+    ],
+    result: 'Rapportage-tijd voor het marketingteam halveerde (van ~60 naar ~30 uur per maand). Nieuwe creatives leven binnen dagen ipv weken. Paid-budget meetbaar efficiënter en — net zo belangrijk — beter te verdedigen richting de board.',
+    source: 'Marketing director, D2C scale-up',
+  },
 ]
 
 // ── Page ─────────────────────────────────────────────────────────────────────
