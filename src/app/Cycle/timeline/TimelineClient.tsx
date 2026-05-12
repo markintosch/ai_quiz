@@ -107,9 +107,17 @@ export default function TimelineClient({
 
   return (
     <main className="min-h-screen flex flex-col px-4 py-8">
-      <header className="px-2 mb-4 flex items-center justify-between gap-3">
+      <header className="px-2 mb-4 flex items-center justify-between gap-3 flex-wrap">
         <h1 className="cycle-display text-3xl">Tijdlijn</h1>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
+          <Link
+            href="/Cycle/dashboard"
+            className="text-sm underline"
+            style={{ color: 'var(--cycle-muted)' }}
+            title="Patronen & nulmeting-vergelijking"
+          >
+            📊 Dashboard
+          </Link>
           <Link
             href="/Cycle/export"
             className="text-sm underline"
