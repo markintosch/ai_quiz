@@ -14,6 +14,7 @@ import Link from 'next/link'
 import { createServiceClient } from '@/lib/supabase/server'
 import { pickLang, STRINGS, formatDate, type Lang } from '@/lib/blog/strings'
 import type { BlogPostRow, BlogFormat } from '@/types/blog'
+import SubscribeForm from '@/components/blog/SubscribeForm'
 
 export const dynamic = 'force-dynamic'                  // always read latest from DB
 
@@ -129,17 +130,12 @@ export default async function BlogIndexPage({
         )}
       </section>
 
-      {/* ── Footer CTA ──────────────────────────────────────── */}
-      <footer className="border-t border-gray-100 bg-gray-50">
-        <div className="mx-auto max-w-3xl px-6 py-12 text-center">
-          <p className="text-gray-700">
-            {s.newsletterCta}{' '}
-            <a href="mailto:mark@brandpwrdmedia.com" className="font-medium text-brand-accent underline underline-offset-2">
-              mark@brandpwrdmedia.com
-            </a>
-          </p>
+      {/* ── Subscribe ───────────────────────────────────────── */}
+      <section className="border-t border-gray-100 bg-gray-50">
+        <div className="mx-auto max-w-2xl px-6 py-14">
+          <SubscribeForm lang={lang} sourcePath="/blog" />
         </div>
-      </footer>
+      </section>
 
       {/* JSON-LD */}
       <script

@@ -20,6 +20,7 @@ import { createServiceClient } from '@/lib/supabase/server'
 import { pickLang, STRINGS, formatDate, type Lang } from '@/lib/blog/strings'
 import { RenderTiptap, tiptapToPlainText } from '@/lib/blog/renderTiptap'
 import type { BlogPostRow } from '@/types/blog'
+import SubscribeForm from '@/components/blog/SubscribeForm'
 
 export const dynamic = 'force-dynamic'
 
@@ -228,18 +229,12 @@ export default async function BlogPostPage({
         )}
       </article>
 
-      {/* ── Footer CTA ──────────────────────────────────────── */}
-      <footer className="border-t border-gray-100 bg-gray-50">
-        <div className="mx-auto max-w-3xl px-6 py-12 text-center">
-          <p className="mb-4 text-gray-700">{s.newsletterCta}</p>
-          <a
-            href="mailto:mark@brandpwrdmedia.com"
-            className="inline-block rounded-md bg-brand px-5 py-2.5 font-medium text-white hover:bg-brand-dark"
-          >
-            mark@brandpwrdmedia.com
-          </a>
+      {/* ── Subscribe ───────────────────────────────────────── */}
+      <section className="border-t border-gray-100 bg-gray-50">
+        <div className="mx-auto max-w-2xl px-6 py-14">
+          <SubscribeForm lang={lang} sourcePath={`/blog/${post.slug}`} sourcePostId={post.id} />
         </div>
-      </footer>
+      </section>
 
       {/* JSON-LD Article */}
       <script
