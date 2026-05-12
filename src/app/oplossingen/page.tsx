@@ -152,21 +152,6 @@ const CASES: Case[] = [
     result: 'Verschuiving van tech-first naar benefit-first messaging. Nieuwe doelgroep-laag ontsloten zonder merkidentiteit te veranderen.',
     source: 'Marketing lead, mobiliteits-scale-up',
   },
-  {
-    sector:  'Brand PWRD Media zelf',
-    scope:   'Eigen bureau · doorlopend',
-    quote:   'De producten op deze pagina draaien op één geïntegreerd systeem. Wat we voor klanten inrichten, gebruiken we eerst zelf.',
-    product: 'The Crew — alle 10 agents in 3 fasen',
-    approach: [
-      'Intelligence: Spy, Lookout, Sage verzamelen markt-, performance- en positie-signalen',
-      'Execution: Helmsman, Quill, Slogger, Navigator vertalen naar campagnes, content, mediaplannen, CRM-flows',
-      'Performance: Chronicle meet, Lookout monitort, terugkoppeling voedt de volgende ronde',
-      'Geen spreadsheets als tussenlaag, geen handmatige overdracht tussen disciplines',
-    ],
-    result: 'Eén operationeel systeem dat dagelijks marketing-werk doet voor een handvol klanten parallel — zonder team-uitbreiding.',
-    source: 'Brand PWRD Media',
-    isCrew: true,
-  },
 ]
 
 // ── Page ─────────────────────────────────────────────────────────────────────
@@ -240,6 +225,15 @@ export default function OplossingenPage() {
             </div>
           </Link>
           <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+            <Link
+              href="/oplossingen"
+              style={{
+                fontSize: 13, fontWeight: 700, color: INK, textDecoration: 'none',
+                borderBottom: `2px solid ${WARM}`, paddingBottom: 2,
+              }}
+            >
+              Oplossingen
+            </Link>
             <Link href="/werk" style={{ fontSize: 13, fontWeight: 600, color: BODY, textDecoration: 'none' }}>Projecten</Link>
             <a
               href={CALENDLY_INTAKE}
@@ -258,7 +252,7 @@ export default function OplossingenPage() {
       </nav>
 
       {/* ── HERO ────────────────────────────────────────────────────────── */}
-      <section style={{ background: INK, color: WHITE, padding: '96px 24px 80px' }}>
+      <section style={{ background: INK, color: WHITE, padding: '88px 24px 64px' }}>
         <div className="max-w-3xl mx-auto">
           <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: WARM, marginBottom: 20 }}>
             Brand PWRD Media · Oplossingen
@@ -273,7 +267,7 @@ export default function OplossingenPage() {
       </section>
 
       {/* ── PROBLEM ────────────────────────────────────────────────────── */}
-      <section style={{ background: WHITE, padding: '80px 24px' }}>
+      <section style={{ background: WHITE, padding: '64px 24px 56px' }}>
         <div className="max-w-3xl mx-auto">
           <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: WARM, marginBottom: 14 }}>
             Het probleem
@@ -296,7 +290,7 @@ export default function OplossingenPage() {
       </section>
 
       {/* ── PRODUCTS — Tier 1: Operationeel ────────────────────────────── */}
-      <section style={{ background: LIGHT, padding: '72px 24px', borderTop: `1px solid ${BORDER}` }}>
+      <section style={{ background: LIGHT, padding: '56px 24px', borderTop: `1px solid ${BORDER}` }}>
         <div className="max-w-5xl mx-auto">
           <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: ACCENT, marginBottom: 10 }}>
             Tier 1 · Voor je dagelijkse operatie
@@ -311,7 +305,7 @@ export default function OplossingenPage() {
       </section>
 
       {/* ── PRODUCTS — Tier 2: Strategisch ─────────────────────────────── */}
-      <section style={{ background: WHITE, padding: '72px 24px', borderTop: `1px solid ${BORDER}` }}>
+      <section style={{ background: WHITE, padding: '56px 24px', borderTop: `1px solid ${BORDER}` }}>
         <div className="max-w-5xl mx-auto">
           <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: WARM, marginBottom: 10 }}>
             Tier 2 · Voor strategische momenten
@@ -326,7 +320,7 @@ export default function OplossingenPage() {
       </section>
 
       {/* ── CASES ──────────────────────────────────────────────────────── */}
-      <section style={{ background: LIGHT, padding: '80px 24px', borderTop: `1px solid ${BORDER}` }}>
+      <section style={{ background: LIGHT, padding: '64px 24px', borderTop: `1px solid ${BORDER}` }}>
         <div className="max-w-3xl mx-auto" style={{ marginBottom: 40 }}>
           <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: ACCENT, marginBottom: 10 }}>
             In de praktijk
@@ -340,25 +334,32 @@ export default function OplossingenPage() {
         </div>
       </section>
 
-      {/* ── THE CREW — system overlay ─────────────────────────────────── */}
-      <section style={{ background: INK, color: WHITE, padding: '96px 24px' }}>
+      {/* ── THE CREW — system overlay (volle-breedte donker statement) ─── */}
+      <section style={{ background: INK, color: WHITE, padding: '104px 24px' }}>
         <div className="max-w-3xl mx-auto">
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: WARM, marginBottom: 14 }}>
-            Het systeem
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: WARM, marginBottom: 16 }}>
+            Het systeem · Brand PWRD Media zelf
           </p>
-          <h2 style={{ fontSize: 'clamp(26px, 3.5vw, 38px)', fontWeight: 900, lineHeight: 1.15, marginBottom: 24, color: WHITE, letterSpacing: '-0.02em' }}>
-            Het systeem achter dit bureau.
+          <h2 style={{ fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 900, lineHeight: 1.1, marginBottom: 28, color: WHITE, letterSpacing: '-0.025em' }}>
+            Wat we voor klanten bouwen, draaien we eerst zelf.
           </h2>
-          <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.78)', lineHeight: 1.7, marginBottom: 32, maxWidth: 580 }}>
-            Alles wat je hierboven ziet — de producten, de cases, de analyses — wordt aangedreven door één geïntegreerd systeem. 10 gespecialiseerde agents in 3 fasen.
+          <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.85)', lineHeight: 1.6, marginBottom: 18, maxWidth: 620, fontStyle: 'italic' }}>
+            &ldquo;De zes producten op deze pagina draaien op één geïntegreerd systeem. Wat we voor klanten inrichten, gebruiken we elk dag op ons eigen bureau.&rdquo;
+          </p>
+          <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', marginBottom: 40 }}>
+            — Brand PWRD Media · doorlopend in productie
+          </p>
+
+          <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.78)', lineHeight: 1.7, marginBottom: 32, maxWidth: 620 }}>
+            Tien gespecialiseerde AI-agents in drie fasen. Intelligence verzamelt en analyseert; Execution vertaalt naar werk; Performance meet en voedt de volgende ronde.
           </p>
 
           {/* Mini flow diagram */}
-          <div className="grid md:grid-cols-3 gap-4 mb-10" style={{ alignItems: 'stretch' }}>
+          <div className="grid md:grid-cols-3 gap-4" style={{ alignItems: 'stretch', marginBottom: 36 }}>
             {[
-              { phase: '01 · Intelligence', body: 'Verzamelt en analyseert. Markt, concurrenten, performance, positie.', agents: 'Spy · Lookout · Sage', tone: ACCENT },
-              { phase: '02 · Execution',    body: 'Vertaalt naar content, campagnes en mediaplannen.', agents: 'Helmsman · Quill · Slogger · Navigator', tone: WARM },
-              { phase: '03 · Performance',  body: 'Meet, leert en stuurt bij. Voedt de volgende ronde.', agents: 'Chronicle · Lookout', tone: '#10B981' },
+              { phase: '01 · Intelligence', body: 'Markt, concurrenten, performance, positie. Continue input voor strategische en operationele keuzes.', agents: 'Spy · Lookout · Sage', tone: ACCENT },
+              { phase: '02 · Execution',    body: 'Van strategie naar campagnes, content, mediaplannen en CRM-flows. Geen handmatige overdracht.', agents: 'Helmsman · Quill · Slogger · Navigator', tone: WARM },
+              { phase: '03 · Performance',  body: 'Meet wat werkt en wat niet. Voedt direct terug naar Intelligence voor de volgende cyclus.', agents: 'Chronicle · Lookout', tone: '#10B981' },
             ].map(f => (
               <div key={f.phase} style={{
                 background: 'rgba(255,255,255,0.04)',
@@ -380,9 +381,21 @@ export default function OplossingenPage() {
             ))}
           </div>
 
-          <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.7)', lineHeight: 1.7, marginBottom: 24 }}>
-            Elke output voedt de volgende. Geen spreadsheets als tussenlaag. Geen handmatige overdracht tussen disciplines. Dit is geen demo. Dit is hoe we werken — en het is wat we voor klanten inrichten.
-          </p>
+          {/* Result statement (uit de oude Crew-case) */}
+          <div style={{
+            background: 'rgba(217, 119, 6, 0.08)',
+            borderLeft: `3px solid ${WARM}`,
+            padding: '20px 24px',
+            borderRadius: '0 12px 12px 0',
+            marginBottom: 28,
+          }}>
+            <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', color: WARM, marginBottom: 8 }}>
+              Resultaat
+            </p>
+            <p style={{ fontSize: 16, color: WHITE, lineHeight: 1.6, fontWeight: 600 }}>
+              Eén operationeel systeem dat dagelijks marketing-werk doet voor een handvol klanten parallel — zonder team-uitbreiding.
+            </p>
+          </div>
 
           <a
             href="/thecrew/nl"
@@ -476,8 +489,9 @@ export default function OplossingenPage() {
         <div className="max-w-5xl mx-auto flex items-center justify-between flex-wrap gap-3">
           <span>© {new Date().getFullYear()} Mark de Kock · Brand PWRD Media</span>
           <span style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-            <Link href="/mentor" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>Adviestrajecten</Link>
-            <Link href="/werk"   style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>Projecten</Link>
+            <Link href="/mentor"      style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>Adviestrajecten</Link>
+            <Link href="/oplossingen" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>Oplossingen</Link>
+            <Link href="/werk"        style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>Projecten</Link>
             <a href="/thecrew/nl" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>The Crew</a>
             <a
               href="https://cursusclaudecode.nl/mdk?utm_source=markdekock_oplossingen&utm_medium=footer&utm_campaign=mdk_affiliate"
