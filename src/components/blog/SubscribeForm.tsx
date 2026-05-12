@@ -42,7 +42,7 @@ const COPY: Record<Lang, {
   rateLimit:    string
 }> = {
   nl: {
-    title:        'Krijg de blog in je inbox',
+    title:        'Krijg alle nieuwe publicaties direct in je inbox',
     subtitle:     'Korte updates en lange essays. Geen spam, makkelijk uitschrijven.',
     emailLabel:   'E-mailadres',
     emailPlaceholder: 'naam@bedrijf.nl',
@@ -58,7 +58,7 @@ const COPY: Record<Lang, {
     rateLimit:    'Te veel pogingen vanaf dit adres. Probeer het over een uurtje opnieuw.',
   },
   en: {
-    title:        'Get the blog in your inbox',
+    title:        'Get every new publication straight to your inbox',
     subtitle:     'Short updates and long essays. No spam, easy to unsubscribe.',
     emailLabel:   'Email',
     emailPlaceholder: 'name@company.com',
@@ -74,7 +74,7 @@ const COPY: Record<Lang, {
     rateLimit:    'Too many attempts from this address. Try again in an hour.',
   },
   de: {
-    title:        'Hol dir den Blog in deine Inbox',
+    title:        'Erhalte jede neue Veröffentlichung direkt in deinem Posteingang',
     subtitle:     'Kurze Updates und längere Essays. Kein Spam, einfach abzubestellen.',
     emailLabel:   'E-Mail',
     emailPlaceholder: 'name@firma.de',
