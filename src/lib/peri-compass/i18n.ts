@@ -274,6 +274,7 @@ export const STEPPER: Record<Lang, {
 export const RESULTS: Record<Lang, {
   eyebrow:           string
   greetingFallback:  string
+  backToCompass:     string
   perDimension:      string
   whatISee:          string
   threeHypotheses:   string
@@ -287,13 +288,26 @@ export const RESULTS: Record<Lang, {
   ctaBody:           string
   ctaButton:         string
   ctaNote:           string
+  cycleAppExplain:   string
   bookmarkHint:      string
+  bookmarkSecurity:  string
+  copyLink:          string
+  copyLinkDone:      string
+  emailMeResults:    string
+  emailLabel:        string
+  emailPlaceholder:  string
+  emailConsentText:  string
+  emailSendBtn:      string
+  emailSending:      string
+  emailSentOk:       string
+  emailSentErr:      string
   ageLabel:          string
   hrtLabel:          string
 }> = {
   nl: {
     eyebrow:              'Je Peri-Compass',
     greetingFallback:     'Je nulmeting',
+    backToCompass:        '← Terug naar uitleg',
     perDimension:         'Per dimensie',
     whatISee:             'Wat ik zie',
     threeHypotheses:      'Drie hypothesen',
@@ -305,15 +319,28 @@ export const RESULTS: Record<Lang, {
     recHint:              'Deze voorstellen worden gebruikt om je daily check-in scherm te personaliseren zodra je begint met tracken.',
     ctaHeading:           'Klaar om te beginnen?',
     ctaBody:              'Met daily check-ins van 60 seconden bouw je in 4-12 weken een patronen-overzicht dat geen enkele app je in één moment kan geven.',
-    ctaButton:            'Start dagelijkse tracking →',
-    ctaNote:              'Voor toegang tot de Cycle app heb je een account nodig.',
+    ctaButton:            'Maak je Cycle-account aan →',
+    ctaNote:              'Cycle is de tracking-app — een 60-seconden check-in per dag, met je Compass als startpunt. Klikken brengt je naar de inlogpagina; je krijgt een magic link in je inbox.',
+    cycleAppExplain:      'Cycle is je dagelijkse logboek: één scherm, ~60 seconden per dag — slaap, energie, stemming, symptomen die voor jou tellen. Met je Compass als nulmeting zie je na 4-12 weken patronen die met geheugen alleen niet opvallen.',
     bookmarkHint:         'Bewaar deze pagina — de URL is uniek voor jou en blijft bereikbaar.',
+    bookmarkSecurity:     'De link bevat een willekeurig ID en is niet te raden. Deel \'m alleen met wie je vertrouwt. Anonieme afnames blijven 12 maanden bewaard, daarna automatisch verwijderd.',
+    copyLink:             '🔗 Kopieer link',
+    copyLinkDone:         '✓ Gekopieerd',
+    emailMeResults:       'Stuur me dit per e-mail',
+    emailLabel:           'Je e-mailadres',
+    emailPlaceholder:     'naam@bedrijf.nl',
+    emailConsentText:     'Ik ga akkoord met het privacybeleid en het ontvangen van mijn Compass-resultaten per e-mail.',
+    emailSendBtn:         'Verstuur',
+    emailSending:         'Versturen…',
+    emailSentOk:          'Verstuurd! Check je inbox over een minuutje.',
+    emailSentErr:         'Er ging iets mis. Probeer het zo opnieuw.',
     ageLabel:             'leeftijd',
     hrtLabel:             'HRT',
   },
   en: {
     eyebrow:              'Your Peri-Compass',
     greetingFallback:     'Your baseline',
+    backToCompass:        '← Back to overview',
     perDimension:         'Per dimension',
     whatISee:             'What I see',
     threeHypotheses:      'Three hypotheses',
@@ -325,15 +352,28 @@ export const RESULTS: Record<Lang, {
     recHint:              'These suggestions personalise your daily check-in screen once you start tracking.',
     ctaHeading:           'Ready to begin?',
     ctaBody:              'With 60-second daily check-ins you build a 4-12 week pattern overview that no single-moment app can give you.',
-    ctaButton:            'Start daily tracking →',
-    ctaNote:              'You need an account to access the Cycle app.',
+    ctaButton:            'Create your Cycle account →',
+    ctaNote:              'Cycle is the tracking app — a 60-second daily check-in, with your Compass as starting point. Clicking takes you to the login page; you\'ll get a magic link in your inbox.',
+    cycleAppExplain:      'Cycle is your daily log: one screen, ~60 seconds per day — sleep, energy, mood, the symptoms that matter to you. With your Compass as baseline you\'ll see patterns within 4-12 weeks that memory alone misses.',
     bookmarkHint:         'Bookmark this page — the URL is unique to you and stays accessible.',
+    bookmarkSecurity:     'The link contains a random ID and cannot be guessed. Only share with people you trust. Anonymous results are kept for 12 months, then automatically deleted.',
+    copyLink:             '🔗 Copy link',
+    copyLinkDone:         '✓ Copied',
+    emailMeResults:       'Email me a copy',
+    emailLabel:           'Your email',
+    emailPlaceholder:     'name@company.com',
+    emailConsentText:     'I agree with the privacy policy and to receive my Compass results by email.',
+    emailSendBtn:         'Send',
+    emailSending:         'Sending…',
+    emailSentOk:          'Sent! Check your inbox in a minute.',
+    emailSentErr:         'Something went wrong. Please try again.',
     ageLabel:             'age',
     hrtLabel:             'HRT',
   },
   fr: {
     eyebrow:              'Votre Peri-Compass',
     greetingFallback:     'Votre point de départ',
+    backToCompass:        '← Retour à la présentation',
     perDimension:         'Par dimension',
     whatISee:             'Ce que je vois',
     threeHypotheses:      'Trois hypothèses',
@@ -345,15 +385,28 @@ export const RESULTS: Record<Lang, {
     recHint:              'Ces suggestions personnalisent votre écran de check-in quotidien dès que vous commencez le suivi.',
     ctaHeading:           'Prête à commencer ?',
     ctaBody:              'Avec des check-ins quotidiens de 60 secondes, vous construisez en 4-12 semaines un aperçu des schémas qu\'aucune app ponctuelle ne peut vous donner.',
-    ctaButton:            'Démarrer le suivi quotidien →',
-    ctaNote:              'Vous avez besoin d\'un compte pour accéder à l\'app Cycle.',
+    ctaButton:            'Créer votre compte Cycle →',
+    ctaNote:              'Cycle est l\'app de suivi — un check-in quotidien de 60 secondes, avec votre Compass comme point de départ. Cliquer vous amène à la page de connexion ; vous recevrez un lien magique dans votre boîte mail.',
+    cycleAppExplain:      'Cycle est votre carnet quotidien : un écran, ~60 secondes par jour — sommeil, énergie, humeur, les symptômes qui comptent pour vous. Avec votre Compass comme base, vous verrez en 4-12 semaines des schémas que la mémoire seule ne capte pas.',
     bookmarkHint:         'Enregistrez cette page — l\'URL est unique pour vous et reste accessible.',
+    bookmarkSecurity:     'Le lien contient un ID aléatoire et ne peut être deviné. Ne partagez qu\'avec des personnes de confiance. Les résultats anonymes sont conservés 12 mois puis supprimés automatiquement.',
+    copyLink:             '🔗 Copier le lien',
+    copyLinkDone:         '✓ Copié',
+    emailMeResults:       'M\'envoyer une copie par e-mail',
+    emailLabel:           'Votre e-mail',
+    emailPlaceholder:     'nom@entreprise.fr',
+    emailConsentText:     'J\'accepte la politique de confidentialité et de recevoir mes résultats Compass par e-mail.',
+    emailSendBtn:         'Envoyer',
+    emailSending:         'Envoi…',
+    emailSentOk:          'Envoyé ! Vérifiez votre boîte mail dans une minute.',
+    emailSentErr:         'Une erreur s\'est produite. Réessayez.',
     ageLabel:             'âge',
     hrtLabel:             'THS',
   },
   de: {
     eyebrow:              'Dein Peri-Compass',
     greetingFallback:     'Deine Standortbestimmung',
+    backToCompass:        '← Zurück zur Übersicht',
     perDimension:         'Pro Dimension',
     whatISee:             'Was ich sehe',
     threeHypotheses:      'Drei Hypothesen',
@@ -365,9 +418,21 @@ export const RESULTS: Record<Lang, {
     recHint:              'Diese Vorschläge personalisieren deinen täglichen Check-in-Bildschirm, sobald du mit dem Tracking beginnst.',
     ctaHeading:           'Bereit anzufangen?',
     ctaBody:              'Mit täglichen 60-Sekunden-Check-ins baust du in 4-12 Wochen einen Mustern-Überblick auf, den dir keine Einzelmoment-App geben kann.',
-    ctaButton:            'Tägliches Tracking starten →',
-    ctaNote:              'Für den Zugriff auf die Cycle-App brauchst du ein Konto.',
+    ctaButton:            'Cycle-Konto erstellen →',
+    ctaNote:              'Cycle ist die Tracking-App — ein 60-Sekunden-Check-in pro Tag, mit deinem Compass als Ausgangspunkt. Beim Klick landest du auf der Login-Seite; du bekommst einen Magic Link in dein Postfach.',
+    cycleAppExplain:      'Cycle ist dein tägliches Logbuch: ein Bildschirm, ~60 Sekunden pro Tag — Schlaf, Energie, Stimmung, die Symptome, die für dich zählen. Mit deinem Compass als Basis siehst du in 4-12 Wochen Muster, die das Gedächtnis allein verpasst.',
     bookmarkHint:         'Speichere diese Seite — die URL ist für dich einzigartig und bleibt erreichbar.',
+    bookmarkSecurity:     'Der Link enthält eine zufällige ID und kann nicht erraten werden. Teile ihn nur mit Personen, denen du vertraust. Anonyme Ergebnisse werden 12 Monate aufbewahrt und dann automatisch gelöscht.',
+    copyLink:             '🔗 Link kopieren',
+    copyLinkDone:         '✓ Kopiert',
+    emailMeResults:       'Per E-Mail senden',
+    emailLabel:           'Deine E-Mail',
+    emailPlaceholder:     'name@firma.de',
+    emailConsentText:     'Ich akzeptiere die Datenschutzerklärung und den Empfang meiner Compass-Ergebnisse per E-Mail.',
+    emailSendBtn:         'Senden',
+    emailSending:         'Wird gesendet…',
+    emailSentOk:          'Gesendet! Prüfe dein Postfach in einer Minute.',
+    emailSentErr:         'Etwas ist schiefgegangen. Bitte erneut versuchen.',
     ageLabel:             'Alter',
     hrtLabel:             'HRT',
   },
@@ -411,4 +476,12 @@ export const FIELD_LABELS: Record<Lang, Record<string, string>> = {
   en: { sleep: 'Sleep',     mood: 'Mood',     stress: 'Stress', energy: 'Energy',  hrt_taken: 'HRT compliance', alcohol: 'Alcohol', busy_day: 'Busy day',    activity: 'Activity',  nap: 'Nap'   },
   fr: { sleep: 'Sommeil',   mood: 'Humeur',   stress: 'Stress', energy: 'Énergie', hrt_taken: 'Observance THS', alcohol: 'Alcool',  busy_day: 'Journée chargée', activity: 'Activité', nap: 'Sieste' },
   de: { sleep: 'Schlaf',    mood: 'Stimmung', stress: 'Stress', energy: 'Energie', hrt_taken: 'HRT-Einnahme',   alcohol: 'Alkohol', busy_day: 'Voller Tag',  activity: 'Bewegung',  nap: 'Nickerchen' },
+}
+
+// ── HRT-status labels (zoals getoond op results page) ───────────────────────
+export const HRT_STATUS_LABELS: Record<Lang, Record<string, string>> = {
+  nl: { none: 'geen',           considering: 'overweegt',     using: 'in gebruik',  stopped: 'gestopt',  prefer_not_say: 'niet opgegeven' },
+  en: { none: 'no',             considering: 'considering',   using: 'using',       stopped: 'stopped',  prefer_not_say: 'not disclosed'   },
+  fr: { none: 'aucun',          considering: 'envisagé',      using: 'en cours',    stopped: 'arrêté',   prefer_not_say: 'non précisé'     },
+  de: { none: 'keine',          considering: 'erwägt',        using: 'in Anwendung',stopped: 'beendet',  prefer_not_say: 'nicht angegeben' },
 }
