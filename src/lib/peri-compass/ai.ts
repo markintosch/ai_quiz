@@ -12,6 +12,7 @@ import { jsonrepair } from 'jsonrepair'
 import type { CompassScore } from './scoring'
 import type { Stage } from './questions'
 import type { Lang } from './i18n'
+import { ALL_EXPERIMENTS, getExperimentByCode, experimentsForPrompt, EXP_BASELINE_TRACK } from './experiments'
 
 const CLAUDE_MODEL = 'claude-sonnet-4-5-20250929'
 const MAX_TOKENS   = 2500
@@ -20,7 +21,14 @@ const TIMEOUT_MS   = 90_000
 export interface CompassAiOutput {
   observation:         string
   hypotheses:          string[]
+  /** De daadwerkelijke experiment-tekst (uit library, evt. licht gepersonaliseerd door Claude) */
   microExperiment:     string
+  /** Code uit src/lib/peri-compass/experiments.ts (voor analytics + tracking-koppeling) */
+  experimentCode?:     string
+  /** Bron-label, gekopieerd uit library — toont onder experiment in UI/email */
+  experimentSource?:   string
+  /** URL naar de richtlijn, indien beschikbaar */
+  experimentSourceUrl?: string
   recommendedTracking: { symptoms: string[]; fields: string[] }
 }
 
@@ -74,110 +82,71 @@ const HRT_LABEL: Record<Lang, Record<string, string>> = {
   de: { none: 'keine HRT',        considering: 'erwägt HRT',        using: 'nutzt HRT',     stopped: 'HRT beendet',   prefer_not_say: 'nicht angegeben' },
 }
 
-const SYSTEM_BY_LANG: Record<Lang, string> = {
-  nl: `Je bent een ervaren coach gespecialiseerd in vrouwengezondheid en de perimenopauze. Je analyseert assessment-resultaten en formuleert observaties en aanknopingspunten voor zelfregie.
+/**
+ * System-prompt per taal. Dezelfde structuur, alleen taal verschilt.
+ * KEY-WIJZIGING t.o.v. v1: Claude moet `experimentCode` kiezen uit een
+ * meegegeven library — niet zelf verzinnen. Dat geeft elke aanbeveling een
+ * verifieerbare bron en voorkomt biohacker-tips zoals "koud handdoek bij bed".
+ */
+function buildSystem(lang: Lang): string {
+  const libraryBlock = experimentsForPrompt()
 
-Toon: warm, direct, peer-to-peer. Geen jargon, geen consultancy-taal, geen overdreven empathie. Schrijf in tweede persoon ("je").
-
-ABSOLUTE REGELS:
-- Geef GEEN medische diagnose. Gebruik woorden als "hypothese", "patroon", "kan wijzen op".
-- Stel GEEN medicatie of HRT voor. Verwijs voor medische vragen naar huisarts/menopauze-arts.
-- Schrijf in NEDERLANDS. Geen Engelse termen tenzij standaard (HRT, perimenopauze).
-- Geen overdreven positieve toon. Geen disclaimers in elke zin.
-
-OUTPUT FORMAT: één JSON-object, geen extra tekst, geen markdown-fences. Alle waarden in het Nederlands. Schema:
-
-{
-  "observation": "1 paragraaf van 3-5 zinnen. Beschrijft het patroon dat je in de scores ziet, met expliciete koppeling tussen 2-3 dimensies. Geen advies hier.",
-  "hypotheses": [
-    "Hypothese 1 — feitelijk geformuleerd, 1 zin",
-    "Hypothese 2 — feitelijk geformuleerd, 1 zin",
-    "Hypothese 3 — feitelijk geformuleerd, 1 zin"
-  ],
-  "microExperiment": "Eén concreet experiment voor de eerste 30 dagen. Maximaal 2 zinnen. Specifiek (welke handeling, welke frequentie). Iets wat niet meer dan 5 min/dag kost.",
-  "recommendedTracking": {
-    "symptoms": ["max 8 symptoom-codes uit de meegegeven lijst die voor deze persoon meest relevant zijn"],
-    "fields":   ["3-6 daily-check-in velden — kies uit: sleep, mood, stress, energy, hrt_taken, alcohol, busy_day, activity, nap"]
+  const langInstructions: Record<Lang, { lang: string; observationLabel: string; hypothesisLabel: string; experimentLabel: string }> = {
+    nl: { lang: 'NEDERLANDS', observationLabel: '1 paragraaf van 3-5 zinnen die het patroon in de scores beschrijft, met expliciete koppeling tussen 2-3 dimensies. Geen advies hier.',
+          hypothesisLabel: 'feitelijk geformuleerd, 1 zin',
+          experimentLabel: 'lichte personalisatie van de gekozen library-tekst (max 1-2 zinnen extra context). Geef het zo terug dat het natuurlijk leest in het Nederlands.' },
+    en: { lang: 'ENGLISH (US)', observationLabel: '1 paragraph of 3-5 sentences describing the pattern across the scores, explicitly connecting 2-3 dimensions. No advice here.',
+          hypothesisLabel: 'factually formulated, 1 sentence',
+          experimentLabel: 'light personalisation of the chosen library text (max 1-2 extra sentences of context). Return it so it reads naturally in English.' },
+    fr: { lang: 'FRANÇAIS', observationLabel: '1 paragraphe de 3-5 phrases décrivant le schéma dans les scores, reliant explicitement 2-3 dimensions. Pas de conseil ici.',
+          hypothesisLabel: 'formulée factuellement, 1 phrase',
+          experimentLabel: 'légère personnalisation du texte de bibliothèque choisi (max 1-2 phrases supplémentaires de contexte). Retournez-le pour qu\'il se lise naturellement en français.' },
+    de: { lang: 'DEUTSCH', observationLabel: '1 Absatz von 3-5 Sätzen, der das Muster in den Scores beschreibt und 2-3 Dimensionen explizit verknüpft. Hier keine Empfehlung.',
+          hypothesisLabel: 'sachlich formuliert, 1 Satz',
+          experimentLabel: 'leichte Personalisierung des gewählten Library-Textes (max 1-2 zusätzliche Kontextsätze). Gib es so zurück, dass es natürlich auf Deutsch liest.' },
   }
-}`,
 
-  en: `You are an experienced coach specialised in women's health and perimenopause. You analyse assessment results and formulate observations and starting points for self-direction.
+  const t = langInstructions[lang]
 
-Tone: warm, direct, peer-to-peer. No jargon, no consultancy-speak, no excessive empathy. Write in second person ("you").
+  return `You are a coach specialised in women's health and perimenopause. You analyse assessment results and formulate observations.
+
+Tone: warm, direct, peer-to-peer. No jargon, no consultancy-speak. Second person ("you" / "je" / "vous" / "du").
 
 ABSOLUTE RULES:
-- Do NOT give a medical diagnosis. Use words like "hypothesis", "pattern", "may indicate".
-- Do NOT propose medication or HRT. Refer medical questions to GP/menopause specialist.
-- Write in ENGLISH (US). No corporate jargon ("synergy", "leverage", "deliverables" forbidden).
-- No excessively positive tone. No disclaimers in every sentence.
+- NO medical diagnosis. Use words like "hypothesis", "pattern", "may indicate".
+- NO medication or HRT proposals. Refer medical questions to GP/menopause specialist.
+- Write all output in ${t.lang}.
+- For the micro-experiment: you MUST choose ONE entry from the library below.
+  Do NOT invent your own. Pick the entry whose 'when' description best matches
+  this person's profile. Return its 'code' so we can verify and source it.
 
-OUTPUT FORMAT: one JSON object, no extra text, no markdown fences. All values in English. Schema:
+EXPERIMENT LIBRARY — choose exactly ONE 'code' from this list:
+
+${libraryBlock}
+
+OUTPUT FORMAT: one JSON object, no extra text, no markdown fences. Schema:
 
 {
-  "observation": "1 paragraph of 3-5 sentences. Describes the pattern you see across the scores, explicitly connecting 2-3 dimensions. No advice here.",
+  "observation": "${t.observationLabel}",
   "hypotheses": [
-    "Hypothesis 1 — factually formulated, 1 sentence",
-    "Hypothesis 2 — factually formulated, 1 sentence",
-    "Hypothesis 3 — factually formulated, 1 sentence"
+    "Hypothesis 1 — ${t.hypothesisLabel}",
+    "Hypothesis 2 — ${t.hypothesisLabel}",
+    "Hypothesis 3 — ${t.hypothesisLabel}"
   ],
-  "microExperiment": "One concrete experiment for the first 30 days. Max 2 sentences. Specific (which action, which frequency). Something that takes no more than 5 min/day.",
+  "experimentCode": "code-from-library-above",
+  "microExperiment": "${t.experimentLabel}",
   "recommendedTracking": {
-    "symptoms": ["max 8 symptom codes from the provided list most relevant for this person"],
+    "symptoms": ["max 8 symptom codes from the person's selected symptoms most relevant to track"],
     "fields":   ["3-6 daily check-in fields — choose from: sleep, mood, stress, energy, hrt_taken, alcohol, busy_day, activity, nap"]
   }
-}`,
+}`
+}
 
-  fr: `Vous êtes une coach expérimentée spécialisée dans la santé des femmes et la périménopause. Vous analysez les résultats d'évaluation et formulez des observations et des points de départ pour l'autonomie.
-
-Ton : chaleureux, direct, de pair à pair. Pas de jargon, pas de langage de consultant, pas d'empathie excessive. Écrivez à la deuxième personne ("vous").
-
-RÈGLES ABSOLUES :
-- Ne donnez PAS de diagnostic médical. Utilisez des mots comme "hypothèse", "schéma", "peut indiquer".
-- Ne proposez PAS de médication ni THS. Renvoyez les questions médicales au médecin/spécialiste de la ménopause.
-- Écrivez en FRANÇAIS. Pas de jargon corporate.
-- Pas de ton excessivement positif. Pas de disclaimers à chaque phrase.
-
-FORMAT DE SORTIE : un objet JSON, pas de texte supplémentaire, pas de balises markdown. Toutes les valeurs en français. Schéma :
-
-{
-  "observation": "1 paragraphe de 3-5 phrases. Décrit le schéma que vous voyez dans les scores, en reliant explicitement 2-3 dimensions. Pas de conseil ici.",
-  "hypotheses": [
-    "Hypothèse 1 — formulée factuellement, 1 phrase",
-    "Hypothèse 2 — formulée factuellement, 1 phrase",
-    "Hypothèse 3 — formulée factuellement, 1 phrase"
-  ],
-  "microExperiment": "Une expérimentation concrète pour les 30 premiers jours. 2 phrases max. Spécifique (quelle action, quelle fréquence). Quelque chose qui prend max 5 min/jour.",
-  "recommendedTracking": {
-    "symptoms": ["max 8 codes de symptômes de la liste fournie les plus pertinents pour cette personne"],
-    "fields":   ["3-6 champs de check-in quotidien — choisir parmi : sleep, mood, stress, energy, hrt_taken, alcohol, busy_day, activity, nap"]
-  }
-}`,
-
-  de: `Du bist eine erfahrene Coach, spezialisiert auf Frauengesundheit und Perimenopause. Du analysierst Assessment-Ergebnisse und formulierst Beobachtungen und Ansatzpunkte für Selbstregie.
-
-Ton: warm, direkt, auf Augenhöhe. Kein Jargon, keine Beratersprache, keine übertriebene Empathie. Schreibe in der zweiten Person ("du").
-
-ABSOLUTE REGELN:
-- Stelle KEINE medizinische Diagnose. Verwende Wörter wie "Hypothese", "Muster", "kann hindeuten auf".
-- Schlage KEINE Medikamente oder HRT vor. Verweise medizinische Fragen an Hausarzt/Menopause-Spezialist.
-- Schreibe auf DEUTSCH (Schweizer Orthografie OK falls passend). Kein Corporate-Jargon.
-- Kein übertrieben positiver Ton. Keine Disclaimer in jedem Satz.
-
-OUTPUT-FORMAT: ein JSON-Objekt, kein zusätzlicher Text, keine Markdown-Fences. Alle Werte auf Deutsch. Schema:
-
-{
-  "observation": "1 Absatz von 3-5 Sätzen. Beschreibt das Muster in den Scores, verknüpft 2-3 Dimensionen explizit. Hier keine Empfehlung.",
-  "hypotheses": [
-    "Hypothese 1 — sachlich formuliert, 1 Satz",
-    "Hypothese 2 — sachlich formuliert, 1 Satz",
-    "Hypothese 3 — sachlich formuliert, 1 Satz"
-  ],
-  "microExperiment": "Ein konkretes Experiment für die ersten 30 Tage. Max 2 Sätze. Spezifisch (welche Handlung, welche Frequenz). Etwas, das max 5 Min./Tag kostet.",
-  "recommendedTracking": {
-    "symptoms": ["max 8 Symptom-Codes aus der gegebenen Liste, die für diese Person am relevantesten sind"],
-    "fields":   ["3-6 Daily-Check-in-Felder — wähle aus: sleep, mood, stress, energy, hrt_taken, alcohol, busy_day, activity, nap"]
-  }
-}`,
+const SYSTEM_BY_LANG: Record<Lang, string> = {
+  nl: buildSystem('nl'),
+  en: buildSystem('en'),
+  fr: buildSystem('fr'),
+  de: buildSystem('de'),
 }
 
 const USER_INTRO: Record<Lang, string> = {
@@ -252,12 +221,30 @@ ${f.instruction}`
       try { parsed = JSON.parse(jsonrepair(json)) }
       catch { return fallback(input) }
     }
+    // Experiment-code valideren tegen de library — als Claude iets verzonnen
+    // heeft of de code ontbreekt, fall back op een veilige default per dominante
+    // dimensie. We geven NOOIT een ongesourced experiment terug.
+    const claimedCode = typeof parsed.experimentCode === 'string' ? parsed.experimentCode : ''
+    const fromLibrary = getExperimentByCode(claimedCode)
+    const exp         = fromLibrary ?? pickFallbackExperiment(input)
+
+    // Als de library-text niet matcht met wat Claude heeft geschreven,
+    // gebruiken we de library-text als bron-of-truth. Claude's tekst
+    // wordt alleen geaccepteerd als het matcht (lichte personalisatie OK).
+    const claudeText  = typeof parsed.microExperiment === 'string' ? parsed.microExperiment : ''
+    const finalText   = claudeText.length > 20 && fromLibrary
+      ? claudeText
+      : exp.text
+
     return {
       observation:         typeof parsed.observation === 'string' ? parsed.observation : fallback(input).observation,
       hypotheses:          Array.isArray(parsed.hypotheses) && parsed.hypotheses.length >= 1
                             ? parsed.hypotheses.slice(0, 3).map(String)
                             : fallback(input).hypotheses,
-      microExperiment:     typeof parsed.microExperiment === 'string' ? parsed.microExperiment : fallback(input).microExperiment,
+      microExperiment:     finalText,
+      experimentCode:      exp.code,
+      experimentSource:    exp.source,
+      experimentSourceUrl: exp.sourceUrl,
       recommendedTracking: parsed.recommendedTracking && typeof parsed.recommendedTracking === 'object'
                             ? {
                                 symptoms: Array.isArray(parsed.recommendedTracking.symptoms)
@@ -329,13 +316,34 @@ const FALLBACK_COPY: Record<Lang, {
   },
 }
 
+/**
+ * Kies een veilig fallback-experiment uit de library op basis van laagste
+ * dimensie-score. Garandeert dat ELKE Compass altijd een gesourced experiment
+ * teruggeeft, zelfs als Claude faalt of een onbekende code retourneert.
+ */
+function pickFallbackExperiment(input: AiInput) {
+  const lowest = [...input.score.dimensions].sort((a, b) => a.score - b.score)[0]
+  const dim = lowest?.dimension
+  // Match dimensie → categorie in library
+  if (dim === 'sleep_recovery')   return ALL_EXPERIMENTS.find((e) => e.code === 'sleep_regularity') ?? EXP_BASELINE_TRACK
+  if (dim === 'energy_capacity')  return ALL_EXPERIMENTS.find((e) => e.code === 'morning_light')    ?? EXP_BASELINE_TRACK
+  if (dim === 'stress_context')   return ALL_EXPERIMENTS.find((e) => e.code === '478_breathing')     ?? EXP_BASELINE_TRACK
+  if (dim === 'lifestyle')        return ALL_EXPERIMENTS.find((e) => e.code === 'strength_2x_weekly') ?? EXP_BASELINE_TRACK
+  if (dim === 'symptom_burden')   return ALL_EXPERIMENTS.find((e) => e.code === 'paced_breathing')    ?? EXP_BASELINE_TRACK
+  return EXP_BASELINE_TRACK
+}
+
 function fallback(input: AiInput): CompassAiOutput {
   const lowest = [...input.score.dimensions].sort((a, b) => a.score - b.score)[0]
-  const c = FALLBACK_COPY[input.lang]
+  const c   = FALLBACK_COPY[input.lang]
+  const exp = pickFallbackExperiment(input)
   return {
-    observation: c.obsTpl(input.score.overall, input.score.band, lowest.label, lowest.score),
-    hypotheses:  c.hyps,
-    microExperiment: c.exp,
+    observation:         c.obsTpl(input.score.overall, input.score.band, lowest.label, lowest.score),
+    hypotheses:          c.hyps,
+    microExperiment:     exp.text,
+    experimentCode:      exp.code,
+    experimentSource:    exp.source,
+    experimentSourceUrl: exp.sourceUrl,
     recommendedTracking: {
       symptoms: input.symptomsList.slice(0, 6),
       fields:   ['sleep', 'mood', 'energy', 'stress'],

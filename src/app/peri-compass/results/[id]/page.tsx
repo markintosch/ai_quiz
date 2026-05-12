@@ -49,6 +49,9 @@ interface AssessmentRow {
   ai_observation:           string | null
   ai_hypotheses:            string[]
   ai_micro_experiment:      string | null
+  ai_micro_experiment_code: string | null
+  ai_micro_experiment_source:     string | null
+  ai_micro_experiment_source_url: string | null
   ai_recommended_tracking:  { symptoms?: string[]; fields?: string[] } | null
   created_at:               string
 }
@@ -170,13 +173,52 @@ export default async function CompassResultsPage({
           </section>
         )}
 
-        {/* Micro-experiment */}
+        {/* Micro-experiment + DIRECT gekoppelde logboek-CTA */}
         {a.ai_micro_experiment && (
-          <section className="mb-8 rounded-xl border border-brand-accent/30 bg-gradient-to-br from-orange-50 to-rose-50 p-6">
-            <p className="mb-2 text-xs font-bold uppercase tracking-wider text-brand-accent">
-              {t.experimentEyebrow}
-            </p>
-            <p className="text-base leading-relaxed text-gray-900">{a.ai_micro_experiment}</p>
+          <section className="mb-8 overflow-hidden rounded-xl border border-brand-accent/30 bg-gradient-to-br from-orange-50 to-rose-50">
+            <div className="p-6">
+              <p className="mb-2 text-xs font-bold uppercase tracking-wider text-brand-accent">
+                {t.experimentEyebrow}
+              </p>
+              <p className="text-base leading-relaxed text-gray-900">{a.ai_micro_experiment}</p>
+
+              {/* Bron-attributie — onder elk experiment, direct zichtbaar */}
+              {a.ai_micro_experiment_source && (
+                <p className="mt-3 text-xs italic text-gray-700">
+                  {t.sourceLabel}:{' '}
+                  {a.ai_micro_experiment_source_url ? (
+                    <a
+                      href={a.ai_micro_experiment_source_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline hover:text-brand-accent"
+                    >
+                      {a.ai_micro_experiment_source}
+                    </a>
+                  ) : (
+                    <span>{a.ai_micro_experiment_source}</span>
+                  )}
+                </p>
+              )}
+            </div>
+
+            {/* Logboek-CTA — direct gekoppeld, NIET helemaal onderaan */}
+            <div className="border-t border-brand-accent/20 bg-white/60 p-6">
+              <p className="mb-1 text-xs font-bold uppercase tracking-wider text-brand">
+                {t.logbookHeading}
+              </p>
+              <p className="mb-4 text-sm leading-relaxed text-gray-700">
+                {t.logbookBody}
+              </p>
+              <Link
+                href={a.email
+                  ? `/Cycle/login?email=${encodeURIComponent(a.email)}`
+                  : '/Cycle/login'}
+                className="inline-block rounded-md bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark"
+              >
+                {t.logbookCta}
+              </Link>
+            </div>
           </section>
         )}
 

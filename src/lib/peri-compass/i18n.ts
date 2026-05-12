@@ -295,6 +295,11 @@ export const RESULTS: Record<Lang, {
   cycleAppExplain:   string
   bookmarkHint:      string
   bookmarkSecurity:  string
+  sourceLabel:       string
+  evidenceFooter:    string
+  logbookHeading:    string
+  logbookBody:       string
+  logbookCta:        string
   copyLink:          string
   copyLinkDone:      string
   emailMeResults:    string
@@ -328,6 +333,11 @@ export const RESULTS: Record<Lang, {
     cycleAppExplain:      'Cycle is je dagelijkse logboek: één scherm, ~60 seconden per dag — slaap, energie, stemming, symptomen die voor jou tellen. Met je Compass als nulmeting zie je na 4-12 weken patronen die met geheugen alleen niet opvallen.',
     bookmarkHint:         'Bewaar deze pagina — de URL is uniek voor jou en blijft bereikbaar.',
     bookmarkSecurity:     'De link bevat een willekeurig ID en is niet te raden. Deel \'m alleen met wie je vertrouwt. Anonieme afnames blijven 12 maanden bewaard, daarna automatisch verwijderd.',
+    sourceLabel:          'Bron',
+    evidenceFooter:       'Alle voorgestelde experimenten zijn gekozen uit erkende menopauze-richtlijnen (NAMS, NICE, IMS, NHS, AASM, ACSM, WHO). Specifieke bron staat onder elk experiment.',
+    logbookHeading:       'Logboek voor je arts',
+    logbookBody:          'Track dit experiment 30 dagen lang in de Cycle app — slaap, energie, stemming en symptomen. Daarna heb je objectieve data om mee te nemen naar je huisarts of menopauze-arts. Concrete data versnelt het gesprek over behandelopties.',
+    logbookCta:           'Begin met loggen in Cycle →',
     copyLink:             '🔗 Kopieer link',
     copyLinkDone:         '✓ Gekopieerd',
     emailMeResults:       'Stuur me dit per e-mail',
@@ -361,6 +371,11 @@ export const RESULTS: Record<Lang, {
     cycleAppExplain:      'Cycle is your daily log: one screen, ~60 seconds per day — sleep, energy, mood, the symptoms that matter to you. With your Compass as baseline you\'ll see patterns within 4-12 weeks that memory alone misses.',
     bookmarkHint:         'Bookmark this page — the URL is unique to you and stays accessible.',
     bookmarkSecurity:     'The link contains a random ID and cannot be guessed. Only share with people you trust. Anonymous results are kept for 12 months, then automatically deleted.',
+    sourceLabel:          'Source',
+    evidenceFooter:       'All suggested experiments are chosen from recognised menopause guidelines (NAMS, NICE, IMS, NHS, AASM, ACSM, WHO). Specific source listed under each experiment.',
+    logbookHeading:       'Logbook for your doctor',
+    logbookBody:          'Track this experiment for 30 days in the Cycle app — sleep, energy, mood, symptoms. Then you have objective data to bring to your GP or menopause specialist. Concrete data accelerates the treatment conversation.',
+    logbookCta:           'Start logging in Cycle →',
     copyLink:             '🔗 Copy link',
     copyLinkDone:         '✓ Copied',
     emailMeResults:       'Email me a copy',
@@ -394,6 +409,11 @@ export const RESULTS: Record<Lang, {
     cycleAppExplain:      'Cycle est votre carnet quotidien : un écran, ~60 secondes par jour — sommeil, énergie, humeur, les symptômes qui comptent pour vous. Avec votre Compass comme base, vous verrez en 4-12 semaines des schémas que la mémoire seule ne capte pas.',
     bookmarkHint:         'Enregistrez cette page — l\'URL est unique pour vous et reste accessible.',
     bookmarkSecurity:     'Le lien contient un ID aléatoire et ne peut être deviné. Ne partagez qu\'avec des personnes de confiance. Les résultats anonymes sont conservés 12 mois puis supprimés automatiquement.',
+    sourceLabel:          'Source',
+    evidenceFooter:       'Toutes les expérimentations proposées sont choisies dans des recommandations menopause reconnues (NAMS, NICE, IMS, NHS, AASM, ACSM, OMS). Source spécifique sous chaque expérimentation.',
+    logbookHeading:       'Journal pour votre médecin',
+    logbookBody:          'Suivez cette expérimentation 30 jours dans l\'app Cycle — sommeil, énergie, humeur, symptômes. Vous aurez ensuite des données objectives à apporter à votre médecin ou spécialiste de la ménopause. Les données concrètes accélèrent la discussion sur les traitements.',
+    logbookCta:           'Commencer à journaliser dans Cycle →',
     copyLink:             '🔗 Copier le lien',
     copyLinkDone:         '✓ Copié',
     emailMeResults:       'M\'envoyer une copie par e-mail',
@@ -427,6 +447,11 @@ export const RESULTS: Record<Lang, {
     cycleAppExplain:      'Cycle ist dein tägliches Logbuch: ein Bildschirm, ~60 Sekunden pro Tag — Schlaf, Energie, Stimmung, die Symptome, die für dich zählen. Mit deinem Compass als Basis siehst du in 4-12 Wochen Muster, die das Gedächtnis allein verpasst.',
     bookmarkHint:         'Speichere diese Seite — die URL ist für dich einzigartig und bleibt erreichbar.',
     bookmarkSecurity:     'Der Link enthält eine zufällige ID und kann nicht erraten werden. Teile ihn nur mit Personen, denen du vertraust. Anonyme Ergebnisse werden 12 Monate aufbewahrt und dann automatisch gelöscht.',
+    sourceLabel:          'Quelle',
+    evidenceFooter:       'Alle vorgeschlagenen Experimente sind aus anerkannten Menopause-Leitlinien gewählt (NAMS, NICE, IMS, NHS, AASM, ACSM, WHO). Spezifische Quelle unter jedem Experiment.',
+    logbookHeading:       'Logbuch für deinen Arzt',
+    logbookBody:          'Tracke dieses Experiment 30 Tage lang in der Cycle-App — Schlaf, Energie, Stimmung, Symptome. Danach hast du objektive Daten, die du zu deinem Hausarzt oder Menopause-Spezialisten mitnehmen kannst. Konkrete Daten beschleunigen das Gespräch über Behandlungsoptionen.',
+    logbookCta:           'Beginne mit dem Logging in Cycle →',
     copyLink:             '🔗 Link kopieren',
     copyLinkDone:         '✓ Kopiert',
     emailMeResults:       'Per E-Mail senden',

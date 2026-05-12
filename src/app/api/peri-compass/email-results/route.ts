@@ -60,6 +60,9 @@ interface AssessmentRow {
   ai_observation:           string | null
   ai_hypotheses:            string[]
   ai_micro_experiment:      string | null
+  ai_micro_experiment_code: string | null
+  ai_micro_experiment_source:     string | null
+  ai_micro_experiment_source_url: string | null
   ai_recommended_tracking:  { symptoms?: string[]; fields?: string[] } | null
   goal_90d:                 string | null
 }
@@ -126,9 +129,12 @@ export async function POST(req: Request) {
   }
 
   const ai = {
-    observation:     a.ai_observation     ?? '',
-    hypotheses:      a.ai_hypotheses      ?? [],
-    microExperiment: a.ai_micro_experiment ?? '',
+    observation:         a.ai_observation     ?? '',
+    hypotheses:          a.ai_hypotheses      ?? [],
+    microExperiment:     a.ai_micro_experiment ?? '',
+    experimentCode:      a.ai_micro_experiment_code      ?? undefined,
+    experimentSource:    a.ai_micro_experiment_source    ?? undefined,
+    experimentSourceUrl: a.ai_micro_experiment_source_url ?? undefined,
     recommendedTracking: {
       symptoms: a.ai_recommended_tracking?.symptoms ?? [],
       fields:   a.ai_recommended_tracking?.fields   ?? [],

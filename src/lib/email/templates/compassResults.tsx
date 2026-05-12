@@ -152,6 +152,11 @@ export function CompassResultsEmail({
           <Section style={experimentSection}>
             <Heading as="h2" style={experimentHeading}>{t.experimentLabel}</Heading>
             <Text style={experimentBody}>{ai.microExperiment}</Text>
+            {ai.experimentSource && (
+              <Text style={experimentSource}>
+                {sourceLabel(lang)}: {ai.experimentSource}
+              </Text>
+            )}
           </Section>
 
           <Hr style={divider} />
@@ -169,6 +174,8 @@ export function CompassResultsEmail({
           <Section style={footer}>
             <Text style={footerText}>{t.brand}</Text>
             <Text style={footerText}>{t.footerNote}</Text>
+            <Text style={footerText}>{EVIDENCE_FOOTER[lang]}</Text>
+            <Text style={footerText}>{DATA_CONTROLLER[lang]}</Text>
           </Section>
         </Container>
       </Body>
@@ -198,6 +205,22 @@ const disclaimer: React.CSSProperties = { fontSize: '12px', color: '#9CA3AF', fo
 const experimentSection: React.CSSProperties = { backgroundColor: '#FFF6F1', padding: '20px 32px', borderTop: '1px solid #FCE0CF', borderBottom: '1px solid #FCE0CF' }
 const experimentHeading: React.CSSProperties = { fontSize: '13px', fontWeight: 700, color: '#E8611A', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 10px' }
 const experimentBody: React.CSSProperties = { fontSize: '15px', color: '#1F2937', lineHeight: 1.6, margin: 0 }
+const experimentSource: React.CSSProperties = { fontSize: '12px', fontStyle: 'italic', color: '#6B7280', margin: '10px 0 0' }
+
+const SOURCE_LABEL: Record<Lang, string> = { nl: 'Bron', en: 'Source', fr: 'Source', de: 'Quelle' }
+function sourceLabel(lang: Lang): string { return SOURCE_LABEL[lang] }
+const EVIDENCE_FOOTER: Record<Lang, string> = {
+  nl: 'Alle voorgestelde experimenten zijn gekozen uit erkende menopauze-richtlijnen (NAMS, NICE, IMS, NHS, AASM, ACSM, WHO).',
+  en: 'All suggested experiments are chosen from recognised menopause guidelines (NAMS, NICE, IMS, NHS, AASM, ACSM, WHO).',
+  fr: 'Toutes les expérimentations proposées sont choisies dans des recommandations menopause reconnues (NAMS, NICE, IMS, NHS, AASM, ACSM, OMS).',
+  de: 'Alle vorgeschlagenen Experimente sind aus anerkannten Menopause-Leitlinien gewählt (NAMS, NICE, IMS, NHS, AASM, ACSM, WHO).',
+}
+const DATA_CONTROLLER: Record<Lang, string> = {
+  nl: 'Platform en data worden beheerd door Brand PWRD Media B.V. (data controller).',
+  en: 'Platform and data are managed by Brand PWRD Media B.V. (data controller).',
+  fr: 'La plateforme et les données sont gérées par Brand PWRD Media B.V. (responsable du traitement).',
+  de: 'Plattform und Daten werden von Brand PWRD Media B.V. verwaltet (Datenverantwortliche).',
+}
 const divider: React.CSSProperties = { borderColor: '#E5E7EB', margin: 0 }
 const ctaSection: React.CSSProperties = { padding: '24px 32px', textAlign: 'center' }
 const button: React.CSSProperties = { backgroundColor: '#E8611A', color: '#FFFFFF', padding: '14px 28px', borderRadius: '8px', fontWeight: 600, fontSize: '15px', textDecoration: 'none', display: 'inline-block' }
