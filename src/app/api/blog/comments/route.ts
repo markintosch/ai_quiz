@@ -19,7 +19,7 @@ import { BlogCommentNotifyEmail } from '@/lib/email/templates/blogCommentNotify'
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 
-const BASE     = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://markdekock.com'
+const BASE     = 'https://markdekock.com'
 const FROM     = 'Brand PWRD Media <blog@brandpwrdmedia.com>'
 const NOTIFY_TO = process.env.ADMIN_EMAIL ?? 'mark@brandpwrdmedia.com'
 const resend   = new Resend(process.env.RESEND_API_KEY)

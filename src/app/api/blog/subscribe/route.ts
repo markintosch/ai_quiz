@@ -32,7 +32,7 @@ export const runtime = 'nodejs'
 const resend = new Resend(process.env.RESEND_API_KEY)
 const FROM   = 'Mark de Kock <blog@brandpwrdmedia.com>'
 const REPLY_TO = 'mark@brandpwrdmedia.com'
-const BASE   = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://markdekock.com'
+const BASE   = 'https://markdekock.com'
 
 // We slaan de letterlijk getoonde AVG-tekst op (consentText) zodat we later
 // kunnen reproduceren waarmee iemand akkoord ging. Truncated naar 1000 char

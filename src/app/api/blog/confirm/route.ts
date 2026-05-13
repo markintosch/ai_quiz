@@ -11,7 +11,7 @@ import { createServiceClient } from '@/lib/supabase/server'
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 
-const BASE = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://markdekock.com'
+const BASE = 'https://markdekock.com'
 
 export async function GET(req: Request) {
   const url   = new URL(req.url)

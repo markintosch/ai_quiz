@@ -27,7 +27,7 @@ import { pickOgImage } from '@/lib/blog/cover'
 
 export const dynamic = 'force-dynamic'
 
-const BASE = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://markdekock.com'
+const BASE = 'https://markdekock.com'
 
 // ── Metadata ────────────────────────────────────────────────────────────────
 export async function generateMetadata({

@@ -29,7 +29,7 @@ import { pickOgImage } from '@/lib/blog/cover'
 
 export const dynamic = 'force-dynamic'
 
-const BASE = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://markdekock.com'
+const BASE = 'https://markdekock.com'
 
 // ── Metadata ────────────────────────────────────────────────────────────────
 export async function generateMetadata({
@@ -245,10 +245,14 @@ export default async function BlogPostPage({
           </div>
         )}
 
-        {/* ── Social share — onder de body, voor de comments ─ */}
+        {/* ── Social share — onder de body, voor de comments ─
+             Blog leeft altijd onder markdekock.com (canonical merknaam),
+             ook al draait de Next-app op een andere host. */}
         <div className="mt-8">
           <SocialShare
-            url={post.locale === 'nl' ? `${BASE}/blog/${post.slug}` : `${BASE}/blog/${post.slug}?lang=${post.locale}`}
+            url={post.locale === 'nl'
+              ? `https://markdekock.com/blog/${post.slug}`
+              : `https://markdekock.com/blog/${post.slug}?lang=${post.locale}`}
             title={post.title}
             lang={lang}
           />

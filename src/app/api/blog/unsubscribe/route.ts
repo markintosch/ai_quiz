@@ -15,7 +15,7 @@ import { createServiceClient } from '@/lib/supabase/server'
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 
-const BASE = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://markdekock.com'
+const BASE = 'https://markdekock.com'
 
 async function unsubscribeByToken(token: string): Promise<{ ok: boolean; locale?: 'nl'|'en'|'de' }> {
   if (!token || token.length < 16) return { ok: false }
