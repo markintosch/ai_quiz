@@ -26,6 +26,7 @@ const NAV_LINKS = [
   { href: '/admin/atelier/sources', label: '↳ Sources registry' },
   { href: '/admin/blog', label: '📝 Blog' },
   { href: '/admin/blog/subscribers', label: '↳ Abonnees' },
+  { href: '/admin/blog/comments',    label: '↳ Reacties' },
   { href: '/admin/peri-compass', label: '🧭 Peri-Compass' },
 ]
 

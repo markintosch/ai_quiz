@@ -21,6 +21,9 @@ import { pickLang, STRINGS, formatDate, type Lang } from '@/lib/blog/strings'
 import { RenderTiptap, tiptapToPlainText } from '@/lib/blog/renderTiptap'
 import type { BlogPostRow } from '@/types/blog'
 import SubscribeForm from '@/components/blog/SubscribeForm'
+import SocialShare    from '@/components/blog/SocialShare'
+import CommentsList   from '@/components/blog/CommentsList'
+import CommentForm    from '@/components/blog/CommentForm'
 import { BlogCover } from '@/components/blog/BlogCover'
 import { pickOgImage } from '@/lib/blog/cover'
 
@@ -234,14 +237,31 @@ export default async function BlogPostPage({
         {/* ── Tags ────────────────────────────────────────── */}
         {post.tags.length > 0 && (
           <div className="mt-12 flex flex-wrap gap-2 border-t border-gray-100 pt-6">
-            {post.tags.map((t) => (
-              <span key={t} className="rounded bg-gray-100 px-2.5 py-1 text-xs text-gray-700">
-                #{t}
+            {post.tags.map((tag) => (
+              <span key={tag} className="rounded bg-gray-100 px-2.5 py-1 text-xs text-gray-700">
+                #{tag}
               </span>
             ))}
           </div>
         )}
+
+        {/* ── Social share — onder de body, voor de comments ─ */}
+        <div className="mt-8">
+          <SocialShare
+            url={post.locale === 'nl' ? `${BASE}/blog/${post.slug}` : `${BASE}/blog/${post.slug}?lang=${post.locale}`}
+            title={post.title}
+            lang={lang}
+          />
+        </div>
       </article>
+
+      {/* ── Comments ────────────────────────────────────────── */}
+      <section className="border-t border-gray-100 bg-white">
+        <div className="mx-auto max-w-3xl px-6 py-12">
+          <CommentsList postId={post.id} lang={lang} />
+          <CommentForm  postId={post.id} lang={lang} />
+        </div>
+      </section>
 
       {/* ── Subscribe ───────────────────────────────────────── */}
       <section className="border-t border-gray-100 bg-gray-50">
