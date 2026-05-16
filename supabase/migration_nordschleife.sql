@@ -34,10 +34,11 @@ ALTER TABLE public.shop_orders
   ADD COLUMN IF NOT EXISTS claimed_at TIMESTAMPTZ;
 
 -- ── Shop product: 5-attempt pack at €2 ──
--- Extend type CHECK to allow 'game' (additive, keeps existing values working).
+-- Drop the legacy type CHECK entirely. It only listed 4 hard-coded types
+-- ('webinar','pdf','course','bundle') and rejects any newer product types
+-- you've added since. The application layer already validates `type`, so the
+-- DB-level allowlist adds no safety — just blockers when adding new kinds.
 ALTER TABLE public.shop_products DROP CONSTRAINT IF EXISTS shop_products_type_check;
-ALTER TABLE public.shop_products ADD CONSTRAINT shop_products_type_check
-  CHECK (type IN ('webinar', 'pdf', 'course', 'bundle', 'game'));
 
 INSERT INTO public.shop_products (
   slug, brand, title, tagline, description,
@@ -64,3 +65,16 @@ ON CONFLICT (slug) DO UPDATE SET
   active = true,
   description = EXCLUDED.description,
   description_en = EXCLUDED.description_en;
+
+-- ── Presence tracking (live participants on the landing page) ───────────────
+-- Each browser tab generates a UUID, pings every 30 seconds, server upserts.
+-- Active = last_seen > NOW() - 90 seconds.
+CREATE TABLE IF NOT EXISTS public.nordschleife_presence (
+  id         UUID PRIMARY KEY,
+  last_seen  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS nordschleife_presence_last_seen_idx
+  ON public.nordschleife_presence (last_seen DESC);
+
+ALTER TABLE public.nordschleife_presence ENABLE ROW LEVEL SECURITY;
