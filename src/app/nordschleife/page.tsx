@@ -20,22 +20,60 @@ const PURPLE  = '#B026FF'
 
 interface LeaderEntry { id: string; name: string; lap_time: string; total_ms: number; created_at: string }
 
-function Leaderboard() {
+const LEADERBOARD_REFRESH_SEC = 5
+
+function Leaderboard({ onCountdown }: { onCountdown?: (sec: number) => void }) {
   const [rows, setRows] = useState<LeaderEntry[]>([])
   const [loading, setLoading] = useState(true)
+  const [flash, setFlash] = useState(false)
 
   useEffect(() => {
-    fetch('/api/nordschleife/leaderboard')
-      .then(r => r.json())
-      .then(d => { setRows(d.rows ?? []); setLoading(false) })
-      .catch(() => setLoading(false))
-  }, [])
+    let cancelled = false
+    let countdownSec = LEADERBOARD_REFRESH_SEC
+
+    async function refresh() {
+      try {
+        const r = await fetch('/api/nordschleife/leaderboard', { cache: 'no-store' })
+        const d = await r.json()
+        if (cancelled) return
+        setRows(d.rows ?? [])
+        setLoading(false)
+        setFlash(true)
+        setTimeout(() => { if (!cancelled) setFlash(false) }, 600)
+      } catch {
+        if (!cancelled) setLoading(false)
+      }
+    }
+
+    // First load + tick every second
+    refresh()
+    countdownSec = LEADERBOARD_REFRESH_SEC
+    onCountdown?.(countdownSec)
+
+    const tick = setInterval(() => {
+      countdownSec -= 1
+      if (countdownSec <= 0) {
+        countdownSec = LEADERBOARD_REFRESH_SEC
+        refresh()
+      }
+      onCountdown?.(countdownSec)
+    }, 1000)
+
+    return () => { cancelled = true; clearInterval(tick) }
+  }, [onCountdown])
 
   if (loading) return <p style={{ fontSize: 13, color: MUTED }}>Warming up the timing screens…</p>
   if (!rows.length) return <p style={{ fontSize: 13, color: MUTED }}>No laps set yet. Be first into the Eifel.</p>
 
   return (
-    <div>
+    <div style={{
+      transition: 'background 0.25s, box-shadow 0.25s',
+      background: flash ? `${GREEN}10` : 'transparent',
+      boxShadow: flash ? `0 0 0 1px ${GREEN}44 inset` : 'none',
+      borderRadius: 6,
+      marginInline: -8,
+      paddingInline: 8,
+    }}>
       {rows.slice(0, 10).map((r, i) => {
         const colour = i === 0 ? PURPLE : i < 3 ? GOLD : MUTED
         return (
@@ -54,6 +92,21 @@ function Leaderboard() {
         )
       })}
     </div>
+  )
+}
+
+function LiveBadge({ secLeft }: { secLeft: number }) {
+  return (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center', gap: 6,
+      fontSize: 11, color: GREEN, fontWeight: 700, letterSpacing: '0.04em',
+    }}>
+      <span style={{
+        width: 7, height: 7, borderRadius: '50%',
+        background: GREEN, animation: 'nsPulse 1.2s ease-in-out infinite',
+      }} />
+      LIVE · update in {secLeft}s
+    </span>
   )
 }
 
@@ -91,8 +144,16 @@ function AttemptStatus() {
 }
 
 export default function NordschleifeLanding() {
+  const [leaderboardCountdown, setLeaderboardCountdown] = useState(LEADERBOARD_REFRESH_SEC)
+
   return (
     <div style={{ minHeight: '100vh', background: BG, fontFamily: 'Inter, system-ui, sans-serif', color: WHITE }}>
+      <style>{`
+        @keyframes nsPulse {
+          0%, 100% { transform: scale(1);   opacity: 1;   }
+          50%      { transform: scale(1.6); opacity: 0.55; }
+        }
+      `}</style>
 
       {/* Nav */}
       <nav style={{ borderBottom: `1px solid ${BORDER}`, padding: '0 24px', background: DARK }}>
@@ -221,12 +282,12 @@ export default function NordschleifeLanding() {
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 14, overflow: 'hidden' }}>
             <div style={{ height: 3, background: `linear-gradient(90deg, ${PURPLE}, ${GREEN})` }} />
             <div style={{ padding: '20px 20px 24px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
                 <h3 style={{ fontSize: 15, fontWeight: 800, color: WHITE }}>🏁 Track Records</h3>
-                <span style={{ fontSize: 11, color: MUTED }}>All time</span>
+                <LiveBadge secLeft={leaderboardCountdown} />
               </div>
               <Suspense fallback={<p style={{ fontSize: 13, color: MUTED }}>Loading…</p>}>
-                <Leaderboard />
+                <Leaderboard onCountdown={setLeaderboardCountdown} />
               </Suspense>
               <div style={{ marginTop: 20 }}>
                 <Link
