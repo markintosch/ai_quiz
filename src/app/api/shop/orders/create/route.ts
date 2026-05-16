@@ -26,14 +26,14 @@ export async function POST(req: NextRequest) {
   const rl = rateLimit(`shop_create:${ip}`, 5, 10 * 60 * 1000) // 5 orders per 10 min per IP
   if (!rl.allowed) return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
 
-  let body: { productSlug?: string; customerName?: string; customerEmail?: string }
+  let body: { productSlug?: string; customerName?: string; customerEmail?: string; returnPath?: string }
   try {
     body = await req.json()
   } catch {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
   }
 
-  const { productSlug, customerName, customerEmail } = body
+  const { productSlug, customerName, customerEmail, returnPath } = body
 
   // Validate fields
   if (!productSlug || !customerName || !customerEmail) {
@@ -89,11 +89,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Failed to create order' }, { status: 500 })
     }
 
+    // Build the post-payment redirect.
+    // Default: the markdekock.com shop success page.
+    // Override: digital-credit products (e.g. Nordschleife) pass a returnPath
+    // that points back to their own claim flow — and we resolve it against the
+    // request's origin so the cookie ends up on the same domain the user paid from.
+    const allowedReturnPaths = new Set(['/nordschleife/claim'])
+    let redirectUrl = `${SHOP_BASE_URL}/shop/success/${order.id}`
+    if (returnPath && allowedReturnPaths.has(returnPath)) {
+      const origin = req.headers.get('origin') || req.nextUrl.origin || SHOP_BASE_URL
+      redirectUrl = `${origin}${returnPath}?order=${order.id}`
+    }
+
     // Create Mollie payment
     const payment = await mollie.payments.create({
       amount: { currency: 'EUR', value: (amountCents / 100).toFixed(2) },
       description: product.title,
-      redirectUrl: `${SHOP_BASE_URL}/shop/success/${order.id}`,
+      redirectUrl,
       webhookUrl: `${SHOP_BASE_URL}/api/shop/webhook`,
       metadata: { orderId: order.id },
     })
