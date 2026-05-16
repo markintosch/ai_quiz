@@ -13,6 +13,7 @@ import {
   PAID_BUNDLE_PRICE_EUR,
   type SectorResult,
 } from '@/products/nordschleife/data'
+import SharePanel from '@/components/nordschleife/SharePanel'
 
 // ── Brand tokens ───────────────────────────────────────────────────────────────
 const BG      = '#0B1A0E'
@@ -213,6 +214,16 @@ function ResultsInner() {
               <div style={{ fontSize: 11, color: MUTED }}>{stat.label}</div>
             </div>
           ))}
+        </div>
+
+        {/* Share panel — always visible, even before saving the lap */}
+        <div style={{ marginBottom: 22 }}>
+          <SharePanel
+            name={name || 'A friend'}
+            lapTime={lap.lapTime}
+            rank={rank}
+            correct={correctCount}
+          />
         </div>
 
         {/* Save form */}
