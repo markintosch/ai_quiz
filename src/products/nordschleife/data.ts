@@ -124,7 +124,7 @@ const EASY: LapQuestion[] = [
     correct: 'b' },
   { id: 'e16', difficulty: 'easy', topic: 'records',
     text: 'Roughly how many corners does the Nordschleife have?',
-    options: [{ value: 'a', label: '20–25' }, { value: 'b', label: '40–50' }, { value: 'c', label: '70–75' }, { value: 'd', label: '120–130' }],
+    options: [{ value: 'a', label: '40–50' }, { value: 'b', label: '90–110' }, { value: 'c', label: 'More than 170' }, { value: 'd', label: 'More than 300' }],
     correct: 'c' },
   { id: 'e17', difficulty: 'easy', topic: 'history',
     text: 'After the 1976 crash, the Nordschleife was permanently dropped from which championship?',

@@ -262,7 +262,7 @@ export default function NordschleifeLanding() {
         <div>
           <div style={{ marginBottom: 40 }}>
             <p style={{ fontSize: 12, fontWeight: 700, color: GREEN, letterSpacing: '0.16em', marginBottom: 14, textTransform: 'uppercase' }}>
-              20.832 km · 73 corners · 1 lap
+              20.832 km · 170+ corners · 1 lap
             </p>
             <h1 style={{
               fontSize: 'clamp(40px, 7vw, 80px)', fontWeight: 900,
