@@ -312,7 +312,7 @@ export default function NordschleifeLanding() {
                 { icon: '🌲', title: '3 sectors · 30 questions', body: 'Hatzenbach (easy) → Karussell (medium) → Döttinger Höhe (hard).' },
                 { icon: '🎲', title: '100-question pool', body: 'Every lap pulls 30 from a 100-question Nordschleife trivia bank.' },
                 { icon: '🟣', title: 'Purple = track record', body: 'Fastest ever. Gold = your personal best this session.' },
-                { icon: '💸', title: '5 free, then €2', body: `${FREE_ATTEMPTS} attempts free per device, then ${PAID_BUNDLE_ATTEMPTS} more for €${PAID_BUNDLE_PRICE_EUR}.` },
+                { icon: '💸', title: `${FREE_ATTEMPTS} free, then €${PAID_BUNDLE_PRICE_EUR}`, body: `${FREE_ATTEMPTS} attempts free per device, then ${PAID_BUNDLE_ATTEMPTS} more for €${PAID_BUNDLE_PRICE_EUR}.` },
               ].map(r => (
                 <div key={r.title}>
                   <div style={{ fontSize: 22, marginBottom: 6 }}>{r.icon}</div>

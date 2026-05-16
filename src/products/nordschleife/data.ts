@@ -51,7 +51,7 @@ export const QUESTIONS_PER_LAP = 30
 export const QUESTIONS_PER_SECTOR = 10
 
 // ── Pricing / gating ──────────────────────────────────────────────────────────
-export const FREE_ATTEMPTS         = 5
+export const FREE_ATTEMPTS         = 3
 export const PAID_BUNDLE_ATTEMPTS  = 5
 export const PAID_BUNDLE_PRICE_EUR = 2
 export const PAID_PRODUCT_SLUG     = 'nordschleife-5-laps'
