@@ -95,6 +95,77 @@ function Leaderboard({ onCountdown }: { onCountdown?: (sec: number) => void }) {
   )
 }
 
+const PRESENCE_STORAGE_KEY = 'nordschleife_presence_id'
+const PRESENCE_PING_MS     = 30_000
+const PRESENCE_FETCH_MS    = 10_000
+const PRESENCE_VISIBLE_MIN = 10
+
+function PresenceBadge() {
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    // Get or create a stable per-tab UUID
+    let id = ''
+    try {
+      id = localStorage.getItem(PRESENCE_STORAGE_KEY) ?? ''
+      if (!id && typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
+        id = crypto.randomUUID()
+        localStorage.setItem(PRESENCE_STORAGE_KEY, id)
+      }
+    } catch { /* localStorage may be unavailable */ }
+    if (!id) return
+
+    let cancelled = false
+
+    async function ping() {
+      try {
+        const r = await fetch('/api/nordschleife/presence', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id }),
+          cache: 'no-store',
+        })
+        const d = await r.json()
+        if (!cancelled) setCount(d.count ?? 0)
+      } catch { /* offline → leave count as-is */ }
+    }
+    async function fetchOnly() {
+      try {
+        const r = await fetch('/api/nordschleife/presence', { cache: 'no-store' })
+        const d = await r.json()
+        if (!cancelled) setCount(d.count ?? 0)
+      } catch { /* ignore */ }
+    }
+
+    ping()
+    const pingInt  = setInterval(ping,      PRESENCE_PING_MS)
+    const fetchInt = setInterval(fetchOnly, PRESENCE_FETCH_MS)
+
+    // Send one last ping with a synthetic stale flag isn't needed — the row
+    // simply expires after 90 s without pings.
+
+    return () => { cancelled = true; clearInterval(pingInt); clearInterval(fetchInt) }
+  }, [])
+
+  if (count < PRESENCE_VISIBLE_MIN) return null
+
+  return (
+    <div style={{
+      display: 'inline-flex', alignItems: 'center', gap: 10,
+      background: `${GREEN}14`, border: `1px solid ${GREEN}44`,
+      borderRadius: 100, padding: '6px 14px',
+      fontSize: 12, fontWeight: 800, color: WHITE, letterSpacing: '0.02em',
+    }}>
+      <span style={{
+        width: 8, height: 8, borderRadius: '50%',
+        background: GREEN, animation: 'nsPulse 1.2s ease-in-out infinite',
+      }} />
+      <span style={{ color: GREEN, fontWeight: 900, fontFamily: 'monospace', fontSize: 13 }}>{count}</span>
+      racers on track right now
+    </div>
+  )
+}
+
 function LiveBadge({ secLeft }: { secLeft: number }) {
   return (
     <span style={{
@@ -205,7 +276,8 @@ export default function NordschleifeLanding() {
               Your total time is your lap time. Set the track record.
             </p>
 
-            <div style={{ marginBottom: 22 }}>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center', marginBottom: 22 }}>
+              <Suspense fallback={null}><PresenceBadge /></Suspense>
               <Suspense fallback={null}><AttemptStatus /></Suspense>
             </div>
 
