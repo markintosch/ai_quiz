@@ -4,6 +4,8 @@ import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { FREE_ATTEMPTS, FREE_STORAGE_KEY, PAID_BUNDLE_ATTEMPTS, PAID_BUNDLE_PRICE_EUR } from '@/products/nordschleife/data'
+import { useNordschleifeLocale } from '@/components/nordschleife/LocaleProvider'
+import LanguageSwitcher from '@/components/nordschleife/LanguageSwitcher'
 
 // ── Brand tokens (Green Hell / Eifel forest) ───────────────────────────────────
 const BG      = '#0B1A0E'
@@ -24,6 +26,7 @@ interface LeaderEntry { id: string; name: string; lap_time: string; total_ms: nu
 const LEADERBOARD_REFRESH_SEC = 5
 
 function Leaderboard({ onCountdown }: { onCountdown?: (sec: number) => void }) {
+  const { t } = useNordschleifeLocale()
   const [rows, setRows] = useState<LeaderEntry[]>([])
   const [loading, setLoading] = useState(true)
   const [flash, setFlash] = useState(false)
@@ -63,8 +66,8 @@ function Leaderboard({ onCountdown }: { onCountdown?: (sec: number) => void }) {
     return () => { cancelled = true; clearInterval(tick) }
   }, [onCountdown])
 
-  if (loading) return <p style={{ fontSize: 13, color: MUTED }}>Warming up the timing screens…</p>
-  if (!rows.length) return <p style={{ fontSize: 13, color: MUTED }}>No laps set yet. Be first into the Eifel.</p>
+  if (loading) return <p style={{ fontSize: 13, color: MUTED }}>{t('leaderboard_warmup')}</p>
+  if (!rows.length) return <p style={{ fontSize: 13, color: MUTED }}>{t('leaderboard_empty')}</p>
 
   return (
     <div style={{
@@ -102,6 +105,7 @@ const PRESENCE_FETCH_MS    = 10_000
 const PRESENCE_VISIBLE_MIN = 10
 
 function PresenceBadge() {
+  const { t } = useNordschleifeLocale()
   const [count, setCount] = useState(0)
 
   useEffect(() => {
@@ -161,13 +165,13 @@ function PresenceBadge() {
         width: 8, height: 8, borderRadius: '50%',
         background: GREEN, animation: 'nsPulse 1.2s ease-in-out infinite',
       }} />
-      <span style={{ color: GREEN, fontWeight: 900, fontFamily: 'monospace', fontSize: 13 }}>{count}</span>
-      racers on track right now
+      <span>{t('presence_badge', { count })}</span>
     </div>
   )
 }
 
 function ChallengeBanner() {
+  const { t } = useNordschleifeLocale()
   const params = useSearchParams()
   const from   = (params.get('from') ?? '').slice(0, 30).trim()
   const time   = (params.get('time') ?? '').slice(0, 16).trim()
@@ -186,11 +190,11 @@ function ChallengeBanner() {
       <span style={{ fontSize: 22 }}>🏎</span>
       <div style={{ flex: 1, minWidth: 200 }}>
         <p style={{ margin: 0, fontSize: 12, fontWeight: 800, color: WHITE, letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.85 }}>
-          You&apos;ve been challenged
+          {t('challenge_kicker')}
         </p>
         <p style={{ margin: 0, fontSize: 16, fontWeight: 700, color: WHITE }}>
-          <strong>{from}</strong> set <span style={{ fontFamily: 'monospace', fontWeight: 900, color: GOLD }}>{time}</span>
-          {rank && <span style={{ opacity: 0.85 }}> · P{rank}</span>}. Beat it.
+          <strong>{from}</strong> {t('challenge_body')} <span style={{ fontFamily: 'monospace', fontWeight: 900, color: GOLD }}>{time}</span>
+          {rank && <span style={{ opacity: 0.85 }}> · P{rank}</span>}. {t('challenge_beat')}
         </p>
       </div>
     </div>
@@ -198,6 +202,7 @@ function ChallengeBanner() {
 }
 
 function LiveBadge({ secLeft }: { secLeft: number }) {
+  const { t } = useNordschleifeLocale()
   return (
     <span style={{
       display: 'inline-flex', alignItems: 'center', gap: 6,
@@ -207,12 +212,13 @@ function LiveBadge({ secLeft }: { secLeft: number }) {
         width: 7, height: 7, borderRadius: '50%',
         background: GREEN, animation: 'nsPulse 1.2s ease-in-out infinite',
       }} />
-      LIVE · update in {secLeft}s
+      {t('leaderboard_live', { sec: secLeft })}
     </span>
   )
 }
 
 function AttemptStatus() {
+  const { t } = useNordschleifeLocale()
   const [freeUsed, setFreeUsed] = useState<number | null>(null)
   const [paidLeft, setPaidLeft] = useState<number | null>(null)
 
@@ -239,13 +245,14 @@ function AttemptStatus() {
     }}>
       <span style={{ width: 6, height: 6, borderRadius: '50%', background: locked ? RED : GREEN }} />
       {locked
-        ? 'No laps left — buy a 5-pack to keep going'
-        : `${freeLeft} free lap${freeLeft === 1 ? '' : 's'} left${paidLeft > 0 ? ` · +${paidLeft} paid` : ''}`}
+        ? t('attempts_none')
+        : `${t(freeLeft === 1 ? 'attempts_free_left' : 'attempts_free_left_plural', { count: freeLeft })}${paidLeft > 0 ? t('attempts_plus_paid', { count: paidLeft }) : ''}`}
     </div>
   )
 }
 
 export default function NordschleifeLanding() {
+  const { t } = useNordschleifeLocale()
   const [leaderboardCountdown, setLeaderboardCountdown] = useState(LEADERBOARD_REFRESH_SEC)
 
   return (
@@ -272,9 +279,12 @@ export default function NordschleifeLanding() {
               Nordschleife
             </span>
           </div>
-          <span style={{ fontSize: 11, fontWeight: 700, color: GREEN, letterSpacing: '0.12em' }}>
-            🌲 GREEN HELL · TIME TRIAL
-          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <span style={{ fontSize: 11, fontWeight: 700, color: GREEN, letterSpacing: '0.12em' }}>
+              {t('header_subtitle')}
+            </span>
+            <LanguageSwitcher compact />
+          </div>
         </div>
       </nav>
 
@@ -284,7 +294,7 @@ export default function NordschleifeLanding() {
         padding: '8px 16px', textAlign: 'center',
         fontSize: 12, fontWeight: 800, color: WHITE, letterSpacing: '0.06em',
       }}>
-        🏁 Live now: 24 HOURS OF NÜRBURGRING — kill the boring laps with trivia
+        {t('live_banner')}
       </div>
 
       <div style={{ maxWidth: 980, margin: '0 auto', padding: '48px 24px 80px', display: 'grid', gridTemplateColumns: '1fr 340px', gap: 40 }}>
@@ -294,18 +304,17 @@ export default function NordschleifeLanding() {
           <Suspense fallback={null}><ChallengeBanner /></Suspense>
           <div style={{ marginBottom: 40 }}>
             <p style={{ fontSize: 12, fontWeight: 700, color: GREEN, letterSpacing: '0.16em', marginBottom: 14, textTransform: 'uppercase' }}>
-              20.832 km · 170+ corners · 1 lap
+              {t('hero_kicker')}
             </p>
             <h1 style={{
               fontSize: 'clamp(40px, 7vw, 80px)', fontWeight: 900,
               letterSpacing: '-0.04em', lineHeight: 0.95, marginBottom: 22,
             }}>
-              The <span style={{ color: GREEN }}>Green</span><br />
-              <span style={{ color: RED }}>Hell</span> Time Trial.
+              {t('hero_title_part1')} <span style={{ color: GREEN }}>{t('hero_title_green')}</span><br />
+              <span style={{ color: RED }}>{t('hero_title_hell')}</span> {t('hero_title_suffix')}
             </h1>
             <p style={{ fontSize: 18, color: BODY, lineHeight: 1.7, maxWidth: 520, marginBottom: 26 }}>
-              30 trivia questions about the most legendary track in motorsport. 15 seconds each. Wrong answer or timeout = +5 second penalty.
-              Your total time is your lap time. Set the track record.
+              {t('hero_body')}
             </p>
 
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center', marginBottom: 22 }}>
@@ -326,25 +335,25 @@ export default function NordschleifeLanding() {
                   boxShadow: `0 8px 24px ${GREEN}33`,
                 }}
               >
-                Start the lap →
+                {t('hero_cta_start')}
               </Link>
               <span style={{ fontSize: 12, color: MUTED }}>
-                First {FREE_ATTEMPTS} laps free · {PAID_BUNDLE_ATTEMPTS} more for €{PAID_BUNDLE_PRICE_EUR}
+                {t('hero_cta_footnote', { free: FREE_ATTEMPTS, paid: PAID_BUNDLE_ATTEMPTS, price: PAID_BUNDLE_PRICE_EUR })}
               </span>
             </div>
           </div>
 
           {/* Rules grid */}
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '28px 24px', marginBottom: 28 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 800, color: WHITE, marginBottom: 18, letterSpacing: '-0.01em' }}>How it works</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 800, color: WHITE, marginBottom: 18, letterSpacing: '-0.01em' }}>{t('rules_heading')}</h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18 }}>
               {[
-                { icon: '⏱', title: 'Time is your score', body: 'Your lap time = total seconds spent answering. Faster = better.' },
-                { icon: '⚠️', title: '+5 second penalty', body: 'Wrong answer or timeout adds 5 seconds to that sector.' },
-                { icon: '🌲', title: '3 sectors · 30 questions', body: 'Hatzenbach (easy) → Karussell (medium) → Döttinger Höhe (hard).' },
-                { icon: '🎲', title: '100-question pool', body: 'Every lap pulls 30 from a 100-question Nordschleife trivia bank.' },
-                { icon: '🟣', title: 'Purple = track record', body: 'Fastest ever. Gold = your personal best this session.' },
-                { icon: '💸', title: `${FREE_ATTEMPTS} free, then €${PAID_BUNDLE_PRICE_EUR}`, body: `${FREE_ATTEMPTS} attempts free per device, then ${PAID_BUNDLE_ATTEMPTS} more for €${PAID_BUNDLE_PRICE_EUR}.` },
+                { icon: '⏱',  title: t('rules_time_t'),   body: t('rules_time_b') },
+                { icon: '⚠️', title: t('rules_pen_t'),    body: t('rules_pen_b') },
+                { icon: '🌲', title: t('rules_sect_t'),   body: t('rules_sect_b') },
+                { icon: '🎲', title: t('rules_pool_t'),   body: t('rules_pool_b') },
+                { icon: '🟣', title: t('rules_purple_t'), body: t('rules_purple_b') },
+                { icon: '💸', title: t('rules_paid_t', { free: FREE_ATTEMPTS, price: PAID_BUNDLE_PRICE_EUR }), body: t('rules_paid_b', { free: FREE_ATTEMPTS, paid: PAID_BUNDLE_ATTEMPTS, price: PAID_BUNDLE_PRICE_EUR }) },
               ].map(r => (
                 <div key={r.title}>
                   <div style={{ fontSize: 22, marginBottom: 6 }}>{r.icon}</div>
@@ -358,13 +367,13 @@ export default function NordschleifeLanding() {
           {/* Sector preview */}
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '20px 24px' }}>
             <p style={{ fontSize: 11, fontWeight: 700, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 14 }}>
-              Your lap, sector by sector
+              {t('sector_preview_heading')}
             </p>
             <div style={{ display: 'flex', gap: 1 }}>
               {[
-                { label: 'SECTOR 1', name: 'Hatzenbach',     qs: 'Q1–Q10',  diff: 'Easy',   color: GREEN,  time: '2:48.0' },
-                { label: 'SECTOR 2', name: 'Karussell',      qs: 'Q11–Q20', diff: 'Medium', color: GOLD,   time: '3:42.0' },
-                { label: 'SECTOR 3', name: 'Döttinger Höhe', qs: 'Q21–Q30', diff: 'Hard',   color: RED,    time: '4:35.0' },
+                { label: t('sector_1'), name: 'Hatzenbach',     qs: 'Q1–Q10',  diff: t('difficulty_easy'),   color: GREEN,  time: '2:48.0' },
+                { label: t('sector_2'), name: 'Karussell',      qs: 'Q11–Q20', diff: t('difficulty_medium'), color: GOLD,   time: '3:42.0' },
+                { label: t('sector_3'), name: 'Döttinger Höhe', qs: 'Q21–Q30', diff: t('difficulty_hard'),   color: RED,    time: '4:35.0' },
               ].map((s, i) => (
                 <div key={s.label} style={{
                   flex: 1, background: BG,
@@ -387,7 +396,7 @@ export default function NordschleifeLanding() {
             <div style={{ height: 3, background: `linear-gradient(90deg, ${PURPLE}, ${GREEN})` }} />
             <div style={{ padding: '20px 20px 24px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-                <h3 style={{ fontSize: 15, fontWeight: 800, color: WHITE }}>🏁 Track Records</h3>
+                <h3 style={{ fontSize: 15, fontWeight: 800, color: WHITE }}>{t('leaderboard_heading')}</h3>
                 <LiveBadge secLeft={leaderboardCountdown} />
               </div>
               <Suspense fallback={<p style={{ fontSize: 13, color: MUTED }}>Loading…</p>}>
@@ -404,7 +413,7 @@ export default function NordschleifeLanding() {
                     padding: '12px', borderRadius: 8, textDecoration: 'none',
                   }}
                 >
-                  Challenge the record →
+                  {t('leaderboard_cta')}
                 </Link>
               </div>
             </div>
@@ -413,9 +422,7 @@ export default function NordschleifeLanding() {
       </div>
 
       <footer style={{ borderTop: `1px solid ${BORDER}`, background: DARK, padding: '20px 24px', textAlign: 'center' }}>
-        <p style={{ fontSize: 12, color: MUTED }}>
-          Nordschleife Time Trial · Built by <span style={{ color: WHITE }}>Kirk & Blackbeard</span> · Trivia is for fun, not for ride-sharing your real laps.
-        </p>
+        <p style={{ fontSize: 12, color: MUTED }}>{t('footer_text')}</p>
       </footer>
     </div>
   )

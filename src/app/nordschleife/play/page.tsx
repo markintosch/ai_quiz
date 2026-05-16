@@ -9,6 +9,7 @@ import {
   scoreSector,
   formatLapTime,
   computeLapMs,
+  localizeQuestion,
   TIME_PER_Q_MS,
   PENALTY_MS,
   QUESTIONS_PER_LAP,
@@ -19,6 +20,8 @@ import {
   type LapQuestion,
   type SectorResult,
 } from '@/products/nordschleife/data'
+import { useNordschleifeLocale } from '@/components/nordschleife/LocaleProvider'
+import LanguageSwitcher from '@/components/nordschleife/LanguageSwitcher'
 
 // ── Brand tokens ───────────────────────────────────────────────────────────────
 const BG      = '#0B1A0E'
@@ -38,6 +41,7 @@ type Phase = 'gate' | 'countdown' | 'racing' | 'feedback' | 'done'
 
 // ── Countdown screen ──────────────────────────────────────────────────────────
 function CountdownScreen({ onGo }: { onGo: () => void }) {
+  const { t } = useNordschleifeLocale()
   const [count, setCount] = useState<number | 'GO'>(3)
 
   useEffect(() => {
@@ -52,8 +56,8 @@ function CountdownScreen({ onGo }: { onGo: () => void }) {
         onGo()
       }
     }
-    const t = setTimeout(tick, 800)
-    return () => clearTimeout(t)
+    const handle = setTimeout(tick, 800)
+    return () => clearTimeout(handle)
   }, [onGo])
 
   const isGo = count === 'GO'
@@ -65,7 +69,7 @@ function CountdownScreen({ onGo }: { onGo: () => void }) {
       fontFamily: 'Inter, system-ui, sans-serif',
     }}>
       <div style={{ fontSize: 14, fontWeight: 700, color: MUTED, letterSpacing: '0.15em', marginBottom: 32 }}>
-        ROLLING OUT OF THE PITS…
+        {t('countdown_kicker')}
       </div>
       <div style={{
         fontSize: 'clamp(100px, 20vw, 180px)',
@@ -76,13 +80,14 @@ function CountdownScreen({ onGo }: { onGo: () => void }) {
       }}>
         {count}
       </div>
-      <div style={{ marginTop: 32, fontSize: 13, color: MUTED }}>Get ready — the timing loop starts now</div>
+      <div style={{ marginTop: 32, fontSize: 13, color: MUTED }}>{t('countdown_ready')}</div>
     </div>
   )
 }
 
 // ── Locked / paywall gate ─────────────────────────────────────────────────────
 function GateScreen({ freeUsed, paidLeft }: { freeUsed: number; paidLeft: number }) {
+  const { t } = useNordschleifeLocale()
   return (
     <div style={{
       minHeight: '100vh', background: BG, color: WHITE,
@@ -96,12 +101,12 @@ function GateScreen({ freeUsed, paidLeft }: { freeUsed: number; paidLeft: number
       }}>
         <div style={{ fontSize: 44, marginBottom: 14 }}>🌲</div>
         <h1 style={{ fontSize: 26, fontWeight: 900, letterSpacing: '-0.02em', marginBottom: 10 }}>
-          You&apos;ve used your <span style={{ color: GREEN }}>{FREE_ATTEMPTS}</span> free laps
+          {t('gate_used_free', { free: FREE_ATTEMPTS })}
         </h1>
         <p style={{ fontSize: 14, color: BODY, lineHeight: 1.6, marginBottom: 24 }}>
           {paidLeft > 0
-            ? `You still have ${paidLeft} paid lap${paidLeft === 1 ? '' : 's'} on this device — start a new lap to use one.`
-            : 'The Eifel is unforgiving. Grab 5 more for €2 and keep chasing the track record.'}
+            ? t(paidLeft === 1 ? 'gate_still_paid' : 'gate_still_paid_plural', { count: paidLeft })
+            : t('gate_eifel_unforgiving')}
         </p>
         {paidLeft <= 0 && (
           <Link href="/nordschleife/buy" style={{
@@ -109,17 +114,17 @@ function GateScreen({ freeUsed, paidLeft }: { freeUsed: number; paidLeft: number
             fontSize: 16, fontWeight: 900, padding: '16px', borderRadius: 10, textDecoration: 'none',
             marginBottom: 14,
           }}>
-            Get 5 more laps · €2 →
+            {t('gate_cta_buy')}
           </Link>
         )}
         <Link href="/nordschleife" style={{
           display: 'block', background: BG, border: `1px solid ${BORDER}`, color: WHITE,
           fontSize: 14, fontWeight: 700, padding: '12px', borderRadius: 10, textDecoration: 'none',
         }}>
-          Back to landing
+          {t('gate_back')}
         </Link>
         <p style={{ fontSize: 11, color: MUTED, marginTop: 18 }}>
-          {freeUsed}/{FREE_ATTEMPTS} free attempts used on this device.
+          {t('gate_used', { used: freeUsed, free: FREE_ATTEMPTS })}
         </p>
       </div>
     </div>
@@ -132,13 +137,15 @@ function FeedbackOverlay({
 }: {
   correct: boolean; timedOut: boolean; timeTaken: number; correctLabel: string
 }) {
+  const { t } = useNordschleifeLocale()
   const icon    = timedOut ? '⏱' : correct ? '✓' : '✗'
   const colour  = timedOut ? GOLD : correct ? GREEN : RED
+  const penSec  = PENALTY_MS / 1000
   const message = timedOut
-    ? `Time's up! +${PENALTY_MS / 1000}s penalty`
+    ? t('play_feedback_timeout', { pen: penSec })
     : correct
-    ? `Correct! ${(timeTaken / 1000).toFixed(1)}s`
-    : `Wrong — +${PENALTY_MS / 1000}s penalty`
+    ? t('play_feedback_correct', { t: (timeTaken / 1000).toFixed(1) })
+    : t('play_feedback_wrong', { pen: penSec })
 
   return (
     <div style={{
@@ -154,7 +161,7 @@ function FeedbackOverlay({
         <div style={{ fontSize: 22, fontWeight: 900, color: colour, marginBottom: 10 }}>{message}</div>
         {(!correct || timedOut) && (
           <div style={{ fontSize: 13, color: MUTED, marginTop: 8 }}>
-            Correct: <span style={{ color: WHITE, fontWeight: 700 }}>{correctLabel}</span>
+            {t('play_correct_was')} <span style={{ color: WHITE, fontWeight: 700 }}>{correctLabel}</span>
           </div>
         )}
       </div>
@@ -164,6 +171,7 @@ function FeedbackOverlay({
 
 export default function NordschleifePlayPage() {
   const router = useRouter()
+  const { t, locale } = useNordschleifeLocale()
 
   // ── Attempt gating: read localStorage + paid credits cookie ──
   const [phase, setPhase]   = useState<Phase>('gate')
@@ -235,7 +243,8 @@ export default function NordschleifePlayPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const currentQ = questions[qIndex]
+  const rawQ     = questions[qIndex]
+  const currentQ = rawQ ? localizeQuestion(rawQ, locale) : undefined
   const sector   = currentQ ? getSector(qIndex) : 1
 
   // ── start timer for current question ──
@@ -258,6 +267,7 @@ export default function NordschleifePlayPage() {
     const elapsed   = Date.now() - startTimeRef.current
     const timeMsRaw = Math.min(elapsed, TIME_PER_Q_MS)
     const q         = questions[qIndex]
+    const qLocal    = localizeQuestion(q, locale)
     const correct   = !timedOut && answer === q.correct
     const timeMsTotal = scoreSector(timeMsRaw, correct, timedOut)
 
@@ -273,7 +283,7 @@ export default function NordschleifePlayPage() {
     const newSectors = [...sectors, result]
     setSectors(newSectors)
 
-    const correctLabel = q.options.find(o => o.value === q.correct)?.label ?? ''
+    const correctLabel = qLocal.options.find(o => o.value === q.correct)?.label ?? ''
     setFeedbackData({ correct, timedOut, timeTaken: timeMsRaw, correctLabel })
     setPhase('feedback')
 
@@ -290,7 +300,7 @@ export default function NordschleifePlayPage() {
         setPhase('racing')
       }
     }, 1100)
-  }, [phase, qIndex, questions, sectors, router, usedPaidLap])
+  }, [phase, qIndex, questions, sectors, router, usedPaidLap, locale])
 
   // ── timeout handler ──
   useEffect(() => {
@@ -319,7 +329,7 @@ export default function NordschleifePlayPage() {
   if (!currentQ) {
     return (
       <div style={{ minHeight: '100vh', background: BG, color: MUTED, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        Loading…
+        {t('claim_one_moment')}
       </div>
     )
   }
@@ -344,7 +354,7 @@ export default function NordschleifePlayPage() {
       <div style={{ background: DARK, borderBottom: `1px solid ${BORDER}`, padding: '0 20px' }}>
         <div style={{ maxWidth: 720, margin: '0 auto', height: 52, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
           <span style={{ fontSize: 13, fontWeight: 900, color: GREEN, letterSpacing: '0.05em' }}>
-            🌲 NORDSCHLEIFE
+            {t('play_brand_label')}
           </span>
 
           {/* Sector indicators */}
@@ -368,9 +378,12 @@ export default function NordschleifePlayPage() {
             })}
           </div>
 
-          <span style={{ fontSize: 12, color: MUTED, fontWeight: 700 }}>
-            Q{qIndex + 1}<span style={{ color: BORDER }}>/{QUESTIONS_PER_LAP}</span>
-          </span>
+          <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+            <LanguageSwitcher compact />
+            <span style={{ fontSize: 12, color: MUTED, fontWeight: 700 }}>
+              {t('play_q_of', { n: qIndex + 1, total: QUESTIONS_PER_LAP })}
+            </span>
+          </div>
         </div>
       </div>
 
@@ -393,7 +406,7 @@ export default function NordschleifePlayPage() {
           }}>
             {(msLeft / 1000).toFixed(1)}
           </div>
-          <div style={{ fontSize: 11, color: MUTED, marginTop: 6, letterSpacing: '0.12em' }}>SECONDS REMAINING</div>
+          <div style={{ fontSize: 11, color: MUTED, marginTop: 6, letterSpacing: '0.12em' }}>{t('play_seconds_remaining')}</div>
         </div>
 
         {/* Sector + difficulty pill */}
@@ -403,7 +416,7 @@ export default function NordschleifePlayPage() {
             fontSize: 10, fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase',
             background: `${diffColor}18`, color: diffColor, border: `1px solid ${diffColor}44`,
           }}>
-            Sector {sector} · {SECTOR_NAMES[sector]} · {currentQ.difficulty}
+            {t(`sector_${sector}` as 'sector_1' | 'sector_2' | 'sector_3')} · {SECTOR_NAMES[sector]} · {t(`difficulty_${currentQ.difficulty}` as 'difficulty_easy' | 'difficulty_medium' | 'difficulty_hard')}
           </span>
         </div>
 

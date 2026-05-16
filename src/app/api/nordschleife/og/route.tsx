@@ -6,6 +6,7 @@
 //   ?time=8:32.456       → lap time (already formatted)
 //   ?rank=3              → leaderboard rank
 //   ?correct=27          → number correct out of 30
+//   ?lang=en|de|nl|fr|es → language of card labels
 //
 // No params → generic teaser card.
 
@@ -27,12 +28,42 @@ const BODY   = '#C5D5C8'
 
 const SIZE = { width: 1200, height: 630 } as const
 
+type Lang = 'en' | 'de' | 'nl' | 'fr' | 'es'
+const LANGS: Lang[] = ['en', 'de', 'nl', 'fr', 'es']
+
+// Compact translation table local to the edge runtime — keeps the OG bundle small.
+const L = {
+  lap_of:       { en: "'s lap",       de: ' – Runde',    nl: ' – ronde',    fr: ' – tour',     es: ' – vuelta' },
+  record:       { en: '🟣 Track record', de: '🟣 Streckenrekord', nl: '🟣 Baanrecord', fr: '🟣 Record du tour', es: '🟣 Récord de pista' },
+  pos:          { en: '🏁 P{n} on the leaderboard', de: '🏁 P{n} in der Bestenliste', nl: '🏁 P{n} in het klassement', fr: '🏁 P{n} au classement', es: '🏁 P{n} en la clasificación' },
+  of_30:        { en: 'of 30 correct',  de: 'von 30 richtig', nl: 'van 30 goed', fr: 'sur 30 bonnes', es: 'de 30 correctas' },
+  hero_kicker:  { en: '20.832 km · 170+ corners · 1 lap', de: '20,832 km · 170+ Kurven · 1 Runde', nl: '20,832 km · 170+ bochten · 1 ronde', fr: '20,832 km · 170+ virages · 1 tour', es: '20,832 km · 170+ curvas · 1 vuelta' },
+  green:        { en: 'Green', de: 'Grüne', nl: 'Groene', fr: 'Enfer', es: 'Infierno' },
+  hell:         { en: 'Hell',  de: 'Hölle', nl: 'Hel',    fr: 'Vert',  es: 'Verde' },
+  trivia:       { en: 'Trivia.', de: 'Trivia.', nl: 'Trivia.', fr: 'Trivia.', es: 'Trivia.' },
+  teaser_body:  { en: '30 questions about the world’s most legendary track. Every second counts.', de: '30 Fragen über die legendärste Rennstrecke der Welt. Jede Sekunde zählt.', nl: '30 vragen over het meest legendarische circuit ter wereld. Elke seconde telt.', fr: '30 questions sur le circuit le plus légendaire du monde. Chaque seconde compte.', es: '30 preguntas sobre el circuito más legendario del mundo. Cada segundo cuenta.' },
+  can_you_beat: { en: 'CAN YOU BEAT IT?', de: 'SCHAFFST DU DAS?', nl: 'KUN JIJ HET BETER?', fr: 'VOUS FAITES MIEUX ?', es: '¿PUEDES SUPERARLO?' },
+  body_pitch:   { en: '30 trivia questions, one lap of the Green Hell.', de: '30 Trivia-Fragen, eine Runde Grüne Hölle.', nl: '30 trivia-vragen, één ronde Groene Hel.', fr: '30 questions de trivia, un tour de l’Enfer Vert.', es: '30 preguntas de trivia, una vuelta al Infierno Verde.' },
+  body_addto:   { en: 'Every second you think is added to your lap time.', de: 'Jede Denksekunde wird zur Rundenzeit addiert.', nl: 'Elke seconde nadenken telt op bij je rondetijd.', fr: 'Chaque seconde de réflexion s’ajoute au temps.', es: 'Cada segundo que piensas se suma a tu vuelta.' },
+  cta:          { en: 'nordschleife trivia →', de: 'nordschleife trivia →', nl: 'nordschleife trivia →', fr: 'nordschleife trivia →', es: 'nordschleife trivia →' },
+  green_hell:   { en: '🌲 GREEN HELL · TIME TRIAL', de: '🌲 GRÜNE HÖLLE · ZEITFAHREN', nl: '🌲 GROENE HEL · TIME TRIAL', fr: '🌲 ENFER VERT · CONTRE-LA-MONTRE', es: '🌲 INFIERNO VERDE · CONTRARRELOJ' },
+} as const
+
+type LKey = keyof typeof L
+function tt(key: LKey, lang: Lang, vars?: Record<string, string | number>): string {
+  let s: string = L[key][lang] ?? L[key].en
+  if (vars) for (const [k, v] of Object.entries(vars)) s = s.replaceAll(`{${k}}`, String(v))
+  return s
+}
+
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
   const name    = (searchParams.get('name') ?? '').slice(0, 30)
   const time    = (searchParams.get('time') ?? '').slice(0, 16)
   const rank    = (searchParams.get('rank') ?? '').slice(0, 5)
   const correct = (searchParams.get('correct') ?? '').slice(0, 5)
+  const langRaw = (searchParams.get('lang') ?? '').slice(0, 2).toLowerCase()
+  const lang: Lang = (LANGS as string[]).includes(langRaw) ? (langRaw as Lang) : 'en'
 
   const isResult = !!time
 
@@ -90,7 +121,7 @@ export async function GET(req: Request) {
             </span>
           </div>
           <span style={{ fontSize: 16, fontWeight: 700, color: GREEN, letterSpacing: '0.18em' }}>
-            🌲 GREEN HELL · TIME TRIAL
+            {tt('green_hell', lang)}
           </span>
         </div>
 
@@ -100,7 +131,7 @@ export async function GET(req: Request) {
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               {name && (
                 <p style={{ fontSize: 24, color: MUTED, margin: 0, marginBottom: 12, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-                  {name}&apos;s lap
+                  {name}{tt('lap_of', lang)}
                 </p>
               )}
               <div
@@ -118,8 +149,8 @@ export async function GET(req: Request) {
               </div>
               {rank && (
                 <p style={{ fontSize: 28, color: BODY, marginTop: 24, marginBottom: 0 }}>
-                  {rankNum === 1 ? '🟣 Track record' : `🏁 P${rank} on the leaderboard`}
-                  {correct && ` · ${correct} of 30 correct`}
+                  {rankNum === 1 ? tt('record', lang) : tt('pos', lang, { n: rank })}
+                  {correct && ` · ${correct} ${tt('of_30', lang)}`}
                 </p>
               )}
             </div>
@@ -136,13 +167,13 @@ export async function GET(req: Request) {
               }}
             >
               <p style={{ fontSize: 14, fontWeight: 800, color: MUTED, letterSpacing: '0.12em', margin: 0, marginBottom: 24 }}>
-                CAN YOU BEAT IT?
+                {tt('can_you_beat', lang)}
               </p>
               <p style={{ fontSize: 26, lineHeight: 1.3, fontWeight: 700, margin: 0, color: WHITE }}>
-                30 trivia questions, one lap of the Green Hell.
+                {tt('body_pitch', lang)}
               </p>
               <p style={{ fontSize: 20, color: BODY, marginTop: 16, marginBottom: 0 }}>
-                Every second you think is added to your lap time.
+                {tt('body_addto', lang)}
               </p>
               <div
                 style={{
@@ -158,7 +189,7 @@ export async function GET(req: Request) {
                   justifyContent: 'center',
                 }}
               >
-                nordschleife trivia →
+                {tt('cta', lang)}
               </div>
             </div>
           </div>
@@ -166,7 +197,7 @@ export async function GET(req: Request) {
           // Generic teaser
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 56px' }}>
             <p style={{ fontSize: 22, color: GREEN, margin: 0, marginBottom: 16, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
-              20.832 km · 170+ corners · 1 lap
+              {tt('hero_kicker', lang)}
             </p>
             <h1
               style={{
@@ -179,12 +210,12 @@ export async function GET(req: Request) {
                 gap: 24,
               }}
             >
-              <span style={{ color: GREEN }}>Green</span>
-              <span style={{ color: RED }}>Hell</span>
-              <span>Trivia.</span>
+              <span style={{ color: GREEN }}>{tt('green', lang)}</span>
+              <span style={{ color: RED }}>{tt('hell', lang)}</span>
+              <span>{tt('trivia', lang)}</span>
             </h1>
             <p style={{ fontSize: 28, color: BODY, marginTop: 24, marginBottom: 0, lineHeight: 1.4 }}>
-              30 questions about the world&apos;s most legendary track. Every second counts.
+              {tt('teaser_body', lang)}
             </p>
           </div>
         )}

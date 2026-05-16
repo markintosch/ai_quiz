@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { PAID_BUNDLE_ATTEMPTS, PAID_BUNDLE_PRICE_EUR, PAID_PRODUCT_SLUG } from '@/products/nordschleife/data'
+import { useNordschleifeLocale } from '@/components/nordschleife/LocaleProvider'
+import LanguageSwitcher from '@/components/nordschleife/LanguageSwitcher'
 
 // ── Brand tokens ───────────────────────────────────────────────────────────────
 const BG      = '#0B1A0E'
@@ -17,6 +19,7 @@ const MUTED   = '#7A8E7E'
 const BODY    = '#C5D5C8'
 
 export default function NordschleifeBuyPage() {
+  const { t } = useNordschleifeLocale()
   const [name, setName]   = useState('')
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
@@ -26,8 +29,8 @@ export default function NordschleifeBuyPage() {
     e.preventDefault()
     const n  = name.trim()
     const em = email.trim()
-    if (!n) { setError('Please enter your name.'); return }
-    if (!em || !em.includes('@')) { setError('Please enter a valid email.'); return }
+    if (!n) { setError(t('buy_err_name')); return }
+    if (!em || !em.includes('@')) { setError(t('buy_err_email')); return }
     setBusy(true)
     setError('')
 
@@ -46,11 +49,11 @@ export default function NordschleifeBuyPage() {
       if (json.checkoutUrl) {
         window.location.href = json.checkoutUrl
       } else {
-        setError(json.error || 'Could not start checkout. Try again.')
+        setError(json.error || t('buy_err_network'))
         setBusy(false)
       }
     } catch {
-      setError('Network error. Please try again.')
+      setError(t('buy_err_network'))
       setBusy(false)
     }
   }
@@ -66,7 +69,10 @@ export default function NordschleifeBuyPage() {
             </div>
             <span style={{ fontSize: 13, fontWeight: 800, color: WHITE }}>Nordschleife</span>
           </Link>
-          <span style={{ fontSize: 12, fontWeight: 700, color: GREEN, letterSpacing: '0.08em' }}>💸 BUY MORE LAPS</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: GREEN, letterSpacing: '0.08em' }}>{t('buy_kicker')}</span>
+            <LanguageSwitcher compact />
+          </div>
         </div>
       </nav>
 
@@ -78,10 +84,10 @@ export default function NordschleifeBuyPage() {
           <div style={{ height: 4, background: `linear-gradient(90deg, ${GREEN}, ${RED})` }} />
           <div style={{ padding: '28px 24px' }}>
             <h1 style={{ fontSize: 28, fontWeight: 900, letterSpacing: '-0.02em', marginBottom: 8 }}>
-              {PAID_BUNDLE_ATTEMPTS} extra laps
+              {t('buy_title', { paid: PAID_BUNDLE_ATTEMPTS })}
             </h1>
             <p style={{ fontSize: 14, color: BODY, lineHeight: 1.6, marginBottom: 22 }}>
-              Top up with {PAID_BUNDLE_ATTEMPTS} more attempts on the Nordschleife trivia time trial. Credits activate immediately after payment and stay on this device for 30 days.
+              {t('buy_body', { paid: PAID_BUNDLE_ATTEMPTS })}
             </p>
 
             <div style={{
@@ -90,8 +96,8 @@ export default function NordschleifeBuyPage() {
               display: 'flex', justifyContent: 'space-between', alignItems: 'center',
             }}>
               <div>
-                <div style={{ fontSize: 13, color: MUTED }}>Total</div>
-                <div style={{ fontSize: 13, color: MUTED }}>incl. 21% BTW</div>
+                <div style={{ fontSize: 13, color: MUTED }}>{t('buy_total')}</div>
+                <div style={{ fontSize: 13, color: MUTED }}>{t('buy_vat')}</div>
               </div>
               <div style={{ fontSize: 32, fontWeight: 900, color: GREEN, fontFamily: 'monospace' }}>
                 €{PAID_BUNDLE_PRICE_EUR.toFixed(2)}
@@ -103,14 +109,14 @@ export default function NordschleifeBuyPage() {
                 <input
                   value={name}
                   onChange={e => { setName(e.target.value); setError('') }}
-                  placeholder="Your name"
+                  placeholder={t('buy_input_name')}
                   maxLength={60}
                   style={{ background: BG, border: `1px solid ${BORDER}`, borderRadius: 8, padding: '12px 16px', fontSize: 15, fontWeight: 700, color: WHITE, outline: 'none' }}
                 />
                 <input
                   value={email}
                   onChange={e => { setEmail(e.target.value); setError('') }}
-                  placeholder="Email for the receipt"
+                  placeholder={t('buy_input_email')}
                   type="email"
                   style={{ background: BG, border: `1px solid ${BORDER}`, borderRadius: 8, padding: '12px 16px', fontSize: 14, color: WHITE, outline: 'none' }}
                 />
@@ -125,7 +131,7 @@ export default function NordschleifeBuyPage() {
                     opacity: busy ? 0.7 : 1,
                   }}
                 >
-                  {busy ? 'Opening Mollie checkout…' : `Pay €${PAID_BUNDLE_PRICE_EUR}.00 with Mollie →`}
+                  {busy ? t('buy_cta_busy') : t('buy_cta', { price: PAID_BUNDLE_PRICE_EUR })}
                 </button>
               </div>
             </form>
@@ -133,10 +139,12 @@ export default function NordschleifeBuyPage() {
         </div>
 
         <div style={{ fontSize: 12, color: MUTED, lineHeight: 1.6 }}>
-          <p>Powered by Mollie. Pay with iDEAL, card, Bancontact, Apple Pay and more.</p>
-          <p>After paying you&apos;ll return here and click <strong style={{ color: WHITE }}>Claim 5 laps</strong> — your credits are stored as a signed cookie on this device.</p>
+          <p>{t('buy_powered')}</p>
+          <p>
+            {t('buy_after_paying')} <strong style={{ color: WHITE }}>{t('buy_after_paying_btn')}</strong> {t('buy_after_paying_tail')}
+          </p>
           <p style={{ marginTop: 14 }}>
-            <Link href="/nordschleife" style={{ color: GREEN, textDecoration: 'underline' }}>← Back to the track</Link>
+            <Link href="/nordschleife" style={{ color: GREEN, textDecoration: 'underline' }}>{t('buy_back')}</Link>
           </p>
         </div>
       </div>

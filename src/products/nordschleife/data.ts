@@ -12,7 +12,15 @@
  *   - Wrong answer or timeout: +5 000 ms penalty
  *   - Total lap time = sum of all 30 sector times
  *   - Format: M:SS.mmm  (e.g. 7:23.456)
+ *
+ * Localisation:
+ *   The canonical English question pool lives here. Translations for
+ *   DE / NL / FR / ES live in ./translations.ts. Components should call
+ *   localizeQuestion(q, locale) when rendering.
  */
+
+import { TRANSLATIONS } from './translations'
+import type { Locale } from './i18n'
 
 export type Difficulty = 'easy' | 'medium' | 'hard'
 
@@ -525,4 +533,24 @@ export function scoreSector(
   const base    = Math.min(timeMsRaw, TIME_PER_Q_MS)
   const penalty = (!correct || timedOut) ? PENALTY_MS : 0
   return base + penalty
+}
+
+// ── Locale-aware projection ───────────────────────────────────────────────────
+/**
+ * Returns a copy of the question with `text` and `options[].label` swapped to
+ * the requested locale. English is the source — for `en`, returns the input
+ * unchanged. Falls back gracefully to English if any translation is missing.
+ */
+export function localizeQuestion(q: LapQuestion, locale: Locale): LapQuestion {
+  if (locale === 'en') return q
+  const tr = TRANSLATIONS[locale]?.[q.id]
+  if (!tr) return q
+  return {
+    ...q,
+    text: tr.text,
+    options: q.options.map((opt, i) => ({
+      value: opt.value,
+      label: tr.options[i] ?? opt.label,
+    })),
+  }
 }

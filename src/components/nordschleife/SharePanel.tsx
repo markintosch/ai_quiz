@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
+import { useNordschleifeLocale } from './LocaleProvider'
 
 // ── Brand tokens ───────────────────────────────────────────────────────────────
 const BG     = '#0B1A0E'
@@ -22,44 +23,49 @@ interface Props {
   correct?: number         // e.g. 27 / 30
 }
 
-function buildChallengeUrl({ name, lapTime, rank }: { name: string; lapTime: string; rank?: number | null }): string {
+function buildChallengeUrl({ name, lapTime, rank, lang }: { name: string; lapTime: string; rank?: number | null; lang?: string }): string {
   if (typeof window === 'undefined') return ''
   const u = new URL('/nordschleife', window.location.origin)
   if (name)    u.searchParams.set('from', name)
   if (lapTime) u.searchParams.set('time', lapTime)
   if (rank)    u.searchParams.set('rank', String(rank))
+  if (lang)    u.searchParams.set('lang', lang)
   return u.toString()
 }
 
-function buildOgUrl({ name, lapTime, rank, correct }: { name: string; lapTime: string; rank?: number | null; correct?: number }): string {
+function buildOgUrl({ name, lapTime, rank, correct, lang }: { name: string; lapTime: string; rank?: number | null; correct?: number; lang?: string }): string {
   if (typeof window === 'undefined') return ''
   const u = new URL('/api/nordschleife/og', window.location.origin)
   if (name)    u.searchParams.set('name', name)
   if (lapTime) u.searchParams.set('time', lapTime)
   if (rank)    u.searchParams.set('rank', String(rank))
   if (typeof correct === 'number') u.searchParams.set('correct', String(correct))
+  if (lang)    u.searchParams.set('lang', lang)
   return u.toString()
 }
 
-function shareText({ name, lapTime, rank }: { name: string; lapTime: string; rank?: number | null }): string {
-  const rankPart = rank === 1 ? ' 🟣 New track record!' : rank ? ` 🏁 P${rank} on the leaderboard.` : ''
-  const who      = name || 'I'
-  return `${who} just hot-lapped the Nordschleife trivia time-trial in ${lapTime}.${rankPart} Can you beat it?`
-}
-
 export default function SharePanel({ name, lapTime, rank, correct }: Props) {
-  const [copied, setCopied]   = useState<'link' | 'text' | null>(null)
+  const { t, locale } = useNordschleifeLocale()
+  const [copied, setCopied] = useState<'link' | 'text' | null>(null)
   const [supportsNative, setSupportsNative] = useState(false)
 
   useEffect(() => {
     setSupportsNative(typeof navigator !== 'undefined' && typeof navigator.share === 'function')
   }, [])
 
-  const url        = useMemo(() => buildChallengeUrl({ name, lapTime, rank }), [name, lapTime, rank])
-  const text       = useMemo(() => shareText({ name, lapTime, rank }), [name, lapTime, rank])
-  const ogUrl      = useMemo(() => buildOgUrl({ name, lapTime, rank, correct }), [name, lapTime, rank, correct])
-  const encodedUrl = encodeURIComponent(url)
-  const encodedTxt = encodeURIComponent(`${text} ${url}`)
+  const url   = useMemo(() => buildChallengeUrl({ name, lapTime, rank, lang: locale }), [name, lapTime, rank, locale])
+  const ogUrl = useMemo(() => buildOgUrl({ name, lapTime, rank, correct, lang: locale }), [name, lapTime, rank, correct, locale])
+  const text  = useMemo(() => {
+    const rankPart = rank === 1
+      ? t('share_rank_first')
+      : rank
+      ? t('share_rank_at', { n: rank })
+      : ''
+    return t('share_message_template', { who: name || t('share_who_self'), time: lapTime, rank: rankPart })
+  }, [name, lapTime, rank, t])
+
+  const encodedUrl     = encodeURIComponent(url)
+  const encodedTxt     = encodeURIComponent(`${text} ${url}`)
   const encodedTxtOnly = encodeURIComponent(text)
 
   async function copyToClipboard(value: string, kind: 'link' | 'text') {
@@ -68,7 +74,6 @@ export default function SharePanel({ name, lapTime, rank, correct }: Props) {
       setCopied(kind)
       setTimeout(() => setCopied(null), 2200)
     } catch {
-      // fallback: prompt
       window.prompt('Copy:', value)
     }
   }
@@ -86,17 +91,15 @@ export default function SharePanel({ name, lapTime, rank, correct }: Props) {
   const linkedin = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`
   const telegram = `https://t.me/share/url?url=${encodedUrl}&text=${encodedTxtOnly}`
   const reddit   = `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedTxtOnly}`
-  const mail     = `mailto:?subject=${encodeURIComponent('Beat my Nordschleife lap')}&body=${encodedTxt}`
+  const mail     = `mailto:?subject=${encodeURIComponent(text)}&body=${encodedTxt}`
 
   return (
     <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, overflow: 'hidden' }}>
       <div style={{ height: 3, background: `linear-gradient(90deg, ${GREEN}, ${RED}, ${GOLD})` }} />
       <div style={{ padding: '22px 22px 24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 16 }}>
-          <h3 style={{ fontSize: 16, fontWeight: 800, color: WHITE, margin: 0 }}>📣 Challenge your friends</h3>
-          <span style={{ fontSize: 11, color: MUTED, fontWeight: 700, letterSpacing: '0.06em' }}>
-            VIRAL · 1-TAP SHARE
-          </span>
+          <h3 style={{ fontSize: 16, fontWeight: 800, color: WHITE, margin: 0 }}>{t('share_heading')}</h3>
+          <span style={{ fontSize: 11, color: MUTED, fontWeight: 700, letterSpacing: '0.06em' }}>{t('share_tag')}</span>
         </div>
 
         {/* Native share — mobile first */}
@@ -111,20 +114,20 @@ export default function SharePanel({ name, lapTime, rank, correct }: Props) {
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
             }}
           >
-            <span>📲</span> Share my lap…
+            <span>📲</span> {t('share_native')}
           </button>
         )}
 
         {/* Channel grid */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 12 }}>
           {[
-            { href: whatsapp, label: 'WhatsApp', icon: '💬', bg: '#25D366' },
-            { href: twitter,  label: 'X',         icon: '𝕏',  bg: '#000000' },
-            { href: facebook, label: 'Facebook',  icon: 'f',  bg: '#1877F2' },
-            { href: linkedin, label: 'LinkedIn',  icon: 'in', bg: '#0A66C2' },
-            { href: telegram, label: 'Telegram',  icon: '✈',  bg: '#229ED9' },
-            { href: reddit,   label: 'Reddit',    icon: '🤖', bg: '#FF4500' },
-            { href: mail,     label: 'E-mail',    icon: '✉',  bg: '#444444' },
+            { href: whatsapp, label: 'WhatsApp',           icon: '💬', bg: '#25D366' },
+            { href: twitter,  label: 'X',                  icon: '𝕏',  bg: '#000000' },
+            { href: facebook, label: 'Facebook',           icon: 'f',  bg: '#1877F2' },
+            { href: linkedin, label: 'LinkedIn',           icon: 'in', bg: '#0A66C2' },
+            { href: telegram, label: 'Telegram',           icon: '✈',  bg: '#229ED9' },
+            { href: reddit,   label: 'Reddit',             icon: '🤖', bg: '#FF4500' },
+            { href: mail,     label: t('share_label_email'), icon: '✉',  bg: '#444444' },
           ].map(c => (
             <a
               key={c.label}
@@ -168,7 +171,7 @@ export default function SharePanel({ name, lapTime, rank, correct }: Props) {
               {copied === 'link' ? '✓' : '🔗'}
             </span>
             <span style={{ fontSize: 11, fontWeight: 700, color: BODY }}>
-              {copied === 'link' ? 'Copied' : 'Copy link'}
+              {copied === 'link' ? t('share_label_copylink_ok') : t('share_label_copylink')}
             </span>
           </button>
         </div>
@@ -179,7 +182,7 @@ export default function SharePanel({ name, lapTime, rank, correct }: Props) {
           padding: '12px 14px', marginBottom: 12,
         }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-            <span style={{ fontSize: 11, color: MUTED, fontWeight: 700, letterSpacing: '0.08em' }}>MSG</span>
+            <span style={{ fontSize: 11, color: MUTED, fontWeight: 700, letterSpacing: '0.08em' }}>{t('share_msg_tag')}</span>
             <span style={{ flex: 1, fontSize: 13, color: BODY, lineHeight: 1.5 }}>{text}</span>
             <button
               onClick={() => copyToClipboard(`${text}\n${url}`, 'text')}
@@ -189,7 +192,7 @@ export default function SharePanel({ name, lapTime, rank, correct }: Props) {
                 cursor: 'pointer', flexShrink: 0,
               }}
             >
-              {copied === 'text' ? '✓ Copied' : 'Copy text'}
+              {copied === 'text' ? t('share_label_copytext_ok') : t('share_label_copytext')}
             </button>
           </div>
           <div style={{ fontSize: 11, color: MUTED, marginTop: 8, wordBreak: 'break-all' }}>{url}</div>
@@ -204,17 +207,15 @@ export default function SharePanel({ name, lapTime, rank, correct }: Props) {
             <QRCodeSVG value={url} size={104} bgColor={WHITE} fgColor="#0B1A0E" level="M" />
           </div>
           <div style={{ flex: 1, fontSize: 12, color: MUTED, lineHeight: 1.5 }}>
-            <p style={{ margin: 0, marginBottom: 6, color: BODY, fontWeight: 700 }}>📺 Live on TV?</p>
-            <p style={{ margin: 0 }}>
-              Point your phone&apos;s camera at this QR. Anyone watching the screen can scan it and start their own lap right now.
-            </p>
+            <p style={{ margin: 0, marginBottom: 6, color: BODY, fontWeight: 700 }}>{t('share_tv_heading')}</p>
+            <p style={{ margin: 0 }}>{t('share_tv_body')}</p>
             <a
               href={ogUrl}
               target="_blank"
               rel="noopener noreferrer"
               style={{ display: 'inline-block', marginTop: 8, fontSize: 11, color: GREEN, textDecoration: 'underline' }}
             >
-              Preview the share image →
+              {t('share_preview_og')}
             </a>
           </div>
         </div>
