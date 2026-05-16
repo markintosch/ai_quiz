@@ -140,7 +140,7 @@ export default function NordschleifeLanding() {
               <span style={{ color: RED }}>Hell</span> Time Trial.
             </h1>
             <p style={{ fontSize: 18, color: BODY, lineHeight: 1.7, maxWidth: 520, marginBottom: 26 }}>
-              30 trivia questions about the most legendary track in motorsport. 25 seconds each. Wrong answer or timeout = +8 second penalty.
+              30 trivia questions about the most legendary track in motorsport. 15 seconds each. Wrong answer or timeout = +5 second penalty.
               Your total time is your lap time. Set the track record.
             </p>
 
@@ -175,7 +175,7 @@ export default function NordschleifeLanding() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18 }}>
               {[
                 { icon: '⏱', title: 'Time is your score', body: 'Your lap time = total seconds spent answering. Faster = better.' },
-                { icon: '⚠️', title: '+8 second penalty', body: 'Wrong answer or timeout adds 8 seconds to that sector.' },
+                { icon: '⚠️', title: '+5 second penalty', body: 'Wrong answer or timeout adds 5 seconds to that sector.' },
                 { icon: '🌲', title: '3 sectors · 30 questions', body: 'Hatzenbach (easy) → Karussell (medium) → Döttinger Höhe (hard).' },
                 { icon: '🎲', title: '100-question pool', body: 'Every lap pulls 30 from a 100-question Nordschleife trivia bank.' },
                 { icon: '🟣', title: 'Purple = track record', body: 'Fastest ever. Gold = your personal best this session.' },

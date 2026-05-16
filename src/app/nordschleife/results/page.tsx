@@ -205,7 +205,7 @@ function ResultsInner() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 28 }}>
           {[
             { label: 'Correct', value: `${correctCount}/${QUESTIONS_PER_LAP}`, color: GREEN },
-            { label: 'Penalties', value: `${penalties}× +8s`, color: penalties > 0 ? RED : MUTED },
+            { label: 'Penalties', value: `${penalties}× +5s`, color: penalties > 0 ? RED : MUTED },
             { label: 'Accuracy', value: `${Math.round((correctCount / QUESTIONS_PER_LAP) * 100)}%`, color: correctCount >= QUESTIONS_PER_LAP * 0.8 ? GREEN : correctCount >= QUESTIONS_PER_LAP * 0.5 ? GOLD : RED },
           ].map(stat => (
             <div key={stat.label} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 12, padding: '16px 12px', textAlign: 'center' }}>

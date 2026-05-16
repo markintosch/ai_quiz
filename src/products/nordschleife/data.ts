@@ -7,11 +7,11 @@
  * Sector 3 (Q21-30): Hard   — "Döttinger Höhe"
  *
  * Timing:
- *   - 25 seconds per question
- *   - Sector time = ms taken (capped at 25 000 if timed out)
- *   - Wrong answer or timeout: +8 000 ms penalty (the Eifel is unforgiving)
+ *   - 15 seconds per question
+ *   - Sector time = ms taken (capped at 15 000 if timed out)
+ *   - Wrong answer or timeout: +5 000 ms penalty
  *   - Total lap time = sum of all 30 sector times
- *   - Format: M:SS.mmm  (e.g. 12:34.567)
+ *   - Format: M:SS.mmm  (e.g. 7:23.456)
  */
 
 export type Difficulty = 'easy' | 'medium' | 'hard'
@@ -45,8 +45,8 @@ export interface LapResult {
 }
 
 // ── Constants ──────────────────────────────────────────────────────────────────
-export const TIME_PER_Q_MS     = 25_000
-export const PENALTY_MS        = 8_000
+export const TIME_PER_Q_MS     = 15_000
+export const PENALTY_MS        = 5_000
 export const QUESTIONS_PER_LAP = 30
 export const QUESTIONS_PER_SECTOR = 10
 

@@ -330,7 +330,7 @@ export default function NordschleifePlayPage() {
   const s3ms = sectors.slice(QUESTIONS_PER_SECTOR * 2, QUESTIONS_PER_LAP).reduce((s, r) => s + r.timeMsTotal, 0)
 
   const progressPct = (msLeft / TIME_PER_Q_MS) * 100
-  const timerColor  = msLeft > 12000 ? GREEN : msLeft > 6000 ? GOLD : RED
+  const timerColor  = msLeft > 8000 ? GREEN : msLeft > 4000 ? GOLD : RED
 
   const diffColor = currentQ.difficulty === 'easy' ? GREEN
                   : currentQ.difficulty === 'medium' ? GOLD
