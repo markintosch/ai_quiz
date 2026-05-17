@@ -64,7 +64,39 @@ interface SysdigScanRow {
   created_at: string
 }
 
-type Tab = 'hotlap' | 'arena' | 'sysdig555' | 'sysdidscan'
+type Tab = 'nordschleife' | 'hotlap' | 'arena' | 'sysdig555' | 'sysdidscan'
+
+interface NordschleifeLap {
+  id:             string
+  name:           string | null
+  email:          string | null
+  lap_time:       string
+  total_ms:       number
+  correct_count:  number | null
+  paid_attempt:   boolean | null
+  created_at:     string
+}
+
+interface NordschleifeOrder {
+  id:        string
+  amount:    number
+  email:     string
+  createdAt: string
+  claimedAt: string | null
+}
+
+interface NordschleifeResponse {
+  rows: NordschleifeLap[]
+  aggregates: {
+    totalLaps:      number
+    paidLaps:       number
+    uniquePlayers:  number
+    activeCount:    number
+    paidOrderCount: number
+    revenueCents:   number
+  }
+  recentOrders: NordschleifeOrder[]
+}
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -121,6 +153,142 @@ function EmptyState({ icon, text }: { icon: string; text: string }) {
     <div style={{ textAlign: 'center', padding: '48px 24px', background: '#F8FAFC', borderRadius: 12, border: '1px solid #E2E8F0' }}>
       <p style={{ fontSize: 32, margin: '0 0 8px' }}>{icon}</p>
       <p style={{ fontSize: 15, color: '#64748B', margin: 0 }}>{text}</p>
+    </div>
+  )
+}
+
+// ── Tab: Nordschleife ─────────────────────────────────────────────────────────
+
+function fmtEuros(cents: number): string {
+  return `€${(cents / 100).toFixed(2)}`
+}
+
+function NordschleifeTab() {
+  const [data, setData] = useState<NordschleifeResponse | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [deleting, setDeleting] = useState<string | null>(null)
+
+  const load = useCallback(() => {
+    setLoading(true)
+    fetch('/api/admin/games/nordschleife')
+      .then(r => r.json())
+      .then((d: NordschleifeResponse) => { setData(d); setLoading(false) })
+      .catch(() => setLoading(false))
+  }, [])
+
+  useEffect(() => { load() }, [load])
+
+  const del = async (id: string, name: string) => {
+    if (!confirm(`Lap van "${name}" verwijderen?`)) return
+    setDeleting(id)
+    await fetch('/api/admin/games/nordschleife', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) })
+    setDeleting(null)
+    load()
+  }
+
+  if (loading) {
+    return (
+      <div>
+        <TabHeader title="🌲 Nordschleife — Green Hell" subtitle="Laden…" onRefresh={load} />
+        <p style={{ color: '#94A3B8', fontSize: 14 }}>Laden…</p>
+      </div>
+    )
+  }
+
+  const a    = data?.aggregates
+  const rows = data?.rows ?? []
+  const orders = data?.recentOrders ?? []
+
+  return (
+    <div>
+      <TabHeader title="🌲 Nordschleife — Green Hell" subtitle={`${rows.length} laps · ${a?.uniquePlayers ?? 0} spelers`} onRefresh={load} />
+
+      {/* Aggregate cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12, marginBottom: 28 }}>
+        {[
+          { label: 'Totaal laps',      value: a?.totalLaps ?? 0,         color: '#354E5E' },
+          { label: 'Unieke spelers',   value: a?.uniquePlayers ?? 0,     color: '#354E5E' },
+          { label: 'Live op de baan',  value: a?.activeCount ?? 0,       color: (a?.activeCount ?? 0) > 0 ? '#16A34A' : '#94A3B8' },
+          { label: 'Betaalde laps',    value: a?.paidLaps ?? 0,          color: '#7C3AED' },
+          { label: 'Bestellingen',     value: a?.paidOrderCount ?? 0,    color: '#7C3AED' },
+          { label: 'Omzet',            value: fmtEuros(a?.revenueCents ?? 0), color: '#16A34A' },
+        ].map(card => (
+          <div key={card.label} style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 10, padding: '14px 16px' }}>
+            <div style={{ fontSize: 11, color: '#94A3B8', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 4 }}>{card.label}</div>
+            <div style={{ fontSize: 22, fontWeight: 800, color: card.color, fontFamily: 'monospace' }}>{card.value}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Recent orders */}
+      {orders.length > 0 && (
+        <div style={{ marginBottom: 28 }}>
+          <h3 style={{ fontSize: 14, fontWeight: 700, color: '#0F172A', marginBottom: 10 }}>💸 Laatste betalingen (top 50)</h3>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+              <thead>
+                <tr style={{ borderBottom: '2px solid #E2E8F0' }}>
+                  {['E-mail', 'Bedrag', 'Datum', 'Geclaimd'].map(h => <th key={h} style={thStyle}>{h}</th>)}
+                </tr>
+              </thead>
+              <tbody>
+                {orders.map(o => (
+                  <tr key={o.id} style={{ borderBottom: '1px solid #F1F5F9' }}>
+                    <td style={{ ...tdStyle, color: '#475569' }}>{o.email}</td>
+                    <td style={{ ...tdStyle, fontWeight: 700, color: '#16A34A', fontFamily: 'monospace' }}>{fmtEuros(o.amount)}</td>
+                    <td style={{ ...tdStyle, color: '#64748B', whiteSpace: 'nowrap' }}>{fmtDate(o.createdAt)}</td>
+                    <td style={{ ...tdStyle, color: o.claimedAt ? '#16A34A' : '#DC2626', whiteSpace: 'nowrap' }}>
+                      {o.claimedAt ? `✓ ${fmtDate(o.claimedAt)}` : '— niet geclaimd'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* Leaderboard */}
+      <h3 style={{ fontSize: 14, fontWeight: 700, color: '#0F172A', marginBottom: 10 }}>🏁 Leaderboard (top 200)</h3>
+      {rows.length === 0 ? (
+        <EmptyState icon="🏁" text="Nog geen laps gezet." />
+      ) : (
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+            <thead>
+              <tr style={{ borderBottom: '2px solid #E2E8F0' }}>
+                {['P', 'Naam', 'E-mail', 'Lap tijd', 'Goed', 'Type', 'Datum', ''].map(h => (
+                  <th key={h} style={thStyle}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r, i) => (
+                <tr key={r.id} style={{ borderBottom: '1px solid #F1F5F9', background: i === 0 ? '#F5F3FF' : 'transparent' }}>
+                  <td style={{ ...tdStyle, fontWeight: 800, color: i === 0 ? '#7C3AED' : i === 1 ? '#6B7280' : i === 2 ? '#92400E' : '#94A3B8' }}>P{i + 1}</td>
+                  <td style={{ ...tdStyle, fontWeight: 600, color: '#0F172A' }}>{r.name ?? '—'}</td>
+                  <td style={{ ...tdStyle, color: '#475569' }}>{r.email ?? '—'}</td>
+                  <td style={{ ...tdStyle, fontWeight: 700, fontFamily: 'monospace', color: i === 0 ? '#7C3AED' : '#0F172A' }}>{r.lap_time}</td>
+                  <td style={{ ...tdStyle, color: '#475569' }}>{r.correct_count != null ? `${r.correct_count}/30` : '—'}</td>
+                  <td style={tdStyle}>
+                    <span style={{
+                      fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 4,
+                      background: r.paid_attempt ? '#FEF3C7' : '#DCFCE7',
+                      color: r.paid_attempt ? '#92400E' : '#166534',
+                    }}>
+                      {r.paid_attempt ? 'Betaald' : 'Gratis'}
+                    </span>
+                  </td>
+                  <td style={{ ...tdStyle, color: '#64748B', whiteSpace: 'nowrap' }}>{fmtDate(r.created_at)}</td>
+                  <td style={tdStyle}>
+                    <DeleteBtn label={deleting === r.id ? '…' : 'Verwijder'} onDelete={() => del(r.id, r.name ?? '—')} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   )
 }
@@ -499,14 +667,15 @@ function TabHeader({ title, subtitle, onRefresh, children }: {
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 const TABS: { id: Tab; label: string }[] = [
-  { id: 'hotlap',     label: '🏎️ Hot Lap' },
-  { id: 'arena',      label: '🏟️ Arena' },
-  { id: 'sysdig555',  label: '⏱️ 555 Time Trial' },
-  { id: 'sysdidscan', label: '🔍 555 Scan' },
+  { id: 'nordschleife', label: '🌲 Nordschleife' },
+  { id: 'hotlap',       label: '🏎️ Hot Lap' },
+  { id: 'arena',        label: '🏟️ Arena' },
+  { id: 'sysdig555',    label: '⏱️ 555 Time Trial' },
+  { id: 'sysdidscan',   label: '🔍 555 Scan' },
 ]
 
 export default function GamesAdminPage() {
-  const [tab, setTab] = useState<Tab>('hotlap')
+  const [tab, setTab] = useState<Tab>('nordschleife')
 
   const tabStyle = (t: Tab): React.CSSProperties => ({
     padding: '8px 20px', borderRadius: 8, fontSize: 14, fontWeight: 700,
@@ -520,7 +689,7 @@ export default function GamesAdminPage() {
     <div>
       <div style={{ marginBottom: 32 }}>
         <h1 style={{ fontSize: 26, fontWeight: 800, color: '#0F172A', margin: '0 0 6px' }}>🎮 Games Admin</h1>
-        <p style={{ fontSize: 14, color: '#64748B', margin: 0 }}>Hot Lap · Arena · Sysdig 555 Time Trial · Sysdig 555 Scan</p>
+        <p style={{ fontSize: 14, color: '#64748B', margin: 0 }}>Nordschleife · Hot Lap · Arena · Sysdig 555 Time Trial · Sysdig 555 Scan</p>
       </div>
 
       <div style={{ display: 'flex', gap: 4, background: '#F1F5F9', borderRadius: 10, padding: 4, width: 'fit-content', marginBottom: 32, flexWrap: 'wrap' }}>
@@ -529,10 +698,11 @@ export default function GamesAdminPage() {
         ))}
       </div>
 
-      {tab === 'hotlap'     && <HotLapTab />}
-      {tab === 'arena'      && <ArenaTab />}
-      {tab === 'sysdig555'  && <Sysdig555Tab />}
-      {tab === 'sysdidscan' && <SysdigScanTab />}
+      {tab === 'nordschleife' && <NordschleifeTab />}
+      {tab === 'hotlap'       && <HotLapTab />}
+      {tab === 'arena'        && <ArenaTab />}
+      {tab === 'sysdig555'    && <Sysdig555Tab />}
+      {tab === 'sysdidscan'   && <SysdigScanTab />}
     </div>
   )
 }
