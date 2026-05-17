@@ -14,6 +14,8 @@ import {
   type SectorResult,
 } from '@/products/nordschleife/data'
 import SharePanel from '@/components/nordschleife/SharePanel'
+import LanguageSwitcher from '@/components/nordschleife/LanguageSwitcher'
+import { useNordschleifeLocale } from '@/components/nordschleife/LocaleProvider'
 
 // ── Brand tokens ───────────────────────────────────────────────────────────────
 const BG      = '#0B1A0E'
@@ -48,6 +50,7 @@ function sectorColour(ms: number): string {
 }
 
 function ResultsInner() {
+  const { t } = useNordschleifeLocale()
   const searchParams = useSearchParams()
   const router       = useRouter()
 
@@ -84,8 +87,8 @@ function ResultsInner() {
     if (!lap) return
     const n = name.trim()
     const em = email.trim()
-    if (!n) { setError('Please enter your name or alias.'); return }
-    if (!em || !em.includes('@')) { setError('Please enter a valid email.'); return }
+    if (!n) { setError(t('results_err_name')); return }
+    if (!em || !em.includes('@')) { setError(t('results_err_email')); return }
 
     setStep('submitting')
     setError('')
@@ -105,7 +108,7 @@ function ResultsInner() {
       if (json.trackRecord) setTrackRecord(json.trackRecord)
       setStep('done')
     } catch {
-      setError('Something went wrong saving your lap — it may have still been recorded.')
+      setError(t('results_err_save'))
       setStep('done')
     }
   }
@@ -113,7 +116,7 @@ function ResultsInner() {
   if (!lap) {
     return (
       <div style={{ minHeight: '100vh', background: BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <p style={{ color: MUTED }}>Loading lap data…</p>
+        <p style={{ color: MUTED }}>{t('claim_one_moment')}</p>
       </div>
     )
   }
@@ -139,7 +142,10 @@ function ResultsInner() {
             </div>
             <span style={{ fontSize: 13, fontWeight: 800, color: WHITE }}>Nordschleife</span>
           </Link>
-          <span style={{ fontSize: 12, fontWeight: 700, color: GREEN, letterSpacing: '0.08em' }}>🏁 LAP COMPLETE</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: GREEN, letterSpacing: '0.08em' }}>{t('results_kicker')}</span>
+            <LanguageSwitcher compact />
+          </div>
         </div>
       </nav>
 
@@ -148,7 +154,7 @@ function ResultsInner() {
         {/* Big lap time */}
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
           <div style={{ fontSize: 13, fontWeight: 700, color: MUTED, letterSpacing: '0.15em', marginBottom: 12 }}>
-            YOUR LAP TIME
+            {t('results_your_lap_time')}
           </div>
           <div style={{
             fontSize: 'clamp(56px, 10vw, 96px)',
@@ -160,7 +166,7 @@ function ResultsInner() {
           </div>
           {isPurple && (
             <div style={{ fontSize: 14, color: PURPLE, fontWeight: 800, marginTop: 10 }}>
-              🟣 New Nordschleife track record!
+              {t('results_new_record')}
             </div>
           )}
         </div>
@@ -170,13 +176,13 @@ function ResultsInner() {
           <div style={{ height: 3, background: `linear-gradient(90deg, ${PURPLE}, ${GREEN})` }} />
           <div style={{ padding: '20px' }}>
             <p style={{ fontSize: 11, fontWeight: 700, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 16 }}>
-              Sector breakdown
+              {t('results_breakdown')}
             </p>
             <div style={{ display: 'flex', gap: 1 }}>
               {[
-                { label: 'SECTOR 1', name: 'Hatzenbach',     ms: s1, diff: 'Easy' },
-                { label: 'SECTOR 2', name: 'Karussell',      ms: s2, diff: 'Medium' },
-                { label: 'SECTOR 3', name: 'Döttinger Höhe', ms: s3, diff: 'Hard' },
+                { label: t('sector_1'), name: 'Hatzenbach',     ms: s1, diff: t('difficulty_easy') },
+                { label: t('sector_2'), name: 'Karussell',      ms: s2, diff: t('difficulty_medium') },
+                { label: t('sector_3'), name: 'Döttinger Höhe', ms: s3, diff: t('difficulty_hard') },
               ].map((s, i) => (
                 <div key={s.label} style={{
                   flex: 1, background: BG,
@@ -193,7 +199,7 @@ function ResultsInner() {
               ))}
               <div style={{ width: 1, background: BORDER }} />
               <div style={{ background: BG, borderRadius: '0 8px 8px 0', padding: '14px 12px', minWidth: 100 }}>
-                <div style={{ fontSize: 9, fontWeight: 700, color: MUTED, letterSpacing: '0.08em', marginBottom: 4 }}>LAP</div>
+                <div style={{ fontSize: 9, fontWeight: 700, color: MUTED, letterSpacing: '0.08em', marginBottom: 4 }}>{t('results_lap')}</div>
                 <div style={{ fontSize: 17, fontWeight: 900, color: isPurple ? PURPLE : GOLD, fontFamily: 'monospace' }}>
                   {lap.lapTime}
                 </div>
@@ -205,9 +211,9 @@ function ResultsInner() {
         {/* Quick stats */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 28 }}>
           {[
-            { label: 'Correct', value: `${correctCount}/${QUESTIONS_PER_LAP}`, color: GREEN },
-            { label: 'Penalties', value: `${penalties}× +5s`, color: penalties > 0 ? RED : MUTED },
-            { label: 'Accuracy', value: `${Math.round((correctCount / QUESTIONS_PER_LAP) * 100)}%`, color: correctCount >= QUESTIONS_PER_LAP * 0.8 ? GREEN : correctCount >= QUESTIONS_PER_LAP * 0.5 ? GOLD : RED },
+            { label: t('stats_correct'),    value: `${correctCount}/${QUESTIONS_PER_LAP}`, color: GREEN },
+            { label: t('stats_penalties'),  value: `${penalties}× +5s`, color: penalties > 0 ? RED : MUTED },
+            { label: t('stats_accuracy'),   value: `${Math.round((correctCount / QUESTIONS_PER_LAP) * 100)}%`, color: correctCount >= QUESTIONS_PER_LAP * 0.8 ? GREEN : correctCount >= QUESTIONS_PER_LAP * 0.5 ? GOLD : RED },
           ].map(stat => (
             <div key={stat.label} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 12, padding: '16px 12px', textAlign: 'center' }}>
               <div style={{ fontSize: 22, fontWeight: 900, color: stat.color, marginBottom: 4, fontFamily: 'monospace' }}>{stat.value}</div>
@@ -219,7 +225,7 @@ function ResultsInner() {
         {/* Share panel — always visible, even before saving the lap */}
         <div style={{ marginBottom: 22 }}>
           <SharePanel
-            name={name || 'A friend'}
+            name={name || t('share_who_default')}
             lapTime={lap.lapTime}
             rank={rank}
             correct={correctCount}
@@ -233,31 +239,31 @@ function ResultsInner() {
             {step === 'done' ? (
               <div style={{ textAlign: 'center', padding: '12px 0' }}>
                 <div style={{ fontSize: 40, marginBottom: 12 }}>🏁</div>
-                <h3 style={{ fontSize: 20, fontWeight: 900, marginBottom: 8 }}>Lap time saved</h3>
+                <h3 style={{ fontSize: 20, fontWeight: 900, marginBottom: 8 }}>{t('results_saved_heading')}</h3>
                 {rank && (
                   <p style={{ fontSize: 16, color: BODY, marginBottom: 4 }}>
-                    You&apos;re <span style={{ color: rank <= 3 ? PURPLE : GOLD, fontWeight: 900 }}>P{rank}</span> on the leaderboard.
+                    {t('results_youre_p')} <span style={{ color: rank <= 3 ? PURPLE : GOLD, fontWeight: 900 }}>P{rank}</span> {t('results_on_leaderboard')}
                   </p>
                 )}
-                {rank === 1 && <p style={{ color: PURPLE, fontWeight: 800 }}>🟣 New track record!</p>}
+                {rank === 1 && <p style={{ color: PURPLE, fontWeight: 800 }}>{t('results_new_record')}</p>}
               </div>
             ) : (
               <>
-                <h3 style={{ fontSize: 16, fontWeight: 800, marginBottom: 6 }}>🏁 Save your lap to the leaderboard</h3>
-                <p style={{ fontSize: 13, color: MUTED, marginBottom: 18 }}>Name shown publicly. Email never is.</p>
+                <h3 style={{ fontSize: 16, fontWeight: 800, marginBottom: 6 }}>{t('results_save_heading')}</h3>
+                <p style={{ fontSize: 13, color: MUTED, marginBottom: 18 }}>{t('results_save_sub')}</p>
                 <form onSubmit={handleSubmit}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                     <input
                       value={name}
                       onChange={e => { setName(e.target.value); setError('') }}
-                      placeholder="Your name or alias"
+                      placeholder={t('results_input_name')}
                       maxLength={30}
                       style={{ background: BG, border: `1px solid ${BORDER}`, borderRadius: 8, padding: '12px 16px', fontSize: 15, fontWeight: 700, color: WHITE, outline: 'none' }}
                     />
                     <input
                       value={email}
                       onChange={e => { setEmail(e.target.value); setError('') }}
-                      placeholder="Email (not shown publicly)"
+                      placeholder={t('results_input_email')}
                       type="email"
                       style={{ background: BG, border: `1px solid ${BORDER}`, borderRadius: 8, padding: '12px 16px', fontSize: 14, color: WHITE, outline: 'none' }}
                     />
@@ -272,7 +278,7 @@ function ResultsInner() {
                         opacity: step === 'submitting' ? 0.7 : 1,
                       }}
                     >
-                      {step === 'submitting' ? 'Saving lap…' : 'Post lap time →'}
+                      {step === 'submitting' ? t('results_submitting') : t('results_submit')}
                     </button>
                   </div>
                 </form>
@@ -289,7 +295,7 @@ function ResultsInner() {
               fontSize: 15, fontWeight: 900,
               padding: '14px 28px', borderRadius: 10, textDecoration: 'none',
             }}>
-              Buy {PAID_BUNDLE_ATTEMPTS} more laps · €{PAID_BUNDLE_PRICE_EUR} →
+              {t('results_buy_more', { paid: PAID_BUNDLE_ATTEMPTS, price: PAID_BUNDLE_PRICE_EUR })}
             </Link>
           ) : (
             <Link href="/nordschleife/play" style={{
@@ -297,7 +303,7 @@ function ResultsInner() {
               fontSize: 15, fontWeight: 900,
               padding: '14px 28px', borderRadius: 10, textDecoration: 'none',
             }}>
-              Another lap →
+              {t('results_another')}
             </Link>
           )}
           <Link href="/nordschleife" style={{
@@ -305,12 +311,18 @@ function ResultsInner() {
             fontSize: 14, fontWeight: 700,
             padding: '14px 24px', borderRadius: 10, textDecoration: 'none',
           }}>
-            Leaderboard
+            {t('results_to_leaderboard')}
           </Link>
         </div>
 
         <p style={{ fontSize: 11, color: MUTED, textAlign: 'center', marginTop: 18 }}>
-          {freeLeft + paidLeft} lap{freeLeft + paidLeft === 1 ? '' : 's'} left on this device · {paidLeft > 0 ? `${paidLeft} paid` : `${freeLeft} free`}
+          {t(
+            (freeLeft + paidLeft) === 1 ? 'results_laps_remaining' : 'results_laps_remaining_plural',
+            {
+              total: freeLeft + paidLeft,
+              detail: paidLeft > 0 ? t('results_paid', { n: paidLeft }) : t('results_free', { n: freeLeft }),
+            },
+          )}
         </p>
       </div>
     </div>

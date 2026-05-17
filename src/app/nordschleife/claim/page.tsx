@@ -4,6 +4,8 @@ import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { PAID_BUNDLE_ATTEMPTS } from '@/products/nordschleife/data'
+import { useNordschleifeLocale } from '@/components/nordschleife/LocaleProvider'
+import LanguageSwitcher from '@/components/nordschleife/LanguageSwitcher'
 
 // ── Brand tokens ───────────────────────────────────────────────────────────────
 const BG      = '#0B1A0E'
@@ -12,12 +14,12 @@ const CARD    = '#142318'
 const BORDER  = '#1E3320'
 const GREEN   = '#45A85F'
 const DEEP    = '#2D7A3E'
-const RED     = '#C8102E'
 const WHITE   = '#FFFFFF'
 const MUTED   = '#7A8E7E'
 const BODY    = '#C5D5C8'
 
 function ClaimInner() {
+  const { t } = useNordschleifeLocale()
   const params  = useSearchParams()
   const orderId = params.get('order') ?? ''
 
@@ -26,7 +28,7 @@ function ClaimInner() {
   const [errorMsg, setErrorMsg] = useState('')
 
   useEffect(() => {
-    if (!orderId) { setState('err'); setErrorMsg('No order ID provided.'); return }
+    if (!orderId) { setState('err'); setErrorMsg(''); return }
     setState('claiming')
     fetch('/api/nordschleife/credits/claim', {
       method: 'POST',
@@ -41,11 +43,11 @@ function ClaimInner() {
         } else if (d.error === 'not_paid_yet') {
           setState('pending')
         } else {
-          setErrorMsg(d.error || 'Could not claim credits.')
+          setErrorMsg(d.error || '')
           setState('err')
         }
       })
-      .catch(() => { setErrorMsg('Network error claiming credits.'); setState('err') })
+      .catch(() => { setErrorMsg(''); setState('err') })
   }, [orderId])
 
   return (
@@ -59,6 +61,7 @@ function ClaimInner() {
             </div>
             <span style={{ fontSize: 13, fontWeight: 800, color: WHITE }}>Nordschleife</span>
           </Link>
+          <LanguageSwitcher compact />
         </div>
       </nav>
 
@@ -67,36 +70,36 @@ function ClaimInner() {
           {state === 'claiming' && (
             <>
               <div style={{ fontSize: 44, marginBottom: 14 }}>⏳</div>
-              <h1 style={{ fontSize: 22, fontWeight: 900, marginBottom: 8 }}>Activating your laps…</h1>
-              <p style={{ fontSize: 14, color: BODY }}>One moment.</p>
+              <h1 style={{ fontSize: 22, fontWeight: 900, marginBottom: 8 }}>{t('claim_activating')}</h1>
+              <p style={{ fontSize: 14, color: BODY }}>{t('claim_one_moment')}</p>
             </>
           )}
           {state === 'ok' && (
             <>
               <div style={{ fontSize: 44, marginBottom: 14 }}>🌲</div>
               <h1 style={{ fontSize: 24, fontWeight: 900, marginBottom: 8 }}>
-                <span style={{ color: GREEN }}>{PAID_BUNDLE_ATTEMPTS}</span> laps activated
+                {t('claim_activated', { paid: PAID_BUNDLE_ATTEMPTS })}
               </h1>
               <p style={{ fontSize: 14, color: BODY, marginBottom: 22 }}>
-                Your credits are now stored on this device.{credits !== null && ` Total available: ${credits}.`}
+                {t('claim_stored')}{credits !== null && t('claim_total_avail', { count: credits })}
               </p>
               <Link href="/nordschleife/play" style={{
                 display: 'block', background: `linear-gradient(135deg, ${GREEN}, ${DEEP})`, color: WHITE,
                 fontSize: 16, fontWeight: 900, padding: '14px', borderRadius: 10, textDecoration: 'none', marginBottom: 10,
               }}>
-                Start a lap →
+                {t('claim_start_lap')}
               </Link>
               <Link href="/nordschleife" style={{ fontSize: 13, color: MUTED, textDecoration: 'underline' }}>
-                Back to landing
+                {t('claim_back')}
               </Link>
             </>
           )}
           {state === 'pending' && (
             <>
               <div style={{ fontSize: 44, marginBottom: 14 }}>💳</div>
-              <h1 style={{ fontSize: 22, fontWeight: 900, marginBottom: 8 }}>Payment is still processing</h1>
+              <h1 style={{ fontSize: 22, fontWeight: 900, marginBottom: 8 }}>{t('claim_pending')}</h1>
               <p style={{ fontSize: 14, color: BODY, marginBottom: 22 }}>
-                Banks sometimes take a minute. Reload this page in a moment to claim your laps.
+                {t('claim_pending_body')}
               </p>
               <button
                 onClick={() => location.reload()}
@@ -106,21 +109,21 @@ function ClaimInner() {
                   border: 'none', cursor: 'pointer', width: '100%',
                 }}
               >
-                Reload &amp; try again
+                {t('claim_reload')}
               </button>
             </>
           )}
           {state === 'err' && (
             <>
               <div style={{ fontSize: 44, marginBottom: 14 }}>❌</div>
-              <h1 style={{ fontSize: 22, fontWeight: 900, marginBottom: 8 }}>Could not activate</h1>
-              <p style={{ fontSize: 14, color: BODY, marginBottom: 22 }}>{errorMsg || 'Please email mark@brandpwrdmedia.com with your order ID.'}</p>
-              <p style={{ fontSize: 12, color: MUTED, marginBottom: 16 }}>Order ID: <code>{orderId}</code></p>
+              <h1 style={{ fontSize: 22, fontWeight: 900, marginBottom: 8 }}>{t('claim_error')}</h1>
+              <p style={{ fontSize: 14, color: BODY, marginBottom: 22 }}>{errorMsg || t('claim_err_default')}</p>
+              <p style={{ fontSize: 12, color: MUTED, marginBottom: 16 }}>{t('claim_order_id_label')} <code>{orderId}</code></p>
               <Link href="/nordschleife" style={{
                 display: 'block', background: BG, border: `1px solid ${BORDER}`, color: WHITE,
                 fontSize: 14, fontWeight: 700, padding: '12px', borderRadius: 10, textDecoration: 'none',
               }}>
-                Back to landing
+                {t('claim_back')}
               </Link>
             </>
           )}
@@ -134,7 +137,7 @@ export default function NordschleifeClaimPage() {
   return (
     <Suspense fallback={
       <div style={{ minHeight: '100vh', background: BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <p style={{ color: MUTED }}>Loading…</p>
+        <p style={{ color: MUTED }}>…</p>
       </div>
     }>
       <ClaimInner />
