@@ -8,11 +8,12 @@ import CheckinStepper from './CheckinStepper'
 export const dynamic = 'force-dynamic'
 export const metadata = { title: 'Vandaag — Cycle Companion' }
 
-export default async function TodayPage({
-  searchParams,
-}: {
-  searchParams: { [k: string]: string | undefined }
-}) {
+export default async function TodayPage(
+  props: {
+    searchParams: Promise<{ [k: string]: string | undefined }>
+  }
+) {
+  const searchParams = await props.searchParams;
   const user = await requireCycleUser()
   if (!user) redirect('/Cycle/login')
 

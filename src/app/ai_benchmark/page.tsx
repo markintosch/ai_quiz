@@ -4,7 +4,7 @@
 // reality. Falls back to mock when N < 30 so the page is meaningful from day 1.
 
 import type { Metadata } from 'next'
-import { headers } from 'next/headers'
+import { headers, type UnsafeUnwrappedHeaders } from 'next/headers';
 import Link from 'next/link'
 import { createClient } from '@supabase/supabase-js'
 import { getContent, pickLang, type Lang } from '@/products/ai_benchmark/data'
@@ -64,7 +64,7 @@ const META_BY_LANG: Record<Lang, {
 
 function getBaseUrl(): string {
   try {
-    const h = headers()
+    const h = (headers() as unknown as UnsafeUnwrappedHeaders)
     const host = h.get('host')
     const proto = h.get('x-forwarded-proto') || 'https'
     if (host) return `${proto}://${host}`
@@ -72,11 +72,12 @@ function getBaseUrl(): string {
   return process.env.NEXT_PUBLIC_BASE_URL || 'https://markdekock.com'
 }
 
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams: { lang?: string }
-}): Promise<Metadata> {
+export async function generateMetadata(
+  props: {
+    searchParams: Promise<{ lang?: string }>
+  }
+): Promise<Metadata> {
+  const searchParams = await props.searchParams;
   const lang = pickLang(searchParams.lang)
   const m = META_BY_LANG[lang]
   const BASE = getBaseUrl()
@@ -122,11 +123,12 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-export default async function AiBenchmarkLandingPage({
-  searchParams,
-}: {
-  searchParams: { lang?: string; preview?: string }
-}) {
+export default async function AiBenchmarkLandingPage(
+  props: {
+    searchParams: Promise<{ lang?: string; preview?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
   const lang = pickLang(searchParams.lang)
   const preview = searchParams.preview === '1'
   const t = getContent(lang)

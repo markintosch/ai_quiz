@@ -31,11 +31,12 @@ interface RespondentRow {
 
 const PAGE_SIZE = 20
 
-export default async function RespondentsPage({
-  searchParams,
-}: {
-  searchParams: { page?: string; version?: string }
-}) {
+export default async function RespondentsPage(
+  props: {
+    searchParams: Promise<{ page?: string; version?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
   const page = Math.max(1, parseInt(searchParams.page ?? '1', 10))
   const version = searchParams.version ?? 'all'
   const from = (page - 1) * PAGE_SIZE

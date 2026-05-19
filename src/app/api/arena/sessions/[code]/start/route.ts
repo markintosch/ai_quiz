@@ -7,10 +7,8 @@ import { createServiceClient } from '@/lib/supabase/server'
 import { isAuthorised } from '@/lib/admin/auth'
 import { arenaEmailHtml } from '@/lib/email/arenaEmail'
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { code: string } }
-) {
+export async function POST(req: NextRequest, props: { params: Promise<{ code: string }> }) {
+  const params = await props.params;
   const supabase = createServiceClient()
   const code = params.code.toUpperCase()
 

@@ -80,16 +80,17 @@ function symptomLabel(code: string, lang: Lang): string {
       if (opt) return opt.labels[lang] ?? opt.labels.nl
     }
   }
-  return code.replace(/_/g, ' ')
+  return code.replace(/_/g, ' ');
 }
 
-export default async function CompassResultsPage({
-  params,
-  searchParams,
-}: {
-  params:       { id: string }
-  searchParams: { lang?: string }
-}) {
+export default async function CompassResultsPage(
+  props: {
+    params: Promise<{ id: string }>
+    searchParams: Promise<{ lang?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const a = await fetchAssessment(params.id)
   if (!a) notFound()
 

@@ -5,10 +5,8 @@ export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 
-export async function GET(
-  _req: NextRequest,
-  { params }: { params: { code: string } }
-) {
+export async function GET(_req: NextRequest, props: { params: Promise<{ code: string }> }) {
+  const params = await props.params;
   const supabase = createServiceClient()
   const code = params.code.toUpperCase()
 

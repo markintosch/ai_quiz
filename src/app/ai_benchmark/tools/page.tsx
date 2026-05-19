@@ -26,11 +26,12 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-export default async function ToolsPage({
-  searchParams,
-}: {
-  searchParams: { lang?: string }
-}) {
+export default async function ToolsPage(
+  props: {
+    searchParams: Promise<{ lang?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
   const lang = pickLang(searchParams.lang)
   const t    = getContent(lang)
 

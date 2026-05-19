@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next'
-import { headers } from 'next/headers'
+import { headers, type UnsafeUnwrappedHeaders } from 'next/headers';
 
 // Dynamic robots.ts — derives the actual host being served at request time.
 // Without this, NEXT_PUBLIC_BASE_URL (which points to one domain on Vercel)
@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
 
 function getBaseUrl(): string {
   try {
-    const h = headers()
+    const h = (headers() as unknown as UnsafeUnwrappedHeaders)
     const host  = h.get('host')
     const proto = h.get('x-forwarded-proto') || 'https'
     if (host) return `${proto}://${host}`

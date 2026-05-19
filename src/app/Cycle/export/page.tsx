@@ -54,11 +54,12 @@ const RANGE_LABEL: Record<string, string> = {
   '180d': 'Afgelopen 180 dagen',
 }
 
-export default async function CycleExportPage({
-  searchParams,
-}: {
-  searchParams: { range?: string }
-}) {
+export default async function CycleExportPage(
+  props: {
+    searchParams: Promise<{ range?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
   const user = await requireCycleUser()
   if (!user) redirect('/Cycle/login')
 
@@ -166,7 +167,6 @@ export default async function CycleExportPage({
           </button>
         </div>
       </div>
-
       {/* Page content — print-friendly */}
       <article className="cycle-export-paper">
         <header className="cycle-export-header">
@@ -323,7 +323,6 @@ export default async function CycleExportPage({
           </p>
         </footer>
       </article>
-
       {/* Inline script voor print-knop (server component kan geen onClick) */}
       <script dangerouslySetInnerHTML={{ __html: `
         document.addEventListener('click', function(e) {
@@ -332,7 +331,7 @@ export default async function CycleExportPage({
         });
       ` }} />
     </div>
-  )
+  );
 }
 
 function Stat({ label, value, suffix }: { label: string; value: string; suffix?: string }) {

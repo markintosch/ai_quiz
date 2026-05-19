@@ -58,11 +58,12 @@ const META: Record<Lang, {
   },
 }
 
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams: { lang?: string }
-}): Promise<Metadata> {
+export async function generateMetadata(
+  props: {
+    searchParams: Promise<{ lang?: string }>
+  }
+): Promise<Metadata> {
+  const searchParams = await props.searchParams;
   const lang      = pickLang(searchParams.lang)
   const m         = META[lang]
   const canonical = lang === 'nl' ? `${BASE}/mentor` : `${BASE}/mentor?lang=${lang}`

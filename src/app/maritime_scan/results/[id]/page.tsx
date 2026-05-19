@@ -4,7 +4,7 @@
 // Pulls the row from maritime_scan_responses, renders score + posture +
 // dimension breakdown + tier-aware acquisition CTA.
 
-import { headers } from 'next/headers'
+import { headers, type UnsafeUnwrappedHeaders } from 'next/headers';
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@supabase/supabase-js'
@@ -52,7 +52,7 @@ interface ResultRow {
 
 function getBaseUrl(): string {
   try {
-    const h = headers()
+    const h = (headers() as unknown as UnsafeUnwrappedHeaders)
     const host = h.get('host')
     const proto = h.get('x-forwarded-proto') || 'https'
     if (host) return `${proto}://${host}`
@@ -60,7 +60,8 @@ function getBaseUrl(): string {
   return process.env.NEXT_PUBLIC_BASE_URL || 'https://aiquiz.brandpwrdmedia.nl'
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const BASE = getBaseUrl()
   return {
     title: 'Maritime Compliance Scan — resultaat',
@@ -74,13 +75,14 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   }
 }
 
-export default async function ResultsPage({
-  params,
-  searchParams,
-}: {
-  params:        { id: string }
-  searchParams: { lang?: string }
-}) {
+export default async function ResultsPage(
+  props: {
+    params: Promise<{ id: string }>
+    searchParams: Promise<{ lang?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const lang = pickLang(searchParams.lang)
   const t    = getContent(lang)
 

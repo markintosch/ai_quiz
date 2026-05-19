@@ -7,11 +7,12 @@ import { LANDING, BRAND, pickLang, type Lang } from '@/lib/cyber-compass/i18n'
 
 const BASE = 'https://markdekock.com'
 
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams: { lang?: string }
-}): Promise<Metadata> {
+export async function generateMetadata(
+  props: {
+    searchParams: Promise<{ lang?: string }>
+  }
+): Promise<Metadata> {
+  const searchParams = await props.searchParams;
   const lang = pickLang(searchParams.lang)
   const t    = LANDING[lang]
   const canonical = lang === 'nl' ? `${BASE}/HCSS` : `${BASE}/HCSS?lang=${lang}`
@@ -37,11 +38,12 @@ export async function generateMetadata({
   }
 }
 
-export default function CyberCompassLandingPage({
-  searchParams,
-}: {
-  searchParams: { lang?: string }
-}) {
+export default async function CyberCompassLandingPage(
+  props: {
+    searchParams: Promise<{ lang?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
   const lang = pickLang(searchParams.lang)
   const t    = LANDING[lang]
   const assessHref = `/HCSS/assess${lang === 'nl' ? '' : '?lang=' + lang}`

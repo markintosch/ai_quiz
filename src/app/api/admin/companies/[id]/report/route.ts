@@ -20,10 +20,8 @@ interface ScoresJsonb {
   shadowAI: { triggered: boolean; severity?: string; gap: number }
 }
 
-export async function POST(
-  _req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(_req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   if (!(await isAuthorised())) {
     return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
   }

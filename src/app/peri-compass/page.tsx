@@ -7,11 +7,12 @@ import { LANDING, LANG_LABELS, OG_LOCALE, pickLang, type Lang } from '@/lib/peri
 
 const BASE = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://markdekock.com'
 
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams: { lang?: string }
-}): Promise<Metadata> {
+export async function generateMetadata(
+  props: {
+    searchParams: Promise<{ lang?: string }>
+  }
+): Promise<Metadata> {
+  const searchParams = await props.searchParams;
   const lang = pickLang(searchParams.lang)
   const t    = LANDING[lang]
   const canonical = lang === 'nl' ? `${BASE}/peri-compass` : `${BASE}/peri-compass?lang=${lang}`
@@ -45,11 +46,12 @@ export async function generateMetadata({
   }
 }
 
-export default function CompassLandingPage({
-  searchParams,
-}: {
-  searchParams: { lang?: string; email?: string; source?: string }
-}) {
+export default async function CompassLandingPage(
+  props: {
+    searchParams: Promise<{ lang?: string; email?: string; source?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
   const lang = pickLang(searchParams.lang)
   const t    = LANDING[lang]
   const assessHref =

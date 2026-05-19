@@ -4,7 +4,7 @@
 // NL primary; ?lang=en switches the entire page chrome.
 
 import type { Metadata } from 'next'
-import { headers } from 'next/headers'
+import { headers, type UnsafeUnwrappedHeaders } from 'next/headers';
 import Link from 'next/link'
 import { getContent, pickLang, type Lang } from '@/products/maritime_scan/data'
 
@@ -27,7 +27,7 @@ const FONT        = "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-
 
 function getBaseUrl(): string {
   try {
-    const h = headers()
+    const h = (headers() as unknown as UnsafeUnwrappedHeaders)
     const host = h.get('host')
     const proto = h.get('x-forwarded-proto') || 'https'
     if (host) return `${proto}://${host}`
@@ -50,11 +50,12 @@ const META: Record<Lang, { title: string; desc: string; ogTitle: string; locale:
   },
 }
 
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams: { lang?: string }
-}): Promise<Metadata> {
+export async function generateMetadata(
+  props: {
+    searchParams: Promise<{ lang?: string }>
+  }
+): Promise<Metadata> {
+  const searchParams = await props.searchParams;
   const lang = pickLang(searchParams.lang)
   const m    = META[lang]
   const BASE = getBaseUrl()
@@ -87,11 +88,12 @@ export async function generateMetadata({
   }
 }
 
-export default async function MaritimeScanLanding({
-  searchParams,
-}: {
-  searchParams: { lang?: string }
-}) {
+export default async function MaritimeScanLanding(
+  props: {
+    searchParams: Promise<{ lang?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
   const lang = pickLang(searchParams.lang)
   const t    = getContent(lang)
 

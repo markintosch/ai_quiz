@@ -32,13 +32,14 @@ export const dynamic = 'force-dynamic'
 const BASE = 'https://markdekock.com'
 
 // ── Metadata ────────────────────────────────────────────────────────────────
-export async function generateMetadata({
-  params,
-  searchParams,
-}: {
-  params:       { slug: string }
-  searchParams: { lang?: string }
-}): Promise<Metadata> {
+export async function generateMetadata(
+  props: {
+    params: Promise<{ slug: string }>
+    searchParams: Promise<{ lang?: string }>
+  }
+): Promise<Metadata> {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const lang = pickLang(searchParams.lang)
   const post = await fetchPostBySlug(params.slug, lang)
 
@@ -114,13 +115,14 @@ export async function generateMetadata({
 }
 
 // ── Page ────────────────────────────────────────────────────────────────────
-export default async function BlogPostPage({
-  params,
-  searchParams,
-}: {
-  params:       { slug: string }
-  searchParams: { lang?: string }
-}) {
+export default async function BlogPostPage(
+  props: {
+    params: Promise<{ slug: string }>
+    searchParams: Promise<{ lang?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const lang = pickLang(searchParams.lang)
   const post = await fetchPostBySlug(params.slug, lang)
 

@@ -1,11 +1,11 @@
-import { headers } from 'next/headers'
+import { headers, type UnsafeUnwrappedHeaders } from 'next/headers';
 import { redirect } from 'next/navigation'
 import type { Metadata } from 'next'
 import MentorPage from './mentor/MentorPageClient'
 
 // Detect if this request is for markdekock.com
 function isMentorDomain(): boolean {
-  const hdrs = headers()
+  const hdrs = (headers() as unknown as UnsafeUnwrappedHeaders)
   const host     = hdrs.get('host')            ?? ''
   const xfwdHost = hdrs.get('x-forwarded-host') ?? ''
   return host.includes('markdekock.com') || xfwdHost.includes('markdekock.com')

@@ -29,11 +29,13 @@ interface SessionRow {
 }
 
 interface PageProps {
-  params:       { code: string }
-  searchParams: { pid?: string }
+  params: Promise<{ code: string }>
+  searchParams: Promise<{ pid?: string }>
 }
 
-export default async function ProserveArenaPlayPage({ params, searchParams }: PageProps) {
+export default async function ProserveArenaPlayPage(props: PageProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const supabase = createServiceClient()
   const code = params.code.toUpperCase()
   const pid  = searchParams.pid ?? ''

@@ -7,10 +7,8 @@ import { createServiceClient } from '@/lib/supabase/server'
 import { isAuthorised } from '@/lib/admin/auth'
 import { arenaEmailHtml, gameOverBodyHtml, winnerBodyHtml, type LeaderboardEntry } from '@/lib/email/arenaEmail'
 
-export async function POST(
-  _req: NextRequest,
-  { params }: { params: { code: string } }
-) {
+export async function POST(_req: NextRequest, props: { params: Promise<{ code: string }> }) {
+  const params = await props.params;
   if (!(await isAuthorised())) {
     return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
   }

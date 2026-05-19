@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
-import { headers } from 'next/headers'
+import { headers, type UnsafeUnwrappedHeaders } from 'next/headers';
 
 // Derive the actual host being served (markdekock.com, aiquiz.brandpwrdmedia.nl,
 // or any other) at request time. This makes every host self-canonicalize so
 // LinkedIn / X / WhatsApp don't see cross-domain og:url + og:image mismatches.
 function getBaseUrl(): string {
   try {
-    const h = headers()
+    const h = (headers() as unknown as UnsafeUnwrappedHeaders)
     const host = h.get('host')
     const proto = h.get('x-forwarded-proto') || 'https'
     if (host) return `${proto}://${host}`

@@ -48,11 +48,12 @@ const COPY: Record<Lang, {
   },
 }
 
-export default function ConfirmedPage({
-  searchParams,
-}: {
-  searchParams: { status?: string; lang?: string }
-}) {
+export default async function ConfirmedPage(
+  props: {
+    searchParams: Promise<{ status?: string; lang?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
   const lang   = pickLang(searchParams.lang)
   const status = searchParams.status === 'invalid' ? 'invalid'
               : searchParams.status === 'unsubscribed' ? 'unsubscribed'

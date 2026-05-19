@@ -17,7 +17,8 @@ import {
 export const dynamic = 'force-dynamic'
 
 // ── GET ─────────────────────────────────────────────────────────────────────
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   if (!(await isAuthorised())) {
     return NextResponse.json({ error: 'unauthorised' }, { status: 401 })
   }
@@ -43,7 +44,8 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
 }
 
 // ── PUT — update post fields ────────────────────────────────────────────────
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   if (!(await isAuthorised())) {
     return NextResponse.json({ error: 'unauthorised' }, { status: 401 })
   }
@@ -129,7 +131,8 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 }
 
 // ── DELETE ──────────────────────────────────────────────────────────────────
-export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   if (!(await isAuthorised())) {
     return NextResponse.json({ error: 'unauthorised' }, { status: 401 })
   }

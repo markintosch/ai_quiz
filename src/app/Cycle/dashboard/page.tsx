@@ -22,11 +22,12 @@ interface EntryRow {
   symptoms:          string[] | null
 }
 
-export default async function CycleDashboardPage({
-  searchParams,
-}: {
-  searchParams: { range?: string }
-}) {
+export default async function CycleDashboardPage(
+  props: {
+    searchParams: Promise<{ range?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
   const user = await requireCycleUser()
   if (!user) redirect('/Cycle/login')
 

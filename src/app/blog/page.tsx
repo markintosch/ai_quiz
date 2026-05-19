@@ -30,11 +30,12 @@ export const dynamic = 'force-dynamic'
 const BASE = 'https://markdekock.com'
 
 // ── Metadata ────────────────────────────────────────────────────────────────
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams: { lang?: string }
-}): Promise<Metadata> {
+export async function generateMetadata(
+  props: {
+    searchParams: Promise<{ lang?: string }>
+  }
+): Promise<Metadata> {
+  const searchParams = await props.searchParams;
   const lang = pickLang(searchParams.lang)
   const s    = STRINGS[lang]
   const canonical = lang === 'nl' ? `${BASE}/blog` : `${BASE}/blog?lang=${lang}`
@@ -93,11 +94,12 @@ async function fetchLatestPostForOgImage(lang: Lang): Promise<
 }
 
 // ── Page ────────────────────────────────────────────────────────────────────
-export default async function BlogIndexPage({
-  searchParams,
-}: {
-  searchParams: { lang?: string; format?: string }
-}) {
+export default async function BlogIndexPage(
+  props: {
+    searchParams: Promise<{ lang?: string; format?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
   const lang = pickLang(searchParams.lang)
   const s    = STRINGS[lang]
 

@@ -20,7 +20,7 @@
 
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, use } from 'react';
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import BlogEditor from '@/components/admin/blog/BlogEditor'
@@ -60,7 +60,8 @@ interface Translation {
   id: string; locale: BlogLocale; slug: string; title: string; status: BlogStatus
 }
 
-export default function EditBlogPostPage({ params }: { params: { id: string } }) {
+export default function EditBlogPostPage(props: { params: Promise<{ id: string }> }) {
+  const params = use(props.params);
   const router = useRouter()
   const [post, setPost]               = useState<Post | null>(null)
   const [translations, setTranslations] = useState<Translation[]>([])
@@ -239,7 +240,6 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
           )}
         </div>
       </div>
-
       <div className="grid gap-8 lg:grid-cols-3">
         {/* ── Left: editor ───────────────────────────────────── */}
         <div className="space-y-4 lg:col-span-2">
@@ -360,11 +360,11 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
               <div className="space-y-3">
                 {post.cover_poster && (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img
+                  (<img
                     src={post.cover_poster}
                     alt="Poster preview"
                     className="w-full max-w-md rounded-md border border-gray-200"
-                  />
+                  />)
                 )}
                 <div className="flex flex-wrap items-center gap-3">
                   <input
@@ -595,7 +595,7 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
         </aside>
       </div>
     </div>
-  )
+  );
 }
 
 // ── UI helpers ──────────────────────────────────────────────────────────────

@@ -32,7 +32,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   let host = ''
   let pathname = ''
   try {
-    const h    = headers()
+    const h    = await headers()
     host       = h.get('host')                 ?? ''
     pathname   = h.get('x-invoke-path')        ?? h.get('x-pathname') ?? ''
   } catch { /* not available in some build contexts */ }

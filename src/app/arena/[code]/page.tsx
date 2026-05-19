@@ -17,7 +17,8 @@ interface LeaderboardEntry {
   rank: number
 }
 
-export default async function ArenaJoinPage({ params }: { params: { code: string } }) {
+export default async function ArenaJoinPage(props: { params: Promise<{ code: string }> }) {
+  const params = await props.params;
   const supabase = createServiceClient()
   const code = params.code.toUpperCase()
 

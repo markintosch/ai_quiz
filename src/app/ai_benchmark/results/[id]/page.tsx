@@ -1,6 +1,6 @@
 // FILE: src/app/ai_benchmark/results/[id]/page.tsx
 import type { Metadata } from 'next'
-import { headers } from 'next/headers'
+import { headers, type UnsafeUnwrappedHeaders } from 'next/headers';
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@supabase/supabase-js'
@@ -24,7 +24,7 @@ export const dynamic = 'force-dynamic'
 
 function getBaseUrl(): string {
   try {
-    const h = headers()
+    const h = (headers() as unknown as UnsafeUnwrappedHeaders)
     const host = h.get('host')
     const proto = h.get('x-forwarded-proto') || 'https'
     if (host) return `${proto}://${host}`
@@ -35,7 +35,8 @@ function getBaseUrl(): string {
 // Per-result metadata so social shares pull the dynamic archetype card.
 // Page itself is noindex (set in /ai_benchmark/results/layout.tsx); this
 // only ensures share scrapers see the right preview.
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata(props: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const params = await props.params;
   const BASE = getBaseUrl()
   const ogUrl = `${BASE}/api/ai_benchmark/og?id=${params.id}`
   return {
@@ -224,13 +225,14 @@ type Segment = 'all' | 'role' | 'industry' | 'size' | 'region'
 
 // Segment labels are now pulled from the lang content per request render.
 
-export default async function ResultsPage({
-  params,
-  searchParams,
-}: {
-  params:        { id: string }
-  searchParams: { lang?: string; preview?: string; segment?: string }
-}) {
+export default async function ResultsPage(
+  props: {
+    params: Promise<{ id: string }>
+    searchParams: Promise<{ lang?: string; preview?: string; segment?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const lang    = pickLang(searchParams.lang)
   const t       = getContent(lang)
   const preview = searchParams.preview === '1'

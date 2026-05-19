@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import LandingClient from './LandingClient'
 
 interface PageProps {
-  searchParams?: { from?: string; time?: string; rank?: string; lang?: string }
+  searchParams?: Promise<{ from?: string; time?: string; rank?: string; lang?: string }>
 }
 
 const LOCALES = ['en', 'de', 'nl', 'fr', 'es'] as const
@@ -30,7 +30,8 @@ const CHALLENGE_TITLE: Record<Lang, (from: string, time: string) => string> = {
 //   /nordschleife?from=Mark&time=8:32.4&rank=3&lang=de
 // gets a personalised title + OG image so social previews show that exact lap
 // in the right language.
-export function generateMetadata({ searchParams }: PageProps): Metadata {
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+  const searchParams = await props.searchParams;
   const from = (searchParams?.from ?? '').slice(0, 30)
   const time = (searchParams?.time ?? '').slice(0, 16)
   const rank = (searchParams?.rank ?? '').slice(0, 5)

@@ -22,11 +22,12 @@ interface Row {
 
 const PAGE_SIZE = 50
 
-export default async function AdminAiBenchmarkPage({
-  searchParams,
-}: {
-  searchParams: { page?: string; role?: string }
-}) {
+export default async function AdminAiBenchmarkPage(
+  props: {
+    searchParams: Promise<{ page?: string; role?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
