@@ -36,9 +36,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
-      - run: npm ci
+      # No `npm install` / `npm ci` — `npm outdated` works against
+      # package.json + package-lock.json alone, no node_modules needed.
+      # That avoids strict lock-validation failures on minor drift.
 
       - name: Build major-bumps report
         run: |
@@ -51,10 +52,15 @@ jobs:
           const data = JSON.parse(raw)
           const rows = []
           for (const [name, info] of Object.entries(data)) {
-            const curMajor    = parseInt((info.current || '').split('.')[0], 10)
-            const latestMajor = parseInt((info.latest  || '').split('.')[0], 10)
-            if (Number.isFinite(curMajor) && Number.isFinite(latestMajor) && latestMajor > curMajor) {
-              rows.push(`- [ ] **${name}**: \`${info.current}\` → \`${info.latest}\``)
+            // Without node_modules, npm reports `wanted` (= highest version in range
+            // per package-lock) but not `current` (= actually-installed). For
+            // major-bump detection, `wanted` is the right anchor — it's what npm
+            // install would use today.
+            const baseline = info.current || info.wanted
+            const baseMajor   = parseInt((baseline    || '').split('.')[0], 10)
+            const latestMajor = parseInt((info.latest || '').split('.')[0], 10)
+            if (Number.isFinite(baseMajor) && Number.isFinite(latestMajor) && latestMajor > baseMajor) {
+              rows.push(`- [ ] **${name}**: \`${baseline}\` → \`${info.latest}\``)
             }
           }
           const stamp = new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC'
