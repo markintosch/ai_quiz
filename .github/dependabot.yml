@@ -1,0 +1,70 @@
+# Dependabot — weekly scan, conservative grouping.
+#
+# What this does:
+# - Once a week (Monday 06:00 Europe/Amsterdam) Dependabot checks for new
+#   versions of every npm package + every GitHub Action used in this repo.
+# - Patch and minor bumps are grouped into a single PR per ecosystem so we
+#   don't get a flood of tiny PRs.
+# - Major version bumps are IGNORED here — they should be handled as their
+#   own focused upgrade project (e.g. Next 15 → 16, React 18 → 19).
+# - Security advisories override the schedule and ignore rules: Dependabot
+#   opens a PR immediately whenever a new CVE is disclosed against any
+#   installed version, regardless of major/minor/patch.
+#
+# Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  # ── npm dependencies ────────────────────────────────────────────────────────
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Europe/Amsterdam"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    groups:
+      # One PR for all patch + minor bumps so reviewing is a single chore.
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      # Skip auto-PRs for major bumps on framework-level packages — these
+      # need a planned migration (codemod + manual verification).
+      - dependency-name: "next"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint-config-next"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/react-dom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "next-intl"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "tailwindcss"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+
+  # ── GitHub Actions ──────────────────────────────────────────────────────────
+  # No workflows live in .github/workflows yet, but if/when they're added,
+  # Dependabot will keep their action versions current.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Europe/Amsterdam"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "ci"
