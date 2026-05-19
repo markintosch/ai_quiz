@@ -1,0 +1,91 @@
+# Tracks major dependency upgrades that Dependabot intentionally ignores.
+#
+# Dependabot (see .github/dependabot.yml) handles patch + minor bumps every
+# Monday. Major bumps of framework packages are ignored there because they
+# need planned migrations, not auto-PRs. This workflow surfaces those
+# pending major bumps so they don't disappear from view.
+#
+# How it works:
+# - Runs ~1h after the weekly Dependabot scan (and on-demand via the Actions tab).
+# - Runs `npm outdated --json`, filters to packages whose latest version
+#   is a major bump over current.
+# - Opens or updates a single tracking issue titled
+#   "Major dependency upgrades pending". One issue total, edited each week —
+#   no notification spam.
+
+name: Major deps tracker
+
+on:
+  schedule:
+    # Monday 07:00 UTC — comfortably after the Dependabot weekly run
+    # (which fires around Monday 06:00 Europe/Amsterdam = 04:00 / 05:00 UTC
+    # depending on DST). Cron in GitHub Actions is fixed-UTC.
+    - cron: '0 7 * * 1'
+  workflow_dispatch: {}
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  detect-majors:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Build major-bumps report
+        run: |
+          # npm outdated exits 1 when anything is outdated — don't fail the step.
+          npm outdated --json > /tmp/outdated.json 2>/dev/null || true
+
+          node <<'JS' > /tmp/body.md
+          const fs = require('fs')
+          const raw = fs.readFileSync('/tmp/outdated.json', 'utf8').trim() || '{}'
+          const data = JSON.parse(raw)
+          const rows = []
+          for (const [name, info] of Object.entries(data)) {
+            const curMajor    = parseInt((info.current || '').split('.')[0], 10)
+            const latestMajor = parseInt((info.latest  || '').split('.')[0], 10)
+            if (Number.isFinite(curMajor) && Number.isFinite(latestMajor) && latestMajor > curMajor) {
+              rows.push(`- [ ] **${name}**: \`${info.current}\` → \`${info.latest}\``)
+            }
+          }
+          const stamp = new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC'
+          if (rows.length === 0) {
+            console.log('_No major version upgrades pending — everything is on the current major._')
+          } else {
+            console.log(`Found **${rows.length}** package${rows.length === 1 ? '' : 's'} with a major version upgrade available:`)
+            console.log('')
+            console.log(rows.join('\n'))
+          }
+          console.log('')
+          console.log('---')
+          console.log('Patch + minor bumps are handled automatically by the weekly Dependabot run (see `.github/dependabot.yml`).')
+          console.log('Major bumps need a planned migration (codemod + smoke test + focused PR) so they are tracked here instead of auto-PR-ed.')
+          console.log('')
+          console.log(`_Last checked: ${stamp}._`)
+          JS
+
+          echo '--- report preview ---'
+          cat /tmp/body.md
+
+      - name: Open or update tracking issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TITLE='Major dependency upgrades pending'
+          ISSUE_NUM=$(gh issue list --state open --json number,title --jq ".[] | select(.title == \"$TITLE\") | .number" | head -1)
+          if [[ -n "$ISSUE_NUM" ]]; then
+            gh issue edit "$ISSUE_NUM" --body-file /tmp/body.md
+            echo "Updated existing tracking issue #$ISSUE_NUM"
+          else
+            gh issue create --title "$TITLE" --body-file /tmp/body.md
+            echo "Created new tracking issue"
+          fi
