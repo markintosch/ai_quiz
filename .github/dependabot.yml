@@ -54,6 +54,13 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "eslint"
         update-types: ["version-update:semver-major"]
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      # resend's major bumps tend to be API rewrites — handle as a planned upgrade
+      - dependency-name: "resend"
+        update-types: ["version-update:semver-major"]
 
   # ── GitHub Actions ──────────────────────────────────────────────────────────
   # No workflows live in .github/workflows yet, but if/when they're added,
