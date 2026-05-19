@@ -85,7 +85,7 @@ export async function POST(req: Request) {
   }
 
   // ── Profile (for phase detection) ───────────────────────────────────────
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: profile } = await supabase
     .from('cycle_profiles')
     .select('last_period_start, typical_length, lat, lon, timezone')

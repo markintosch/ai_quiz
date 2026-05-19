@@ -4,7 +4,7 @@
 // Pulls the row from maritime_scan_responses, renders score + posture +
 // dimension breakdown + tier-aware acquisition CTA.
 
-import { headers, type UnsafeUnwrappedHeaders } from 'next/headers';
+import { headers } from 'next/headers'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@supabase/supabase-js'
@@ -50,9 +50,9 @@ interface ResultRow {
   created_at:       string
 }
 
-function getBaseUrl(): string {
+async function getBaseUrl(): Promise<string> {
   try {
-    const h = (headers() as unknown as UnsafeUnwrappedHeaders)
+    const h = await headers()
     const host = h.get('host')
     const proto = h.get('x-forwarded-proto') || 'https'
     if (host) return `${proto}://${host}`
@@ -62,7 +62,7 @@ function getBaseUrl(): string {
 
 export async function generateMetadata(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
-  const BASE = getBaseUrl()
+  const BASE = await getBaseUrl()
   return {
     title: 'Maritime Compliance Scan — resultaat',
     robots: { index: false, follow: false },

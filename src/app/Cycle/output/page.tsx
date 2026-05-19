@@ -25,7 +25,7 @@ export default async function OutputPage() {
   if (!user) redirect('/Cycle/login')
 
   const today = new Date().toISOString().slice(0, 10)
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const [{ data: entry }, { data: weather }, { count: totalEntries }] = await Promise.all([
     supabase.from('cycle_daily_entries')

@@ -17,7 +17,7 @@ export async function POST(req: Request) {
   const ruleKey = body.rule_key
   if (!ruleKey) return NextResponse.json({ ok: false, error: 'invalid' }, { status: 400 })
 
-  const supabase = createClient()
+  const supabase = await createClient()
   await supabase.from('cycle_insights_seen').insert({
     user_id:  user.id,
     rule_key: ruleKey,

@@ -35,7 +35,7 @@ export default async function CycleDashboardPage(
   const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000)
   const sinceISO = since.toISOString().slice(0, 10)
 
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: entries } = await supabase
     .from('cycle_daily_entries')
     .select('entry_date, mood_score, sleep, stress, alcohol_glasses, busy_day, symptoms')

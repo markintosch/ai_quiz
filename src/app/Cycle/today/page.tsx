@@ -17,7 +17,7 @@ export default async function TodayPage(
   const user = await requireCycleUser()
   if (!user) redirect('/Cycle/login')
 
-  const supabase = createClient()
+  const supabase = await createClient()
   const today = new Date().toISOString().slice(0, 10)
 
   const { data: profile } = await supabase

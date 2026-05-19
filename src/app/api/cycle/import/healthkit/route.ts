@@ -49,7 +49,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: 'too_many' }, { status: 413 })
   }
 
-  const supabase = createClient()
+  const supabase = await createClient()
 
   // Profile for phase detection
   const { data: profile } = await supabase

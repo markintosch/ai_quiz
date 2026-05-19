@@ -1,6 +1,6 @@
 // FILE: src/app/ai_benchmark/results/[id]/page.tsx
 import type { Metadata } from 'next'
-import { headers, type UnsafeUnwrappedHeaders } from 'next/headers';
+import { headers } from 'next/headers'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@supabase/supabase-js'
@@ -22,9 +22,9 @@ import {
 
 export const dynamic = 'force-dynamic'
 
-function getBaseUrl(): string {
+async function getBaseUrl(): Promise<string> {
   try {
-    const h = (headers() as unknown as UnsafeUnwrappedHeaders)
+    const h = await headers()
     const host = h.get('host')
     const proto = h.get('x-forwarded-proto') || 'https'
     if (host) return `${proto}://${host}`
@@ -37,7 +37,7 @@ function getBaseUrl(): string {
 // only ensures share scrapers see the right preview.
 export async function generateMetadata(props: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const params = await props.params;
-  const BASE = getBaseUrl()
+  const BASE = await getBaseUrl()
   const ogUrl = `${BASE}/api/ai_benchmark/og?id=${params.id}`
   return {
     openGraph: {

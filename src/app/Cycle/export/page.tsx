@@ -71,7 +71,7 @@ export default async function CycleExportPage(
   const sinceISO = since.toISOString().slice(0, 10)
   const todayISO = today.toISOString().slice(0, 10)
 
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: entries } = await supabase
     .from('cycle_daily_entries')
     .select('entry_date, mood_score, sleep, stress, readiness_score, alcohol_glasses, busy_day, nap_taken, menstruation_flag, symptoms, cycle_phase')

@@ -17,7 +17,7 @@ export async function DELETE() {
 
   // Sign out the current session — keeps the auth user (so a new login is
   // possible if she changes her mind), just empties the cycle data.
-  const supabase = createClient()
+  const supabase = await createClient()
   await supabase.auth.signOut()
 
   return NextResponse.json({ ok: true })

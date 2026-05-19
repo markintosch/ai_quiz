@@ -4,7 +4,7 @@
 // NL primary; ?lang=en switches the entire page chrome.
 
 import type { Metadata } from 'next'
-import { headers, type UnsafeUnwrappedHeaders } from 'next/headers';
+import { headers } from 'next/headers'
 import Link from 'next/link'
 import { getContent, pickLang, type Lang } from '@/products/maritime_scan/data'
 
@@ -25,9 +25,9 @@ const BORDER      = '#E2E8F0'
 const LIGHT       = '#F8FAFC'
 const FONT        = "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
 
-function getBaseUrl(): string {
+async function getBaseUrl(): Promise<string> {
   try {
-    const h = (headers() as unknown as UnsafeUnwrappedHeaders)
+    const h = await headers()
     const host = h.get('host')
     const proto = h.get('x-forwarded-proto') || 'https'
     if (host) return `${proto}://${host}`
@@ -58,7 +58,7 @@ export async function generateMetadata(
   const searchParams = await props.searchParams;
   const lang = pickLang(searchParams.lang)
   const m    = META[lang]
-  const BASE = getBaseUrl()
+  const BASE = await getBaseUrl()
   return {
     title:       m.title,
     description: m.desc,

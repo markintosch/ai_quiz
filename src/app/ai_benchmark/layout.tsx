@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
-import { headers, type UnsafeUnwrappedHeaders } from 'next/headers';
+import { headers } from 'next/headers'
 
 // Derive the actual host being served (markdekock.com, aiquiz.brandpwrdmedia.nl,
 // or any other) at request time. This makes every host self-canonicalize so
 // LinkedIn / X / WhatsApp don't see cross-domain og:url + og:image mismatches.
-function getBaseUrl(): string {
+async function getBaseUrl(): Promise<string> {
   try {
-    const h = (headers() as unknown as UnsafeUnwrappedHeaders)
+    const h = await headers()
     const host = h.get('host')
     const proto = h.get('x-forwarded-proto') || 'https'
     if (host) return `${proto}://${host}`
@@ -15,7 +15,7 @@ function getBaseUrl(): string {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const BASE = getBaseUrl()
+  const BASE = await getBaseUrl()
   const ogUrl = `${BASE}/api/ai_benchmark/og?type=landing`
   return {
     metadataBase: new URL(BASE),

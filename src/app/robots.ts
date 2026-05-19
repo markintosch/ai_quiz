@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next'
-import { headers, type UnsafeUnwrappedHeaders } from 'next/headers';
+import { headers } from 'next/headers'
 
 // Dynamic robots.ts — derives the actual host being served at request time.
 // Without this, NEXT_PUBLIC_BASE_URL (which points to one domain on Vercel)
@@ -7,9 +7,9 @@ import { headers, type UnsafeUnwrappedHeaders } from 'next/headers';
 // the wrong sitemap.
 export const dynamic = 'force-dynamic'
 
-function getBaseUrl(): string {
+async function getBaseUrl(): Promise<string> {
   try {
-    const h = (headers() as unknown as UnsafeUnwrappedHeaders)
+    const h = await headers()
     const host  = h.get('host')
     const proto = h.get('x-forwarded-proto') || 'https'
     if (host) return `${proto}://${host}`
@@ -54,8 +54,8 @@ const AI_CRAWLERS = [
   'CCBot',            // Common Crawl (feeds many LLMs)
 ] as const
 
-export default function robots(): MetadataRoute.Robots {
-  const BASE_URL = getBaseUrl()
+export default async function robots(): Promise<MetadataRoute.Robots> {
+  const BASE_URL = await getBaseUrl()
   return {
     rules: [
       // Default — every other bot follows these allow/disallow rules.

@@ -15,7 +15,7 @@ import { LiveCounter }    from '@/components/ai_benchmark/LiveCounter'
 import { LangPills }      from '@/components/ai_benchmark/LangPills'
 import { Tracker }        from '@/components/ai_benchmark/Tracker'
 import type { Metadata } from 'next'
-import { headers, type UnsafeUnwrappedHeaders } from 'next/headers';
+import { headers } from 'next/headers'
 
 // Dashboard reads ?lang=, can't be statically cached per request.
 export const dynamic = 'force-dynamic'
@@ -42,9 +42,9 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-function getBaseUrl(): string {
+async function getBaseUrl(): Promise<string> {
   try {
-    const h = (headers() as unknown as UnsafeUnwrappedHeaders)
+    const h = await headers()
     const host = h.get('host')
     const proto = h.get('x-forwarded-proto') || 'https'
     if (host) return `${proto}://${host}`
@@ -54,7 +54,7 @@ function getBaseUrl(): string {
 
 export async function generateMetadata(props: { searchParams: Promise<{ lang?: string }> }): Promise<Metadata> {
   const searchParams = await props.searchParams;
-  const BASE = getBaseUrl()
+  const BASE = await getBaseUrl()
   const lang = pickLang(searchParams.lang)
   const ogUrl = `${BASE}/api/ai_benchmark/og?type=dashboard`
   const titles: Record<Lang, { title: string; desc: string; ogTitle: string; twTitle: string; twDesc: string }> = {

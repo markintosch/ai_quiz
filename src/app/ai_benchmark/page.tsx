@@ -4,7 +4,7 @@
 // reality. Falls back to mock when N < 30 so the page is meaningful from day 1.
 
 import type { Metadata } from 'next'
-import { headers, type UnsafeUnwrappedHeaders } from 'next/headers';
+import { headers } from 'next/headers'
 import Link from 'next/link'
 import { createClient } from '@supabase/supabase-js'
 import { getContent, pickLang, type Lang } from '@/products/ai_benchmark/data'
@@ -62,9 +62,9 @@ const META_BY_LANG: Record<Lang, {
   },
 }
 
-function getBaseUrl(): string {
+async function getBaseUrl(): Promise<string> {
   try {
-    const h = (headers() as unknown as UnsafeUnwrappedHeaders)
+    const h = await headers()
     const host = h.get('host')
     const proto = h.get('x-forwarded-proto') || 'https'
     if (host) return `${proto}://${host}`
@@ -80,7 +80,7 @@ export async function generateMetadata(
   const searchParams = await props.searchParams;
   const lang = pickLang(searchParams.lang)
   const m = META_BY_LANG[lang]
-  const BASE = getBaseUrl()
+  const BASE = await getBaseUrl()
   const ogUrl = `${BASE}/api/ai_benchmark/og?type=landing`
   return {
     title:       m.title,
