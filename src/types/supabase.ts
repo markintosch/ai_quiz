@@ -26,6 +26,14 @@ export interface Database {
           welcome_message: string | null
           excluded_question_codes: string[] | null
           product_id: string | null
+          access_code: string | null
+          secondary_color: string | null
+          bg_color: string | null
+          assessment_mode: 'internal' | 'external' | null
+          notify_email: string | null
+          form_position: 'pre' | 'post' | null
+          lead_capture_mode: 'full' | 'minimal' | null
+          website_url: string | null
         }
         Insert: {
           id?: string
@@ -39,6 +47,14 @@ export interface Database {
           welcome_message?: string | null
           excluded_question_codes?: string[] | null
           product_id?: string | null
+          access_code?: string | null
+          secondary_color?: string | null
+          bg_color?: string | null
+          assessment_mode?: 'internal' | 'external' | null
+          notify_email?: string | null
+          form_position?: 'pre' | 'post' | null
+          lead_capture_mode?: 'full' | 'minimal' | null
+          website_url?: string | null
         }
         Update: {
           id?: string
@@ -52,6 +68,14 @@ export interface Database {
           welcome_message?: string | null
           excluded_question_codes?: string[] | null
           product_id?: string | null
+          access_code?: string | null
+          secondary_color?: string | null
+          bg_color?: string | null
+          assessment_mode?: 'internal' | 'external' | null
+          notify_email?: string | null
+          form_position?: 'pre' | 'post' | null
+          lead_capture_mode?: 'full' | 'minimal' | null
+          website_url?: string | null
         }
         Relationships: []
       }
