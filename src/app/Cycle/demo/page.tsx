@@ -47,7 +47,8 @@ const SCENARIOS = {
   },
 } as const
 
-export default function DemoPage({ searchParams }: { searchParams: { state?: string } }) {
+export default async function DemoPage(props: { searchParams: Promise<{ state?: string }> }) {
+  const searchParams = await props.searchParams;
   const state = (searchParams.state as keyof typeof SCENARIOS) ?? 'good'
   const data = SCENARIOS[state] ?? SCENARIOS.good
 

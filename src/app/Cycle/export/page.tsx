@@ -54,11 +54,12 @@ const RANGE_LABEL: Record<string, string> = {
   '180d': 'Afgelopen 180 dagen',
 }
 
-export default async function CycleExportPage({
-  searchParams,
-}: {
-  searchParams: { range?: string }
-}) {
+export default async function CycleExportPage(
+  props: {
+    searchParams: Promise<{ range?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
   const user = await requireCycleUser()
   if (!user) redirect('/Cycle/login')
 
@@ -70,7 +71,7 @@ export default async function CycleExportPage({
   const sinceISO = since.toISOString().slice(0, 10)
   const todayISO = today.toISOString().slice(0, 10)
 
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: entries } = await supabase
     .from('cycle_daily_entries')
     .select('entry_date, mood_score, sleep, stress, readiness_score, alcohol_glasses, busy_day, nap_taken, menstruation_flag, symptoms, cycle_phase')
@@ -166,7 +167,6 @@ export default async function CycleExportPage({
           </button>
         </div>
       </div>
-
       {/* Page content — print-friendly */}
       <article className="cycle-export-paper">
         <header className="cycle-export-header">
@@ -323,7 +323,6 @@ export default async function CycleExportPage({
           </p>
         </footer>
       </article>
-
       {/* Inline script voor print-knop (server component kan geen onClick) */}
       <script dangerouslySetInnerHTML={{ __html: `
         document.addEventListener('click', function(e) {
@@ -332,7 +331,7 @@ export default async function CycleExportPage({
         });
       ` }} />
     </div>
-  )
+  );
 }
 
 function Stat({ label, value, suffix }: { label: string; value: string; suffix?: string }) {

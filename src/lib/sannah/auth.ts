@@ -25,7 +25,7 @@ export function deriveMasterSessionToken(secret: string): string {
 }
 
 /** Cookie options shared by login + logout. */
-export function sannahCookieOptions(maxAge = 60 * 60 * 12): Parameters<Awaited<ReturnType<typeof cookies>>['set']>[2] {
+export function sannahCookieOptions(maxAge = 60 * 60 * 12): Parameters<Awaited<Awaited<ReturnType<typeof cookies>>>['set']>[2] {
   return {
     httpOnly: true,
     path: '/',

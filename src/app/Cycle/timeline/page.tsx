@@ -13,7 +13,7 @@ export default async function TimelinePage() {
   const user = await requireCycleUser()
   if (!user) redirect('/Cycle/login')
 
-  const supabase = createClient()
+  const supabase = await createClient()
   const today = new Date()
   const start = new Date(today); start.setDate(start.getDate() - 27)
   const startISO = start.toISOString().slice(0, 10)

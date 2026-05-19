@@ -4,15 +4,15 @@ import type { Metadata } from 'next'
 import MentorPage from './mentor/MentorPageClient'
 
 // Detect if this request is for markdekock.com
-function isMentorDomain(): boolean {
-  const hdrs = headers()
+async function isMentorDomain(): Promise<boolean> {
+  const hdrs = await headers()
   const host     = hdrs.get('host')            ?? ''
   const xfwdHost = hdrs.get('x-forwarded-host') ?? ''
   return host.includes('markdekock.com') || xfwdHost.includes('markdekock.com')
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  if (isMentorDomain()) {
+  if (await isMentorDomain()) {
     return {
       title: 'AI strategie & executie | Mark de Kock',
       description: 'Van AI-ambitie naar iets wat écht werkt in jouw organisatie. Persoonlijke begeleiding voor leiders. Max. 5 trajecten tegelijk.',
@@ -32,8 +32,8 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export default function RootPage() {
-  if (isMentorDomain()) {
+export default async function RootPage() {
+  if (await isMentorDomain()) {
     return <MentorPage />
   }
   // All other domains: next-intl middleware handles locale redirect,

@@ -4,9 +4,10 @@ import { isAuthorised } from '@/lib/admin/auth'
 
 export const dynamic = 'force-dynamic'
 
-type Params = { params: { id: string } }
+type Params = { params: Promise<{ id: string }> }
 
-export async function GET(_req: NextRequest, { params }: Params) {
+export async function GET(_req: NextRequest, props: Params) {
+  const params = await props.params;
   if (!(await isAuthorised())) {
     return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
   }
@@ -32,7 +33,8 @@ export async function GET(_req: NextRequest, { params }: Params) {
   return NextResponse.json({ entity: data, agentProfile })
 }
 
-export async function PUT(req: NextRequest, { params }: Params) {
+export async function PUT(req: NextRequest, props: Params) {
+  const params = await props.params;
   if (!(await isAuthorised())) {
     return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
   }
@@ -76,7 +78,8 @@ export async function PUT(req: NextRequest, { params }: Params) {
   return NextResponse.json({ entity: data })
 }
 
-export async function DELETE(_req: NextRequest, { params }: Params) {
+export async function DELETE(_req: NextRequest, props: Params) {
+  const params = await props.params;
   if (!(await isAuthorised())) {
     return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
   }

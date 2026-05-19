@@ -14,7 +14,7 @@ export default async function InsightsPage() {
   const user = await requireCycleUser()
   if (!user) redirect('/Cycle/login')
 
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const [{ data: entries }, { data: weather }, { data: seenRules }] = await Promise.all([
     supabase.from('cycle_daily_entries')

@@ -64,12 +64,14 @@ const DIM_KEYS: { key: keyof Pick<AssessmentRow,
   { key: 'score_supply_chain', dim: 'supply_chain' },
 ]
 
-export default async function CyberResultsPage({
-  params, searchParams,
-}: {
-  params:       { id: string }
-  searchParams: { lang?: string }
-}) {
+export default async function CyberResultsPage(
+  props: {
+    params: Promise<{ id: string }>
+    searchParams: Promise<{ lang?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const a = await fetchAssessment(params.id)
   if (!a) notFound()
 

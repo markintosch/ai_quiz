@@ -29,7 +29,8 @@ interface SessionRow {
   time_per_q:      number
 }
 
-export default async function ProserveArenaJoinPage({ params }: { params: { code: string } }) {
+export default async function ProserveArenaJoinPage(props: { params: Promise<{ code: string }> }) {
+  const params = await props.params;
   const supabase = createServiceClient()
   const code = params.code.toUpperCase()
 

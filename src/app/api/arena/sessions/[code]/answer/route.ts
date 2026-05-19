@@ -9,10 +9,8 @@ import type { ArenaQuestion, ArenaDifficulty } from '@/products/cloud_arena/type
 import { CLOUD_ARENA_CONFIG } from '@/products/cloud_arena/config'
 import { rateLimit, getClientIp } from '@/lib/rateLimit'
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { code: string } }
-) {
+export async function POST(req: NextRequest, props: { params: Promise<{ code: string }> }) {
+  const params = await props.params;
   // Bot/spam protection — 60 answers per 5 min generously covers a real
   // 30-question game with retries; blocks scripted spam.
   const ip = getClientIp(req.headers)

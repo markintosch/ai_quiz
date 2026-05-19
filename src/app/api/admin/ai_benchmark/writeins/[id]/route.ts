@@ -11,10 +11,8 @@ const supabase = createClient(
 
 const VALID_STATUSES = new Set(['pending', 'reviewed', 'promoted', 'merged', 'rejected'])
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     const body = await req.json() as {
       status?:       string

@@ -7,10 +7,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 import { rateLimit, getClientIp } from '@/lib/rateLimit'
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { code: string } }
-) {
+export async function POST(req: NextRequest, props: { params: Promise<{ code: string }> }) {
+  const params = await props.params;
   // Bot/spam protection — finish triggers a global rerank, expensive when spammed.
   const ip = getClientIp(req.headers)
   const rl = rateLimit(`arena_finish:${ip}`, 10, 10 * 60 * 1000)

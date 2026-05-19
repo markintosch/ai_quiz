@@ -10,8 +10,8 @@ const pressStart = Press_Start_2P({ weight: '400', subsets: ['latin'], variable:
 const vt323 = VT323({ weight: '400', subsets: ['latin'], variable: '--font-vt323' })
 
 interface PageProps {
-  params: { code: string }
-  searchParams: { pid?: string }
+  params: Promise<{ code: string }>
+  searchParams: Promise<{ pid?: string }>
 }
 
 interface ParticipantRow {
@@ -29,7 +29,9 @@ interface LeaderboardEntry {
   isMe: boolean
 }
 
-export default async function ArenaResultsPage({ params, searchParams }: PageProps) {
+export default async function ArenaResultsPage(props: PageProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const supabase = createServiceClient()
   const code = params.code.toUpperCase()
   const myParticipantId = searchParams.pid ?? ''

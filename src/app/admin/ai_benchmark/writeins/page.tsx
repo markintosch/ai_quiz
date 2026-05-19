@@ -22,11 +22,12 @@ interface WriteIn {
   last_seen:    string
 }
 
-export default async function WriteInsPage({
-  searchParams,
-}: {
-  searchParams: { status?: string }
-}) {
+export default async function WriteInsPage(
+  props: {
+    searchParams: Promise<{ status?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
   const status = searchParams.status ?? 'pending'
 
   const supabase = createClient(

@@ -9,7 +9,8 @@ export const dynamic = 'force-dynamic'
 
 const VALID_STATUS = new Set(['pending', 'approved', 'spam', 'rejected'])
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   if (!(await isAuthorised())) {
     return NextResponse.json({ error: 'unauthorised' }, { status: 401 })
   }
@@ -31,7 +32,8 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   return NextResponse.json({ ok: true })
 }
 
-export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   if (!(await isAuthorised())) {
     return NextResponse.json({ error: 'unauthorised' }, { status: 401 })
   }

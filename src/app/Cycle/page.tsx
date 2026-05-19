@@ -33,7 +33,7 @@ export default async function CycleEntryPage() {
   }
 
   // Technische onboarding (locatie, cyclus-datum)
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: profile } = await supabase
     .from('cycle_profiles')
     .select('onboarded_at')

@@ -21,7 +21,7 @@ export async function GET(req: Request) {
   if (!user) return NextResponse.json({ ok: false }, { status: 401 })
 
   const format = new URL(req.url).searchParams.get('format') ?? 'json'
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const profileRes = await supabase
     .from('cycle_profiles').select('*').eq('user_id', user.id).maybeSingle()

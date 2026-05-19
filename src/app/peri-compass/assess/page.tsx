@@ -12,11 +12,12 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 }
 
-export default function CompassAssessPage({
-  searchParams,
-}: {
-  searchParams: { lang?: string; email?: string }
-}) {
+export default async function CompassAssessPage(
+  props: {
+    searchParams: Promise<{ lang?: string; email?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
   const lang = pickLang(searchParams.lang)
   return <CompassAssessClient lang={lang} prefilledEmail={searchParams.email ?? ''} />
 }

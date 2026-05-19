@@ -25,7 +25,7 @@ export function deriveSessionToken(secret: string): string {
 /**
  * Cookie options for the admin session cookie.
  */
-export function adminCookieOptions(maxAge = 60 * 60 * 8): Parameters<Awaited<ReturnType<typeof cookies>>['set']>[2] {
+export function adminCookieOptions(maxAge = 60 * 60 * 8): Parameters<Awaited<Awaited<ReturnType<typeof cookies>>>['set']>[2] {
   return {
     httpOnly: true,
     path: '/',

@@ -23,11 +23,12 @@ const RANGE_DAYS: Record<string, number | null> = {
   'all': null,
 }
 
-export default async function FunnelPage({
-  searchParams,
-}: {
-  searchParams: { range?: string }
-}) {
+export default async function FunnelPage(
+  props: {
+    searchParams: Promise<{ range?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
   const range = (searchParams.range && RANGE_DAYS[searchParams.range] !== undefined ? searchParams.range : '30')
   const days  = RANGE_DAYS[range]
 

@@ -12,7 +12,7 @@ export default async function SettingsPage() {
   const user = await requireCycleUser()
   if (!user) redirect('/Cycle/login')
 
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: profile } = await supabase
     .from('cycle_profiles')
     .select('last_period_start, typical_length, reminder_time, timezone')
