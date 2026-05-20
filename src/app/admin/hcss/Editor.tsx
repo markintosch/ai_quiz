@@ -82,8 +82,61 @@ function ObjectList<T extends Record<string, string>>({ label, items, fields, em
   )
 }
 
-// ── Main editor ─────────────────────────────────────────────────────────────
+// Image field: shows a preview, lets you upload a file (→ Supabase Storage via
+// /api/admin/upload) or paste a path/URL manually.
+function ImageField({ label, value, onChange }: {
+  label: string; value: string; onChange: (v: string) => void
+}) {
+  const [uploading, setUploading] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
 
+  async function upload(file: File) {
+    setUploading(true); setErr(null)
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
+      const json = await res.json() as { url?: string; error?: string }
+      if (!res.ok || !json.url) throw new Error(json.error ?? 'Upload mislukt')
+      onChange(json.url)
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : 'Upload mislukt')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  return (
+    <div className="mb-3">
+      <span className="block text-xs font-semibold text-gray-700 mb-1">{label}</span>
+      <div className="flex items-start gap-4">
+        {value
+          // eslint-disable-next-line @next/next/no-img-element
+          ? <img src={value} alt="" className="w-24 h-24 rounded-lg object-cover border border-gray-200" />
+          : <div className="w-24 h-24 rounded-lg border border-dashed border-gray-300 flex items-center justify-center text-xs text-gray-400">geen</div>}
+        <div className="flex-1">
+          <input
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-accent"
+            placeholder="/Diederik_Hammer.jpeg of upload-URL"
+            value={value} onChange={(e) => onChange(e.target.value)} />
+          <div className="mt-2 flex items-center gap-3">
+            <label className="text-sm text-brand-accent font-semibold cursor-pointer hover:underline">
+              {uploading ? 'Uploaden…' : 'Upload afbeelding'}
+              <input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" className="hidden"
+                disabled={uploading}
+                onChange={(e) => { const f = e.target.files?.[0]; if (f) upload(f) }} />
+            </label>
+            {value && <button type="button" className="text-sm text-red-600 hover:underline" onClick={() => onChange('')}>verwijderen</button>}
+          </div>
+          <p className="mt-1 text-xs text-gray-400">PNG, JPG, WebP of SVG · max 2 MB</p>
+          {err && <p className="mt-1 text-xs text-red-600">{err}</p>}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Main editor ─────────────────────────────────────────────────────────────
 export default function HcssEditor({ initial }: { initial: HcssContent }) {
   const [c, setC] = useState<HcssContent>(initial)
   const [saving, setSaving] = useState(false)
@@ -141,7 +194,7 @@ export default function HcssEditor({ initial }: { initial: HcssContent }) {
         <Field label="Kop" value={c.problem.heading} onChange={(v) => patch('problem', { heading: v })} />
         <Field label="Tekst" value={c.problem.body} onChange={(v) => patch('problem', { body: v })} textarea />
         <Field label="Afsluitende regel" value={c.problem.closing} onChange={(v) => patch('problem', { closing: v })} textarea />
-        <Field label="Foto (pad in /public, leeg = geen foto)" value={c.problem.photo} onChange={(v) => patch('problem', { photo: v })} />
+        <ImageField label="Foto naast dit blok" value={c.problem.photo} onChange={(v) => patch('problem', { photo: v })} />
       </Section>
 
       <Section title="Diensten">
