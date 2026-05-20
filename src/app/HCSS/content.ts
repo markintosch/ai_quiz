@@ -24,7 +24,7 @@ export interface HcssContent {
     ctaSecondary: HLink
     trustBar: string[]
   }
-  problem: { heading: string; body: string; closing: string }
+  problem: { heading: string; body: string; closing: string; photo: string }
   services: { heading: string; intro: string; cards: HCard[] }
   assessment: {
     eyebrow: string
@@ -90,6 +90,7 @@ export const DEFAULT_CONTENT: HcssContent = {
     heading: 'Herkenbaar?',
     body: 'Je organisatie draait op digitale systemen, maar niemand houdt zich fulltime bezig met informatiebeveiliging. Je weet dat er risico’s zijn, maar niet precies welke. En de securitybedrijven die je vindt, bieden oplossingen die te zwaar, te duur of te complex zijn voor jouw situatie.',
     closing: 'HCSS is er voor organisaties die cybersecurity serieus willen nemen, zonder dat het een enterprise-project wordt.',
+    photo: '/Diederik_Hammer.jpeg',
   },
   services: {
     heading: 'Wat HCSS voor je doet',

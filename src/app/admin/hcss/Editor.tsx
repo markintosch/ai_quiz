@@ -141,6 +141,7 @@ export default function HcssEditor({ initial }: { initial: HcssContent }) {
         <Field label="Kop" value={c.problem.heading} onChange={(v) => patch('problem', { heading: v })} />
         <Field label="Tekst" value={c.problem.body} onChange={(v) => patch('problem', { body: v })} textarea />
         <Field label="Afsluitende regel" value={c.problem.closing} onChange={(v) => patch('problem', { closing: v })} textarea />
+        <Field label="Foto (pad in /public, leeg = geen foto)" value={c.problem.photo} onChange={(v) => patch('problem', { photo: v })} />
       </Section>
 
       <Section title="Diensten">

@@ -38,10 +38,16 @@ export default function HcssView({ c }: { c: HcssContent }) {
 
       {/* PROBLEM */}
       <section className="hcss-sec">
-        <div className="hcss-wrap hcss-narrow">
-          <h2>{c.problem.heading}</h2>
-          <p className="hcss-big">{c.problem.body}</p>
-          <p className="hcss-big hcss-accent-text">{c.problem.closing}</p>
+        <div className={`hcss-wrap ${c.problem.photo ? 'hcss-problem-grid' : 'hcss-narrow'}`}>
+          <div>
+            <h2>{c.problem.heading}</h2>
+            <p className="hcss-big">{c.problem.body}</p>
+            <p className="hcss-big hcss-accent-text">{c.problem.closing}</p>
+          </div>
+          {c.problem.photo && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img className="hcss-problem-photo" src={c.problem.photo} alt="Diederik Hammer" />
+          )}
         </div>
       </section>
 
@@ -265,6 +271,8 @@ const CSS = `
 .hcss-alt{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .hcss-big{font-size:19px;margin-top:16px!important}
 .hcss-accent-text{font-weight:600;color:var(--n)}
+.hcss-problem-grid{display:grid;grid-template-columns:1.4fr .9fr;gap:40px;align-items:center}
+.hcss-problem-photo{width:100%;height:auto;border-radius:16px;object-fit:cover;box-shadow:0 18px 40px rgba(13,27,42,.16)}
 .hcss-grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:28px}
 .hcss-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px}
 .hcss-alt .hcss-card{background:var(--bg)}
@@ -337,6 +345,6 @@ const CSS = `
 .hcss-footnav{display:flex;flex-wrap:wrap;gap:18px;align-items:center}
 .hcss-footnav a{color:#cdd6df;text-decoration:none;font-size:14px}
 .hcss-legal{margin-top:28px!important;font-size:13px;color:#6f8498}
-@media(max-width:880px){.hcss-grid4{grid-template-columns:1fr 1fr}.hcss-tiers{grid-template-columns:1fr}.hcss-quotes{grid-template-columns:1fr}.hcss-contact-grid{grid-template-columns:1fr}.hcss-creds{grid-template-columns:1fr}.hcss-founder{flex-direction:column}}
+@media(max-width:880px){.hcss-grid4{grid-template-columns:1fr 1fr}.hcss-tiers{grid-template-columns:1fr}.hcss-quotes{grid-template-columns:1fr}.hcss-problem-grid{grid-template-columns:1fr;gap:24px}.hcss-problem-photo{max-width:360px}.hcss-contact-grid{grid-template-columns:1fr}.hcss-creds{grid-template-columns:1fr}.hcss-founder{flex-direction:column}}
 @media(max-width:560px){.hcss-grid4{grid-template-columns:1fr}.hcss-frow{grid-template-columns:1fr}.hcss-navlinks{gap:14px}.hcss-navlinks a:not(.hcss-btn){display:none}}
 `
