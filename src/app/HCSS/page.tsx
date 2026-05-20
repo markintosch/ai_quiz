@@ -91,6 +91,24 @@ export default async function CyberCompassLandingPage(
         </div>
       </section>
 
+      {/* Testimonials — role-attributed, no names */}
+      {t.testimonials.length > 0 && (
+        <section className="border-t border-gray-100 bg-white">
+          <div className="mx-auto max-w-5xl px-6 py-16">
+            <h2 className="mb-8 text-center text-2xl font-bold" style={{ color: '#1f3a4a' }}>{t.testimonialsHeading}</h2>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {t.testimonials.map((tm, i) => (
+                <figure key={i} className="flex h-full flex-col rounded-lg border border-gray-200 bg-white p-6">
+                  <span aria-hidden="true" className="mb-3 text-3xl leading-none" style={{ color: '#E8611A' }}>&ldquo;</span>
+                  <blockquote className="mb-4 flex-1 text-sm leading-relaxed text-gray-700">{tm.quote}</blockquote>
+                  <figcaption className="text-xs font-medium" style={{ color: '#1f3a4a' }}>{tm.role}</figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* For whom */}
       <section className="border-t border-gray-100 bg-gray-50">
         <div className="mx-auto max-w-3xl px-6 py-14">

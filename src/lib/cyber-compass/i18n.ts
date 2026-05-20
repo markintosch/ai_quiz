@@ -34,6 +34,8 @@ export const LANDING: Record<Lang, {
   forWhom:       { strong: string; text: string }[]
   notHeading:    string
   notList:       string[]
+  testimonialsHeading: string
+  testimonials:  { quote: string; role: string }[]
   finalLine:     string
   ownedBy:       string
 }> = {
@@ -65,6 +67,10 @@ export const LANDING: Record<Lang, {
       'Geen sales-funnel — je bent vrij om alleen je score te bekijken en weg te gaan.',
       'Geen dataverkoop. Het platform en je antwoorden worden beheerd door Brand PWRD Media. Diederik (HCSS) is inhoudelijk eigenaar van het assessment.',
     ],
+    testimonialsHeading: 'Wat opdrachtgevers zeggen',
+    testimonials: [
+      { quote: 'Diederik heeft enorm veel kennis op het gebied van cybersecurity. Hij is niet alleen een professional, maar ook een uitstekende luisteraar die altijd openstaat voor nieuwe ideeën.', role: 'Opdrachtgever — samengewerkt aan informatiebeveiliging' },
+    ],
     finalLine:     'Klaar voor je nulmeting?',
     ownedBy:       'Een instrument van Hammer Cyber Security Services (HCSS), gebouwd op het Brand PWRD Media platform.',
   },
@@ -95,6 +101,10 @@ export const LANDING: Record<Lang, {
       'Not a NIS2 or ISO certification check (does give a first direction).',
       'Not a sales funnel — you can view your score and leave.',
       'No data sales. The platform and your answers are managed by Brand PWRD Media. Diederik (HCSS) is the content owner of the assessment.',
+    ],
+    testimonialsHeading: 'What clients say',
+    testimonials: [
+      { quote: 'Diederik has an enormous amount of knowledge in cybersecurity. He is not only a professional, but also an excellent listener who is always open to new ideas.', role: 'Client — worked together on information security' },
     ],
     finalLine:     'Ready for your baseline?',
     ownedBy:       'A tool by Hammer Cyber Security Services (HCSS), built on the Brand PWRD Media platform.',
