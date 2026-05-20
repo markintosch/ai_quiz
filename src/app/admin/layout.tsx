@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { href: '/admin/stats', label: 'Statistics' },
   { href: '/admin/privacy', label: 'Privacy & Data' },
   { href: '/admin/content', label: 'Homepage copy' },
+  { href: '/admin/summercourse', label: '☀️ Summer Course' },
   { href: '/admin/products', label: 'Products' },
   { href: '/admin/shop', label: '🛍️ Shop' },
   { href: '/admin/interests', label: 'Interests' },

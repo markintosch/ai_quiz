@@ -12,6 +12,7 @@ const ALLOWED_PRODUCT_KEYS = new Set([
   'manda_readiness',
   'hr_readiness',
   'zorgmarkt_readiness',
+  'summer_course',
 ])
 
 // GET /api/admin/content?locale=en&product_key=ai_maturity
