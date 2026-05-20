@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import type {
-  SummerCourseContent, SCDay, SCRow, SCHost, SCFaq,
+  SummerCourseContent, SCDay, SCRow, SCHost, SCFaq, SCCase,
 } from '@/app/summercourse/content'
 
 // ── Small field primitives ─────────────────────────────────────────────────
@@ -176,6 +176,35 @@ export default function SummerCourseEditor({ initial }: { initial: SummerCourseC
           <Field label="Tekst" value={c.program.after.body} textarea
             onChange={(v) => patch('program', { after: { ...c.program.after, body: v } })} />
         </div>
+      </Section>
+
+      {/* CASES */}
+      <Section title="Voorbeeldcases">
+        <Field label="Kop" value={c.cases.heading} onChange={(v) => patch('cases', { heading: v })} />
+        <StringList label="Intro-alinea's" items={c.cases.intro} onChange={(v) => patch('cases', { intro: v })} />
+        {c.cases.items.map((cs, i) => (
+          <div key={i} className="border border-gray-200 rounded-lg p-3 mb-3 bg-gray-50">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-xs font-bold text-gray-500">Case {i + 1}</span>
+              <button type="button" className="text-xs text-red-600 hover:underline"
+                onClick={() => patch('cases', { items: c.cases.items.filter((_, j) => j !== i) })}>verwijderen</button>
+            </div>
+            <Field label="Titel" value={cs.title}
+              onChange={(v) => patch('cases', { items: c.cases.items.map((x, j) => j === i ? { ...x, title: v } : x) })} />
+            <Field label="Voor wie" value={cs.forWho} textarea
+              onChange={(v) => patch('cases', { items: c.cases.items.map((x, j) => j === i ? { ...x, forWho: v } : x) })} />
+            <Field label="Wat je bouwt" value={cs.build} textarea
+              onChange={(v) => patch('cases', { items: c.cases.items.map((x, j) => j === i ? { ...x, build: v } : x) })} />
+            <Field label="Wat neem je mee" value={cs.input} textarea
+              onChange={(v) => patch('cases', { items: c.cases.items.map((x, j) => j === i ? { ...x, input: v } : x) })} />
+            <Field label="Na afloop" value={cs.result} textarea
+              onChange={(v) => patch('cases', { items: c.cases.items.map((x, j) => j === i ? { ...x, result: v } : x) })} />
+          </div>
+        ))}
+        <button type="button" className="text-sm text-brand-accent font-semibold hover:underline mb-4 block"
+          onClick={() => patch('cases', { items: [...c.cases.items, { title: '', forWho: '', build: '', input: '', result: '' } as SCCase] })}>+ case toevoegen</button>
+        <Field label="Afsluiting — titel" value={c.cases.closingTitle} onChange={(v) => patch('cases', { closingTitle: v })} />
+        <Field label="Afsluiting — tekst" value={c.cases.closingBody} onChange={(v) => patch('cases', { closingBody: v })} textarea />
       </Section>
 
       {/* SCHEDULE */}

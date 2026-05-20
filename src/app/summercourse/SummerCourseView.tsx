@@ -113,8 +113,35 @@ export default function SummerCourseView({ c }: { c: SummerCourseContent }) {
         </div>
       </section>
 
-      {/* SCHEDULE */}
+      {/* CASES */}
       <section>
+        <div className="sc-wrap">
+          <h2>{c.cases.heading}</h2>
+          <div className="sc-narrow-block">
+            {c.cases.intro.map((p, i) => <p key={i} className="sc-muted sc-casetop">{p}</p>)}
+          </div>
+          <div className="sc-cases">
+            {c.cases.items.map((cs, i) => (
+              <div key={i} className="sc-case">
+                <h3>{cs.title}</h3>
+                <dl>
+                  <dt>Voor wie</dt><dd>{cs.forWho}</dd>
+                  <dt>Wat je bouwt</dt><dd>{cs.build}</dd>
+                  <dt>Wat neem je mee</dt><dd>{cs.input}</dd>
+                  <dt>Na afloop</dt><dd>{cs.result}</dd>
+                </dl>
+              </div>
+            ))}
+          </div>
+          <div className="sc-case-closing">
+            <h3>{c.cases.closingTitle}</h3>
+            <p>{c.cases.closingBody}</p>
+          </div>
+        </div>
+      </section>
+
+      {/* SCHEDULE */}
+      <section className="sc-alt">
         <div className="sc-wrap">
           <h2>{c.schedule.heading}</h2>
           <p className="sc-muted">{c.schedule.intro}</p>
@@ -130,7 +157,7 @@ export default function SummerCourseView({ c }: { c: SummerCourseContent }) {
       </section>
 
       {/* HOSTS */}
-      <section className="sc-alt">
+      <section>
         <div className="sc-wrap">
           <h2>{c.hosts.heading}</h2>
           <p className="sc-muted sc-narrow">{c.hosts.intro}</p>
@@ -149,7 +176,7 @@ export default function SummerCourseView({ c }: { c: SummerCourseContent }) {
       </section>
 
       {/* PRICING */}
-      <section id="investering">
+      <section className="sc-alt" id="investering">
         <div className="sc-wrap">
           <h2>{c.pricing.heading}</h2>
           <p className="sc-vs">{c.pricing.onlineVsLive}</p>
@@ -172,7 +199,7 @@ export default function SummerCourseView({ c }: { c: SummerCourseContent }) {
       </section>
 
       {/* FAQ */}
-      <section className="sc-alt">
+      <section>
         <div className="sc-wrap">
           <h2>{c.faq.heading}</h2>
           <div className="sc-faqs">
@@ -187,7 +214,7 @@ export default function SummerCourseView({ c }: { c: SummerCourseContent }) {
       </section>
 
       {/* SIGNUP */}
-      <section id="inschrijven">
+      <section className="sc-alt" id="inschrijven">
         <div className="sc-wrap sc-signup">
           <h2>{c.signup.heading}</h2>
           <p className="sc-muted">{c.signup.intro}</p>
@@ -257,6 +284,16 @@ const CSS = `
 .sc-blk{margin-top:18px}
 .sc-blk .sc-tag{display:block;margin-bottom:8px}
 .sc-blk ul{margin:0 0 0 18px;color:var(--sc-muted);font-size:15px}
+.sc-casetop{margin-top:14px!important;font-size:16px}
+.sc-cases{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:28px}
+.sc-case{background:#fff;border:1px solid var(--sc-line);border-radius:16px;padding:22px}
+.sc-case h3{margin-bottom:12px}
+.sc-case dl{display:grid;grid-template-columns:120px 1fr;gap:6px 14px;margin:0}
+.sc-case dt{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--sc-accent);padding-top:2px}
+.sc-case dd{margin:0;font-size:14px;color:var(--sc-muted)}
+.sc-case-closing{margin-top:24px;background:#fff;border:1px dashed var(--sc-line);border-radius:16px;padding:24px}
+.sc-case-closing h3{margin-bottom:8px}
+.sc-case-closing p{color:var(--sc-muted);font-size:15px;max-width:760px}
 .sc-sched{margin-top:28px;border:1px solid var(--sc-line);border-radius:16px;overflow:hidden;background:#fff}
 .sc-srow{display:grid;grid-template-columns:140px 1fr;border-top:1px solid var(--sc-line)}
 .sc-srow:first-child{border-top:none}
@@ -289,5 +326,5 @@ const CSS = `
 .sc-footer{background:var(--sc-teal-dk);color:#aebcc7;padding:36px 0;font-size:14px}
 .sc-footer a{color:#fff;text-decoration:none}
 .sc-footrow{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
-@media(max-width:760px){.sc-grid2,.sc-price-wrap{grid-template-columns:1fr}.sc-srow{grid-template-columns:110px 1fr}}
+@media(max-width:760px){.sc-grid2,.sc-price-wrap,.sc-cases{grid-template-columns:1fr}.sc-srow{grid-template-columns:110px 1fr}.sc-case dl{grid-template-columns:1fr}.sc-case dt{padding-top:8px}}
 `
