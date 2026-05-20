@@ -9,6 +9,7 @@ import { detectPhase, inferPeriodStarts } from '@/lib/cycle/phase'
 import { computeReadiness } from '@/lib/cycle/score'
 import type { ActivityIntensity, ActivityType, CyclePhase } from '@/lib/cycle/types'
 import { fetchWeather } from '@/lib/cycle/weather'
+import { isValidSymptom, type SymptomKey } from '@/lib/cycle/symptoms'
 
 const ACTIVITY_TYPES: ActivityType[] = ['None', 'Walk', 'Run', 'Cycle', 'Strength', 'Yoga', 'Other']
 const INTENSITIES: ActivityIntensity[] = ['Low', 'Medium', 'High']
@@ -40,6 +41,10 @@ export async function POST(req: Request) {
     activity_types?: string[]
     activity_intensity?: string | null
     alcohol_glasses?: number
+    symptoms?: string[]
+    symptom_intensities?: Record<string, number>
+    nap_taken?: boolean
+    busy_day?: boolean
     menstruation_flag?: boolean
   }
 
@@ -52,6 +57,17 @@ export async function POST(req: Request) {
   const types     = (body.activity_types ?? []).filter((t): t is ActivityType =>
     ACTIVITY_TYPES.includes(t as ActivityType))
   const intensity = body.activity_intensity ?? null
+  const symptoms  = (body.symptoms ?? []).filter(isValidSymptom) as SymptomKey[]
+  // Build a clean intensities object: only keys that ARE in the symptoms
+  // array AND whose intensity is an integer 1-5. Anything else is dropped.
+  const intensitiesIn = body.symptom_intensities ?? {}
+  const symptomIntensities: Record<string, number> = {}
+  for (const key of symptoms) {
+    const v = intensitiesIn[key]
+    if (Number.isInteger(v) && v >= 1 && v <= 5) symptomIntensities[key] = v
+  }
+  const napTaken  = Boolean(body.nap_taken)
+  const busyDay   = Boolean(body.busy_day)
 
   if (
     !isISODate(entryDate) ||
@@ -69,7 +85,7 @@ export async function POST(req: Request) {
   }
 
   // ── Profile (for phase detection) ───────────────────────────────────────
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: profile } = await supabase
     .from('cycle_profiles')
     .select('last_period_start, typical_length, lat, lon, timezone')
@@ -139,6 +155,10 @@ export async function POST(req: Request) {
       activity_types:     types,
       activity_intensity: isRest ? null : (intensity as ActivityIntensity),
       alcohol_glasses:    alcohol,
+      symptoms,
+      symptom_intensities: symptomIntensities,
+      nap_taken:          napTaken,
+      busy_day:           busyDay,
       menstruation_flag:  Boolean(body.menstruation_flag),
       readiness_score:    score.readiness,
       cycle_phase:        phaseResult.phase,

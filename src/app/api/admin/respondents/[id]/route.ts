@@ -4,10 +4,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 import { isAuthorised } from '@/lib/admin/auth'
 
-export async function DELETE(
-  _req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(_req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   if (!(await isAuthorised())) {
     return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
   }

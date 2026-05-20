@@ -26,6 +26,14 @@ export interface Database {
           welcome_message: string | null
           excluded_question_codes: string[] | null
           product_id: string | null
+          access_code: string | null
+          secondary_color: string | null
+          bg_color: string | null
+          assessment_mode: 'internal' | 'external' | null
+          notify_email: string | null
+          form_position: 'pre' | 'post' | null
+          lead_capture_mode: 'full' | 'minimal' | null
+          website_url: string | null
         }
         Insert: {
           id?: string
@@ -39,6 +47,14 @@ export interface Database {
           welcome_message?: string | null
           excluded_question_codes?: string[] | null
           product_id?: string | null
+          access_code?: string | null
+          secondary_color?: string | null
+          bg_color?: string | null
+          assessment_mode?: 'internal' | 'external' | null
+          notify_email?: string | null
+          form_position?: 'pre' | 'post' | null
+          lead_capture_mode?: 'full' | 'minimal' | null
+          website_url?: string | null
         }
         Update: {
           id?: string
@@ -52,6 +68,14 @@ export interface Database {
           welcome_message?: string | null
           excluded_question_codes?: string[] | null
           product_id?: string | null
+          access_code?: string | null
+          secondary_color?: string | null
+          bg_color?: string | null
+          assessment_mode?: 'internal' | 'external' | null
+          notify_email?: string | null
+          form_position?: 'pre' | 'post' | null
+          lead_capture_mode?: 'full' | 'minimal' | null
+          website_url?: string | null
         }
         Relationships: []
       }
@@ -1001,6 +1025,10 @@ export interface Database {
           activity_types: string[]
           activity_intensity: string | null
           alcohol_glasses: number
+          symptoms: string[]
+          symptom_intensities: Json
+          nap_taken: boolean
+          busy_day: boolean
           menstruation_flag: boolean
           readiness_score: number | null
           cycle_phase: string
@@ -1019,6 +1047,10 @@ export interface Database {
           activity_types?: string[]
           activity_intensity?: string | null
           alcohol_glasses?: number
+          symptoms?: string[]
+          symptom_intensities?: Json
+          nap_taken?: boolean
+          busy_day?: boolean
           menstruation_flag?: boolean
           readiness_score?: number | null
           cycle_phase: string
@@ -1037,6 +1069,10 @@ export interface Database {
           activity_types?: string[]
           activity_intensity?: string | null
           alcohol_glasses?: number
+          symptoms?: string[]
+          symptom_intensities?: Json
+          nap_taken?: boolean
+          busy_day?: boolean
           menstruation_flag?: boolean
           readiness_score?: number | null
           cycle_phase?: string

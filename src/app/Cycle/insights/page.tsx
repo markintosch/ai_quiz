@@ -14,11 +14,11 @@ export default async function InsightsPage() {
   const user = await requireCycleUser()
   if (!user) redirect('/Cycle/login')
 
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const [{ data: entries }, { data: weather }, { data: seenRules }] = await Promise.all([
     supabase.from('cycle_daily_entries')
-      .select('entry_date, mood_score, sleep, stress, readiness_score, activity_intensity, activity_types, alcohol_glasses, cycle_phase')
+      .select('entry_date, mood_score, sleep, stress, readiness_score, activity_intensity, activity_types, alcohol_glasses, symptoms, symptom_intensities, nap_taken, busy_day, cycle_phase')
       .eq('user_id', user.id)
       .order('entry_date', { ascending: true })
       .limit(120),
@@ -44,6 +44,10 @@ export default async function InsightsPage() {
     activity_intensity: e.activity_intensity,
     activity_types:     e.activity_types ?? [],
     alcohol_glasses:    e.alcohol_glasses ?? 0,
+    symptoms:           e.symptoms ?? [],
+    symptom_intensities: (e.symptom_intensities ?? {}) as Record<string, number>,
+    nap_taken:          e.nap_taken ?? false,
+    busy_day:           e.busy_day ?? false,
     cycle_phase:        e.cycle_phase,
     rainy:              weatherByDate[e.entry_date] === 'rainy',
   }))

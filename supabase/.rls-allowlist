@@ -1,0 +1,31 @@
+# scripts/check-rls.sh allow-list
+# ──────────────────────────────────────────────────────────────────────────────
+# Tables whose RLS is enabled in ANOTHER migration file (split across files).
+# Add one table name per line. The pre-commit hook reads this list and
+# skips reporting these as violations.
+#
+# RULE: only add to this list when there's an explicit OTHER migration file
+# that does the ENABLE ROW LEVEL SECURITY for the table. Don't use this to
+# silence a real violation.
+
+# ── Pulse tables — RLS enabled in supabase/migration_rls_pulse.sql ─────────
+pulse_responses
+pulse_suggestions
+pulse_themes
+pulse_entities
+pulse_dimensions
+pulse_responses_v2
+pulse_leads
+pulse_suggestions_v2
+pulse_agent_profiles
+pulse_anomaly_flags
+
+# ── Cohort + arena + site_content — RLS enabled in supabase/migration_rls_security_audit.sql
+cohort_waves
+cohort_responses
+arena_questions
+arena_sessions
+arena_participants
+arena_answers
+arena_subscribers
+site_content

@@ -8,6 +8,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { ActivityType, ActivityIntensity } from '@/lib/cycle/types'
+import { SYMPTOM_GROUPS_NL, SYMPTOM_LABEL_NL, type SymptomKey } from '@/lib/cycle/symptoms'
 
 const ACTIVITY_LABELS: Record<ActivityType, string> = {
   None:     'Rust',
@@ -25,6 +26,8 @@ const INTENSITY_LABELS: Record<ActivityIntensity, string> = {
   High:   'Pittig',
 }
 
+type SymptomIntensity = 1 | 2 | 3 | 4 | 5
+
 interface InitialEntry {
   mood_score: number
   mood_variable: boolean
@@ -33,6 +36,9 @@ interface InitialEntry {
   activity_types: ActivityType[]
   activity_intensity: ActivityIntensity | null
   alcohol_glasses: number
+  symptoms: Partial<Record<SymptomKey, SymptomIntensity>>
+  nap_taken: boolean
+  busy_day: boolean
   menstruation_flag: boolean
 }
 
@@ -45,17 +51,34 @@ export default function CheckinStepper({
 }) {
   const router = useRouter()
 
-  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5 | 6>(1)
+  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5 | 6 | 7>(1)
   const [mood, setMood]                 = useState<number>(initial?.mood_score ?? 5)
   const [moodVariable, setMoodVariable] = useState<boolean>(initial?.mood_variable ?? false)
   const [sleep, setSleep]               = useState<number>(initial?.sleep ?? 7)
+  const [napTaken, setNapTaken]         = useState<boolean>(initial?.nap_taken ?? false)
   const [activityTypes, setTypes]       = useState<ActivityType[]>(initial?.activity_types ?? ['None'])
   const [intensity, setIntensity]       = useState<ActivityIntensity | null>(initial?.activity_intensity ?? null)
   const [stress, setStress]             = useState<number>(initial?.stress ?? 5)
+  const [busyDay, setBusyDay]           = useState<boolean>(initial?.busy_day ?? false)
+  const [symptoms, setSymptoms]         = useState<Partial<Record<SymptomKey, SymptomIntensity>>>(initial?.symptoms ?? {})
   const [alcohol, setAlcohol]           = useState<number>(initial?.alcohol_glasses ?? 0)
   const [period, setPeriod]             = useState<boolean>(initial?.menstruation_flag ?? false)
   const [submitting, setSubmitting]     = useState(false)
   const [error, setError]               = useState<string>('')
+
+  function toggleSymptom(k: SymptomKey) {
+    setSymptoms(prev => {
+      if (prev[k] != null) {
+        const { [k]: _, ...rest } = prev
+        return rest
+      }
+      return { ...prev, [k]: 3 as SymptomIntensity }   // default intensity = 3
+    })
+  }
+
+  function setSymptomIntensity(k: SymptomKey, n: SymptomIntensity) {
+    setSymptoms(prev => prev[k] != null ? { ...prev, [k]: n } : prev)
+  }
 
   const isRest = activityTypes.length === 1 && activityTypes[0] === 'None'
 
@@ -83,6 +106,10 @@ export default function CheckinStepper({
           activity_types:     activityTypes,
           activity_intensity: isRest ? null : intensity,
           alcohol_glasses:    alcohol,
+          symptoms:           Object.keys(symptoms),       // string[] presence
+          symptom_intensities: symptoms,                   // { key: 1-5 }
+          nap_taken:          napTaken,
+          busy_day:           busyDay,
           menstruation_flag:  period,
         }),
       })
@@ -106,7 +133,7 @@ export default function CheckinStepper({
 
         {/* Progress dots */}
         <div className="flex justify-center gap-2 mb-7">
-          {[1, 2, 3, 4, 5, 6].map(n => (
+          {[1, 2, 3, 4, 5, 6, 7].map(n => (
             <span
               key={n}
               aria-hidden
@@ -170,9 +197,17 @@ export default function CheckinStepper({
                 min={1} max={10} step={1}
                 value={sleep}
                 onChange={e => setSleep(Number(e.target.value))}
-                className="cycle-slider"
+                className="cycle-slider mb-5"
                 aria-label="Slaap van 1 tot 10"
               />
+              <label className="flex items-center gap-3 cursor-pointer" style={{ fontSize: 14, color: 'var(--cycle-muted)' }}>
+                <input
+                  type="checkbox"
+                  checked={napTaken}
+                  onChange={e => setNapTaken(e.target.checked)}
+                />
+                Dutje gehad vandaag
+              </label>
             </Step>
           )}
 
@@ -238,18 +273,118 @@ export default function CheckinStepper({
                 min={1} max={10} step={1}
                 value={stress}
                 onChange={e => setStress(Number(e.target.value))}
-                className="cycle-slider"
+                className="cycle-slider mb-5"
                 aria-label="Stress van 1 tot 10"
               />
+              <label className="flex items-center gap-3 cursor-pointer" style={{ fontSize: 14, color: 'var(--cycle-muted)' }}>
+                <input
+                  type="checkbox"
+                  checked={busyDay}
+                  onChange={e => setBusyDay(e.target.checked)}
+                />
+                Drukke dag
+              </label>
             </Step>
           )}
 
           {step === 5 && (
             <Step
-              title="Glazen alcohol gisteren?"
-              subtitle="Wijn, bier, sterk — telt allemaal."
+              title="Iets opvallends?"
+              subtitle="Tik aan wat je vandaag voelt. Niets? Klik 'Niets vandaag'."
               onBack={() => setStep(4)}
               onNext={() => setStep(6)}
+              canAdvance
+            >
+              <button
+                type="button"
+                className="cycle-button cycle-button-ghost w-full mb-5"
+                onClick={() => { setSymptoms({}); setStep(6) }}
+                style={{ minHeight: 'auto', padding: '10px 14px', fontSize: 14 }}
+              >
+                Niets vandaag →
+              </button>
+
+              {SYMPTOM_GROUPS_NL.map(group => {
+                const selectedInGroup = group.keys.filter(k => symptoms[k] != null)
+                return (
+                  <div key={group.label} style={{ marginBottom: 18 }}>
+                    <p
+                      className="cycle-display"
+                      style={{ fontSize: 17, marginBottom: 8, color: 'var(--cycle-muted)' }}
+                    >
+                      {group.label}
+                    </p>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                      {group.keys.map(k => (
+                        <button
+                          key={k}
+                          type="button"
+                          className="cycle-chip"
+                          data-selected={symptoms[k] != null ? 'true' : 'false'}
+                          onClick={() => toggleSymptom(k)}
+                          style={{ minHeight: 'auto', padding: '8px 12px', fontSize: 14 }}
+                        >
+                          {SYMPTOM_LABEL_NL[k]}
+                          {symptoms[k] != null && (
+                            <span style={{ marginLeft: 6, opacity: 0.85 }}>· {symptoms[k]}</span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                    {selectedInGroup.length > 0 && (
+                      <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                        {selectedInGroup.map(k => (
+                          <div key={k} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                            <span style={{
+                              fontSize: 13,
+                              color: 'var(--cycle-muted)',
+                              minWidth: 120,
+                            }}>
+                              {SYMPTOM_LABEL_NL[k]}
+                            </span>
+                            {([1, 2, 3, 4, 5] as SymptomIntensity[]).map(n => (
+                              <button
+                                key={n}
+                                type="button"
+                                onClick={() => setSymptomIntensity(k, n)}
+                                aria-label={`Intensiteit ${n} voor ${SYMPTOM_LABEL_NL[k]}`}
+                                data-selected={symptoms[k] === n ? 'true' : 'false'}
+                                style={{
+                                  width: 30,
+                                  height: 30,
+                                  borderRadius: '50%',
+                                  border: '1px solid var(--cycle-border)',
+                                  background: symptoms[k] === n ? 'var(--cycle-accent)' : 'var(--cycle-card)',
+                                  color: symptoms[k] === n ? '#fff' : 'var(--cycle-fg)',
+                                  fontSize: 13,
+                                  fontWeight: 500,
+                                  cursor: 'pointer',
+                                  padding: 0,
+                                  transition: 'all 200ms ease-out',
+                                }}
+                              >
+                                {n}
+                              </button>
+                            ))}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+              <p className="text-xs mt-2" style={{ color: 'var(--cycle-muted)' }}>
+                1 = nauwelijks · 3 = duidelijk · 5 = heftig
+              </p>
+            </Step>
+          )}
+
+          {step === 6 && (
+            <Step
+              title="Glazen alcohol gisteren?"
+              subtitle="Wijn, bier, sterk — telt allemaal."
+              onBack={() => setStep(5)}
+              onNext={() => setStep(7)}
               canAdvance
             >
               <div style={{ display: 'flex', gap: 8, marginBottom: 4 }}>
@@ -272,7 +407,7 @@ export default function CheckinStepper({
             </Step>
           )}
 
-          {step === 6 && (
+          {step === 7 && (
             <div>
               <h1 className="cycle-display text-3xl mb-1">Menstruatie vandaag?</h1>
               <p className="text-sm mb-6" style={{ color: 'var(--cycle-muted)' }}>
@@ -301,7 +436,7 @@ export default function CheckinStepper({
               <div className="flex gap-3">
                 <button
                   className="cycle-button cycle-button-ghost flex-1"
-                  onClick={() => setStep(5)}
+                  onClick={() => setStep(6)}
                   disabled={submitting}
                 >
                   Terug

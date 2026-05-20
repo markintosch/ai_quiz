@@ -4,11 +4,17 @@ export const dynamic = 'force-dynamic'
 // POST — player joins a lobby or active session (up to 5 attempts per email)
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
+import { rateLimit, getClientIp } from '@/lib/rateLimit'
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { code: string } }
-) {
+export async function POST(req: NextRequest, props: { params: Promise<{ code: string }> }) {
+  const params = await props.params;
+  // Bot/abuse protection — public endpoint that creates rows.
+  const ip = getClientIp(req.headers)
+  const rl = rateLimit(`arena_join:${ip}`, 10, 10 * 60 * 1000)
+  if (!rl.allowed) {
+    return NextResponse.json({ error: 'Too many join attempts. Try again in a few minutes.' }, { status: 429 })
+  }
+
   const supabase = createServiceClient()
   const code = params.code.toUpperCase()
   const body = await req.json() as { display_name: string; email?: string }

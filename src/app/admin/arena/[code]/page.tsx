@@ -6,7 +6,8 @@ import ArenaSessionManager from '@/components/admin/ArenaSessionManager'
 
 export const dynamic = 'force-dynamic'
 
-export default async function ArenaSessionPage({ params }: { params: { code: string } }) {
+export default async function ArenaSessionPage(props: { params: Promise<{ code: string }> }) {
+  const params = await props.params;
   const supabase = createServiceClient()
   const code = params.code.toUpperCase()
 

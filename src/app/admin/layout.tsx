@@ -25,6 +25,11 @@ const NAV_LINKS = [
   { href: '/admin/atelier', label: 'Atelier · ops' },
   { href: '/admin/atelier/icps', label: '↳ ICP knowledge base' },
   { href: '/admin/atelier/sources', label: '↳ Sources registry' },
+  { href: '/admin/blog', label: '📝 Blog' },
+  { href: '/admin/blog/subscribers', label: '↳ Abonnees' },
+  { href: '/admin/blog/comments',    label: '↳ Reacties' },
+  { href: '/admin/peri-compass', label: '🧭 Peri-Compass' },
+  { href: '/admin/cyber-compass', label: '🛡 Cyber Compass · HCSS' },
 ]
 
 export default function AdminLayout({

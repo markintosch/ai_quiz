@@ -13,7 +13,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: company } = await supabase
     .from('companies')
     .select('name, quiz_products!product_id(key)')
@@ -52,7 +52,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function FullQuizPage({ params }: PageProps) {
   const { locale, slug } = await params
   setRequestLocale(locale)
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: company, error: companyError } = await supabase
     .from('companies')

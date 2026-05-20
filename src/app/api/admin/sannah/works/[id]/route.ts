@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { isAuthorised } from '@/lib/admin/auth'
+import { isSannahAuthorised } from '@/lib/sannah/auth'
 
 const sb = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -20,7 +20,7 @@ interface PatchBody {
 }
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  if (!(await isAuthorised())) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  if (!(await isSannahAuthorised())) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
   const { id } = await params
   let body: PatchBody
   try { body = (await req.json()) as PatchBody } catch { return NextResponse.json({ error: 'Ongeldige JSON.' }, { status: 400 }) }
@@ -34,7 +34,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 }
 
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  if (!(await isAuthorised())) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  if (!(await isSannahAuthorised())) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
   const { id } = await params
   // Get image path first to delete from storage
   const { data: row } = await sb.from('sannah_works').select('image_path').eq('id', id).maybeSingle() as { data: { image_path: string } | null }

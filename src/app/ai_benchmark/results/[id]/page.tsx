@@ -22,9 +22,9 @@ import {
 
 export const dynamic = 'force-dynamic'
 
-function getBaseUrl(): string {
+async function getBaseUrl(): Promise<string> {
   try {
-    const h = headers()
+    const h = await headers()
     const host = h.get('host')
     const proto = h.get('x-forwarded-proto') || 'https'
     if (host) return `${proto}://${host}`
@@ -35,8 +35,9 @@ function getBaseUrl(): string {
 // Per-result metadata so social shares pull the dynamic archetype card.
 // Page itself is noindex (set in /ai_benchmark/results/layout.tsx); this
 // only ensures share scrapers see the right preview.
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const BASE = getBaseUrl()
+export async function generateMetadata(props: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const params = await props.params;
+  const BASE = await getBaseUrl()
   const ogUrl = `${BASE}/api/ai_benchmark/og?id=${params.id}`
   return {
     openGraph: {
@@ -224,13 +225,14 @@ type Segment = 'all' | 'role' | 'industry' | 'size' | 'region'
 
 // Segment labels are now pulled from the lang content per request render.
 
-export default async function ResultsPage({
-  params,
-  searchParams,
-}: {
-  params:        { id: string }
-  searchParams: { lang?: string; preview?: string; segment?: string }
-}) {
+export default async function ResultsPage(
+  props: {
+    params: Promise<{ id: string }>
+    searchParams: Promise<{ lang?: string; preview?: string; segment?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const lang    = pickLang(searchParams.lang)
   const t       = getContent(lang)
   const preview = searchParams.preview === '1'
@@ -687,6 +689,79 @@ export default async function ResultsPage({
                   }}
                 >
                   {tc.button}
+                </a>
+              </div>
+            </div>
+          </section>
+        )
+      })()}
+
+      {/* ── Cursus aanvulling — voor je team / als basis ──────────────────── */}
+      {(() => {
+        const tier = getScoreTier(data.total_score)
+        const cursusCopy = lang === 'nl'
+          ? {
+              eyebrow: 'Voor je team',
+              headline: tier === 'low'
+                ? 'Begin met de basics — voor jezelf én je team.'
+                : tier === 'mid'
+                ? 'Geef je team dezelfde sprong.'
+                : 'Geef je team de hands-on basis zodat ze niet achterblijven.',
+              body: 'Samen met Frank Meeuwsen ontwikkelden we cursusclaudecode.nl — een praktijkcursus voor professionals die AI willen gebruiken, niet bespreken.',
+              cta: 'Bekijk de cursus ↗',
+            }
+          : lang === 'fr'
+          ? {
+              eyebrow: 'Pour votre équipe',
+              headline: tier === 'low'
+                ? 'Commencez par les bases — pour vous et votre équipe.'
+                : tier === 'mid'
+                ? 'Faites faire le même saut à votre équipe.'
+                : "Donnez à votre équipe la base pratique pour qu'elle ne reste pas derrière.",
+              body: "Avec Frank Meeuwsen, nous avons développé cursusclaudecode.nl — une formation pratique pour les professionnels qui veulent utiliser l'IA, pas en discuter.",
+              cta: 'Voir le cours ↗',
+            }
+          : {
+              eyebrow: 'For your team',
+              headline: tier === 'low'
+                ? 'Start with the basics — for yourself and your team.'
+                : tier === 'mid'
+                ? 'Give your team the same leap.'
+                : 'Give your team the hands-on foundation so they don\'t fall behind.',
+              body: 'Together with Frank Meeuwsen we built cursusclaudecode.nl — a practical course for professionals who want to use AI, not just discuss it.',
+              cta: 'See the course ↗',
+            }
+        return (
+          <section style={{ background: '#fff', padding: '36px 24px', borderTop: `1px solid ${BORDER}` }}>
+            <div style={{ maxWidth: 760, margin: '0 auto' }}>
+              <div style={{
+                background: LIGHT, border: `1px solid ${BORDER}`, borderRadius: 12,
+                padding: '20px 24px',
+                display: 'flex', flexDirection: 'column', gap: 8,
+              }}>
+                <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', color: ACCENT, margin: 0 }}>
+                  {cursusCopy.eyebrow}
+                </p>
+                <p style={{ fontSize: 17, fontWeight: 700, color: INK, lineHeight: 1.35, margin: 0, letterSpacing: '-0.01em' }}>
+                  {cursusCopy.headline}
+                </p>
+                <p style={{ fontSize: 14, color: BODY, lineHeight: 1.55, margin: 0 }}>
+                  {cursusCopy.body}
+                </p>
+                <a
+                  href={`https://cursusclaudecode.nl/mdk?utm_source=ai_benchmark_results&utm_medium=cta_block&utm_campaign=mdk_affiliate&utm_content=${tier}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    alignSelf: 'flex-start',
+                    color: ACCENT, fontWeight: 700, fontSize: 13,
+                    textDecoration: 'none',
+                    borderBottom: `2px solid ${ACCENT}55`,
+                    paddingBottom: 2,
+                    marginTop: 4,
+                  }}
+                >
+                  {cursusCopy.cta}
                 </a>
               </div>
             </div>

@@ -25,7 +25,7 @@ export async function requireCycleUser(): Promise<
   | { id: string; email: string }
   | null
 > {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user || !user.email) return null
   if (!isAllowed(user.email)) {

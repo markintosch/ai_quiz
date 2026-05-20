@@ -17,10 +17,8 @@ interface ShopProduct {
   title: string
 }
 
-export async function GET(
-  _req: NextRequest,
-  { params }: { params: { orderId: string } }
-) {
+export async function GET(_req: NextRequest, props: { params: Promise<{ orderId: string }> }) {
+  const params = await props.params;
   const { orderId } = params
 
   if (!orderId) {

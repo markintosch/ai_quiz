@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { isAuthorised } from '@/lib/admin/auth'
+import { isSannahAuthorised } from '@/lib/sannah/auth'
 
 const sb = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -17,7 +17,7 @@ interface ReorderBody { ids: string[] }
  * Used by drag-and-drop in admin.
  */
 export async function POST(req: NextRequest) {
-  if (!(await isAuthorised())) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  if (!(await isSannahAuthorised())) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
   let body: ReorderBody
   try { body = (await req.json()) as ReorderBody } catch { return NextResponse.json({ error: 'Ongeldige JSON.' }, { status: 400 }) }
   if (!Array.isArray(body.ids) || body.ids.length === 0) {

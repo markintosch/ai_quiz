@@ -42,9 +42,9 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-function getBaseUrl(): string {
+async function getBaseUrl(): Promise<string> {
   try {
-    const h = headers()
+    const h = await headers()
     const host = h.get('host')
     const proto = h.get('x-forwarded-proto') || 'https'
     if (host) return `${proto}://${host}`
@@ -52,8 +52,9 @@ function getBaseUrl(): string {
   return process.env.NEXT_PUBLIC_BASE_URL || 'https://markdekock.com'
 }
 
-export async function generateMetadata({ searchParams }: { searchParams: { lang?: string } }): Promise<Metadata> {
-  const BASE = getBaseUrl()
+export async function generateMetadata(props: { searchParams: Promise<{ lang?: string }> }): Promise<Metadata> {
+  const searchParams = await props.searchParams;
+  const BASE = await getBaseUrl()
   const lang = pickLang(searchParams.lang)
   const ogUrl = `${BASE}/api/ai_benchmark/og?type=dashboard`
   const titles: Record<Lang, { title: string; desc: string; ogTitle: string; twTitle: string; twDesc: string }> = {
@@ -107,11 +108,12 @@ export async function generateMetadata({ searchParams }: { searchParams: { lang?
   }
 }
 
-export default async function DashboardPage({
-  searchParams,
-}: {
-  searchParams: { preview?: string; lang?: string }
-}) {
+export default async function DashboardPage(
+  props: {
+    searchParams: Promise<{ preview?: string; lang?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
   const preview = searchParams.preview === '1'
   const lang = pickLang(searchParams.lang)
   const t = getContent(lang)
@@ -145,7 +147,6 @@ export default async function DashboardPage({
   return (
     <div style={{ minHeight: '100vh', background: LIGHT, color: INK, fontFamily: FONT }}>
       <Tracker event="dashboard_viewed" />
-
       {/* ── Nav ── */}
       <nav style={{ background: '#fff', borderBottom: `1px solid ${BORDER}`, position: 'sticky', top: 0, zIndex: 50 }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -167,7 +168,6 @@ export default async function DashboardPage({
           </div>
         </div>
       </nav>
-
       {/* ── Hero ── */}
       <section style={{ background: '#fff', padding: '56px 24px 32px', borderBottom: `1px solid ${BORDER}` }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
@@ -196,7 +196,6 @@ export default async function DashboardPage({
           </p>
         </div>
       </section>
-
       {/* ── Skill curve ── */}
       <section style={{ background: '#fff', padding: '40px 24px', borderBottom: `1px solid ${BORDER}` }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
@@ -220,14 +219,12 @@ export default async function DashboardPage({
           <SkillCurve curve={data.skillCurve} lang={lang} />
         </div>
       </section>
-
       {/* ── Market overview ── */}
       <section style={{ padding: '40px 24px 24px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <MarketOverview data={data} lang={lang} />
         </div>
       </section>
-
       {/* ── CTA ── */}
       <section style={{ background: INK, color: '#fff', padding: '52px 24px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', textAlign: 'center' }}>
@@ -268,7 +265,6 @@ export default async function DashboardPage({
           </div>
         </div>
       </section>
-
       <footer style={{ background: '#000', padding: '24px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <span style={{ color: '#fff', fontWeight: 800, fontSize: 13, letterSpacing: '-0.01em' }}>
@@ -280,5 +276,5 @@ export default async function DashboardPage({
         </div>
       </footer>
     </div>
-  )
+  );
 }

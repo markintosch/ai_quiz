@@ -21,7 +21,7 @@ export async function POST(req: Request) {
   }
 
   const today = new Date().toISOString().slice(0, 10)
-  const supabase = createClient()
+  const supabase = await createClient()
   const { error } = await supabase
     .from('cycle_daily_entries')
     .update({ score_feedback: value })

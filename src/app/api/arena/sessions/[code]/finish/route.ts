@@ -5,11 +5,17 @@ export const dynamic = 'force-dynamic'
 // When all participants have finished, sets session status to 'completed' and assigns ranks.
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
+import { rateLimit, getClientIp } from '@/lib/rateLimit'
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { code: string } }
-) {
+export async function POST(req: NextRequest, props: { params: Promise<{ code: string }> }) {
+  const params = await props.params;
+  // Bot/spam protection — finish triggers a global rerank, expensive when spammed.
+  const ip = getClientIp(req.headers)
+  const rl = rateLimit(`arena_finish:${ip}`, 10, 10 * 60 * 1000)
+  if (!rl.allowed) {
+    return NextResponse.json({ error: 'Too many finish calls.' }, { status: 429 })
+  }
+
   const supabase = createServiceClient()
   const code = params.code.toUpperCase()
   const body = await req.json() as { participant_id: string }

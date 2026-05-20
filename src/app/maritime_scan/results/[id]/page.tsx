@@ -50,9 +50,9 @@ interface ResultRow {
   created_at:       string
 }
 
-function getBaseUrl(): string {
+async function getBaseUrl(): Promise<string> {
   try {
-    const h = headers()
+    const h = await headers()
     const host = h.get('host')
     const proto = h.get('x-forwarded-proto') || 'https'
     if (host) return `${proto}://${host}`
@@ -60,8 +60,9 @@ function getBaseUrl(): string {
   return process.env.NEXT_PUBLIC_BASE_URL || 'https://aiquiz.brandpwrdmedia.nl'
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  const BASE = getBaseUrl()
+export async function generateMetadata(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
+  const BASE = await getBaseUrl()
   return {
     title: 'Maritime Compliance Scan — resultaat',
     robots: { index: false, follow: false },
@@ -74,13 +75,14 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   }
 }
 
-export default async function ResultsPage({
-  params,
-  searchParams,
-}: {
-  params:        { id: string }
-  searchParams: { lang?: string }
-}) {
+export default async function ResultsPage(
+  props: {
+    params: Promise<{ id: string }>
+    searchParams: Promise<{ lang?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const lang = pickLang(searchParams.lang)
   const t    = getContent(lang)
 

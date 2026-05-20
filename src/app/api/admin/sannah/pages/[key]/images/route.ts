@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { isAuthorised } from '@/lib/admin/auth'
+import { isSannahAuthorised } from '@/lib/sannah/auth'
 import type { SannahPageImage } from '@/lib/sannah/types'
 
 const sb = createClient(
@@ -23,7 +23,7 @@ const MAX_IMAGES_PER_PAGE = 6
 const VALID_KEYS = ['homepage', 'over_mij', 'contact', 'cv'] as const
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ key: string }> }) {
-  if (!(await isAuthorised())) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  if (!(await isSannahAuthorised())) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
   const { key } = await params
   if (!VALID_KEYS.includes(key as typeof VALID_KEYS[number])) {
     return NextResponse.json({ error: `Onbekende page_key: ${key}` }, { status: 400 })
@@ -74,7 +74,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ key
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ key: string }> }) {
-  if (!(await isAuthorised())) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  if (!(await isSannahAuthorised())) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
   const { key } = await params
   const path = req.nextUrl.searchParams.get('path')
   if (!path) return NextResponse.json({ error: 'path query param verplicht.' }, { status: 400 })

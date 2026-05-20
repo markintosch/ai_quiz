@@ -38,7 +38,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: 'invalid' }, { status: 400 })
   }
 
-  const supabase = createClient()
+  const supabase = await createClient()
   const { error } = await supabase
     .from('cycle_profiles')
     .upsert({

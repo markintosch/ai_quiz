@@ -7,10 +7,11 @@ export const metadata: Metadata = {
 }
 
 interface PageProps {
-  searchParams: { success?: string; error?: string }
+  searchParams: Promise<{ success?: string; error?: string }>
 }
 
-export default function UnsubscribePage({ searchParams }: PageProps) {
+export default async function UnsubscribePage(props: PageProps) {
+  const searchParams = await props.searchParams;
   const success = searchParams.success === '1'
   const error   = searchParams.error
 

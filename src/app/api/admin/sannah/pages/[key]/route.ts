@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { isAuthorised } from '@/lib/admin/auth'
+import { isSannahAuthorised } from '@/lib/sannah/auth'
 
 const sb = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -20,7 +20,7 @@ interface PatchBody {
 }
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ key: string }> }) {
-  if (!(await isAuthorised())) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  if (!(await isSannahAuthorised())) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
   const { key } = await params
   if (!VALID_KEYS.includes(key as typeof VALID_KEYS[number])) {
     return NextResponse.json({ error: `Onbekende page_key: ${key}` }, { status: 400 })

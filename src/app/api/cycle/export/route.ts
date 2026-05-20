@@ -21,7 +21,7 @@ export async function GET(req: Request) {
   if (!user) return NextResponse.json({ ok: false }, { status: 401 })
 
   const format = new URL(req.url).searchParams.get('format') ?? 'json'
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const profileRes = await supabase
     .from('cycle_profiles').select('*').eq('user_id', user.id).maybeSingle()
@@ -37,18 +37,27 @@ export async function GET(req: Request) {
   if (format === 'csv') {
     const headers = [
       'entry_date', 'mood_score', 'mood_variable', 'sleep', 'stress',
-      'activity_types', 'activity_intensity', 'alcohol_glasses', 'menstruation_flag',
+      'activity_types', 'activity_intensity', 'alcohol_glasses',
+      'symptoms', 'symptom_intensities', 'nap_taken', 'busy_day', 'menstruation_flag',
       'readiness_score', 'cycle_phase', 'score_feedback',
       'temp_c', 'condition',
     ]
     const weatherByDate: Record<string, WeatherRow> = Object.fromEntries(weather.map(w => [w.entry_date, w]))
     const rows = entries.map(e => {
       const w = weatherByDate[e.entry_date]
+      const intensities = (e.symptom_intensities ?? {}) as Record<string, number>
+      const intensitiesSerialized = Object.entries(intensities)
+        .map(([k, v]) => `${k}:${v}`)
+        .join('|')
       return [
         e.entry_date, e.mood_score, e.mood_variable, e.sleep, e.stress,
         (e.activity_types ?? []).join('|'),
         e.activity_intensity ?? '',
         e.alcohol_glasses ?? 0,
+        (e.symptoms ?? []).join('|'),
+        intensitiesSerialized,
+        e.nap_taken,
+        e.busy_day,
         e.menstruation_flag,
         e.readiness_score ?? '',
         e.cycle_phase,

@@ -32,11 +32,12 @@ interface InterestRow {
   created_at: string
 }
 
-export default async function InterestsPage({
-  searchParams,
-}: {
-  searchParams: { service?: string }
-}) {
+export default async function InterestsPage(
+  props: {
+    searchParams: Promise<{ service?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
   if (!(await isAuthorised())) redirect('/admin/login')
 
   const supabase = createServiceClient()

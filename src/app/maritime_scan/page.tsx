@@ -25,9 +25,9 @@ const BORDER      = '#E2E8F0'
 const LIGHT       = '#F8FAFC'
 const FONT        = "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
 
-function getBaseUrl(): string {
+async function getBaseUrl(): Promise<string> {
   try {
-    const h = headers()
+    const h = await headers()
     const host = h.get('host')
     const proto = h.get('x-forwarded-proto') || 'https'
     if (host) return `${proto}://${host}`
@@ -50,14 +50,15 @@ const META: Record<Lang, { title: string; desc: string; ogTitle: string; locale:
   },
 }
 
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams: { lang?: string }
-}): Promise<Metadata> {
+export async function generateMetadata(
+  props: {
+    searchParams: Promise<{ lang?: string }>
+  }
+): Promise<Metadata> {
+  const searchParams = await props.searchParams;
   const lang = pickLang(searchParams.lang)
   const m    = META[lang]
-  const BASE = getBaseUrl()
+  const BASE = await getBaseUrl()
   return {
     title:       m.title,
     description: m.desc,
@@ -87,11 +88,12 @@ export async function generateMetadata({
   }
 }
 
-export default async function MaritimeScanLanding({
-  searchParams,
-}: {
-  searchParams: { lang?: string }
-}) {
+export default async function MaritimeScanLanding(
+  props: {
+    searchParams: Promise<{ lang?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
   const lang = pickLang(searchParams.lang)
   const t    = getContent(lang)
 
