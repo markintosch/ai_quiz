@@ -4,42 +4,53 @@
 // merges it over these defaults, so the page renders fully even before any CMS
 // edit. The admin editor (src/app/admin/summercourse) saves the whole object back.
 
-export interface SCCard { tag: string; title: string; body: string }
 export interface SCDay { daynum: string; title: string; morning: string[]; afternoon: string[] }
 export interface SCRow { time: string; text: string }
 export interface SCHost { initials: string; name: string; bio: string }
 export interface SCFaq { q: string; a: string }
+export interface SCPhase { label: string; title: string; body: string }
 
 export interface SummerCourseContent {
   hero: {
     eyebrow: string
     title: string
     subtitle: string
-    badges: string[]
+    bullets: string[]
+    credibility: string
     ctaPrimary: string
     ctaSecondary: string
     note: string
   }
+  problem: { heading: string; paragraphs: string[] }
+  outcome: { heading: string; intro: string; items: string[] }
   audience: {
     heading: string
     intro: string
-    cards: SCCard[]
-    exclTitle: string
-    exclBody: string
+    forTitle: string
+    forItems: string[]
+    notTitle: string
+    notItems: string[]
   }
-  goals: { heading: string; items: string[] }
-  program: { heading: string; intro: string; days: SCDay[] }
+  program: {
+    heading: string
+    intro: string
+    intake: SCPhase
+    days: SCDay[]
+    after: SCPhase
+  }
   schedule: { heading: string; intro: string; rows: SCRow[] }
-  hosts: { heading: string; people: SCHost[] }
+  hosts: { heading: string; intro: string; people: SCHost[] }
   pricing: {
     heading: string
     ebLabel: string
     ebPrice: string
     regPrice: string
+    onlineVsLive: string
     depositLine: string
     ctaLabel: string
     inclTitle: string
     incl: string[]
+    scarcity: string
   }
   faq: { heading: string; items: SCFaq[] }
   signup: { heading: string; intro: string; ctaLabel: string; ctaHref: string }
@@ -47,105 +58,138 @@ export interface SummerCourseContent {
 
 export const DEFAULT_CONTENT: SummerCourseContent = {
   hero: {
-    eyebrow: 'Summer Course · Editie 2026',
-    title: 'Drie dagen Claude AI. Eén werkend recept dat van jou is.',
+    eyebrow: 'Zomercursus · 3-daagse AI build sprint',
+    title: 'Bouw in drie dagen je eigen AI-werkproces',
     subtitle:
-      'Geen losse trucs, maar een persoonlijke AI-workflow verankerd in je eigen werk. Kleine groep, veel handen-uit-de-mouwen, begeleid door Mark de Kock & Frank Meeuwsen.',
-    badges: ['📅 3 aaneengesloten dagen', '👥 Max. 12 deelnemers', '📍 Locatie n.t.b. — NL', '🗣️ Nederlandstalig'],
-    ctaPrimary: 'Reserveer je plek · €199 aanbetaling',
+      'Een praktische zomercursus met Frank Meeuwsen en Mark de Kock, voor professionals die Claude niet alleen willen proberen, maar echt willen toepassen in hun werk.',
+    bullets: [
+      '3 dagen live begeleiding',
+      'Kleine groep — max. 12',
+      'Geen programmeerkennis nodig',
+      'Je werkt aan je eigen case',
+      'Inclusief toegang tot de online Claude Code cursus',
+    ],
+    credibility:
+      'Gebaseerd op de online Claude Code cursus van Frank Meeuwsen, aangevuld met live begeleiding, strategische vertaling en persoonlijke toepassing door Mark de Kock.',
+    ctaPrimary: 'Reserveer je plek',
     ctaSecondary: 'Bekijk het programma',
     note: 'Aanbetaling reserveert je plek. Gaat de cursus niet door (min. 6 deelnemers)? Dan krijg je 100% terug.',
   },
+  problem: {
+    heading: 'Van proberen naar gebruiken',
+    paragraphs: [
+      'De meeste mensen blijven hangen in "AI uitproberen". Je test wat prompts, je leest LinkedIn-posts, je kijkt demo’s — maar je dagelijkse werk verandert niet echt.',
+      'Deze driedaagse is voor wie de stap zet van experimenteren naar echt gebruiken. Je werkt niet aan oefencases. Je werkt aan je eigen werk.',
+    ],
+  },
+  outcome: {
+    heading: 'Wat je meeneemt',
+    intro: 'Geen aantekeningen die in een la verdwijnen, maar iets wat je maandag erna direct gebruikt.',
+    items: [
+      'Een eigen Claude-workflow voor een echte taak uit jouw werk',
+      'Een set herbruikbare prompts en instructies',
+      'Een beter begrip van context, bestanden, checks en outputkwaliteit',
+      'Een eenvoudige werkwijze om Claude veilig en kritisch in te zetten',
+      'Een concreet vervolgplan voor jezelf of je team',
+    ],
+  },
   audience: {
     heading: 'Voor wie is dit?',
-    intro:
-      'Voor knowledge workers die Claude écht in hun werk willen inzetten — niet voor de hardcore programmeurs onder ons.',
-    cards: [
-      { tag: 'Marketeers & makers', title: 'Content & research', body: 'Schrijfwerk, research, contentworkflows — van uren naar minuten, met behoud van jouw stem.' },
-      { tag: 'Ondernemers & freelancers', title: 'Je tweede brein', body: 'Claude als hefboom voor je praktijk: voorstellen, klantwerk, de administratie die blijft liggen.' },
-      { tag: 'Knowledge workers', title: 'Strategen & redacteuren', body: 'Consultants, beleidsmensen, redacteuren die AI-fluency willen die verder gaat dan een chatvenster.' },
+    intro: 'Voor professionals die werken met kennis, tekst, plannen, analyse, ideeën of klantwerk.',
+    forTitle: 'Wel voor',
+    forItems: [
+      'Content- & researchprofessionals',
+      'Marketing, communicatie en strategie',
+      'Zelfstandigen en kleine teams',
+      'Iedereen die werkt met kennis, tekst, plannen, analyse of klantoutput',
     ],
-    exclTitle: 'Niet voor: hardcore programmeurs',
-    exclBody:
-      'Bouw je dagelijks met de API en ken je je weg in een terminal? Dan haal je hier te weinig uit. Lichte technische affiniteit zonder dev-achtergrond? Juist welkom.',
-  },
-  goals: {
-    heading: 'Waar loop je mee weg',
-    items: [
-      'Een werkend Claude-recept — een persoonlijke workflow die je dag-3 al gebruikt, niet een mapje met losse prompts.',
-      'Bagage om zelf verder te bouwen — Projects, MCP-koppelingen, agents en de juiste modelkeuze (Opus / Sonnet / Haiku) met kostenbesef.',
-      'Een kritische, ethische blik — privacy & GDPR, IP, bias en hallucinaties: wanneer Claude briljant is, en wanneer je hem juist níét inzet.',
+    notTitle: 'Niet voor',
+    notItems: [
+      'Mensen die alleen willen luisteren',
+      'Wie een diepe technische programmeercursus zoekt',
+      'Wie generieke AI-inspiratie wil zonder zelf te bouwen',
     ],
   },
   program: {
     heading: 'Het programma',
     intro:
-      'Elke ochtend een vast programma: theorie, live demo en een werkblok. Elke middag bouw je aan je eigen project, terwijl Mark & Frank rondlopen.',
+      'Een begeleide build sprint met een duidelijke leerboog. Elke ochtend een vast programma, elke middag bouwen aan je eigen case.',
+    intake: {
+      label: 'Vooraf',
+      title: 'Intake & voorbereiding',
+      body: 'Korte intake en je kiest je case. Je neemt één echte werkuitdaging mee, zodat je vanaf dag 1 aan iets van jezelf werkt.',
+    },
     days: [
       {
         daynum: 'Dag 1',
-        title: 'Foundations & mindset',
+        title: 'Begrijpen & kiezen',
         morning: [
-          'Wat ís Claude? Anthropic, modellen, wanneer welk model',
-          'Mentale modellen: Claude.ai vs API vs Claude Code',
+          'Wat kan Claude realistisch voor jouw werk doen?',
+          'Mentale modellen: Claude.ai, Projects en Claude Code',
           'Prompting voorbij de basis: context, structuur, denkstappen',
-          'Live demo: Mark & Frank doen écht werk voor de groep',
+          'Live demo: Frank & Mark doen écht werk voor de groep',
         ],
         afternoon: [
-          'Kies je eigen project: "waar wil ik dag 3 mee thuiskomen?"',
-          'Scopen, eerste prompts, Projects opzetten',
-          'Daily debrief: 3 deelnemers laten zien',
+          'Kies één concrete use case uit je eigen werk',
+          'Scope hem af en zet je eerste werkende prompts',
+          'Daily debrief: een paar deelnemers laten zien',
         ],
       },
       {
         daynum: 'Dag 2',
-        title: 'Diepte & gereedschap',
+        title: 'Bouwen & structureren',
         morning: [
-          'Projects, artifacts & file uploads als productieomgeving',
-          'MCP uitgelegd voor niet-developers (Notion, Gmail, Drive, Agenda)',
-          'Agents & workflows: chat, agent of Claude Code?',
-          'Light intro Claude Code — conversationeel bouwen',
+          'Van losse prompts naar een herbruikbaar werkproces',
+          'Documenten, context en instructies slim inrichten',
+          'MCP voor niet-developers: koppel je eigen tools',
+          'Checks & handover-logica inbouwen',
         ],
         afternoon: [
-          'Doorbouwen met Projects + MCP',
-          'Office-hours 1-op-1’s op inschrijving',
+          'Bouw de eerste werkende versie van je workflow',
+          'Office-hours: 1-op-1 met Frank of Mark',
           'Daily debrief',
         ],
       },
       {
         daynum: 'Dag 3',
-        title: 'Shippen & volhouden',
+        title: 'Testen & toepasbaar maken',
         morning: [
-          '"Is dit goed?" — output evalueren, hallucinaties spotten',
-          'Ethiek, bias, IP, privacy, GDPR & NDA-werk',
-          'Kostenbewustzijn: tokens, abonnementen, API-prijzen',
-          'Volhouden: rituelen, prompt-bibliotheek, communities',
+          '"Is dit goed?" — output evalueren en hallucinaties spotten',
+          'Veilig & kritisch: privacy, GDPR, IP en bias',
+          'Kostenbewustzijn: tokens, abonnementen, modelkeuze',
+          'Je werkwijze documenteren als simpele handleiding',
         ],
         afternoon: [
-          'Eindsprint eigen project',
-          'Slot-presentaties: iedereen 5 minuten',
-          'Borrel',
+          'Stress-test je workflow tegen echte voorbeelden',
+          'Slot-presentaties: iedereen laat z’n werkproces zien',
+          'Vervolgplan + borrel',
         ],
       },
     ],
+    after: {
+      label: 'Achteraf',
+      title: 'Toegang & opvolging',
+      body: 'Toegang tot de online Claude Code cursus en een optioneel terugkommoment om je workflow te verbeteren of klaar te maken voor je team.',
+    },
   },
   schedule: {
-    heading: 'Een dag in de cursus',
-    intro:
-      'Reken op ~24 uur contact over drie dagen. Geen verplicht huiswerk — wel optioneel doorprutsen tussendoor.',
+    heading: 'Een dag in de sprint',
+    intro: 'Reken op ~24 uur begeleide bouwtijd over drie dagen. Geen verplicht huiswerk — wel optioneel doorbouwen tussendoor.',
     rows: [
       { time: '09:00–09:30', text: 'Inloop & koffie' },
       { time: '09:30–12:30', text: 'Vast ochtendprogramma — theorie, live demo & werkblok in de groep' },
       { time: '12:30–13:30', text: 'Lunch (verzorgd)' },
-      { time: '13:30–17:00', text: 'Eigen project bouwen onder begeleiding — Mark & Frank lopen rond, korte 1-op-1’s' },
-      { time: '17:00–17:30', text: 'Daily debrief — 3 deelnemers presenteren' },
+      { time: '13:30–17:00', text: 'Bouwen aan je eigen case onder begeleiding — Frank & Mark lopen rond, korte 1-op-1’s' },
+      { time: '17:00–17:30', text: 'Daily debrief — een paar deelnemers presenteren' },
     ],
   },
   hosts: {
     heading: 'Je begeleiders',
+    intro:
+      'Frank brengt de praktische AI- en Claude-ervaring; Mark vertaalt het naar strategie, werkproces en toepassing in je organisatie.',
     people: [
-      { initials: 'MdK', name: 'Mark de Kock', bio: '[Korte bio — wat doe je, waarom geef je deze cursus, één concrete Claude-win uit je eigen werk.]' },
-      { initials: 'FM', name: 'Frank Meeuwsen', bio: '[Korte bio — achtergrond, schrijven/AI, waarom jij dit samen met Mark doet.]' },
+      { initials: 'FM', name: 'Frank Meeuwsen', bio: 'Maakt AI al jaren praktisch toepasbaar. Maker van de online Claude Code cursus en stem van "minder práten over AI, meer dóén".' },
+      { initials: 'MdK', name: 'Mark de Kock', bio: 'Brengt strategie naar uitvoering. Helpt professionals en teams AI vertalen naar een werkend werkproces. Partner bij Kirk & Blackbeard.' },
     ],
   },
   pricing: {
@@ -153,26 +197,29 @@ export const DEFAULT_CONTENT: SummerCourseContent = {
     ebLabel: 'Early-bird · eerste 6 plekken',
     ebPrice: '€799',
     regPrice: '€899',
-    depositLine: 'Reserveer met €199 aanbetaling. Restant per factuur, uiterlijk 14 dagen voor aanvang.',
+    onlineVsLive: 'De online cursus leert je de basis. Deze driedaagse helpt je om het toe te passen op jouw werk.',
+    depositLine: 'Reserveer met €199 aanbetaling. Restant per factuur, uiterlijk 14 dagen voor aanvang. Prijzen excl. btw.',
     ctaLabel: 'Reserveer je plek',
     inclTitle: 'Inbegrepen',
     incl: [
-      '3 dagen begeleiding door Mark & Frank',
+      'Drie live cursusdagen met persoonlijke begeleiding',
       'Lunch, koffie/thee & slotborrel',
-      'Digitale cursusgids met alle prompts & links',
-      '3 maanden afterparty-community',
-      '1 follow-up gesprek (30 min, online) na 4 weken',
+      'Toegang tot de online Claude Code cursus',
+      'Een eigen uitgewerkte, herbruikbare workflow',
+      'Een follow-up gesprek (30 min, online) na 4 weken',
     ],
+    scarcity: 'Kleine groep, veel persoonlijke begeleiding. Daarom is het aantal plekken beperkt.',
   },
   faq: {
     heading: 'Veelgestelde vragen',
     items: [
-      { q: 'Moet ik al ervaring met AI hebben?', a: 'Basiservaring met ChatGPT of Claude is een pré, geen vereiste. Via je motivatie bij de inschrijving stemmen we de groep af.' },
+      { q: 'Wat is het verschil met de online Claude Code cursus?', a: 'De online cursus leert je in je eigen tempo de basis. Tijdens deze driedaagse pas je het onder begeleiding toe op je eigen werk — met live feedback, bouwtijd en accountability. Toegang tot de online cursus zit bij de driedaagse inbegrepen.' },
+      { q: 'Moet ik al ervaring met AI hebben?', a: 'Basiservaring met ChatGPT of Claude is een pré, geen vereiste. Via de intake stemmen we de groep en jouw case af.' },
+      { q: 'Heb ik programmeerkennis nodig?', a: 'Nee. We werken vanuit je eigen werk, niet vanuit code. Lichte technische affiniteit is mooi meegenomen, maar geen voorwaarde.' },
       { q: 'In welke taal is de cursus?', a: 'Nederlandstalig. Materiaal en voorbeelden zijn deels Engels (zoals de tools zelf).' },
       { q: 'Wat als er minder dan 6 inschrijvingen zijn?', a: 'Dan gaat de cursus niet door en krijg je je aanbetaling 100% terug.' },
       { q: 'Kan ik op bedrijfsnaam factureren?', a: 'Ja. Bij de inschrijving vul je je bedrijfs- en btw-gegevens in; de factuur voor het restbedrag zetten we daarop.' },
-      { q: 'Wat moet ik meenemen?', a: 'Je laptop met oplader en een claude.ai-account. Verder regelen we alles op locatie.' },
-      { q: 'Hoe zit het met annuleren?', a: '[Annuleringsvoorwaarden n.t.b. — staffel op basis van dagen voor aanvang.]' },
+      { q: 'Wat moet ik meenemen?', a: 'Je laptop met oplader, een claude.ai-account en één echte werkuitdaging. Verder regelen we alles op locatie.' },
     ],
   },
   signup: {

@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import type {
-  SummerCourseContent, SCCard, SCDay, SCRow, SCHost, SCFaq,
+  SummerCourseContent, SCDay, SCRow, SCHost, SCFaq,
 } from '@/app/summercourse/content'
 
 // ── Small field primitives ─────────────────────────────────────────────────
@@ -37,7 +37,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   )
 }
 
-// Editor for a list of plain strings (bullets, badges, included items).
+// Editor for a list of plain strings (bullets, items, included lines).
 function StringList({ label, items, onChange }: {
   label: string; items: string[]; onChange: (v: string[]) => void
 }) {
@@ -102,47 +102,51 @@ export default function SummerCourseEditor({ initial }: { initial: SummerCourseC
         <Field label="Eyebrow" value={c.hero.eyebrow} onChange={(v) => patch('hero', { eyebrow: v })} />
         <Field label="Titel" value={c.hero.title} onChange={(v) => patch('hero', { title: v })} textarea />
         <Field label="Subtitel" value={c.hero.subtitle} onChange={(v) => patch('hero', { subtitle: v })} textarea />
-        <StringList label="Badges" items={c.hero.badges} onChange={(v) => patch('hero', { badges: v })} />
+        <StringList label="Bullets" items={c.hero.bullets} onChange={(v) => patch('hero', { bullets: v })} />
+        <Field label="Credibility-regel" value={c.hero.credibility} onChange={(v) => patch('hero', { credibility: v })} textarea />
         <Field label="CTA primair" value={c.hero.ctaPrimary} onChange={(v) => patch('hero', { ctaPrimary: v })} />
         <Field label="CTA secundair" value={c.hero.ctaSecondary} onChange={(v) => patch('hero', { ctaSecondary: v })} />
         <Field label="Notitie onder CTA" value={c.hero.note} onChange={(v) => patch('hero', { note: v })} textarea />
+      </Section>
+
+      {/* PROBLEM */}
+      <Section title="Probleem">
+        <Field label="Kop" value={c.problem.heading} onChange={(v) => patch('problem', { heading: v })} />
+        <StringList label="Alinea's" items={c.problem.paragraphs} onChange={(v) => patch('problem', { paragraphs: v })} />
+      </Section>
+
+      {/* OUTCOME */}
+      <Section title="Wat je meeneemt">
+        <Field label="Kop" value={c.outcome.heading} onChange={(v) => patch('outcome', { heading: v })} />
+        <Field label="Intro" value={c.outcome.intro} onChange={(v) => patch('outcome', { intro: v })} textarea />
+        <StringList label="Opbrengsten" items={c.outcome.items} onChange={(v) => patch('outcome', { items: v })} />
       </Section>
 
       {/* AUDIENCE */}
       <Section title="Voor wie">
         <Field label="Kop" value={c.audience.heading} onChange={(v) => patch('audience', { heading: v })} />
         <Field label="Intro" value={c.audience.intro} onChange={(v) => patch('audience', { intro: v })} textarea />
-        {c.audience.cards.map((card, i) => (
-          <div key={i} className="border border-gray-200 rounded-lg p-3 mb-3 bg-gray-50">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-xs font-bold text-gray-500">Kaart {i + 1}</span>
-              <button type="button" className="text-xs text-red-600 hover:underline"
-                onClick={() => patch('audience', { cards: c.audience.cards.filter((_, j) => j !== i) })}>verwijderen</button>
-            </div>
-            <Field label="Label" value={card.tag}
-              onChange={(v) => patch('audience', { cards: c.audience.cards.map((x, j) => j === i ? { ...x, tag: v } : x) })} />
-            <Field label="Titel" value={card.title}
-              onChange={(v) => patch('audience', { cards: c.audience.cards.map((x, j) => j === i ? { ...x, title: v } : x) })} />
-            <Field label="Tekst" value={card.body} textarea
-              onChange={(v) => patch('audience', { cards: c.audience.cards.map((x, j) => j === i ? { ...x, body: v } : x) })} />
-          </div>
-        ))}
-        <button type="button" className="text-sm text-brand-accent font-semibold hover:underline mb-3"
-          onClick={() => patch('audience', { cards: [...c.audience.cards, { tag: '', title: '', body: '' } as SCCard] })}>+ kaart toevoegen</button>
-        <Field label="Uitsluiting — titel" value={c.audience.exclTitle} onChange={(v) => patch('audience', { exclTitle: v })} />
-        <Field label="Uitsluiting — tekst" value={c.audience.exclBody} onChange={(v) => patch('audience', { exclBody: v })} textarea />
-      </Section>
-
-      {/* GOALS */}
-      <Section title="Waar loop je mee weg">
-        <Field label="Kop" value={c.goals.heading} onChange={(v) => patch('goals', { heading: v })} />
-        <StringList label="Doelen" items={c.goals.items} onChange={(v) => patch('goals', { items: v })} />
+        <Field label="Titel — wel voor" value={c.audience.forTitle} onChange={(v) => patch('audience', { forTitle: v })} />
+        <StringList label="Wel voor — punten" items={c.audience.forItems} onChange={(v) => patch('audience', { forItems: v })} />
+        <Field label="Titel — niet voor" value={c.audience.notTitle} onChange={(v) => patch('audience', { notTitle: v })} />
+        <StringList label="Niet voor — punten" items={c.audience.notItems} onChange={(v) => patch('audience', { notItems: v })} />
       </Section>
 
       {/* PROGRAM */}
       <Section title="Programma">
         <Field label="Kop" value={c.program.heading} onChange={(v) => patch('program', { heading: v })} />
         <Field label="Intro" value={c.program.intro} onChange={(v) => patch('program', { intro: v })} textarea />
+
+        <div className="border border-gray-200 rounded-lg p-3 mb-3 bg-gray-50">
+          <span className="text-xs font-bold text-gray-500">Vooraf-blok</span>
+          <Field label="Label" value={c.program.intake.label}
+            onChange={(v) => patch('program', { intake: { ...c.program.intake, label: v } })} />
+          <Field label="Titel" value={c.program.intake.title}
+            onChange={(v) => patch('program', { intake: { ...c.program.intake, title: v } })} />
+          <Field label="Tekst" value={c.program.intake.body} textarea
+            onChange={(v) => patch('program', { intake: { ...c.program.intake, body: v } })} />
+        </div>
+
         {c.program.days.map((day, i) => (
           <div key={i} className="border border-gray-200 rounded-lg p-3 mb-3 bg-gray-50">
             <div className="flex justify-between items-center mb-2">
@@ -156,12 +160,22 @@ export default function SummerCourseEditor({ initial }: { initial: SummerCourseC
               onChange={(v) => patch('program', { days: c.program.days.map((x, j) => j === i ? { ...x, title: v } : x) })} />
             <StringList label="Ochtend (vast)" items={day.morning}
               onChange={(v) => patch('program', { days: c.program.days.map((x, j) => j === i ? { ...x, morning: v } : x) })} />
-            <StringList label="Middag (begeleid bouwen)" items={day.afternoon}
+            <StringList label="Middag (eigen case)" items={day.afternoon}
               onChange={(v) => patch('program', { days: c.program.days.map((x, j) => j === i ? { ...x, afternoon: v } : x) })} />
           </div>
         ))}
-        <button type="button" className="text-sm text-brand-accent font-semibold hover:underline"
+        <button type="button" className="text-sm text-brand-accent font-semibold hover:underline mb-4 block"
           onClick={() => patch('program', { days: [...c.program.days, { daynum: '', title: '', morning: [], afternoon: [] } as SCDay] })}>+ dag toevoegen</button>
+
+        <div className="border border-gray-200 rounded-lg p-3 mb-1 bg-gray-50">
+          <span className="text-xs font-bold text-gray-500">Achteraf-blok</span>
+          <Field label="Label" value={c.program.after.label}
+            onChange={(v) => patch('program', { after: { ...c.program.after, label: v } })} />
+          <Field label="Titel" value={c.program.after.title}
+            onChange={(v) => patch('program', { after: { ...c.program.after, title: v } })} />
+          <Field label="Tekst" value={c.program.after.body} textarea
+            onChange={(v) => patch('program', { after: { ...c.program.after, body: v } })} />
+        </div>
       </Section>
 
       {/* SCHEDULE */}
@@ -187,6 +201,7 @@ export default function SummerCourseEditor({ initial }: { initial: SummerCourseC
       {/* HOSTS */}
       <Section title="Begeleiders">
         <Field label="Kop" value={c.hosts.heading} onChange={(v) => patch('hosts', { heading: v })} />
+        <Field label="Intro" value={c.hosts.intro} onChange={(v) => patch('hosts', { intro: v })} textarea />
         {c.hosts.people.map((p, i) => (
           <div key={i} className="border border-gray-200 rounded-lg p-3 mb-3 bg-gray-50">
             <div className="flex justify-between items-center mb-2">
@@ -209,6 +224,7 @@ export default function SummerCourseEditor({ initial }: { initial: SummerCourseC
       {/* PRICING */}
       <Section title="Investering">
         <Field label="Kop" value={c.pricing.heading} onChange={(v) => patch('pricing', { heading: v })} />
+        <Field label="Online-vs-live regel" value={c.pricing.onlineVsLive} onChange={(v) => patch('pricing', { onlineVsLive: v })} textarea />
         <Field label="Early-bird label" value={c.pricing.ebLabel} onChange={(v) => patch('pricing', { ebLabel: v })} />
         <div className="grid grid-cols-2 gap-3">
           <Field label="Early-bird prijs" value={c.pricing.ebPrice} onChange={(v) => patch('pricing', { ebPrice: v })} />
@@ -218,6 +234,7 @@ export default function SummerCourseEditor({ initial }: { initial: SummerCourseC
         <Field label="CTA-label" value={c.pricing.ctaLabel} onChange={(v) => patch('pricing', { ctaLabel: v })} />
         <Field label="Inbegrepen — kop" value={c.pricing.inclTitle} onChange={(v) => patch('pricing', { inclTitle: v })} />
         <StringList label="Inbegrepen — punten" items={c.pricing.incl} onChange={(v) => patch('pricing', { incl: v })} />
+        <Field label="Schaarste-regel" value={c.pricing.scarcity} onChange={(v) => patch('pricing', { scarcity: v })} textarea />
       </Section>
 
       {/* FAQ */}
