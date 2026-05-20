@@ -70,6 +70,8 @@ export const LANDING: Record<Lang, {
     testimonialsHeading: 'Wat opdrachtgevers zeggen',
     testimonials: [
       { quote: 'Diederik heeft enorm veel kennis op het gebied van cybersecurity. Hij is niet alleen een professional, maar ook een uitstekende luisteraar die altijd openstaat voor nieuwe ideeën.', role: 'Opdrachtgever — samengewerkt aan informatiebeveiliging' },
+      { quote: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua, met heldere taal en concrete vervolgstappen.', role: 'Rol — bijv. IT-manager, financiële dienstverlening' },
+      { quote: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo. Pragmatisch, persoonlijk en zonder onnodige complexiteit.', role: 'Rol — bijv. Directeur, MKB-organisatie' },
     ],
     finalLine:     'Klaar voor je nulmeting?',
     ownedBy:       'Een instrument van Hammer Cyber Security Services (HCSS), gebouwd op het Brand PWRD Media platform.',
@@ -105,6 +107,8 @@ export const LANDING: Record<Lang, {
     testimonialsHeading: 'What clients say',
     testimonials: [
       { quote: 'Diederik has an enormous amount of knowledge in cybersecurity. He is not only a professional, but also an excellent listener who is always open to new ideas.', role: 'Client — worked together on information security' },
+      { quote: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua — clear language and concrete next steps.', role: 'Role — e.g. IT manager, financial services' },
+      { quote: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo. Pragmatic, personal and without unnecessary complexity.', role: 'Role — e.g. Director, SME organisation' },
     ],
     finalLine:     'Ready for your baseline?',
     ownedBy:       'A tool by Hammer Cyber Security Services (HCSS), built on the Brand PWRD Media platform.',

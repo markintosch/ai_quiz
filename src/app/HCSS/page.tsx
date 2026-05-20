@@ -4,8 +4,31 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LANDING, BRAND, pickLang, type Lang } from '@/lib/cyber-compass/i18n'
+import { createServiceClient } from '@/lib/supabase/server'
 
 const BASE = 'https://markdekock.com'
+
+type Testimonial = { quote: string; role: string }
+
+// CMS override for the testimonials block, editable via /admin/hcss and stored
+// in site_content (product_key 'hcss', per locale). Falls back to the i18n
+// defaults when no row exists or the platform is unreachable.
+async function loadTestimonials(lang: Lang): Promise<{ heading?: string; items?: Testimonial[] }> {
+  try {
+    const supabase = createServiceClient()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data } = await (supabase as any)
+      .from('site_content')
+      .select('content')
+      .eq('locale', lang)
+      .eq('product_key', 'hcss')
+      .single() as { data: { content: { testimonialsHeading?: string; testimonials?: Testimonial[] } } | null }
+    const c = data?.content
+    return { heading: c?.testimonialsHeading, items: c?.testimonials }
+  } catch {
+    return {}
+  }
+}
 
 export async function generateMetadata(
   props: {
@@ -47,6 +70,10 @@ export default async function CyberCompassLandingPage(
   const lang = pickLang(searchParams.lang)
   const t    = LANDING[lang]
   const assessHref = `/HCSS/assess${lang === 'nl' ? '' : '?lang=' + lang}`
+
+  const tmOverride = await loadTestimonials(lang)
+  const testimonialsHeading = tmOverride.heading ?? t.testimonialsHeading
+  const testimonials = (tmOverride.items && tmOverride.items.length > 0) ? tmOverride.items : t.testimonials
 
   return (
     <main className="min-h-screen bg-white">
@@ -91,13 +118,13 @@ export default async function CyberCompassLandingPage(
         </div>
       </section>
 
-      {/* Testimonials — role-attributed, no names */}
-      {t.testimonials.length > 0 && (
+      {/* Testimonials — role-attributed, no names. CMS-editable via /admin/hcss */}
+      {testimonials.length > 0 && (
         <section className="border-t border-gray-100 bg-white">
           <div className="mx-auto max-w-5xl px-6 py-16">
-            <h2 className="mb-8 text-center text-2xl font-bold" style={{ color: '#1f3a4a' }}>{t.testimonialsHeading}</h2>
+            <h2 className="mb-8 text-center text-2xl font-bold" style={{ color: '#1f3a4a' }}>{testimonialsHeading}</h2>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {t.testimonials.map((tm, i) => (
+              {testimonials.map((tm, i) => (
                 <figure key={i} className="flex h-full flex-col rounded-lg border border-gray-200 bg-white p-6">
                   <span aria-hidden="true" className="mb-3 text-3xl leading-none" style={{ color: '#E8611A' }}>&ldquo;</span>
                   <blockquote className="mb-4 flex-1 text-sm leading-relaxed text-gray-700">{tm.quote}</blockquote>

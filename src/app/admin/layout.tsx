@@ -12,6 +12,7 @@ const NAV_LINKS = [
   { href: '/admin/privacy', label: 'Privacy & Data' },
   { href: '/admin/content', label: 'Homepage copy' },
   { href: '/admin/summercourse', label: '☀️ Summer Course' },
+  { href: '/admin/hcss', label: '🛡️ HCSS testimonials' },
   { href: '/admin/products', label: 'Products' },
   { href: '/admin/shop', label: '🛍️ Shop' },
   { href: '/admin/interests', label: 'Interests' },
