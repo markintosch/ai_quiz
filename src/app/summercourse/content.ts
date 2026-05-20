@@ -9,6 +9,7 @@ export interface SCRow { time: string; text: string }
 export interface SCHost { initials: string; name: string; bio: string }
 export interface SCFaq { q: string; a: string }
 export interface SCPhase { label: string; title: string; body: string }
+export interface SCCase { title: string; forWho: string; build: string; input: string; result: string }
 
 export interface SummerCourseContent {
   hero: {
@@ -37,6 +38,13 @@ export interface SummerCourseContent {
     intake: SCPhase
     days: SCDay[]
     after: SCPhase
+  }
+  cases: {
+    heading: string
+    intro: string[]
+    items: SCCase[]
+    closingTitle: string
+    closingBody: string
   }
   schedule: { heading: string; intro: string; rows: SCRow[] }
   hosts: { heading: string; intro: string; people: SCHost[] }
@@ -171,6 +179,60 @@ export const DEFAULT_CONTENT: SummerCourseContent = {
       title: 'Toegang & opvolging',
       body: 'Toegang tot de online Claude Code cursus en een optioneel terugkommoment om je workflow te verbeteren of klaar te maken voor je team.',
     },
+  },
+  cases: {
+    heading: 'Voorbeeldcases die je in drie dagen kunt bouwen',
+    intro: [
+      'Je hoeft niet vooraf precies te weten wat je wilt maken. De meeste deelnemers komen binnen met een vaag idee, een terugkerende taak of een frustratie in hun werk. Tijdens de intake maken we daar een scherpe bouwcase van.',
+      'Hieronder zie je voorbeelden van werkprocessen die goed passen bij deze driedaagse. Voor elke case geldt: hoe meer echt materiaal je meeneemt uit je eigen werk, hoe beter je workflow na drie dagen aansluit op jouw praktijk.',
+    ],
+    items: [
+      {
+        title: 'Klantdossier als AI-werkruimte',
+        forWho: 'Strategen, consultants, bureaus en zelfstandigen.',
+        build: 'Eén Claude Project per klant, gevuld met aanbod, notities, eerdere output, tone-of-voice en vaste prompts voor discovery, voorstellen en opvolging.',
+        input: 'Een bestaande klantcase, intake-notities, eerdere voorstellen, mails, deliverables of tone-of-voice voorbeelden.',
+        result: 'Je start sneller met klantwerk en hoeft minder vaak opnieuw context uit te leggen.',
+      },
+      {
+        title: 'LinkedIn-schrijfpartner in jouw stem',
+        forWho: 'Professionals die vaker willen publiceren, maar niet telkens vanaf nul willen beginnen.',
+        build: 'Een schrijfproces op basis van je eigen posts, thema’s, stijl en ruwe ideeën.',
+        input: '10–20 eigen posts, losse ideeën, thema’s waar je over wilt schrijven en eventueel voorbeelden van posts die je goed vindt.',
+        result: 'Je maakt sneller sterke conceptposts zonder generieke AI-toon.',
+      },
+      {
+        title: 'Voorstel- en offertegenerator',
+        forWho: 'Zelfstandigen, consultants en kleine bureaus.',
+        build: 'Een workflow die intake-notities of e-mailwisselingen omzet naar een conceptvoorstel in jouw eigen structuur.',
+        input: 'Een recente intake, e-mailwisseling, offerte-template, dienstenbeschrijving en voorbeelden van eerdere voorstellen.',
+        result: 'Je gaat sneller van goed gesprek naar professioneel voorstel, inclusief aannames, scope en open vragen.',
+      },
+      {
+        title: 'Wekelijkse trend- of sectorwatcher',
+        forWho: 'Content-, research-, marketing- en strategieprofessionals.',
+        build: 'Een vaste workflow om bronnen, rapporten en losse signalen samen te vatten in jouw eigen rapportformat.',
+        input: 'Nieuwsbrieven, rapporten, websites, artikelen of bronnen die je nu al gebruikt om je vak of markt te volgen.',
+        result: 'Je hebt sneller overzicht én een betere vertaalslag naar wat dit betekent voor klanten, team of markt.',
+      },
+      {
+        title: 'Van briefing naar creatief concept',
+        forWho: 'Marketing-, communicatie- en creatieve professionals.',
+        build: 'Een proces dat een briefing vertaalt naar meerdere denkrichtingen, met rationale, voorbeeldcopy en mogelijke visuele haakjes.',
+        input: 'Een echte briefing, merkcontext, doelgroepinformatie, eerdere campagnes en voorbeelden van werk dat qua richting past.',
+        result: 'Je begint conceptontwikkeling met meer structuur, betere opties en minder leeg scherm.',
+      },
+      {
+        title: 'Maandelijkse rapportage in vast format',
+        forWho: 'Marketing-, operations-, finance- of projectprofessionals.',
+        build: 'Een workflow die data, notities en context omzet naar een helder maandrapport in de toon en structuur die jouw klant of directie verwacht.',
+        input: 'Een bestaande rapportage, losse data, notities, KPI’s, klantfeedback en het format waarin je normaal rapporteert.',
+        result: 'Rapporteren wordt geen terugkerende tijdslurper, maar een vast proces dat je steeds opnieuw kunt gebruiken.',
+      },
+    ],
+    closingTitle: 'Staat jouw case hier niet tussen?',
+    closingBody:
+      'Grote kans dat hij toch past. Zolang het gaat om kenniswerk, tekst, analyse, voorbereiding, rapportage, klantoutput of terugkerende werkprocessen kunnen we er meestal een bruikbare AI-workflow van maken. Tijdens de intake helpen we je kiezen wat haalbaar, waardevol en scherp genoeg is om in drie dagen te bouwen.',
   },
   schedule: {
     heading: 'Een dag in de sprint',
