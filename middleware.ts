@@ -52,6 +52,7 @@ export function middleware(req: NextRequest) {
   if (pathname.startsWith('/atelier'))    return NextResponse.next()
   if (pathname.startsWith('/Cycle'))      return NextResponse.next()
   if (pathname.startsWith('/summercourse')) return NextResponse.next()
+  if (pathname.startsWith('/HCSS') || pathname.startsWith('/hcss')) return NextResponse.next()
   if (pathname.startsWith('/sannah') || pathname.startsWith('/Sannah')) return NextResponse.next()
 
   // ── markdekock.com root: handled in src/app/page.tsx via server-side headers() ─
