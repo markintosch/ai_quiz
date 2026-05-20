@@ -34,8 +34,6 @@ export const LANDING: Record<Lang, {
   forWhom:       { strong: string; text: string }[]
   notHeading:    string
   notList:       string[]
-  testimonialsHeading: string
-  testimonials:  { quote: string; role: string }[]
   finalLine:     string
   ownedBy:       string
 }> = {
@@ -67,12 +65,6 @@ export const LANDING: Record<Lang, {
       'Geen sales-funnel — je bent vrij om alleen je score te bekijken en weg te gaan.',
       'Geen dataverkoop. Het platform en je antwoorden worden beheerd door Brand PWRD Media. Diederik (HCSS) is inhoudelijk eigenaar van het assessment.',
     ],
-    testimonialsHeading: 'Wat opdrachtgevers zeggen',
-    testimonials: [
-      { quote: 'Diederik heeft enorm veel kennis op het gebied van cybersecurity. Hij is niet alleen een professional, maar ook een uitstekende luisteraar die altijd openstaat voor nieuwe ideeën.', role: 'Opdrachtgever — samengewerkt aan informatiebeveiliging' },
-      { quote: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua, met heldere taal en concrete vervolgstappen.', role: 'Rol — bijv. IT-manager, financiële dienstverlening' },
-      { quote: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo. Pragmatisch, persoonlijk en zonder onnodige complexiteit.', role: 'Rol — bijv. Directeur, MKB-organisatie' },
-    ],
     finalLine:     'Klaar voor je nulmeting?',
     ownedBy:       'Een instrument van Hammer Cyber Security Services (HCSS), gebouwd op het Brand PWRD Media platform.',
   },
@@ -103,12 +95,6 @@ export const LANDING: Record<Lang, {
       'Not a NIS2 or ISO certification check (does give a first direction).',
       'Not a sales funnel — you can view your score and leave.',
       'No data sales. The platform and your answers are managed by Brand PWRD Media. Diederik (HCSS) is the content owner of the assessment.',
-    ],
-    testimonialsHeading: 'What clients say',
-    testimonials: [
-      { quote: 'Diederik has an enormous amount of knowledge in cybersecurity. He is not only a professional, but also an excellent listener who is always open to new ideas.', role: 'Client — worked together on information security' },
-      { quote: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua — clear language and concrete next steps.', role: 'Role — e.g. IT manager, financial services' },
-      { quote: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo. Pragmatic, personal and without unnecessary complexity.', role: 'Role — e.g. Director, SME organisation' },
     ],
     finalLine:     'Ready for your baseline?',
     ownedBy:       'A tool by Hammer Cyber Security Services (HCSS), built on the Brand PWRD Media platform.',

@@ -1,46 +1,41 @@
 import { createServiceClient } from '@/lib/supabase/server'
-import { LANDING, type Lang } from '@/lib/cyber-compass/i18n'
-import HcssTestimonialsEditor, { type LocaleData } from './Editor'
+import { DEFAULT_CONTENT, mergeContent, type HcssContent } from '@/app/HCSS/content'
+import HcssEditor from './Editor'
 
 export const dynamic = 'force-dynamic'
 
-async function loadLocale(lang: Lang): Promise<LocaleData> {
-  const fallback: LocaleData = {
-    heading: LANDING[lang].testimonialsHeading,
-    items: LANDING[lang].testimonials,
-  }
+const PRODUCT_KEY = 'hcss'
+const LOCALE = 'nl'
+
+async function loadContent(): Promise<HcssContent> {
   try {
     const supabase = createServiceClient()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data } = await (supabase as any)
       .from('site_content')
       .select('content')
-      .eq('locale', lang)
-      .eq('product_key', 'hcss')
-      .single() as { data: { content: { testimonialsHeading?: string; testimonials?: { quote: string; role: string }[] } } | null }
-    const c = data?.content
-    return {
-      heading: c?.testimonialsHeading ?? fallback.heading,
-      items: (c?.testimonials && c.testimonials.length > 0) ? c.testimonials : fallback.items,
-    }
+      .eq('locale', LOCALE)
+      .eq('product_key', PRODUCT_KEY)
+      .single() as { data: { content: Record<string, unknown> } | null }
+    return mergeContent(DEFAULT_CONTENT, data?.content)
   } catch {
-    return fallback
+    return DEFAULT_CONTENT
   }
 }
 
 export default async function AdminHcssPage() {
-  const [nl, en] = await Promise.all([loadLocale('nl'), loadLocale('en')])
+  const initial = await loadContent()
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-brand">HCSS · testimonials</h1>
+        <h1 className="text-2xl font-bold text-brand">HCSS · pagina-inhoud</h1>
         <p className="text-sm text-gray-500 mt-1">
-          Bewerk de testimonials op{' '}
+          Bewerk alle tekst van{' '}
           <a href="/HCSS" target="_blank" className="text-brand-accent underline">markdekock.com/HCSS</a>.
-          Gebruik rollen, geen namen. Wijzigingen zijn na opslaan direct live.
+          Wijzigingen zijn na opslaan direct live.
         </p>
       </div>
-      <HcssTestimonialsEditor initial={{ nl, en }} />
+      <HcssEditor initial={initial} />
     </div>
   )
 }
