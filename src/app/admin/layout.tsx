@@ -13,6 +13,7 @@ const NAV_LINKS = [
   { href: '/admin/content', label: 'Homepage copy' },
   { href: '/admin/summercourse', label: '☀️ Summer Course' },
   { href: '/admin/hcss', label: '🛡️ HCSS' },
+  { href: '/admin/ai-governance', label: '⚖️ AI Governance' },
   { href: '/admin/products', label: 'Products' },
   { href: '/admin/shop', label: '🛍️ Shop' },
   { href: '/admin/interests', label: 'Interests' },
