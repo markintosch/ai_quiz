@@ -55,6 +55,7 @@ export function middleware(req: NextRequest) {
   if (pathname.startsWith('/summercourse')) return NextResponse.next()
   if (pathname.startsWith('/sannah') || pathname.startsWith('/Sannah')) return NextResponse.next()
   if (pathname.startsWith('/HCSS') || pathname.startsWith('/hcss')) return NextResponse.next()
+  if (pathname.startsWith('/ai-governance')) return NextResponse.next()
   if (pathname.startsWith('/nordschleife')) return NextResponse.next()
   if (pathname.startsWith('/indycar'))      return NextResponse.next()
   if (pathname.startsWith('/hot_lap'))      return NextResponse.next()

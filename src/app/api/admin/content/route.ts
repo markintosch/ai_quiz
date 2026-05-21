@@ -14,6 +14,7 @@ const ALLOWED_PRODUCT_KEYS = new Set([
   'zorgmarkt_readiness',
   'summer_course',
   'hcss',
+  'ai_governance',
 ])
 
 // GET /api/admin/content?locale=en&product_key=ai_maturity
