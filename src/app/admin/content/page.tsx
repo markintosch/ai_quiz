@@ -93,8 +93,8 @@ interface AllContent {
 const EN_LANDING: LandingContent = {
   hero: {
     badge: 'Free · 5 minutes · Instant results',
-    heading1: 'Your competitors are already using AI.',
-    heading2: 'Where do you actually stand?',
+    heading1: 'AI brings both opportunities and challenges for you and your business.',
+    heading2: 'Discover in 5 minutes where you stand — and what a logical next step is.',
     sub: 'Our 5-minute diagnostic benchmarks your AI maturity across 6 critical dimensions — and tells you exactly what to prioritise next.',
     authors: 'Developed by Mark de Kock & Frank Meeuwsen — AI transformation specialists with 30+ years of combined digital experience.',
     ctaMain: 'Start the 5-minute AI scan →',
@@ -162,8 +162,8 @@ const EN_LANDING: LandingContent = {
 const NL_LANDING: LandingContent = {
   hero: {
     badge: 'Gratis · 5 minuten · Direct resultaat',
-    heading1: 'Je concurrenten gebruiken AI al.',
-    heading2: 'Waar sta jij eigenlijk?',
+    heading1: 'AI biedt kansen én uitdagingen voor jou en je bedrijf.',
+    heading2: 'Ontdek in 5 minuten waar jij staat — en wat een logische volgende stap is.',
     sub: 'Onze 5-minuten-diagnose meet je AI-volwassenheid op 6 kritieke dimensies — en vertelt je precies wat je als eerste moet aanpakken.',
     authors: 'Ontwikkeld door Mark de Kock & Frank Meeuwsen — AI-transformatiespecialisten met ruim 30 jaar gecombineerde digitale ervaring.',
     ctaMain: 'Start de gratis 5-minuten-scan →',
@@ -231,8 +231,8 @@ const NL_LANDING: LandingContent = {
 const FR_LANDING: LandingContent = {
   hero: {
     badge: 'Gratuit · 5 minutes · Résultats immédiats',
-    heading1: 'Vos concurrents utilisent déjà l\'IA.',
-    heading2: 'Où en êtes-vous vraiment ?',
+    heading1: 'L\'IA offre des opportunités et des défis pour vous et votre entreprise.',
+    heading2: 'Découvrez en 5 minutes où vous en êtes — et quelle est la prochaine étape logique.',
     sub: 'Notre diagnostic de 5 minutes évalue votre maturité IA sur 6 dimensions critiques — et vous indique exactement quoi prioriser.',
     authors: 'Développé par Mark de Kock & Frank Meeuwsen — spécialistes de la transformation IA avec plus de 30 ans d\'expérience digitale combinée.',
     ctaMain: 'Démarrer le scan IA de 5 minutes →',
