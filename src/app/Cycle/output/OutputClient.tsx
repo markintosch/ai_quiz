@@ -14,9 +14,16 @@ const CONDITION_ICON: Record<string, string> = {
   'clear-night': '☾',
 }
 
+const METRIC_LABEL_NL: Record<string, string> = {
+  sleep:     'slaap',
+  mood:      'stemming',
+  readiness: 'readiness',
+  stress:    'stress',
+}
+
 export default function OutputClient({
   readiness, band, guidance, phaseLabel, components, weather, feedback,
-  showScore, totalEntries,
+  showScore, totalEntries, experiment,
 }: {
   readiness: number
   band: ReadinessBand
@@ -27,6 +34,12 @@ export default function OutputClient({
   feedback: -1 | 0 | 1 | null
   showScore: boolean
   totalEntries: number
+  experiment: {
+    description: string
+    metric: string
+    dayOfTotal: string
+    daysRemaining: number
+  } | null
 }) {
   const [shown, setShown] = useState(0)
   const [whyOpen, setWhyOpen] = useState(false)
@@ -65,6 +78,27 @@ export default function OutputClient({
   return (
     <main className="min-h-screen flex flex-col items-center justify-between px-6 py-10">
       <div className="w-full max-w-md flex-1 flex flex-col items-center justify-center">
+
+        {/* Active experiment banner from Peri-Compass */}
+        {experiment && (
+          <div className="cycle-card" style={{
+            width: '100%',
+            padding: 14,
+            marginBottom: 22,
+            borderColor: 'var(--cycle-accent)',
+            borderWidth: 1,
+          }}>
+            <p className="text-xs mb-1" style={{ color: 'var(--cycle-accent)', fontWeight: 600, letterSpacing: 0.4, textTransform: 'uppercase' }}>
+              Experiment · dag {experiment.dayOfTotal}
+            </p>
+            <p className="text-sm" style={{ color: 'var(--cycle-fg)', lineHeight: 1.45 }}>
+              {experiment.description}
+            </p>
+            <p className="text-xs mt-2" style={{ color: 'var(--cycle-muted)' }}>
+              We meten je {METRIC_LABEL_NL[experiment.metric] ?? experiment.metric} over deze 30 dagen — nog {experiment.daysRemaining} {experiment.daysRemaining === 1 ? 'dag' : 'dagen'}.
+            </p>
+          </div>
+        )}
 
         {showScore ? (
           <>

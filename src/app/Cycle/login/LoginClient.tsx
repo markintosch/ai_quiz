@@ -16,10 +16,18 @@ export default function LoginClient() {
   const [password, setPassword] = useState('')
   const [status, setStatus] = useState<'idle' | 'sending' | 'error' | 'completing'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
+  // ?next=/Cycle/... preserved across login flow so compass→bridge redirects survive
+  const [nextPath, setNextPath] = useState<string>('')
 
-  // Detect implicit-flow hash on first render and complete the sign-in.
   useEffect(() => {
     if (typeof window === 'undefined') return
+
+    // Pick up ?next= from the current URL
+    const search = new URLSearchParams(window.location.search)
+    const n = search.get('next') ?? ''
+    if (n.startsWith('/Cycle')) setNextPath(n)
+
+    // Detect implicit-flow hash and complete sign-in
     const hash = window.location.hash.replace(/^#/, '')
     if (!hash || !hash.includes('access_token=')) return
     const params = new URLSearchParams(hash)
@@ -28,7 +36,6 @@ export default function LoginClient() {
     if (!accessToken || !refreshToken) return
 
     setStatus('completing')
-    // Clean the hash so a reload doesn't re-trigger.
     window.history.replaceState({}, '', '/Cycle/login')
     const supabase = createClient()
     supabase.auth
@@ -39,7 +46,8 @@ export default function LoginClient() {
           setErrorMsg(`Sessie zetten mislukt: ${error.message}`)
           return
         }
-        window.location.href = '/Cycle'
+        // Honor next= when set, otherwise back to Cycle root
+        window.location.href = n.startsWith('/Cycle') ? n : '/Cycle'
       })
       .catch(err => {
         setStatus('error')
@@ -55,7 +63,7 @@ export default function LoginClient() {
       const res = await fetch('/api/cycle/login', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ password, next: nextPath }),
       })
       const json = await res.json().catch(() => ({})) as {
         ok?: boolean; action_link?: string; error?: string; detail?: string

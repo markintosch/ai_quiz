@@ -32,8 +32,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: 'config' }, { status: 503 })
   }
 
-  const body = (await req.json().catch(() => ({}))) as { password?: string }
+  const body = (await req.json().catch(() => ({}))) as { password?: string; next?: string }
   const input = (body.password ?? '').trim()
+  // Only forward /Cycle paths — prevents open-redirect on the magic link
+  const rawNext = body.next ?? ''
+  const nextParam = rawNext.startsWith('/Cycle') ? rawNext : ''
   if (!input) {
     return NextResponse.json({ ok: false, error: 'invalid' }, { status: 400 })
   }
@@ -47,7 +50,7 @@ export async function POST(req: Request) {
   let { data, error } = await supabase.auth.admin.generateLink({
     type: 'magiclink',
     email: defaultEmail,
-    options: { redirectTo: `${origin}/Cycle/auth/callback` },
+    options: { redirectTo: `${origin}/Cycle/auth/callback${nextParam ? `?next=${encodeURIComponent(nextParam)}` : ''}` },
   })
 
   // If the configured user doesn't exist in auth.users (e.g. deleted),
@@ -67,7 +70,7 @@ export async function POST(req: Request) {
     ;({ data, error } = await supabase.auth.admin.generateLink({
       type: 'magiclink',
       email: defaultEmail,
-      options: { redirectTo: `${origin}/Cycle/auth/callback` },
+      options: { redirectTo: `${origin}/Cycle/auth/callback${nextParam ? `?next=${encodeURIComponent(nextParam)}` : ''}` },
     }))
   }
 

@@ -1118,6 +1118,60 @@ export interface Database {
         }
         Relationships: []
       }
+      cycle_experiments: {
+        Row: {
+          id: string
+          user_id: string
+          source_assessment_id: string | null
+          code: string
+          description: string
+          rationale: string | null
+          source: string | null
+          source_url: string | null
+          metric_to_watch: string
+          started_at: string
+          duration_days: number
+          ended_at: string | null
+          status: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          source_assessment_id?: string | null
+          code: string
+          description: string
+          rationale?: string | null
+          source?: string | null
+          source_url?: string | null
+          metric_to_watch?: string
+          started_at?: string
+          duration_days?: number
+          ended_at?: string | null
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          source_assessment_id?: string | null
+          code?: string
+          description?: string
+          rationale?: string | null
+          source?: string | null
+          source_url?: string | null
+          metric_to_watch?: string
+          started_at?: string
+          duration_days?: number
+          ended_at?: string | null
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       cycle_insights_seen: {
         Row: {
           id: string

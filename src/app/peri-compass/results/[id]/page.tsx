@@ -151,6 +151,29 @@ export default async function CompassResultsPage(
           <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-gray-200">{bandCopy.sub}</p>
         </div>
 
+        {/* Bridge to Cycle Companion — hoisted right under the score so the
+            daily-routine call is the very first action, not buried after
+            hypotheses + experiment + tracking. The bridge route preserves the
+            assessment id through the password gate so symptoms + experiment
+            pre-populate on her first check-in. */}
+        {a.ai_micro_experiment && (
+          <section className="mb-8 overflow-hidden rounded-xl border-2 border-brand-accent bg-gradient-to-br from-orange-50 to-rose-50 p-6 text-center">
+            <p className="mb-2 text-xs font-bold uppercase tracking-wider text-brand-accent">
+              {t.logbookHeading}
+            </p>
+            <p className="mb-5 text-sm leading-relaxed text-gray-700 md:text-base">
+              {t.logbookBody}
+            </p>
+            <Link
+              href={`/Cycle/login?next=${encodeURIComponent(`/Cycle/bridge/compass?assessment_id=${a.id}`)}`}
+              className="inline-block rounded-md bg-brand px-7 py-3 text-base font-bold text-white shadow-md hover:bg-brand-dark"
+            >
+              {t.startCheckinCta} →
+            </Link>
+            <p className="mt-3 text-xs text-gray-600">{t.startCheckinSub}</p>
+          </section>
+        )}
+
         {/* Per dimensie */}
         {/* Je grootste hefboom nu — focus geven vóór de hele dimensie-radar */}
         {topLever && topLeverText && (
@@ -246,24 +269,10 @@ export default async function CompassResultsPage(
               )}
             </div>
 
-            {/* Logboek-CTA — direct gekoppeld, lagere drempel + microcopy */}
-            <div className="border-t border-brand-accent/20 bg-white/60 p-6">
-              <p className="mb-1 text-xs font-bold uppercase tracking-wider text-brand">
-                {t.logbookHeading}
-              </p>
-              <p className="mb-4 text-sm leading-relaxed text-gray-700">
-                {t.logbookBody}
-              </p>
-              <Link
-                href={a.email
-                  ? `/Cycle/login?email=${encodeURIComponent(a.email)}`
-                  : '/Cycle/login'}
-                className="inline-block rounded-md bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark"
-              >
-                {t.startCheckinCta}
-              </Link>
-              <p className="mt-2 text-xs text-gray-600">{t.startCheckinSub}</p>
-            </div>
+            {/* CTA hoisted to the top of the page — under the score badge.
+                We keep this section for the rich experiment details
+                (description + rationale + source) but the primary action
+                button lives above now. */}
           </section>
         )}
 

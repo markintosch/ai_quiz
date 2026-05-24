@@ -5,10 +5,10 @@
 // POST the whole entry to /api/cycle/checkin which computes phase + score
 // and writes the row.
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { ActivityType, ActivityIntensity } from '@/lib/cycle/types'
-import { SYMPTOM_GROUPS_NL, SYMPTOM_LABEL_NL, type SymptomKey } from '@/lib/cycle/symptoms'
+import { SYMPTOM_GROUPS_NL, SYMPTOM_LABEL_NL, type SymptomKey, isValidSymptom } from '@/lib/cycle/symptoms'
 
 const ACTIVITY_LABELS: Record<ActivityType, string> = {
   None:     'Rust',
@@ -65,6 +65,37 @@ export default function CheckinStepper({
   const [period, setPeriod]             = useState<boolean>(initial?.menstruation_flag ?? false)
   const [submitting, setSubmitting]     = useState(false)
   const [error, setError]               = useState<string>('')
+  const [compassPrefill, setCompassPrefill] = useState<SymptomKey[]>([])
+
+  // On first render, if the URL signals we came from Compass, read the
+  // cookie that the bridge route stashed and pre-select those symptoms
+  // (only if she hasn't already filled in any symptoms herself).
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    if (!new URLSearchParams(window.location.search).has('compass')) return
+    const raw = document.cookie
+      .split('; ')
+      .find(c => c.startsWith('cycle_compass_symptoms='))
+      ?.split('=')[1]
+    if (!raw) return
+    try {
+      const parsed = JSON.parse(decodeURIComponent(raw)) as unknown
+      if (!Array.isArray(parsed)) return
+      const validKeys = parsed.filter(isValidSymptom) as SymptomKey[]
+      if (validKeys.length === 0) return
+      setCompassPrefill(validKeys)
+      setSymptoms(prev => {
+        // Only prefill if she hasn't added any symptoms yet
+        if (Object.keys(prev).length > 0) return prev
+        const next: Partial<Record<SymptomKey, SymptomIntensity>> = {}
+        for (const k of validKeys) next[k] = 3 as SymptomIntensity
+        return next
+      })
+      // Clear the cookie so it doesn't trigger again tomorrow
+      document.cookie = 'cycle_compass_symptoms=; Max-Age=0; Path=/Cycle; SameSite=Strict; Secure'
+    } catch { /* ignore malformed cookie */ }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   function toggleSymptom(k: SymptomKey) {
     setSymptoms(prev => {
@@ -295,6 +326,12 @@ export default function CheckinStepper({
               onNext={() => setStep(6)}
               canAdvance
             >
+              {compassPrefill.length > 0 && (
+                <p className="text-xs mb-4 px-3 py-2 rounded-md" style={{ background: 'var(--cycle-accent-soft, rgba(212,132,126,0.10))', color: 'var(--cycle-fg)' }}>
+                  Voor-geselecteerd uit je Compass — pas vrij aan, of tik weg wat vandaag niet speelt.
+                </p>
+              )}
+
               <button
                 type="button"
                 className="cycle-button cycle-button-ghost w-full mb-5"
