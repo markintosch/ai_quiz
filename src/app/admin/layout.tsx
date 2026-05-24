@@ -1,39 +1,6 @@
 // FILE: src/app/admin/layout.tsx
-import Link from 'next/link'
 import LogoutButton from '@/components/admin/LogoutButton'
-
-const NAV_LINKS = [
-  { href: '/admin/dashboard', label: 'Dashboard' },
-  { href: '/admin/respondents', label: 'Respondents' },
-  { href: '/admin/companies', label: 'Companies' },
-  { href: '/admin/cohorts', label: 'Cohorts' },
-  { href: '/admin/benchmark', label: 'Benchmark' },
-  { href: '/admin/stats', label: 'Statistics' },
-  { href: '/admin/privacy', label: 'Privacy & Data' },
-  { href: '/admin/content', label: 'Homepage copy' },
-  { href: '/admin/summercourse', label: '☀️ Summer Course' },
-  { href: '/admin/hcss', label: '🛡️ HCSS' },
-  { href: '/admin/ai-governance', label: '⚖️ AI Governance' },
-  { href: '/admin/ai-governance/signups', label: '↳ Voorinschrijvingen' },
-  { href: '/admin/products', label: 'Products' },
-  { href: '/admin/shop', label: '🛍️ Shop' },
-  { href: '/admin/interests', label: 'Interests' },
-  { href: '/admin/games', label: '🎮 Games' },
-  { href: '/admin/pulse', label: 'Pulse' },
-  { href: '/admin/ai_benchmark', label: 'AI-benchmark' },
-  { href: '/admin/ai_benchmark/funnel', label: '↳ Funnel' },
-  { href: '/admin/ai_benchmark/writeins', label: '↳ Write-ins' },
-  { href: '/admin/sannahremco', label: 'Sannah & Remco' },
-  { href: '/admin/sannah', label: 'Sannah portfolio CMS' },
-  { href: '/admin/atelier', label: 'Atelier · ops' },
-  { href: '/admin/atelier/icps', label: '↳ ICP knowledge base' },
-  { href: '/admin/atelier/sources', label: '↳ Sources registry' },
-  { href: '/admin/blog', label: '📝 Blog' },
-  { href: '/admin/blog/subscribers', label: '↳ Abonnees' },
-  { href: '/admin/blog/comments',    label: '↳ Reacties' },
-  { href: '/admin/peri-compass', label: '🧭 Peri-Compass' },
-  { href: '/admin/cyber-compass', label: '🛡 Cyber Compass · HCSS' },
-]
+import AdminNav from '@/components/admin/AdminNav'
 
 export default function AdminLayout({
   children,
@@ -43,30 +10,22 @@ export default function AdminLayout({
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
-      <aside className="w-56 flex-shrink-0 bg-brand flex flex-col">
+      <aside className="w-60 flex-shrink-0 bg-brand flex flex-col">
         {/* Logo */}
-        <div className="px-5 py-6 border-b border-white/10">
+        <div className="px-5 py-5 border-b border-white/10">
           <p className="text-brand-accent font-bold text-sm tracking-wide leading-tight">
             Brand PWRD Media
           </p>
           <p className="text-gray-300 text-xs mt-0.5">Admin</p>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 px-3 py-4 space-y-1">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+        {/* Grouped, searchable navigation */}
+        <div className="flex-1 overflow-hidden">
+          <AdminNav />
+        </div>
 
         {/* Logout */}
-        <div className="px-3 py-4 border-t border-white/10">
+        <div className="px-3 py-3 border-t border-white/10">
           <LogoutButton />
         </div>
       </aside>
