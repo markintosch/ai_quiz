@@ -145,48 +145,56 @@ export default async function CompassResultsPage(
         </div>
 
         {/* Score badge */}
-        <div className="mb-8 rounded-xl bg-brand p-8 text-center text-white shadow-lg">
+        <div className="mb-6 rounded-xl bg-brand p-8 text-center text-white shadow-lg">
           <p className="font-mono text-7xl font-black text-brand-accent md:text-8xl">{a.score_overall}</p>
           <p className="mt-2 text-xl font-semibold">{bandCopy.title}</p>
           <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-gray-200">{bandCopy.sub}</p>
         </div>
 
-        {/* Bridge to Cycle Companion — hoisted right under the score so the
-            daily-routine call is the very first action, not buried after
-            hypotheses + experiment + tracking. The bridge route preserves the
-            assessment id through the password gate so symptoms + experiment
-            pre-populate on her first check-in. */}
-        {a.ai_micro_experiment && (
-          <section className="mb-8 overflow-hidden rounded-xl border-2 border-brand-accent bg-gradient-to-br from-orange-50 to-rose-50 p-6 text-center">
-            <p className="mb-2 text-xs font-bold uppercase tracking-wider text-brand-accent">
-              {t.logbookHeading}
+        {/* HOOK INSIGHT — hero treatment, no card border. Single sentence that
+            grounds the rest of the page in one specific takeaway. */}
+        {topLever && topLeverText && (
+          <section className="mb-10 text-center px-2">
+            <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-accent">
+              {t.topLeverHeading}
             </p>
-            <p className="mb-5 text-sm leading-relaxed text-gray-700 md:text-base">
-              {t.logbookBody}
+            <h2 className="mb-3 font-serif text-3xl leading-tight text-brand md:text-4xl">
+              {dimensionLabel(topLever.dim, lang)}
+            </h2>
+            <p className="mx-auto max-w-xl text-base leading-relaxed text-gray-700">
+              {topLeverText}
             </p>
-            <Link
-              href={`/Cycle/login?next=${encodeURIComponent(`/Cycle/bridge/compass?assessment_id=${a.id}`)}`}
-              className="inline-block rounded-md bg-brand px-7 py-3 text-base font-bold text-white shadow-md hover:bg-brand-dark"
-            >
-              {t.startCheckinCta} →
-            </Link>
-            <p className="mt-3 text-xs text-gray-600">{t.startCheckinSub}</p>
           </section>
         )}
 
-        {/* Per dimensie */}
-        {/* Je grootste hefboom nu — focus geven vóór de hele dimensie-radar */}
-        {topLever && topLeverText && (
-          <section className="mb-6 rounded-xl border-2 border-brand-accent/40 bg-white p-6">
-            <p className="mb-2 text-xs font-bold uppercase tracking-wider text-brand-accent">
-              {t.topLeverHeading}
-            </p>
-            <h2 className="mb-2 text-xl font-bold text-brand">
-              {dimensionLabel(topLever.dim, lang)}
-            </h2>
-            <p className="text-sm leading-relaxed text-gray-700">
-              {topLeverText}
-            </p>
+        {/* BRIDGE EXPERIMENT CTA — the 30-day pact, framed as one action.
+            Experiment text inside the same frame as the CTA so she knows
+            exactly what she's committing to. */}
+        {a.ai_micro_experiment && (
+          <section className="mb-10 overflow-hidden rounded-2xl border-2 border-brand-accent bg-gradient-to-br from-orange-50 to-rose-50 shadow-md">
+            <div className="px-6 py-7 text-center">
+              <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-accent">
+                {t.experimentEyebrow}
+              </p>
+              <p className="mx-auto mb-6 max-w-xl text-lg leading-snug text-gray-900 md:text-xl">
+                {a.ai_micro_experiment}
+              </p>
+
+              <Link
+                href={`/Cycle/login?next=${encodeURIComponent(`/Cycle/bridge/compass?assessment_id=${a.id}`)}`}
+                className="inline-block rounded-md bg-brand px-7 py-3 text-base font-bold text-white shadow-md transition-colors hover:bg-brand-dark"
+              >
+                {t.startCheckinCta}
+              </Link>
+              <p className="mt-3 text-xs text-gray-600">{t.startCheckinSub}</p>
+            </div>
+
+            {/* Sub-frame: how we know if it works — collapsed inline, no extra tap */}
+            <div className="border-t border-brand-accent/20 bg-white/60 px-6 py-4 text-center">
+              <p className="mx-auto max-w-xl text-xs leading-relaxed text-gray-700">
+                {t.logbookBody}
+              </p>
+            </div>
           </section>
         )}
 
@@ -230,49 +238,34 @@ export default async function CompassResultsPage(
           </section>
         )}
 
-        {/* Micro-experiment + DIRECT gekoppelde logboek-CTA */}
-        {a.ai_micro_experiment && (
-          <section className="mb-8 overflow-hidden rounded-xl border border-brand-accent/30 bg-gradient-to-br from-orange-50 to-rose-50">
-            <div className="p-6">
-              <p className="mb-2 text-xs font-bold uppercase tracking-wider text-brand-accent">
-                {t.experimentEyebrow}
+        {/* "Why this experiment" — rationale + source, secondary visual weight
+            (no more orange gradient). The experiment text itself + the action
+            now live in the bridge CTA section near the top of the page. */}
+        {(expEntry?.rationale || a.ai_micro_experiment_source) && (
+          <section className="mb-8 rounded-xl border border-gray-200 bg-white p-6">
+            <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-accent">
+              {t.whyExperimentLabel}
+            </p>
+            {expEntry?.rationale && (
+              <p className="mb-3 text-sm leading-relaxed text-gray-800">{expEntry.rationale}</p>
+            )}
+            {a.ai_micro_experiment_source && (
+              <p className="text-xs italic text-gray-600">
+                {t.sourceLabel}:{' '}
+                {a.ai_micro_experiment_source_url ? (
+                  <a
+                    href={a.ai_micro_experiment_source_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-brand-accent"
+                  >
+                    {a.ai_micro_experiment_source}
+                  </a>
+                ) : (
+                  <span>{a.ai_micro_experiment_source}</span>
+                )}
               </p>
-              <p className="text-base leading-relaxed text-gray-900">{a.ai_micro_experiment}</p>
-
-              {/* Waarom dit experiment? — kort rationale (toont werking) */}
-              {expEntry?.rationale && (
-                <div className="mt-4 rounded-md bg-white/70 p-3">
-                  <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-brand-accent">
-                    {t.whyExperimentLabel}
-                  </p>
-                  <p className="text-sm leading-relaxed text-gray-800">{expEntry.rationale}</p>
-                </div>
-              )}
-
-              {/* Bron-attributie — onder elk experiment, direct zichtbaar */}
-              {a.ai_micro_experiment_source && (
-                <p className="mt-3 text-xs italic text-gray-700">
-                  {t.sourceLabel}:{' '}
-                  {a.ai_micro_experiment_source_url ? (
-                    <a
-                      href={a.ai_micro_experiment_source_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="underline hover:text-brand-accent"
-                    >
-                      {a.ai_micro_experiment_source}
-                    </a>
-                  ) : (
-                    <span>{a.ai_micro_experiment_source}</span>
-                  )}
-                </p>
-              )}
-            </div>
-
-            {/* CTA hoisted to the top of the page — under the score badge.
-                We keep this section for the rich experiment details
-                (description + rationale + source) but the primary action
-                button lives above now. */}
+            )}
           </section>
         )}
 
