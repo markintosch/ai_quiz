@@ -213,12 +213,26 @@ export default function SummerCourseView({ c }: { c: SummerCourseContent }) {
         </div>
       </section>
 
-      {/* SIGNUP */}
+      {/* SIGNUP — Frank: hrefs in content.ts → signup.{ebHref,regHref} */}
       <section className="sc-alt" id="inschrijven">
         <div className="sc-wrap sc-signup">
           <h2>{c.signup.heading}</h2>
           <p className="sc-muted">{c.signup.intro}</p>
-          <a href={c.signup.ctaHref} className="sc-btn sc-btn-primary">{c.signup.ctaLabel}</a>
+          <div className="sc-pay">
+            <a href={c.signup.ebHref} className="sc-pay-card sc-pay-eb">
+              <span className="sc-pay-label">{c.signup.ebLabel}</span>
+              <span className="sc-pay-price">{c.signup.ebPrice}</span>
+              <span className="sc-pay-sub">{c.signup.ebSub}</span>
+              <span className="sc-pay-cta">Reserveer en betaal →</span>
+            </a>
+            <a href={c.signup.regHref} className="sc-pay-card sc-pay-reg">
+              <span className="sc-pay-label">{c.signup.regLabel}</span>
+              <span className="sc-pay-price">{c.signup.regPrice}</span>
+              <span className="sc-pay-sub">{c.signup.regSub}</span>
+              <span className="sc-pay-cta">Reserveer en betaal →</span>
+            </a>
+          </div>
+          <p className="sc-pay-note">{c.signup.note}</p>
         </div>
       </section>
 
@@ -323,8 +337,17 @@ const CSS = `
 .sc-pm{color:var(--sc-accent);font-weight:800}
 .sc-signup{text-align:center}
 .sc-signup .sc-muted{max-width:560px;margin:8px auto 24px}
+.sc-pay{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:640px;margin:0 auto}
+.sc-pay-card{display:flex;flex-direction:column;align-items:center;gap:6px;background:#fff;border:1.5px solid var(--sc-line);border-radius:18px;padding:28px 22px;text-decoration:none;color:var(--sc-ink);transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease}
+.sc-pay-card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(28,36,51,.10);border-color:var(--sc-accent)}
+.sc-pay-eb{background:linear-gradient(180deg,#fff,#fff8f2);border-color:var(--sc-gold)}
+.sc-pay-label{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--sc-accent)}
+.sc-pay-price{font-size:42px;font-weight:800;letter-spacing:-.02em}
+.sc-pay-sub{font-size:13px;color:var(--sc-muted)}
+.sc-pay-cta{margin-top:14px;background:linear-gradient(135deg,var(--sc-gold),var(--sc-accent));color:#fff;font-weight:700;padding:12px 22px;border-radius:10px;font-size:15px}
+.sc-pay-note{margin-top:22px!important;font-size:14px;color:var(--sc-muted);max-width:520px;margin-left:auto;margin-right:auto}
 .sc-footer{background:var(--sc-teal-dk);color:#aebcc7;padding:36px 0;font-size:14px}
 .sc-footer a{color:#fff;text-decoration:none}
 .sc-footrow{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
-@media(max-width:760px){.sc-grid2,.sc-price-wrap,.sc-cases{grid-template-columns:1fr}.sc-srow{grid-template-columns:110px 1fr}.sc-case dl{grid-template-columns:1fr}.sc-case dt{padding-top:8px}}
+@media(max-width:760px){.sc-grid2,.sc-price-wrap,.sc-cases,.sc-pay{grid-template-columns:1fr}.sc-srow{grid-template-columns:110px 1fr}.sc-case dl{grid-template-columns:1fr}.sc-case dt{padding-top:8px}}
 `
