@@ -19,6 +19,49 @@ export const metadata: Metadata = {
   },
 }
 
+const eventSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BusinessEvent',
+  name: 'AI impact op leiderschap — executive middag',
+  description: 'Praktische executive middag voor CEO, CMO en CDO over wat AI vraagt van leiderschap, gevolgd door een 90-dagen-traject.',
+  startDate: '2026-06-29T09:00:00+02:00',
+  endDate:   '2026-06-29T17:30:00+02:00',
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  location: {
+    '@type': 'Place',
+    name: 'Utrecht',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Utrecht',
+      addressCountry: 'NL',
+    },
+  },
+  organizer: [
+    { '@type': 'Person', name: 'Ben van den Burg' },
+    { '@type': 'Person', name: 'Mark de Kock', url: 'https://markdekock.com' },
+  ],
+  offers: {
+    '@type': 'Offer',
+    price: '1595',
+    priceCurrency: 'EUR',
+    availability: 'https://schema.org/InStock',
+    url: `${BASE}/ai-leiderschap#boeken`,
+  },
+  maximumAttendeeCapacity: 40,
+  inLanguage: 'nl',
+  url:   `${BASE}/ai-leiderschap`,
+  image: `${BASE}/ai-leiderschap/opengraph-image`,
+}
+
 export default function AILeiderschapLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(eventSchema) }}
+      />
+      {children}
+    </>
+  )
 }

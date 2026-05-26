@@ -4,10 +4,19 @@ import WaitlistForm from './WaitlistForm'
 // Self-contained presentational view. Scoped <style> block (.ail-* prefix).
 // Navy/amber, executive feel.
 
+function isBookable(href: string): boolean {
+  return /^https?:\/\//i.test(href) && !/REPLACE_WITH/i.test(href)
+}
+
 export default function AILeiderschapView({ c }: { c: AILContent }) {
   return (
     <div className="ail-root">
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
+
+      <nav className="ail-nav">
+        <a href="https://markdekock.com" className="ail-nav-back">← markdekock.com</a>
+        <a href="#boeken" className="ail-btn ail-btn-primary ail-nav-cta">Boek je plek</a>
+      </nav>
 
       <header className="ail-hero">
         <div className="ail-wrap">
@@ -39,6 +48,11 @@ export default function AILeiderschapView({ c }: { c: AILContent }) {
           <div className="ail-roles">
             {c.audience.roles.map((r, i) => <span key={i} className="ail-role">{r}</span>)}
           </div>
+          {c.audience.scenarios.length > 0 && (
+            <ul className="ail-scenarios">
+              {c.audience.scenarios.map((s, i) => <li key={i}>{s}</li>)}
+            </ul>
+          )}
           <p className="ail-muted ail-small">{c.audience.note}</p>
         </div>
       </section>
@@ -83,7 +97,10 @@ export default function AILeiderschapView({ c }: { c: AILContent }) {
           <div className="ail-hosts">
             {c.hosts.people.map((p, i) => (
               <div key={i} className="ail-host">
-                <div className="ail-avatar">{p.initials}</div>
+                {p.photo
+                  // eslint-disable-next-line @next/next/no-img-element
+                  ? <img className="ail-avatar ail-avatar-img" src={p.photo} alt={p.name} />
+                  : <div className="ail-avatar">{p.initials}</div>}
                 <div>
                   <h3>{p.name}</h3>
                   <p className="ail-host-role">{p.role}</p>
@@ -94,6 +111,22 @@ export default function AILeiderschapView({ c }: { c: AILContent }) {
           </div>
         </div>
       </section>
+
+      {c.testimonials.items.length > 0 && (
+        <section className="ail-sec">
+          <div className="ail-wrap ail-narrow">
+            <h2>{c.testimonials.heading}</h2>
+            <div className="ail-testimonials">
+              {c.testimonials.items.map((t, i) => (
+                <blockquote key={i} className="ail-quote">
+                  <p>“{t.quote}”</p>
+                  <cite>{[t.name, t.role].filter(Boolean).join(' · ')}</cite>
+                </blockquote>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="ail-sec ail-alt">
         <div className="ail-wrap ail-narrow">
@@ -112,15 +145,18 @@ export default function AILeiderschapView({ c }: { c: AILContent }) {
           <h2>{c.slots.heading}</h2>
           <p className="ail-muted ail-narrow">{c.slots.intro}</p>
           <div className="ail-slots">
-            {c.slots.items.map((slot) => (
-              <a key={slot.id} href={slot.mollieHref} className="ail-slot">
-                <span className="ail-slot-label">{slot.label}</span>
-                <span className="ail-slot-time">{slot.time}</span>
-                <span className="ail-slot-price">{slot.price}</span>
-                <span className="ail-slot-note">{slot.note}</span>
-                <span className="ail-slot-cta">Boek + betaal →</span>
-              </a>
-            ))}
+            {c.slots.items.map((slot) => {
+              const bookable = isBookable(slot.mollieHref)
+              return (
+                <a key={slot.id} href={bookable ? slot.mollieHref : '#voorinschrijving'} className={`ail-slot ${bookable ? '' : 'ail-slot-soon'}`}>
+                  <span className="ail-slot-label">{slot.label}</span>
+                  <span className="ail-slot-time">{slot.time}</span>
+                  <span className="ail-slot-price">{slot.price}</span>
+                  <span className="ail-slot-note">{slot.note}</span>
+                  <span className="ail-slot-cta">{bookable ? 'Boek + betaal →' : 'Boeking opent binnenkort'}</span>
+                </a>
+              )
+            })}
           </div>
           <p className="ail-pay-note">{c.slots.payNote}</p>
         </div>
@@ -175,7 +211,12 @@ const CSS = `
 .ail-btn:hover{transform:translateY(-2px)}
 .ail-btn-primary{background:linear-gradient(135deg,var(--acc2),var(--acc));color:#fff;box-shadow:0 8px 22px rgba(232,97,26,.28)}
 .ail-btn-ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.35)}
-.ail-hero{background:radial-gradient(1100px 460px at 80% -10%,rgba(245,168,32,.16),transparent),linear-gradient(180deg,var(--n),var(--n2));color:#fff;padding:84px 0 68px}
+.ail-nav{position:absolute;top:0;left:0;right:0;z-index:10;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.ail-nav-back{color:rgba(255,255,255,.65);text-decoration:none;font-size:14px;font-weight:600}
+.ail-nav-back:hover{color:#fff}
+.ail-nav-cta{padding:10px 20px;font-size:14px}
+.ail-root{position:relative}
+.ail-hero{background:radial-gradient(1100px 460px at 80% -10%,rgba(245,168,32,.16),transparent),linear-gradient(180deg,var(--n),var(--n2));color:#fff;padding:120px 0 68px}
 .ail-hero h1{max-width:840px}
 .ail-lead{font-size:20px;color:#b0c2d2;margin-top:18px!important;max-width:720px}
 .ail-bullets{list-style:none;display:flex;flex-wrap:wrap;gap:10px 22px;margin:26px 0!important;padding:0}
@@ -188,6 +229,9 @@ const CSS = `
 .ail-big{font-size:19px;margin-top:14px!important}
 .ail-roles{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
 .ail-role{background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:9px 16px;font-size:14px;font-weight:600;color:var(--teal)}
+.ail-scenarios{list-style:none;padding:0;margin:28px 0 0!important;display:grid;gap:10px;max-width:740px}
+.ail-scenarios li{font-size:16px;color:var(--ink);padding-left:24px;position:relative}
+.ail-scenarios li::before{content:"";position:absolute;left:0;top:9px;width:14px;height:2px;background:var(--acc);border-radius:2px}
 .ail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px}
 .ail-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px}
 .ail-card h3{margin-bottom:8px}
@@ -200,7 +244,14 @@ const CSS = `
 .ail-host{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px}
 .ail-host p{color:var(--muted);font-size:14px;margin-top:6px!important}
 .ail-host-role{color:var(--acc)!important;font-weight:600;font-size:13px!important;margin-top:2px!important}
-.ail-avatar{flex:0 0 56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--n));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+.ail-avatar{flex:0 0 56px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--n));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+.ail-avatar-img{object-fit:cover;background:#eee}
+.ail-testimonials{display:grid;gap:18px;margin-top:24px}
+.ail-quote{background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px;margin:0;border-left:3px solid var(--acc)}
+.ail-quote p{font-size:17px;line-height:1.55;color:var(--ink);font-style:italic;margin:0}
+.ail-quote cite{display:block;margin-top:12px;font-size:14px;font-style:normal;font-weight:600;color:var(--muted)}
+.ail-slot-soon{opacity:.88;border-style:dashed}
+.ail-slot-soon .ail-slot-cta{background:#7a8a98}
 .ail-facts{margin-top:20px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
 .ail-fact{display:grid;grid-template-columns:200px 1fr;border-top:1px solid var(--line)}
 .ail-fact:first-child{border-top:none}

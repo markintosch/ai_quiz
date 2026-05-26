@@ -4,11 +4,12 @@
 // interest for follow-up editions. CMS-editable via /admin/ai-leiderschap.
 
 export interface AILItem { title: string; body: string }
-export interface AILHost { initials: string; name: string; role: string; bio: string }
+export interface AILHost { initials: string; name: string; role: string; bio: string; photo: string }
 export interface AILFact { label: string; value: string }
 export interface AILFaq { q: string; a: string }
 export interface AILStep { label: string; title: string; body: string }
 export interface AILSlot { id: string; label: string; time: string; price: string; mollieHref: string; note: string }
+export interface AILTestimonial { quote: string; name: string; role: string }
 
 export interface AILContent {
   hero: {
@@ -23,10 +24,11 @@ export interface AILContent {
     note: string
   }
   problem: { heading: string; body: string }
-  audience: { heading: string; intro: string; roles: string[]; note: string }
+  audience: { heading: string; intro: string; roles: string[]; scenarios: string[]; note: string }
   program: { heading: string; intro: string; items: AILItem[] }
   trajectory: { heading: string; intro: string; steps: AILStep[] }
   hosts: { heading: string; intro: string; people: AILHost[] }
+  testimonials: { heading: string; items: AILTestimonial[] }
   practical: { heading: string; facts: AILFact[] }
   slots: {
     heading: string
@@ -77,6 +79,11 @@ export const DEFAULT_CONTENT: AILContent = {
       'Voorzitter RvB / lid RvT',
       'Algemeen directeur / MT-voorzitter',
     ],
+    scenarios: [
+      'Je hebt drie AI-pilots lopen, maar geen strategie die ze verbindt.',
+      'Je team vraagt om richting en je weet nog niet welke.',
+      'Je wilt niet experimenteren met AI, je wilt sturen.',
+    ],
     note: 'Kom met een collega uit je directie of MT. Peer-werk wordt rijker wanneer je samen kunt terugkomen op de inzichten.',
   },
   program: {
@@ -106,8 +113,26 @@ export const DEFAULT_CONTENT: AILContent = {
     heading: 'Je begeleiders',
     intro: 'Twee perspectieven: Ben als dagvoorzitter en strateeg, Mark als gastheer en vervolgtraject-begeleider.',
     people: [
-      { initials: 'BvdB', name: 'Ben van den Burg', role: 'Dagvoorzitter & keynote', bio: 'Strateeg en spreker met scherpe kijk op leiderschap in tijden van technologische verschuiving. Verzorgt de keynote en leidt de dialoog.' },
-      { initials: 'MdK', name: 'Mark de Kock', role: 'Gastheer & traject-begeleider', bio: 'Brengt AI-strategie naar uitvoering. Faciliteert de werkblokken, het 90-dagen-traject en de individuele follow-up calls.' },
+      {
+        initials: 'BvdB',
+        name: 'Ben van den Burg',
+        role: 'Dagvoorzitter & keynote',
+        bio: 'Strateeg en spreker over leiderschap in technologische transitie. Begeleidt directieteams bij strategische heroriëntatie wanneer markt, organisatie en technologie tegelijk schuiven. Schrijft en spreekt regelmatig over de menselijke kant van digitale transformatie.',
+        photo: '/Ben_van_den_Burg.jpg',
+      },
+      {
+        initials: 'MdK',
+        name: 'Mark de Kock',
+        role: 'Gastheer & traject-begeleider',
+        bio: 'Vertaalt AI-strategie naar uitvoering. Werkt met directieteams aan het verbinden van ambitie, organisatie en eerste werkende toepassingen. Faciliteert de werkblokken, het 90-dagen-traject en de individuele follow-up calls.',
+        photo: '/markdekock_2026.png',
+      },
+    ],
+  },
+  testimonials: {
+    heading: 'Wat deelnemers zeggen',
+    items: [
+      // Vul aan via /admin/ai-leiderschap. Sectie verbergt zich als de lijst leeg is.
     ],
   },
   practical: {
@@ -131,7 +156,10 @@ export const DEFAULT_CONTENT: AILContent = {
         label: 'Ochtend',
         time: '09:00 – 13:00 (incl. afsluitende lunch)',
         price: '€1.595',
-        mollieHref: 'https://www.mollie.com/payment/REPLACE_WITH_OCHTEND_LINK',
+        // Vervang door je Mollie Payment Link (begint met https://). Zolang
+        // hier "#" of een placeholder staat, toont de View een "Boeking opent
+        // binnenkort"-staat in plaats van een dode link.
+        mollieHref: '#boeken',
         note: 'Max. 20 plekken',
       },
       {
@@ -139,7 +167,7 @@ export const DEFAULT_CONTENT: AILContent = {
         label: 'Middag',
         time: '13:30 – 17:30 (incl. afsluitende borrel)',
         price: '€1.595',
-        mollieHref: 'https://www.mollie.com/payment/REPLACE_WITH_MIDDAG_LINK',
+        mollieHref: '#boeken',
         note: 'Max. 20 plekken',
       },
     ],

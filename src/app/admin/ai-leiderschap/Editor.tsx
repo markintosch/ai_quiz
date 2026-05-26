@@ -129,6 +129,7 @@ export default function AILEditor({ initial }: { initial: AILContent }) {
         <Field label="Kop" value={c.audience.heading} onChange={(v) => patch('audience', { heading: v })} />
         <Field label="Intro" value={c.audience.intro} onChange={(v) => patch('audience', { intro: v })} textarea />
         <StringList label="Rollen" items={c.audience.roles} onChange={(v) => patch('audience', { roles: v })} />
+        <StringList label="Herkenbare scenario's (onder de rollen)" items={c.audience.scenarios} onChange={(v) => patch('audience', { scenarios: v })} />
         <Field label="Notitie" value={c.audience.note} onChange={(v) => patch('audience', { note: v })} textarea />
       </Section>
 
@@ -151,14 +152,26 @@ export default function AILEditor({ initial }: { initial: AILContent }) {
       <Section title="Begeleiders">
         <Field label="Kop" value={c.hosts.heading} onChange={(v) => patch('hosts', { heading: v })} />
         <Field label="Intro" value={c.hosts.intro} onChange={(v) => patch('hosts', { intro: v })} textarea />
-        <ObjectList label="Personen" items={c.hosts.people} empty={{ initials: '', name: '', role: '', bio: '' }}
+        <ObjectList label="Personen" items={c.hosts.people} empty={{ initials: '', name: '', role: '', bio: '', photo: '' }}
           fields={[
-            { key: 'initials', label: 'Initialen' },
+            { key: 'initials', label: 'Initialen (fallback als foto leeg)' },
             { key: 'name',     label: 'Naam' },
             { key: 'role',     label: 'Rol-omschrijving' },
             { key: 'bio',      label: 'Bio', textarea: true },
+            { key: 'photo',    label: 'Foto-pad (bijv. /Ben_van_den_Burg.jpg)' },
           ]}
           onChange={(v) => patch('hosts', { people: v })} />
+      </Section>
+
+      <Section title="Testimonials">
+        <Field label="Kop" value={c.testimonials.heading} onChange={(v) => patch('testimonials', { heading: v })} />
+        <ObjectList label="Quotes (sectie verbergt zich als deze lijst leeg is)" items={c.testimonials.items} empty={{ quote: '', name: '', role: '' }}
+          fields={[
+            { key: 'quote', label: 'Quote', textarea: true },
+            { key: 'name',  label: 'Naam' },
+            { key: 'role',  label: 'Functie / organisatie' },
+          ]}
+          onChange={(v) => patch('testimonials', { items: v })} />
       </Section>
 
       <Section title="Praktisch">

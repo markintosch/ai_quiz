@@ -10,39 +10,53 @@ export default function OGImage() {
     (
       <div
         style={{
+          background: 'linear-gradient(135deg, #0D1B2A, #13243a)',
           width: '100%',
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          background: '#0D1B2A',
-          padding: '64px',
-          fontFamily: 'sans-serif',
+          justifyContent: 'center',
+          padding: '60px 80px',
+          fontFamily: 'system-ui, sans-serif',
+          color: '#fff',
         }}
       >
         <div
           style={{
-            background: 'linear-gradient(135deg, #F5A820, #E8611A)',
-            borderRadius: '6px',
-            padding: '6px 16px',
-            fontSize: '14px',
+            fontSize: 16,
             fontWeight: 700,
-            color: '#fff',
-            letterSpacing: '0.08em',
+            color: '#F5A820',
+            letterSpacing: '0.12em',
             textTransform: 'uppercase',
-            marginBottom: '40px',
-            alignSelf: 'flex-start',
+            marginBottom: 20,
           }}
         >
-          Executive middag · 29 juni 2026
+          Executive middag · 29 juni 2026 · Utrecht
         </div>
-        <div style={{ fontSize: '64px', fontWeight: 800, color: '#fff', lineHeight: 1.04, maxWidth: '920px', marginBottom: '24px' }}>
+        <div
+          style={{
+            fontSize: 64,
+            fontWeight: 800,
+            lineHeight: 1.06,
+            letterSpacing: '-0.02em',
+            maxWidth: 940,
+          }}
+        >
           AI impact op leiderschap
         </div>
-        <div style={{ fontSize: '26px', color: '#b0c2d2', maxWidth: '820px', lineHeight: 1.4, marginBottom: 'auto' }}>
-          Een halve dag plus een 90-dagen-traject voor CEO, CMO en CDO. Utrecht.
+        <div
+          style={{
+            fontSize: 24,
+            color: '#b0c2d2',
+            marginTop: 26,
+            maxWidth: 760,
+            lineHeight: 1.45,
+          }}
+        >
+          Voor CEO, CMO en CDO. Inclusief 90-dagen-vervolgtraject met Ben van den Burg &amp; Mark de Kock.
         </div>
-        <div style={{ color: '#8aa8bb', fontSize: '22px', fontWeight: 600 }}>
-          Ben van den Burg &amp; Mark de Kock
+        <div style={{ fontSize: 14, color: '#5a6678', marginTop: 'auto' }}>
+          markdekock.com
         </div>
       </div>
     ),
