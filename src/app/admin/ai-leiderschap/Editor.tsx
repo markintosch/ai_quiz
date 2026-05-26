@@ -171,12 +171,27 @@ export default function AILEditor({ initial }: { initial: AILContent }) {
           <Field label="CTA secundair — label" value={c.hero.ctaSecondary.label} onChange={(v) => patch('hero', { ctaSecondary: { ...c.hero.ctaSecondary, label: v } })} />
           <Field label="CTA secundair — link" value={c.hero.ctaSecondary.href} onChange={(v) => patch('hero', { ctaSecondary: { ...c.hero.ctaSecondary, href: v } })} />
         </div>
+        <StringList label="Outputs-strip (de 3 dingen die je meeneemt)" items={c.hero.outputs} onChange={(v) => patch('hero', { outputs: v })} />
         <Field label="Notitie onder CTA" value={c.hero.note} onChange={(v) => patch('hero', { note: v })} textarea />
       </Section>
 
       <Section title="Probleem">
         <Field label="Kop" value={c.problem.heading} onChange={(v) => patch('problem', { heading: v })} />
         <Field label="Tekst" value={c.problem.body} onChange={(v) => patch('problem', { body: v })} textarea />
+      </Section>
+
+      <Section title="Wat je na afloop hebt (takeaways)">
+        <Field label="Kop" value={c.takeaways.heading} onChange={(v) => patch('takeaways', { heading: v })} />
+        <Field label="Intro" value={c.takeaways.intro} onChange={(v) => patch('takeaways', { intro: v })} textarea />
+        <ObjectList label="Takeaway-kaarten" items={c.takeaways.items} empty={{ title: '', body: '' }}
+          fields={[{ key: 'title', label: 'Titel' }, { key: 'body', label: 'Tekst', textarea: true }]}
+          onChange={(v) => patch('takeaways', { items: v })} />
+      </Section>
+
+      <Section title="Contrast (Dit is niet... wel...)">
+        <Field label="Kop" value={c.contrast.heading} onChange={(v) => patch('contrast', { heading: v })} />
+        <StringList label="Niet-regels" items={c.contrast.notItems} onChange={(v) => patch('contrast', { notItems: v })} />
+        <Field label="Wel-regel" value={c.contrast.wel} onChange={(v) => patch('contrast', { wel: v })} textarea />
       </Section>
 
       <Section title="Voor wie">
@@ -193,6 +208,15 @@ export default function AILEditor({ initial }: { initial: AILContent }) {
         <ObjectList label="Programmaonderdelen" items={c.program.items} empty={{ title: '', body: '' }}
           fields={[{ key: 'title', label: 'Titel' }, { key: 'body', label: 'Tekst', textarea: true }]}
           onChange={(v) => patch('program', { items: v })} />
+      </Section>
+
+      <Section title="Assessment-blok (hoe de spiegel werkt)">
+        <Field label="Kop" value={c.assessment.heading} onChange={(v) => patch('assessment', { heading: v })} />
+        <Field label="Intro" value={c.assessment.intro} onChange={(v) => patch('assessment', { intro: v })} textarea />
+        <ObjectList label="Stappen" items={c.assessment.steps} empty={{ title: '', body: '' }}
+          fields={[{ key: 'title', label: 'Titel' }, { key: 'body', label: 'Tekst', textarea: true }]}
+          onChange={(v) => patch('assessment', { steps: v })} />
+        <Field label="Privacy-notitie" value={c.assessment.privacyNote} onChange={(v) => patch('assessment', { privacyNote: v })} textarea />
       </Section>
 
       <Section title="90-dagen-traject">
@@ -232,6 +256,13 @@ export default function AILEditor({ initial }: { initial: AILContent }) {
         </div>
       </Section>
 
+      <Section title="Waarom deze aanpak werkt">
+        <Field label="Kop" value={c.whyWorks.heading} onChange={(v) => patch('whyWorks', { heading: v })} />
+        <ObjectList label="Punten" items={c.whyWorks.items} empty={{ title: '', body: '' }}
+          fields={[{ key: 'title', label: 'Titel' }, { key: 'body', label: 'Tekst', textarea: true }]}
+          onChange={(v) => patch('whyWorks', { items: v })} />
+      </Section>
+
       <Section title="Testimonials">
         <Field label="Kop" value={c.testimonials.heading} onChange={(v) => patch('testimonials', { heading: v })} />
         <ObjectList label="Quotes (sectie verbergt zich als deze lijst leeg is)" items={c.testimonials.items} empty={{ quote: '', name: '', role: '' }}
@@ -250,6 +281,11 @@ export default function AILEditor({ initial }: { initial: AILContent }) {
           onChange={(v) => patch('practical', { facts: v })} />
       </Section>
 
+      <Section title="Wat zit erbij in (inclusief-lijst)">
+        <Field label="Kop" value={c.included.heading} onChange={(v) => patch('included', { heading: v })} />
+        <StringList label="Inbegrepen items" items={c.included.items} onChange={(v) => patch('included', { items: v })} />
+      </Section>
+
       <Section title="Tijdslots (Mollie-knoppen)">
         <Field label="Kop" value={c.slots.heading} onChange={(v) => patch('slots', { heading: v })} />
         <Field label="Intro" value={c.slots.intro} onChange={(v) => patch('slots', { intro: v })} textarea />
@@ -264,6 +300,8 @@ export default function AILEditor({ initial }: { initial: AILContent }) {
           ]}
           onChange={(v) => patch('slots', { items: v })} />
         <Field label="Notitie onder de knoppen" value={c.slots.payNote} onChange={(v) => patch('slots', { payNote: v })} textarea />
+        <Field label="Duo-blok label" value={c.slots.duoLabel} onChange={(v) => patch('slots', { duoLabel: v })} />
+        <Field label="Duo-blok tekst" value={c.slots.duoBody} onChange={(v) => patch('slots', { duoBody: v })} textarea />
       </Section>
 
       <Section title="Voorinschrijving (wachtlijst)">

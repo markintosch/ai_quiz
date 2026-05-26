@@ -19,22 +19,30 @@ export interface AILContent {
     eventDate: string        // e.g. "Maandag 29 juni 2026"
     eventLocation: string
     bullets: string[]
+    outputs: string[]        // 3 concrete outputs strip (above the fold)
     ctaPrimary: { label: string; href: string }
     ctaSecondary: { label: string; href: string }
     note: string
   }
   problem: { heading: string; body: string }
+  takeaways: { heading: string; intro: string; items: AILItem[] }
   audience: { heading: string; intro: string; roles: string[]; scenarios: string[]; note: string }
+  contrast: { heading: string; notItems: string[]; wel: string }
   program: { heading: string; intro: string; items: AILItem[] }
+  assessment: { heading: string; intro: string; steps: AILItem[]; privacyNote: string }
   trajectory: { heading: string; intro: string; steps: AILStep[] }
   hosts: { heading: string; intro: string; people: AILHost[] }
+  whyWorks: { heading: string; items: AILItem[] }
   testimonials: { heading: string; items: AILTestimonial[] }
   practical: { heading: string; facts: AILFact[] }
+  included: { heading: string; items: string[] }
   slots: {
     heading: string
     intro: string
     items: AILSlot[]
     payNote: string
+    duoLabel: string
+    duoBody: string
   }
   waitlist: {
     heading: string
@@ -48,8 +56,8 @@ export interface AILContent {
 export const DEFAULT_CONTENT: AILContent = {
   hero: {
     eyebrow: 'Executive middag · met Ben van den Burg & Mark de Kock',
-    title: 'AI impact op leiderschap',
-    subtitle: 'Een praktische middag voor CEO, CMO en CDO over wat AI vraagt van hoe je leidt. Gevolgd door een gefaciliteerd 90-dagen-traject zodat de keuzes die je maakt ook landen.',
+    title: 'Van AI-experimenten naar leiderschapskeuzes in 90 dagen.',
+    subtitle: 'Een halve dag waarin je met andere directieleden de richting kiest, en een 90-dagen-ritme dat zorgt dat die keuze ook landt. Voor CEO, CMO en CDO.',
     eventDate: 'Maandag 29 juni 2026',
     eventLocation: 'Utrecht (locatie wordt gedeeld bij bevestiging)',
     bullets: [
@@ -57,16 +65,39 @@ export const DEFAULT_CONTENT: AILContent = {
       '📍 Utrecht',
       'Kies tussen ochtend of middag',
       'Max. 20 deelnemers per sessie',
-      'Inclusief 90-dagen-vervolgtraject',
-      'Begeleid door Ben van den Burg & Mark de Kock',
+      '€1.595 p.p. excl. btw',
     ],
-    ctaPrimary: { label: 'Boek je plek →', href: '#boeken' },
-    ctaSecondary: { label: 'Bekijk het programma', href: '#programma' },
+    outputs: [
+      'Persoonlijke AI-leiderschap-spiegel',
+      'Eén concrete 90-dagen-leiderschapskeuze',
+      'Opvolgritme met voortgangsmetingen',
+    ],
+    ctaPrimary: { label: 'Boek je plek', href: '#boeken' },
+    ctaSecondary: { label: 'Bekijk het 90-dagen-traject', href: '#traject' },
     note: 'Beide sessies gaan door bij minimaal 10 inschrijvingen. Vooruitbetaling via Mollie. Excl. btw.',
   },
   problem: {
     heading: 'AI is een leiderschapsvraagstuk, geen IT-project',
     body: 'Je organisatie experimenteert met AI, of weet dat het moet. Wat het écht vraagt van jou als leider blijft vaak ongezegd. Het gaat niet alleen over welke tool je kiest of welke training je inkoopt. Het gaat over de beslissingen die je neemt en de richting die je je organisatie meegeeft, in een tijd waarin AI je strategie, je team en je rol verandert.',
+  },
+  takeaways: {
+    heading: 'Wat je na afloop hebt',
+    intro: 'Geen aantekeningen die in een la verdwijnen. Vier concrete uitkomsten die de week erop al meedoen in je werk.',
+    items: [
+      { title: 'Persoonlijk rapport', body: 'Je eigen score op de AI-leiderschap-dimensies. Privé, niet gedeeld met anderen.' },
+      { title: '90-dagen-canvas', body: 'Eén A3 met je gekozen richting, je eerste stap en je belangrijkste belemmering. Ingevuld op de dag, met peer-feedback.' },
+      { title: 'Teamboodschap', body: 'Eén heldere zin die je maandag aan je team zegt over wat dit voor jullie betekent. Voorkomt verwarring.' },
+      { title: 'Delta-meting op dag 30/60/90', body: 'Drie korte herhaalmetingen op precies de mijlpalen van je canvas. Je ziet waar je beweegt en waar niet.' },
+    ],
+  },
+  contrast: {
+    heading: 'Wat dit niet is, en wat wel',
+    notItems: [
+      'Geen prompttraining',
+      'Geen technische AI-cursus',
+      'Geen inspiratiesessie zonder vervolg',
+    ],
+    wel: 'Wel: een executive sprint om richting, keuzes en vervolg te organiseren. Voor leiders die niet meer willen experimenteren, maar willen sturen.',
   },
   audience: {
     heading: 'Voor wie is deze middag?',
@@ -88,15 +119,26 @@ export const DEFAULT_CONTENT: AILContent = {
   },
   program: {
     heading: 'Het programma',
-    intro: 'Een halve dag in vier blokken: oriëntatie, dialoog, eigen werk en commitments. Ben leidt de dag, Mark begeleidt het werk en het 90-dagen-vervolg.',
+    intro: 'Vier blokken in een halve dag. Elk blok heeft een eigen opbrengst, niet alleen een onderwerp.',
     items: [
-      { title: 'Keynote door Ben van den Burg', body: 'Eén uur over wat AI verschuift in leiderschap, met scherpe observaties uit de praktijk.' },
-      { title: 'Diagnose (werkblok 1)', body: 'In trio\'s op de dimensies van je AI-assessment. Waar staat jouw organisatie? Wat zien je peers dat jij niet ziet?' },
-      { title: 'Cohort-spiegel', body: 'De geaggregeerde data van deze zaal op het scherm. Waar zit deze groep sterk, waar liggen risico\'s, hoe verhouden jullie je tot de markt.' },
-      { title: '90-dagen-canvas (werkblok 2)', body: 'Eén concrete keuze voor de komende 90 dagen, gebaseerd op je zwakste dimensie. Eindigt met je eerste stap en je boodschap aan je team.' },
+      { title: 'Keynote: gedeelde taal en leiderschapsframe', body: 'Ben opent met een uur over wat AI verschuift in jouw rol als leider. Scherp, geen hype. De zaal krijgt hetzelfde vocabulaire voor de rest van de middag.' },
+      { title: 'Diagnose: waar staan we écht?', body: 'In trio\'s op de dimensies van je assessment. Wat zien je peers dat jij niet ziet? Eerste eerlijke spiegel.' },
+      { title: 'Cohort-spiegel: wat kunnen we van elkaar leren?', body: 'De geaggregeerde, anonieme data van deze zaal op het scherm. Wat doet deze groep al, wat blijft liggen, en wat zegt dat?' },
+      { title: '90-dagen-canvas: welke keuze maak ik?', body: 'Eén concrete keuze waar je je 90 dagen aan committeert. Met je eerste stap en je teamboodschap erbij.' },
       { title: 'Afsluiting & Q&A', body: 'Ben en Mark vatten samen, prikkelen, beantwoorden wat er nog ligt.' },
-      { title: 'Borrel / lunch + netwerken', body: 'De waardevolle helft van zo\'n middag: peers die hetzelfde dragen, dezelfde vragen stellen, andere antwoorden gevonden hebben.' },
+      { title: 'Borrel of lunch + netwerken', body: 'Peers die hetzelfde dragen, dezelfde vragen stellen, andere antwoorden gevonden hebben.' },
     ],
+  },
+  assessment: {
+    heading: 'De assessment als spiegel',
+    intro: 'Tien minuten vooraf invullen. De data is de stille gespreksleider van de middag.',
+    steps: [
+      { title: 'Vooraf', body: 'Je vult de baseline-assessment in (~10 min). Je krijgt direct een persoonlijk rapport in je inbox.' },
+      { title: 'Persoonlijke reflectie', body: 'Je rapport laat zien op welke dimensies je sterk staat en waar het risico zit. Privé.' },
+      { title: 'Cohort-vergelijking', body: 'Op de dag tonen we de geaggregeerde score van de zaal. Anoniem. Je weet hoe jij je verhoudt tot peers.' },
+      { title: 'Na 90 dagen', body: 'Drie herhaalmetingen op dag 30, 60 en 90. Je krijgt een delta-rapport dat laat zien waar je daadwerkelijk bent verschoven.' },
+    ],
+    privacyNote: 'Individuele resultaten blijven van jou. We delen geen persoonlijke scores met andere deelnemers. In de zaal tonen we alleen anonieme, geaggregeerde patronen. We verkopen geen data.',
   },
   trajectory: {
     heading: 'Een 90-dagen-traject met de middag als startpunt',
@@ -111,7 +153,7 @@ export const DEFAULT_CONTENT: AILContent = {
   },
   hosts: {
     heading: 'Je begeleiders',
-    intro: 'Twee perspectieven: Ben als dagvoorzitter en strateeg, Mark als gastheer en vervolgtraject-begeleider.',
+    intro: 'Ben brengt de scherpe buitenblik. Mark zorgt dat het landt.',
     people: [
       {
         initials: 'BvdB',
@@ -129,6 +171,16 @@ export const DEFAULT_CONTENT: AILContent = {
       },
     ],
   },
+  whyWorks: {
+    heading: 'Waarom deze aanpak werkt',
+    items: [
+      { title: 'Senior peer pressure', body: 'Andere directieleden stellen scherpere vragen dan adviseurs. De spiegel komt van mensen die hetzelfde dragen.' },
+      { title: 'Data-gebaseerde reflectie', body: 'De assessment maakt onderbuik concreet. Je weet niet alleen wat je voelt, je ziet ook waar je zit.' },
+      { title: 'Eén concrete keuze', body: 'Geen lijst van twintig dingen. Eén keuze, scherp ingebed in een ritme van 90 dagen.' },
+      { title: 'Opvolgritme', body: 'Drie metingen op precies de mijlpalen van je canvas. Niemand komt er goedkoop vanaf.' },
+      { title: 'Accountability zonder zwaarte', body: 'Een 1-op-1 met Mark op dag 15. Geen masterclass, wel een spiegel die zorgt dat je niet vergeet wat je koos.' },
+    ],
+  },
   testimonials: {
     heading: 'Wat deelnemers zeggen',
     items: [
@@ -143,8 +195,21 @@ export const DEFAULT_CONTENT: AILContent = {
       { label: 'Vorm', value: 'Halve dag, kies ochtend of middag' },
       { label: 'Groep', value: 'Min. 10, max. 20 per sessie' },
       { label: 'Investering', value: '€1.595 p.p. (excl. btw)' },
-      { label: 'Inbegrepen', value: 'Baseline-assessment, canvas + boekje, lunch/borrel, 90-dagen-traject met 1-op-1 en progressiemetingen' },
       { label: 'Taal', value: 'Nederlands' },
+    ],
+  },
+  included: {
+    heading: 'Wat zit erbij in',
+    items: [
+      'Halve dag executive sessie (Ben + Mark)',
+      'Baseline-assessment vooraf',
+      'Persoonlijk rapport',
+      '90-dagen-canvas (A3) + leiderschapsboekje',
+      'Lunch of borrel',
+      '30-min 1-op-1 follow-up met Mark op dag 15',
+      'Progressiemetingen op dag 30, 60 en 90',
+      'Persoonlijk delta-rapport',
+      'Anoniem cohort-eindrapport',
     ],
   },
   slots: {
@@ -172,6 +237,8 @@ export const DEFAULT_CONTENT: AILContent = {
       },
     ],
     payNote: 'Veilig betalen via Mollie · iDEAL, creditcard, Bancontact. Bij minder dan 10 inschrijvingen voor jouw slot krijg je je betaling volledig terug. Prijzen excl. btw.',
+    duoLabel: 'Kom met een MT-collega',
+    duoBody: 'Twee deelnemers uit één organisatie halen aantoonbaar meer uit het 90-dagen-traject. Duo-tarief op aanvraag: €2.750 voor twee (excl. btw). Neem contact op via de wachtlijst hieronder of mail rechtstreeks.',
   },
   waitlist: {
     heading: 'Kan je niet op 29 juni?',
@@ -187,7 +254,8 @@ export const DEFAULT_CONTENT: AILContent = {
       { q: 'Is de baseline-assessment verplicht?', a: 'Aanbevolen, niet verplicht. Wie vooraf invult haalt veel meer uit de cohort-spiegel en de werkblokken. Daar komt de data van de zaal terug.' },
       { q: 'Hoe werkt het 90-dagen-traject precies?', a: 'Na de middag krijg je op dag 15 een 1-op-1 met Mark (30 min, online). Op dag 30, 60 en 90 ontvang je een korte gepersonaliseerde meting met je delta-rapport. Op dag 90 een cohort-slotrapport.' },
       { q: 'Kan ik op bedrijfsnaam factureren?', a: 'Ja. Bij de Mollie-checkout vul je je bedrijfs- en btw-gegevens in. Je ontvangt een factuur op naam van je bedrijf.' },
-      { q: 'Kan ik met een collega komen?', a: 'Graag. Twee mensen uit dezelfde organisatie maken het peer-werk en het 90-dagen-traject sterker. Beide boeken één plek.' },
+      { q: 'Kan ik met twee mensen uit één organisatie komen?', a: 'Ja, dat raden we zelfs aan. Twee directieleden uit dezelfde organisatie halen meer uit het 90-dagen-traject, want jullie kunnen samen terugkomen op de inzichten. Duo-tarief op aanvraag: €2.750 voor twee (excl. btw). Neem contact op via de wachtlijst of mail rechtstreeks.' },
+      { q: 'Wat gebeurt er met mijn assessmentdata?', a: 'Je persoonlijke rapport is en blijft van jou. We delen geen individuele scores met andere deelnemers, je werkgever of derden. In de zaal tonen we alleen geaggregeerde, anonieme patronen, bijvoorbeeld "deze zaal scoort gemiddeld X op governance". We verkopen geen data en de assessment is GDPR-conform opgeslagen.' },
     ],
   },
   footer: {
