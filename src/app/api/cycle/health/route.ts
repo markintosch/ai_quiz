@@ -25,9 +25,6 @@ export async function GET() {
     ok: true,
     deploy: { commit: sha, environment: env, deployed_at: new Date().toISOString() },
     config: {
-      password:          status(process.env.CYCLE_PASSWORD),
-      default_email:     status(process.env.CYCLE_DEFAULT_EMAIL),
-      allowlist:         status(process.env.CYCLE_ALLOWED_EMAILS, 'csv'),
       cron_secret:       status(process.env.CRON_SECRET),
       supabase_url:      status(process.env.NEXT_PUBLIC_SUPABASE_URL),
       supabase_anon_key: status(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
@@ -35,5 +32,8 @@ export async function GET() {
       resend_api_key:    status(process.env.RESEND_API_KEY),
       reminder_from:     status(process.env.CYCLE_REMINDER_FROM),
     },
+    // CYCLE_PASSWORD, CYCLE_DEFAULT_EMAIL and CYCLE_ALLOWED_EMAILS are obsolete
+    // since v1.4 (passwordless multi-user). You can delete them from Vercel
+    // when convenient — the app no longer reads them.
   })
 }

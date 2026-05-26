@@ -1,25 +1,17 @@
 // FILE: src/lib/cycle/auth.ts
-// Email allowlist for Cycle Companion. Personal app — only the configured
-// addresses can request a magic link or hold a session.
+// Cycle Companion auth — passwordless magic-link, multi-user.
+//
+// Anyone who has provided an email (typically via Peri-Compass) can request
+// a magic-link login. Supabase Auth handles user creation on first sign-in.
+// All Cycle tables have row-level security keyed on auth.uid() so users
+// only ever see their own data.
 
 import { createClient } from '@/lib/supabase/server'
 
-function allowlist(): string[] {
-  return (process.env.CYCLE_ALLOWED_EMAILS ?? '')
-    .split(',')
-    .map(e => e.trim().toLowerCase())
-    .filter(Boolean)
-}
-
-export function isAllowed(email: string | null | undefined): boolean {
-  if (!email) return false
-  return allowlist().includes(email.trim().toLowerCase())
-}
-
 /**
  * Resolve the current authenticated user from the request cookies, returning
- * null if missing OR if the email is not on the allowlist. Use this as the
- * single guard in server components and API routes.
+ * null if no valid session. Use this as the single guard in server components
+ * and API routes.
  */
 export async function requireCycleUser(): Promise<
   | { id: string; email: string }
@@ -28,9 +20,5 @@ export async function requireCycleUser(): Promise<
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user || !user.email) return null
-  if (!isAllowed(user.email)) {
-    await supabase.auth.signOut()
-    return null
-  }
   return { id: user.id, email: user.email }
 }
