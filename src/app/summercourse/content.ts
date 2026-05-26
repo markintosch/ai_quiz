@@ -71,17 +71,18 @@ export const DEFAULT_CONTENT: SummerCourseContent = {
     subtitle:
       'Een praktische zomercursus met Frank Meeuwsen en Mark de Kock, voor professionals die Claude niet alleen willen proberen, maar echt willen toepassen in hun werk.',
     bullets: [
-      '3 dagen live begeleiding',
+      '📅 7, 9 en 14 juli 2026',
+      '📍 Wonders of Work, Utrecht',
       'Kleine groep — max. 12',
       'Geen programmeerkennis nodig',
       'Je werkt aan je eigen case',
-      'Inclusief toegang tot de online Claude Code cursus',
+      'Claude Max-abonnement zelf regelen (±€90/mnd)',
     ],
     credibility:
       'Gebaseerd op de online Claude Code cursus van Frank Meeuwsen, aangevuld met live begeleiding, strategische vertaling en persoonlijke toepassing door Mark de Kock.',
     ctaPrimary: 'Reserveer je plek',
     ctaSecondary: 'Bekijk het programma',
-    note: 'Aanbetaling reserveert je plek. Gaat de cursus niet door (min. 6 deelnemers)? Dan krijg je 100% terug.',
+    note: 'Vooruitbetaling vooraf via Mollie, zoals een concertkaartje. Gaat de cursus niet door (min. 6 deelnemers)? Dan krijg je 100% terug.',
   },
   problem: {
     heading: 'Van proberen naar gebruiken',
@@ -121,15 +122,15 @@ export const DEFAULT_CONTENT: SummerCourseContent = {
   program: {
     heading: 'Het programma',
     intro:
-      'Een begeleide build sprint met een duidelijke leerboog. Elke ochtend een vast programma, elke middag bouwen aan je eigen case.',
+      'Een begeleide build sprint met een duidelijke leerboog. Dag 1 en 2 in dezelfde week (di + do), dan een week ruimte om zelf te oefenen, en dag 3 een week later om je workflow te testen en agents toe te voegen.',
     intake: {
       label: 'Vooraf',
       title: 'Intake & voorbereiding',
-      body: 'Korte intake en je kiest je case. Je neemt één echte werkuitdaging mee, zodat je vanaf dag 1 aan iets van jezelf werkt.',
+      body: 'Korte intake, je kiest je case en regelt je Claude Max-abonnement (±€90/maand) zodat je tijdens de sprint niet tegen tokenlimieten aanloopt. Je neemt één echte werkuitdaging mee, zodat je vanaf dag 1 aan iets van jezelf werkt.',
     },
     days: [
       {
-        daynum: 'Dag 1',
+        daynum: 'Dag 1 · di 7 juli',
         title: 'Begrijpen & kiezen',
         morning: [
           'Wat kan Claude realistisch voor jouw werk doen?',
@@ -138,13 +139,13 @@ export const DEFAULT_CONTENT: SummerCourseContent = {
           'Live demo: Frank & Mark doen écht werk voor de groep',
         ],
         afternoon: [
-          'Kies één concrete use case uit je eigen werk',
+          'Kies één concrete use case uit je eigen werk (ideation)',
           'Scope hem af en zet je eerste werkende prompts',
           'Daily debrief: een paar deelnemers laten zien',
         ],
       },
       {
-        daynum: 'Dag 2',
+        daynum: 'Dag 2 · do 9 juli',
         title: 'Bouwen & structureren',
         morning: [
           'Van losse prompts naar een herbruikbaar werkproces',
@@ -154,21 +155,21 @@ export const DEFAULT_CONTENT: SummerCourseContent = {
         ],
         afternoon: [
           'Bouw de eerste werkende versie van je workflow',
-          'Office-hours: 1-op-1 met Frank of Mark',
-          'Daily debrief',
+          'Office hours: 1-op-1 met Frank of Mark (±20 min p.p.)',
+          'Daily debrief — na afloop vragen we per formulier wat je tegenkomt, zodat we dag 3 daarop afstemmen',
         ],
       },
       {
-        daynum: 'Dag 3',
-        title: 'Testen & toepasbaar maken',
+        daynum: 'Dag 3 · di 14 juli',
+        title: 'Testen & toepassen — werken met agents',
         morning: [
+          'Werken met agents: Claude Code en MCP voor wie geen developer is',
+          'Stress-test je workflow tegen echte voorbeelden',
           '"Is dit goed?" — output evalueren en hallucinaties spotten',
-          'Veilig & kritisch: privacy, GDPR, IP en bias',
-          'Kostenbewustzijn: tokens, abonnementen, modelkeuze',
-          'Je werkwijze documenteren als simpele handleiding',
+          'Veilig & kritisch: privacy, GDPR, IP en kosten',
         ],
         afternoon: [
-          'Stress-test je workflow tegen echte voorbeelden',
+          'Eindsprint — agent-toepassing op je eigen case',
           'Slot-presentaties: iedereen laat z’n werkproces zien',
           'Vervolgplan + borrel',
         ],
@@ -236,7 +237,7 @@ export const DEFAULT_CONTENT: SummerCourseContent = {
   },
   schedule: {
     heading: 'Een dag in de sprint',
-    intro: 'Reken op ~24 uur begeleide bouwtijd over drie dagen. Geen verplicht huiswerk — wel optioneel doorbouwen tussendoor.',
+    intro: 'Reken op ~24 uur begeleide bouwtijd over drie dagen. Dag 1 en 2 in dezelfde week (di + do), dag 3 een week later — zo heb je tussendoor ruimte om zelf te oefenen.',
     rows: [
       { time: '09:00–09:30', text: 'Inloop & koffie' },
       { time: '09:30–12:30', text: 'Vast ochtendprogramma — theorie, live demo & werkblok in de groep' },
@@ -258,15 +259,15 @@ export const DEFAULT_CONTENT: SummerCourseContent = {
     heading: 'Investering',
     ebLabel: 'Early-bird · eerste 6 plekken',
     ebPrice: '€799',
-    regPrice: '€899',
+    regPrice: '€999',
     onlineVsLive: 'De online cursus leert je de basis. Deze driedaagse helpt je om het toe te passen op jouw werk.',
-    depositLine: 'Reserveer met €199 aanbetaling. Restant per factuur, uiterlijk 14 dagen voor aanvang. Prijzen excl. btw.',
+    depositLine: 'Vooruitbetaling vooraf via Mollie — zoals een concertkaartje. Geen factuurgedoe achteraf. Prijzen excl. btw.',
     ctaLabel: 'Reserveer je plek',
     inclTitle: 'Inbegrepen',
     incl: [
-      'Drie live cursusdagen met persoonlijke begeleiding',
-      'Lunch, koffie/thee & slotborrel',
-      'Toegang tot de online Claude Code cursus',
+      'Drie live cursusdagen met persoonlijke begeleiding (di 7, do 9 en di 14 juli)',
+      'Locatie in Utrecht (Wonders of Work) incl. lunch en koffie/thee',
+      'Office hours op dag 2 — 1-op-1 met Frank of Mark (±20 min)',
       'Een eigen uitgewerkte, herbruikbare workflow',
       'Een follow-up gesprek (30 min, online) na 4 weken',
     ],
@@ -279,9 +280,11 @@ export const DEFAULT_CONTENT: SummerCourseContent = {
       { q: 'Moet ik al ervaring met AI hebben?', a: 'Basiservaring met ChatGPT of Claude is een pré, geen vereiste. Via de intake stemmen we de groep en jouw case af.' },
       { q: 'Heb ik programmeerkennis nodig?', a: 'Nee. We werken vanuit je eigen werk, niet vanuit code. Lichte technische affiniteit is mooi meegenomen, maar geen voorwaarde.' },
       { q: 'In welke taal is de cursus?', a: 'Nederlandstalig. Materiaal en voorbeelden zijn deels Engels (zoals de tools zelf).' },
-      { q: 'Wat als er minder dan 6 inschrijvingen zijn?', a: 'Dan gaat de cursus niet door en krijg je je aanbetaling 100% terug.' },
-      { q: 'Kan ik op bedrijfsnaam factureren?', a: 'Ja. Bij de inschrijving vul je je bedrijfs- en btw-gegevens in; de factuur voor het restbedrag zetten we daarop.' },
-      { q: 'Wat moet ik meenemen?', a: 'Je laptop met oplader, een claude.ai-account en één echte werkuitdaging. Verder regelen we alles op locatie.' },
+      { q: 'Wat als er minder dan 6 inschrijvingen zijn?', a: 'Dan gaat de cursus niet door en krijg je je betaling 100% terug.' },
+      { q: 'Kan ik op bedrijfsnaam factureren?', a: 'Ja. Bij de inschrijving vul je je bedrijfs- en btw-gegevens in; je krijgt een factuur op naam van je bedrijf voor de vooruitbetaling.' },
+      { q: 'Wat moet ik meenemen?', a: 'Je laptop met oplader en één echte werkuitdaging. Een Claude Max-abonnement (±€90/maand) regel je zelf vooraf — daar werken we tijdens de sprint mee zodat je niet tegen tokenlimieten aanloopt.' },
+      { q: 'Waarom een week tussen dag 2 en dag 3?', a: 'Dan heb je ruimte om je workflow zelf uit te proberen. Na dag 2 vragen we per formulier wat je tegenkomt, zodat we dag 3 daarop afstemmen — met een focus op agents en toepassing.' },
+      { q: 'Wat is de locatie?', a: 'Wonders of Work in Utrecht, op loopafstand van het centrum. Lunch en koffie/thee zijn inbegrepen.' },
     ],
   },
   signup: {
