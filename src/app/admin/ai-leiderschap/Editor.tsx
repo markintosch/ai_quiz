@@ -73,6 +73,60 @@ function ObjectList<T extends Record<string, string>>({ label, items, fields, em
   )
 }
 
+// Image field: shows a preview, lets you upload a file (→ Supabase Storage
+// via /api/admin/upload) or paste a path/URL manually.
+function ImageField({ label, value, onChange }: {
+  label: string; value: string; onChange: (v: string) => void
+}) {
+  const [uploading, setUploading] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+
+  async function upload(file: File) {
+    setUploading(true); setErr(null)
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
+      const json = await res.json() as { url?: string; error?: string }
+      if (!res.ok || !json.url) throw new Error(json.error ?? 'Upload mislukt')
+      onChange(json.url)
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : 'Upload mislukt')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  return (
+    <div className="mb-3">
+      <span className="block text-xs font-semibold text-gray-700 mb-1">{label}</span>
+      <div className="flex items-start gap-4">
+        {value
+          // eslint-disable-next-line @next/next/no-img-element
+          ? <img src={value} alt="" className="w-24 h-24 rounded-lg object-cover border border-gray-200" />
+          : <div className="w-24 h-24 rounded-lg border border-dashed border-gray-300 flex items-center justify-center text-xs text-gray-400">geen</div>}
+        <div className="flex-1">
+          <input
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-accent"
+            placeholder="/Ben_van_den_Burg.jpg of upload-URL"
+            value={value} onChange={(e) => onChange(e.target.value)} />
+          <div className="mt-2 flex items-center gap-3">
+            <label className="text-sm text-brand-accent font-semibold cursor-pointer hover:underline">
+              {uploading ? 'Uploaden…' : 'Upload afbeelding'}
+              <input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" className="hidden"
+                disabled={uploading}
+                onChange={(e) => { const f = e.target.files?.[0]; if (f) upload(f) }} />
+            </label>
+            {value && <button type="button" className="text-sm text-red-600 hover:underline" onClick={() => onChange('')}>verwijderen</button>}
+          </div>
+          <p className="mt-1 text-xs text-gray-400">PNG, JPG, WebP of SVG · max 2 MB</p>
+          {err && <p className="mt-1 text-xs text-red-600">{err}</p>}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function AILEditor({ initial }: { initial: AILContent }) {
   const [c, setC] = useState<AILContent>(initial)
   const [saving, setSaving] = useState(false)
@@ -152,15 +206,30 @@ export default function AILEditor({ initial }: { initial: AILContent }) {
       <Section title="Begeleiders">
         <Field label="Kop" value={c.hosts.heading} onChange={(v) => patch('hosts', { heading: v })} />
         <Field label="Intro" value={c.hosts.intro} onChange={(v) => patch('hosts', { intro: v })} textarea />
-        <ObjectList label="Personen" items={c.hosts.people} empty={{ initials: '', name: '', role: '', bio: '', photo: '' }}
-          fields={[
-            { key: 'initials', label: 'Initialen (fallback als foto leeg)' },
-            { key: 'name',     label: 'Naam' },
-            { key: 'role',     label: 'Rol-omschrijving' },
-            { key: 'bio',      label: 'Bio', textarea: true },
-            { key: 'photo',    label: 'Foto-pad (bijv. /Ben_van_den_Burg.jpg)' },
-          ]}
-          onChange={(v) => patch('hosts', { people: v })} />
+        <div className="mb-2">
+          <span className="block text-xs font-semibold text-gray-700 mb-2">Personen</span>
+          {c.hosts.people.map((p, i) => (
+            <div key={i} className="border border-gray-200 rounded-lg p-3 mb-3 bg-gray-50">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-xs font-bold text-gray-500">Persoon {i + 1}</span>
+                <button type="button" className="text-xs text-red-600 hover:underline"
+                  onClick={() => patch('hosts', { people: c.hosts.people.filter((_, j) => j !== i) })}>verwijderen</button>
+              </div>
+              <Field label="Initialen (fallback als foto leeg)" value={p.initials}
+                onChange={(v) => patch('hosts', { people: c.hosts.people.map((x, j) => j === i ? { ...x, initials: v } : x) })} />
+              <Field label="Naam" value={p.name}
+                onChange={(v) => patch('hosts', { people: c.hosts.people.map((x, j) => j === i ? { ...x, name: v } : x) })} />
+              <Field label="Rol-omschrijving" value={p.role}
+                onChange={(v) => patch('hosts', { people: c.hosts.people.map((x, j) => j === i ? { ...x, role: v } : x) })} />
+              <Field label="Bio" value={p.bio} textarea
+                onChange={(v) => patch('hosts', { people: c.hosts.people.map((x, j) => j === i ? { ...x, bio: v } : x) })} />
+              <ImageField label="Foto" value={p.photo}
+                onChange={(v) => patch('hosts', { people: c.hosts.people.map((x, j) => j === i ? { ...x, photo: v } : x) })} />
+            </div>
+          ))}
+          <button type="button" className="text-sm text-brand-accent font-semibold hover:underline"
+            onClick={() => patch('hosts', { people: [...c.hosts.people, { initials: '', name: '', role: '', bio: '', photo: '' }] })}>+ persoon toevoegen</button>
+        </div>
       </Section>
 
       <Section title="Testimonials">
