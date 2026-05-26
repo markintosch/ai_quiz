@@ -3,14 +3,14 @@ import type { Metadata } from 'next'
 const BASE = 'https://markdekock.com'
 
 export const metadata: Metadata = {
-  title: 'AI impact op leiderschap — executive middag 29 juni 2026',
+  title: 'AI impact op leiderschap · executive sessie 29 juni 2026',
   description:
-    'Praktische executive middag voor CEO, CMO en CDO over wat AI vraagt van leiderschap. Met Ben van den Burg en Mark de Kock. Maandag 29 juni 2026, Utrecht.',
+    'Praktische executive sessie voor CEO, CMO en CDO over wat AI vraagt van leiderschap. Met Ben van den Burg en Mark de Kock. Maandag 29 juni 2026, Utrecht.',
   metadataBase: new URL(BASE),
   robots: { index: true, follow: true },
   alternates: { canonical: `${BASE}/ai-leiderschap` },
   openGraph: {
-    title: 'AI impact op leiderschap — executive middag',
+    title: 'AI impact op leiderschap · executive sessie',
     description: 'Halve dag voor CEO/CMO/CDO, gevolgd door een 90-dagen-traject. 29 juni 2026, Utrecht.',
     url: `${BASE}/ai-leiderschap`,
     siteName: 'Mark de Kock & Ben van den Burg',
@@ -22,8 +22,8 @@ export const metadata: Metadata = {
 const eventSchema = {
   '@context': 'https://schema.org',
   '@type': 'BusinessEvent',
-  name: 'AI impact op leiderschap — executive middag',
-  description: 'Praktische executive middag voor CEO, CMO en CDO over wat AI vraagt van leiderschap, gevolgd door een 90-dagen-traject.',
+  name: 'AI impact op leiderschap · executive sessie',
+  description: 'Praktische executive sessie voor CEO, CMO en CDO over wat AI vraagt van leiderschap, gevolgd door een 90-dagen-traject.',
   startDate: '2026-06-29T09:00:00+02:00',
   endDate:   '2026-06-29T17:30:00+02:00',
   eventStatus: 'https://schema.org/EventScheduled',
