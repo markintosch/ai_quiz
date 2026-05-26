@@ -41,8 +41,13 @@ export default function WaitlistForm({ successMessage }: { successMessage: strin
         <label>Organisatie<input name="organisation" /></label>
         <label>Rol<input name="role" placeholder="bijv. CEO, CMO, CDO" /></label>
       </div>
-      <label className="ail-full">Wanneer past je het beste? (optioneel)
-        <input name="preference" placeholder="bijv. najaar 2026, Q1 2027, doordeweeks ochtend" />
+      <label className="ail-full">Voorkeur dagdeel (optioneel)
+        <select name="preference" defaultValue="">
+          <option value="">Geen voorkeur</option>
+          <option value="ochtend">Ochtend (09:00–13:00)</option>
+          <option value="middag">Middag (13:30–17:30)</option>
+          <option value="geen-voorkeur">Maakt niet uit</option>
+        </select>
       </label>
       <label className="ail-check"><input type="checkbox" name="consent" required /> Ik wil op de hoogte gehouden worden van volgende edities.</label>
       <div className="ail-formfoot">
