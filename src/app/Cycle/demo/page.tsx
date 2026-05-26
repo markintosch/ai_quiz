@@ -75,6 +75,16 @@ export default async function DemoPage(props: { searchParams: Promise<{ state?: 
         feedback={data.feedback}
         showScore={data.showScore}
         totalEntries={data.totalEntries}
+        experiment={
+          state === 'good'
+            ? {
+                description:   'Magnesium glycinate 30 min voor bedtijd, 30 dagen lang.',
+                metric:        'sleep',
+                dayOfTotal:    '7 / 30',
+                daysRemaining: 23,
+              }
+            : null
+        }
       />
     </>
   )

@@ -1,25 +1,36 @@
 'use client'
 
 // FILE: src/app/Cycle/login/LoginClient.tsx
-// Password gate. POSTs to /api/cycle/login which validates and returns a
-// Supabase action_link; the browser follows it to establish a session.
+// Passwordless login. Email input → submit → magic link via Supabase Auth.
 //
-// Supabase may return tokens via PKCE query (?code=...) or implicit flow
-// hash (#access_token=...). The query path is handled in /Cycle/auth/callback;
-// the hash path is handled here on mount because hash fragments aren't sent
-// to the server.
+// Supabase may return tokens via PKCE query (?code=...) on the callback URL
+// OR via implicit flow hash (#access_token=...) when it falls back to the
+// project's Site URL. We handle both: the query route is the auth callback
+// route file; the hash route is detected here on mount.
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
 export default function LoginClient() {
-  const [password, setPassword] = useState('')
-  const [status, setStatus] = useState<'idle' | 'sending' | 'error' | 'completing'>('idle')
+  const [email, setEmail]       = useState('')
+  const [status, setStatus]     = useState<'idle' | 'sending' | 'sent' | 'error' | 'completing'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
+  const [nextPath, setNextPath] = useState<string>('')
 
-  // Detect implicit-flow hash on first render and complete the sign-in.
   useEffect(() => {
     if (typeof window === 'undefined') return
+
+    const search = new URLSearchParams(window.location.search)
+    const n = search.get('next') ?? ''
+    if (n.startsWith('/Cycle')) setNextPath(n)
+
+    // Pre-fill email if provided in URL (e.g. from compass results CTA)
+    const emailHint = search.get('email')
+    if (emailHint && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailHint)) {
+      setEmail(emailHint.toLowerCase())
+    }
+
+    // Implicit-flow hash handling
     const hash = window.location.hash.replace(/^#/, '')
     if (!hash || !hash.includes('access_token=')) return
     const params = new URLSearchParams(hash)
@@ -28,7 +39,6 @@ export default function LoginClient() {
     if (!accessToken || !refreshToken) return
 
     setStatus('completing')
-    // Clean the hash so a reload doesn't re-trigger.
     window.history.replaceState({}, '', '/Cycle/login')
     const supabase = createClient()
     supabase.auth
@@ -39,7 +49,7 @@ export default function LoginClient() {
           setErrorMsg(`Sessie zetten mislukt: ${error.message}`)
           return
         }
-        window.location.href = '/Cycle'
+        window.location.href = n.startsWith('/Cycle') ? n : '/Cycle'
       })
       .catch(err => {
         setStatus('error')
@@ -55,22 +65,19 @@ export default function LoginClient() {
       const res = await fetch('/api/cycle/login', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ email, next: nextPath }),
       })
       const json = await res.json().catch(() => ({})) as {
-        ok?: boolean; action_link?: string; error?: string; detail?: string
+        ok?: boolean; sent?: boolean; error?: string
       }
-      if (!res.ok || !json.ok || !json.action_link) {
+      if (!res.ok || !json.ok) {
         setStatus('error')
-        if (json.error === 'rate')        setErrorMsg('Te veel pogingen — wacht even.')
-        else if (json.error === 'config') setErrorMsg('Server-config ontbreekt (CYCLE_PASSWORD of CYCLE_DEFAULT_EMAIL).')
-        else if (json.error === 'auth')   setErrorMsg(`Login mislukt: ${json.detail ?? 'onbekende fout'}.`)
-        else if (json.error === 'create_user') setErrorMsg(`User aanmaken mislukt: ${json.detail ?? 'onbekende fout'}.`)
-        else if (res.status === 401)      setErrorMsg('Wachtwoord klopt niet.')
-        else                              setErrorMsg('Onbekende fout. Probeer opnieuw.')
+        if (json.error === 'invalid_email') setErrorMsg('Vul een geldig e-mailadres in.')
+        else if (json.error === 'rate')    setErrorMsg('Te veel pogingen — wacht even.')
+        else                                setErrorMsg('Onbekende fout. Probeer opnieuw.')
         return
       }
-      window.location.href = json.action_link
+      setStatus('sent')
     } catch {
       setStatus('error')
       setErrorMsg('Geen verbinding. Probeer opnieuw.')
@@ -88,32 +95,52 @@ export default function LoginClient() {
     )
   }
 
+  if (status === 'sent') {
+    return (
+      <main className="min-h-screen flex flex-col items-center justify-center px-6">
+        <div className="w-full max-w-sm cycle-card p-7 text-center">
+          <p className="cycle-display text-3xl mb-3">Check je inbox</p>
+          <p className="text-sm mb-2" style={{ color: 'var(--cycle-fg)' }}>
+            We hebben een inlog-link gestuurd naar <strong>{email}</strong>.
+          </p>
+          <p className="text-xs" style={{ color: 'var(--cycle-muted)' }}>
+            Klik 'm aan om binnen te komen. Geen mail in je inbox? Check Promoties of Spam.
+          </p>
+        </div>
+        <p className="text-xs mt-6" style={{ color: 'var(--cycle-muted)' }}>
+          Persoonlijke tool — geen medisch advies.
+        </p>
+      </main>
+    )
+  }
+
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-6">
       <div className="w-full max-w-sm cycle-card p-7">
-        <h1 className="cycle-display text-3xl mb-1">Cycle Companion</h1>
-        <p className="text-sm mb-7" style={{ color: 'var(--cycle-muted)' }}>
-          Voer het wachtwoord in om in te loggen.
+        <h1 className="cycle-display text-3xl mb-1">Welkom terug</h1>
+        <p className="text-sm mb-6" style={{ color: 'var(--cycle-muted)' }}>
+          Vul je e-mailadres in. We sturen je een inlog-link.
         </p>
 
         <form onSubmit={handleSubmit}>
           <input
-            type="password"
+            type="email"
             required
             autoFocus
-            autoComplete="current-password"
+            autoComplete="email"
+            inputMode="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            placeholder="jij@voorbeeld.nl"
             className="cycle-input mb-4"
-            placeholder="Wachtwoord"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
             disabled={status === 'sending'}
           />
           <button
             type="submit"
             className="cycle-button w-full"
-            disabled={status === 'sending' || !password}
+            disabled={status === 'sending' || !email}
           >
-            {status === 'sending' ? 'Bezig…' : 'Inloggen'}
+            {status === 'sending' ? 'Versturen…' : 'Stuur me een inlog-link'}
           </button>
           {errorMsg && (
             <p className="text-sm mt-3" style={{ color: 'var(--cycle-accent)' }}>
@@ -121,6 +148,10 @@ export default function LoginClient() {
             </p>
           )}
         </form>
+
+        <p className="text-xs mt-6" style={{ color: 'var(--cycle-muted)', lineHeight: 1.5 }}>
+          Nog geen account? Doe eerst de <a href="/peri-compass" style={{ color: 'var(--cycle-accent)', textDecoration: 'underline' }}>Peri-Compass</a> — daar krijg je een persoonlijk startpunt en een 30-dagen experiment.
+        </p>
       </div>
       <p className="text-xs mt-6" style={{ color: 'var(--cycle-muted)' }}>
         Persoonlijke tool — geen medisch advies.

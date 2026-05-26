@@ -1,83 +1,64 @@
 // FILE: src/app/api/cycle/login/route.ts
-// Password-gated login. On correct password the server uses Supabase admin
-// to generate a magic-link action URL for the configured user, returns it,
-// and the client redirects there. Supabase verifies the OTP and lands the
-// browser at /Cycle/auth/callback which exchanges the code for a real
-// session — same callback path as the previous email-based flow.
+// Passwordless magic-link login for Cycle Companion (multi-user).
 //
-// No email is sent; the magic link is consumed server-to-browser-to-Supabase
-// without going through the user's inbox.
+// Flow:
+//  1. User enters her email on /Cycle/login
+//  2. We rate-limit, then call Supabase Auth's signInWithOtp
+//  3. Supabase emails her a one-tap magic link (via Supabase SMTP or the
+//     configured Resend SMTP relay — see Supabase Auth settings)
+//  4. She clicks it, lands on /Cycle/auth/callback?code=... → session set
+//
+// Anti-enumeration: we always respond { ok: true, sent: true } so a probe
+// can't tell whether an email is already registered.
 
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 import { rateLimit } from '@/lib/rateLimit'
-import { createHmac, timingSafeEqual } from 'crypto'
 
-function passwordsMatch(input: string, expected: string): boolean {
-  // Constant-time compare via HMACs so length differences don't leak timing.
-  const a = createHmac('sha256', expected).update(input).digest()
-  const b = createHmac('sha256', expected).update(expected).digest()
-  return a.length === b.length && timingSafeEqual(a, b)
+function isValidEmail(s: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s)
 }
 
 export async function POST(req: Request) {
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown'
-  if (!rateLimit(`cycle-login:${ip}`, 5, 15 * 60 * 1000)) {
+  if (!rateLimit(`cycle-login-ip:${ip}`, 5, 15 * 60 * 1000)) {
     return NextResponse.json({ ok: false, error: 'rate' }, { status: 429 })
   }
 
-  const expected = process.env.CYCLE_PASSWORD ?? ''
-  const defaultEmail = process.env.CYCLE_DEFAULT_EMAIL ?? ''
-  if (!expected || !defaultEmail) {
-    return NextResponse.json({ ok: false, error: 'config' }, { status: 503 })
+  const body = (await req.json().catch(() => ({}))) as { email?: string; next?: string }
+  const email = (body.email ?? '').trim().toLowerCase()
+  if (!isValidEmail(email)) {
+    return NextResponse.json({ ok: false, error: 'invalid_email' }, { status: 400 })
   }
 
-  const body = (await req.json().catch(() => ({}))) as { password?: string }
-  const input = (body.password ?? '').trim()
-  if (!input) {
-    return NextResponse.json({ ok: false, error: 'invalid' }, { status: 400 })
+  // Per-email rate limit so one address can't be spammed with magic-link mails
+  if (!rateLimit(`cycle-login-email:${email}`, 4, 60 * 60 * 1000)) {
+    // Silent — same 200 response so the rate limit doesn't leak.
+    return NextResponse.json({ ok: true, sent: true })
   }
-  if (!passwordsMatch(input, expected)) {
-    return NextResponse.json({ ok: false, error: 'invalid' }, { status: 401 })
-  }
+
+  // /Cycle path-only guard against open-redirect via the next param
+  const rawNext = body.next ?? ''
+  const nextParam = rawNext.startsWith('/Cycle') ? rawNext : ''
 
   const origin = req.headers.get('origin') ?? 'https://markdekock.com'
-  const supabase = createServiceClient()
+  const redirectTo = `${origin}/Cycle/auth/callback${nextParam ? `?next=${encodeURIComponent(nextParam)}` : ''}`
 
-  let { data, error } = await supabase.auth.admin.generateLink({
-    type: 'magiclink',
-    email: defaultEmail,
-    options: { redirectTo: `${origin}/Cycle/auth/callback` },
+  const supabase = createServiceClient()
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: {
+      emailRedirectTo: redirectTo,
+      // shouldCreateUser=true is the default; first-time emails auto-create
+      // an auth.users row when they verify the magic link.
+    },
   })
 
-  // If the configured user doesn't exist in auth.users (e.g. deleted),
-  // create it on the fly with confirmed email so the magic link can be issued.
-  if (error && /not found|does not exist|user.*not.*registered/i.test(error.message ?? '')) {
-    const { error: createErr } = await supabase.auth.admin.createUser({
-      email: defaultEmail,
-      email_confirm: true,
-    })
-    if (createErr) {
-      console.error('[cycle login] createUser failed', createErr)
-      return NextResponse.json(
-        { ok: false, error: 'create_user', detail: createErr.message },
-        { status: 500 },
-      )
-    }
-    ;({ data, error } = await supabase.auth.admin.generateLink({
-      type: 'magiclink',
-      email: defaultEmail,
-      options: { redirectTo: `${origin}/Cycle/auth/callback` },
-    }))
+  if (error) {
+    console.error('[cycle login] signInWithOtp failed', { email, error: error.message })
+    // Still return success-shaped to avoid enumeration; logs capture the truth
+    return NextResponse.json({ ok: true, sent: true })
   }
 
-  if (error || !data?.properties?.action_link) {
-    console.error('[cycle login] generateLink failed', error)
-    return NextResponse.json(
-      { ok: false, error: 'auth', detail: error?.message ?? 'unknown' },
-      { status: 500 },
-    )
-  }
-
-  return NextResponse.json({ ok: true, action_link: data.properties.action_link })
+  return NextResponse.json({ ok: true, sent: true })
 }

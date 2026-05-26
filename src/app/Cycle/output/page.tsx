@@ -27,7 +27,7 @@ export default async function OutputPage() {
   const today = new Date().toISOString().slice(0, 10)
   const supabase = await createClient()
 
-  const [{ data: entry }, { data: weather }, { count: totalEntries }] = await Promise.all([
+  const [{ data: entry }, { data: weather }, { count: totalEntries }, { data: experiment }] = await Promise.all([
     supabase.from('cycle_daily_entries')
       .select('mood_score, sleep, stress, cycle_phase, readiness_score, score_feedback')
       .eq('user_id', user.id)
@@ -41,6 +41,13 @@ export default async function OutputPage() {
     supabase.from('cycle_daily_entries')
       .select('id', { count: 'exact', head: true })
       .eq('user_id', user.id),
+    supabase.from('cycle_experiments')
+      .select('id, description, metric_to_watch, started_at, duration_days, source')
+      .eq('user_id', user.id)
+      .eq('status', 'active')
+      .order('started_at', { ascending: false })
+      .limit(1)
+      .maybeSingle(),
   ])
 
   if (!entry) redirect('/Cycle/today')
@@ -72,6 +79,26 @@ export default async function OutputPage() {
   const guidance = guidanceFor(score.band)
   const phaseLabel = PHASE_LABEL_NL[entry.cycle_phase as CyclePhase]
 
+  // Compute day-of-experiment for the banner
+  let experimentBanner: {
+    description: string
+    metric: string
+    dayOfTotal: string
+    daysRemaining: number
+  } | null = null
+  if (experiment) {
+    const startMs = Date.parse(experiment.started_at as string + 'T00:00:00Z')
+    const todayMs = Date.parse(today + 'T00:00:00Z')
+    const dayN = Math.max(1, Math.floor((todayMs - startMs) / 86_400_000) + 1)
+    const total = experiment.duration_days as number
+    experimentBanner = {
+      description:   experiment.description as string,
+      metric:        experiment.metric_to_watch as string,
+      dayOfTotal:    `${Math.min(dayN, total)} / ${total}`,
+      daysRemaining: Math.max(0, total - dayN),
+    }
+  }
+
   return (
     <OutputClient
       readiness={entry.readiness_score ?? score.readiness}
@@ -87,6 +114,7 @@ export default async function OutputPage() {
       feedback={(entry.score_feedback as -1 | 0 | 1 | null) ?? null}
       showScore={showScore}
       totalEntries={totalEntries ?? 0}
+      experiment={experimentBanner}
     />
   )
 }
