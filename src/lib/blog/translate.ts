@@ -20,9 +20,9 @@
 import Anthropic from '@anthropic-ai/sdk'
 import type { TiptapDoc, TiptapNode, BlogLocale } from '@/types/blog'
 
-const CLAUDE_MODEL = 'claude-sonnet-4-5-20250929'   // Sonnet 4.6 alias
-const MAX_TOKENS   = 8192
-const TIMEOUT_MS   = 90_000
+const CLAUDE_MODEL = 'claude-sonnet-4-6'             // Sonnet 4.6 — latest, faster
+const MAX_TOKENS   = 16384                           // headroom for longer posts; was 8192 (output truncation → invalid JSON for long posts)
+const TIMEOUT_MS   = 110_000                         // 110s; route's maxDuration is 120s
 
 const LANG_LABEL: Record<BlogLocale, string> = {
   nl: 'Dutch (Netherlands)',
@@ -132,7 +132,11 @@ ${numbered}`
   try {
     parsed = JSON.parse(jsonText)
   } catch {
-    throw new Error('Translation response was not valid JSON')
+    const hint = jsonText.length > 200
+      ? `…${jsonText.slice(-200)}`  // last 200 chars usually reveal truncation
+      : jsonText
+    console.error('[blog/translate] invalid JSON. Length:', jsonText.length, 'tail:', hint)
+    throw new Error(`Vertaling mislukte: model output was geen geldige JSON (mogelijk afgekapt op ${MAX_TOKENS} tokens). Probeer opnieuw, splits de post, of verhoog MAX_TOKENS.`)
   }
 
   // Build the translated string array, falling back to source if a key is missing.
