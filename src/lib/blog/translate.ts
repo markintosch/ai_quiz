@@ -7,22 +7,20 @@
  * Then walk the tree again and substitute the translated strings back in,
  * preserving every node, mark, and attr exactly.
  *
- * Why this approach instead of just "translate the JSON":
- *   - Asking the LLM to return Tiptap JSON risks structural drift (mis-nested
- *     marks, dropped attrs, broken image src).
- *   - Numbered list keeps token cost low, response is easy to validate, and
- *     structure is guaranteed to round-trip.
- *
- * Image alt text and link href title attrs are also collected (we want those
- * translated too). URLs themselves are NOT translated.
+ * Long-post handling: the strings are split into CHUNK_SIZE-sized batches and
+ * translated in parallel. This keeps each API call well within max_tokens and
+ * prevents the "one big call truncates → invalid JSON" failure mode that long
+ * posts used to hit. Failed chunks fall back to the source text so the rest of
+ * the post still translates.
  */
 
 import Anthropic from '@anthropic-ai/sdk'
 import type { TiptapDoc, TiptapNode, BlogLocale } from '@/types/blog'
 
-const CLAUDE_MODEL = 'claude-sonnet-4-6'             // Sonnet 4.6 — latest, faster
-const MAX_TOKENS   = 16384                           // headroom for longer posts; was 8192 (output truncation → invalid JSON for long posts)
-const TIMEOUT_MS   = 110_000                         // 110s; route's maxDuration is 120s
+const CLAUDE_MODEL = 'claude-sonnet-4-6'             // Sonnet 4.6
+const MAX_TOKENS   = 16384                           // per-chunk; with chunking we never need more
+const TIMEOUT_MS   = 110_000                         // overall budget; route maxDuration is 120s
+const CHUNK_SIZE   = 100                             // strings per API call
 
 const LANG_LABEL: Record<BlogLocale, string> = {
   nl: 'Dutch (Netherlands)',
@@ -65,7 +63,7 @@ export async function translatePost(
   const slots: string[] = []
   collectStrings(inputs.content as unknown as TiptapNode, slots)
 
-  // Add metadata at the front so we get them back in a single call.
+  // Add metadata at the front so we get them back in the same numbered space.
   const META_OFFSET = 4
   const allStrings: string[] = [
     inputs.title,
@@ -74,11 +72,6 @@ export async function translatePost(
     inputs.meta_description ?? '',
     ...slots,
   ]
-
-  // Build the numbered prompt.
-  const numbered = allStrings
-    .map((s, i) => `${i}: ${JSON.stringify(s)}`)
-    .join('\n')
 
   const sourceLang = LANG_LABEL[fromLocale]
   const targetLang = LANG_LABEL[toLocale]
@@ -100,43 +93,47 @@ Format: respond with ONE JSON object, no surrounding prose, no markdown fences. 
 
 Every numbered entry from the input MUST appear in the output. If a string is empty (""), translate it as "". Preserve any markdown-like punctuation (asterisks, backticks) inside the strings exactly.`
 
-  const user = `Translate every string. Return JSON only.
-
-${numbered}`
+  // Build chunks of indices (start inclusive, end exclusive).
+  const chunks: Array<[number, number]> = []
+  for (let i = 0; i < allStrings.length; i += CHUNK_SIZE) {
+    chunks.push([i, Math.min(i + CHUNK_SIZE, allStrings.length)])
+  }
 
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY ?? '' })
   const ac = new AbortController()
   const t  = setTimeout(() => ac.abort(), TIMEOUT_MS)
 
-  let raw: string
+  console.log(`[blog/translate] ${fromLocale}→${toLocale} · ${allStrings.length} strings · ${chunks.length} chunk(s)`)
+  const t0 = Date.now()
+
+  let parsed: Record<string, string> = {}
   try {
-    const resp = await client.messages.create(
-      {
-        model:       CLAUDE_MODEL,
-        max_tokens:  MAX_TOKENS,
-        temperature: 0.2,
-        system,
-        messages:    [{ role: 'user', content: user }],
-      },
-      { signal: ac.signal },
+    const results = await Promise.allSettled(
+      chunks.map(([start, end], i) =>
+        translateChunk(client, system, allStrings, start, end, ac.signal, i),
+      ),
     )
-    const block = resp.content.find((b) => b.type === 'text')
-    raw = block && 'text' in block ? block.text : ''
+
+    let okCount = 0
+    let failCount = 0
+    for (const [i, r] of results.entries()) {
+      if (r.status === 'fulfilled') {
+        Object.assign(parsed, r.value)
+        okCount++
+      } else {
+        failCount++
+        const [s, e] = chunks[i]
+        console.error(`[blog/translate] chunk ${i} (${s}-${e}) rejected:`, r.reason instanceof Error ? r.reason.message : r.reason)
+      }
+    }
+
+    console.log(`[blog/translate] done in ${((Date.now() - t0) / 1000).toFixed(1)}s · ${okCount} ok / ${failCount} failed`)
+
+    if (okCount === 0) {
+      throw new Error('Vertaling mislukt: alle chunks faalden. Bekijk de Vercel function-logs voor details (rate limit, timeout of API-fout).')
+    }
   } finally {
     clearTimeout(t)
-  }
-
-  // Extract JSON object — model sometimes wraps in fences despite instructions.
-  const jsonText = extractJson(raw)
-  let parsed: Record<string, string>
-  try {
-    parsed = JSON.parse(jsonText)
-  } catch {
-    const hint = jsonText.length > 200
-      ? `…${jsonText.slice(-200)}`  // last 200 chars usually reveal truncation
-      : jsonText
-    console.error('[blog/translate] invalid JSON. Length:', jsonText.length, 'tail:', hint)
-    throw new Error(`Vertaling mislukte: model output was geen geldige JSON (mogelijk afgekapt op ${MAX_TOKENS} tokens). Probeer opnieuw, splits de post, of verhoog MAX_TOKENS.`)
   }
 
   // Build the translated string array, falling back to source if a key is missing.
@@ -159,6 +156,52 @@ ${numbered}`
     meta_description: translated[3] || inputs.meta_description,
     content:          newContent,
   }
+}
+
+// ── Per-chunk API call ─────────────────────────────────────────────────────
+
+async function translateChunk(
+  client:     Anthropic,
+  system:     string,
+  allStrings: string[],
+  start:      number,
+  end:        number,
+  signal:     AbortSignal,
+  chunkIdx:   number,
+): Promise<Record<string, string>> {
+  const numbered = allStrings
+    .slice(start, end)
+    .map((s, i) => `${start + i}: ${JSON.stringify(s)}`)
+    .join('\n')
+
+  const user = `Translate every string. Return JSON only.\n\n${numbered}`
+
+  const t0 = Date.now()
+  const resp = await client.messages.create(
+    {
+      model:       CLAUDE_MODEL,
+      max_tokens:  MAX_TOKENS,
+      temperature: 0.2,
+      system,
+      messages:    [{ role: 'user', content: user }],
+    },
+    { signal },
+  )
+  const block = resp.content.find((b) => b.type === 'text')
+  const raw   = block && 'text' in block ? block.text : ''
+
+  const jsonText = extractJson(raw)
+  let parsed: Record<string, string>
+  try {
+    parsed = JSON.parse(jsonText)
+  } catch {
+    const hint = jsonText.length > 200 ? `…${jsonText.slice(-200)}` : jsonText
+    console.error(`[blog/translate] chunk ${chunkIdx} (${start}-${end}) invalid JSON. Length:`, jsonText.length, 'tail:', hint)
+    throw new Error(`chunk ${chunkIdx}: invalid JSON (mogelijk afgekapt op ${MAX_TOKENS} tokens)`)
+  }
+
+  console.log(`[blog/translate] chunk ${chunkIdx} (${start}-${end}) ok in ${((Date.now() - t0) / 1000).toFixed(1)}s`)
+  return parsed
 }
 
 // ── Tree walkers ────────────────────────────────────────────────────────────

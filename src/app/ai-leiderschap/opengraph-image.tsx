@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og'
 
 export const runtime = 'edge'
-export const alt = 'Verantwoord AI omarmen — introductiemiddag voor CISO, DPO & compliance'
+export const alt = 'AI impact op leiderschap — executive middag 29 juni 2026'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -33,16 +33,16 @@ export default function OGImage() {
             alignSelf: 'flex-start',
           }}
         >
-          Introductiemiddag · CISO, DPO &amp; compliance
+          Executive middag · 29 juni 2026
         </div>
-        <div style={{ fontSize: '56px', fontWeight: 800, color: '#fff', lineHeight: 1.08, maxWidth: '920px', marginBottom: '24px' }}>
-          Verantwoord AI omarmen
+        <div style={{ fontSize: '64px', fontWeight: 800, color: '#fff', lineHeight: 1.04, maxWidth: '920px', marginBottom: '24px' }}>
+          AI impact op leiderschap
         </div>
-        <div style={{ fontSize: '26px', color: '#b0c2d2', maxWidth: '780px', lineHeight: 1.4, marginBottom: 'auto' }}>
-          Van rem op AI naar enabler. Praktische guardrails voor AI-adoptie in je organisatie.
+        <div style={{ fontSize: '26px', color: '#b0c2d2', maxWidth: '820px', lineHeight: 1.4, marginBottom: 'auto' }}>
+          Een halve dag plus een 90-dagen-traject voor CEO, CMO en CDO. Utrecht.
         </div>
         <div style={{ color: '#8aa8bb', fontSize: '22px', fontWeight: 600 }}>
-          Mark de Kock &amp; Frank Meeuwsen
+          Ben van den Burg &amp; Mark de Kock
         </div>
       </div>
     ),

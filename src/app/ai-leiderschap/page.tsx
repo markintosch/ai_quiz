@@ -1,13 +1,13 @@
 import { createServiceClient } from '@/lib/supabase/server'
-import { DEFAULT_CONTENT, mergeContent, type AIGContent } from './content'
-import AIGovernanceView from './View'
+import { DEFAULT_CONTENT, mergeContent, type AILContent } from './content'
+import AILeiderschapView from './View'
 
 export const dynamic = 'force-dynamic'
 
-const PRODUCT_KEY = 'ai_governance'
+const PRODUCT_KEY = 'ai_leiderschap'
 const LOCALE = 'nl'
 
-async function loadContent(): Promise<AIGContent> {
+async function loadContent(): Promise<AILContent> {
   try {
     const supabase = createServiceClient()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -23,7 +23,7 @@ async function loadContent(): Promise<AIGContent> {
   }
 }
 
-export default async function AIGovernancePage() {
+export default async function AILeiderschapPage() {
   const content = await loadContent()
-  return <AIGovernanceView c={content} />
+  return <AILeiderschapView c={content} />
 }

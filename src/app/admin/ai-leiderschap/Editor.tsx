@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import type { AIGContent } from '@/app/ai-governance/content'
+import type { AILContent } from '@/app/ai-leiderschap/content'
 
 function Field({ label, value, onChange, textarea = false }: {
   label: string; value: string; onChange: (v: string) => void; textarea?: boolean
@@ -73,12 +73,12 @@ function ObjectList<T extends Record<string, string>>({ label, items, fields, em
   )
 }
 
-export default function AIGEditor({ initial }: { initial: AIGContent }) {
-  const [c, setC] = useState<AIGContent>(initial)
+export default function AILEditor({ initial }: { initial: AILContent }) {
+  const [c, setC] = useState<AILContent>(initial)
   const [saving, setSaving] = useState(false)
   const [msg, setMsg] = useState<string | null>(null)
 
-  const patch = useCallback(<K extends keyof AIGContent>(key: K, value: Partial<AIGContent[K]>) => {
+  const patch = useCallback(<K extends keyof AILContent>(key: K, value: Partial<AILContent[K]>) => {
     setC((prev) => ({ ...prev, [key]: { ...prev[key], ...value } }))
   }, [])
 
@@ -88,7 +88,7 @@ export default function AIGEditor({ initial }: { initial: AIGContent }) {
       const res = await fetch('/api/admin/content', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ locale: 'nl', product_key: 'ai_governance', content: c }),
+        body: JSON.stringify({ locale: 'nl', product_key: 'ai_leiderschap', content: c }),
       })
       if (!res.ok) {
         const j = await res.json().catch(() => ({}))
@@ -108,6 +108,8 @@ export default function AIGEditor({ initial }: { initial: AIGContent }) {
         <Field label="Eyebrow" value={c.hero.eyebrow} onChange={(v) => patch('hero', { eyebrow: v })} />
         <Field label="Titel" value={c.hero.title} onChange={(v) => patch('hero', { title: v })} textarea />
         <Field label="Subtitel" value={c.hero.subtitle} onChange={(v) => patch('hero', { subtitle: v })} textarea />
+        <Field label="Datum" value={c.hero.eventDate} onChange={(v) => patch('hero', { eventDate: v })} />
+        <Field label="Locatie" value={c.hero.eventLocation} onChange={(v) => patch('hero', { eventLocation: v })} />
         <StringList label="Bullets" items={c.hero.bullets} onChange={(v) => patch('hero', { bullets: v })} />
         <div className="grid grid-cols-2 gap-3">
           <Field label="CTA primair — label" value={c.hero.ctaPrimary.label} onChange={(v) => patch('hero', { ctaPrimary: { ...c.hero.ctaPrimary, label: v } })} />
@@ -133,21 +135,29 @@ export default function AIGEditor({ initial }: { initial: AIGContent }) {
       <Section title="Programma">
         <Field label="Kop" value={c.program.heading} onChange={(v) => patch('program', { heading: v })} />
         <Field label="Intro" value={c.program.intro} onChange={(v) => patch('program', { intro: v })} textarea />
-        <ObjectList label="Onderwerpen" items={c.program.items} empty={{ title: '', body: '' }}
+        <ObjectList label="Programmaonderdelen" items={c.program.items} empty={{ title: '', body: '' }}
           fields={[{ key: 'title', label: 'Titel' }, { key: 'body', label: 'Tekst', textarea: true }]}
           onChange={(v) => patch('program', { items: v })} />
       </Section>
 
-      <Section title="Wat je meeneemt">
-        <Field label="Kop" value={c.takeaways.heading} onChange={(v) => patch('takeaways', { heading: v })} />
-        <StringList label="Punten" items={c.takeaways.items} onChange={(v) => patch('takeaways', { items: v })} />
+      <Section title="90-dagen-traject">
+        <Field label="Kop" value={c.trajectory.heading} onChange={(v) => patch('trajectory', { heading: v })} />
+        <Field label="Intro" value={c.trajectory.intro} onChange={(v) => patch('trajectory', { intro: v })} textarea />
+        <ObjectList label="Stappen" items={c.trajectory.steps} empty={{ label: '', title: '', body: '' }}
+          fields={[{ key: 'label', label: 'Label (bijv. "Dag 15")' }, { key: 'title', label: 'Titel' }, { key: 'body', label: 'Tekst', textarea: true }]}
+          onChange={(v) => patch('trajectory', { steps: v })} />
       </Section>
 
       <Section title="Begeleiders">
         <Field label="Kop" value={c.hosts.heading} onChange={(v) => patch('hosts', { heading: v })} />
         <Field label="Intro" value={c.hosts.intro} onChange={(v) => patch('hosts', { intro: v })} textarea />
-        <ObjectList label="Personen" items={c.hosts.people} empty={{ initials: '', name: '', bio: '' }}
-          fields={[{ key: 'initials', label: 'Initialen' }, { key: 'name', label: 'Naam' }, { key: 'bio', label: 'Bio', textarea: true }]}
+        <ObjectList label="Personen" items={c.hosts.people} empty={{ initials: '', name: '', role: '', bio: '' }}
+          fields={[
+            { key: 'initials', label: 'Initialen' },
+            { key: 'name',     label: 'Naam' },
+            { key: 'role',     label: 'Rol-omschrijving' },
+            { key: 'bio',      label: 'Bio', textarea: true },
+          ]}
           onChange={(v) => patch('hosts', { people: v })} />
       </Section>
 
@@ -158,11 +168,26 @@ export default function AIGEditor({ initial }: { initial: AIGContent }) {
           onChange={(v) => patch('practical', { facts: v })} />
       </Section>
 
-      <Section title="Voorinschrijving">
-        <Field label="Kop" value={c.signup.heading} onChange={(v) => patch('signup', { heading: v })} />
-        <Field label="Intro" value={c.signup.intro} onChange={(v) => patch('signup', { intro: v })} textarea />
-        <StringList label="Rol-opties (dropdown in formulier)" items={c.signup.roleOptions} onChange={(v) => patch('signup', { roleOptions: v })} />
-        <Field label="Succesmelding na verzenden" value={c.signup.successMessage} onChange={(v) => patch('signup', { successMessage: v })} textarea />
+      <Section title="Tijdslots (Mollie-knoppen)">
+        <Field label="Kop" value={c.slots.heading} onChange={(v) => patch('slots', { heading: v })} />
+        <Field label="Intro" value={c.slots.intro} onChange={(v) => patch('slots', { intro: v })} textarea />
+        <ObjectList label="Slots" items={c.slots.items} empty={{ id: '', label: '', time: '', price: '', mollieHref: '', note: '' }}
+          fields={[
+            { key: 'id',         label: 'ID (alleen letters/cijfers)' },
+            { key: 'label',      label: 'Label (bijv. "Ochtend")' },
+            { key: 'time',       label: 'Tijd' },
+            { key: 'price',      label: 'Prijs (bijv. "€1.595")' },
+            { key: 'mollieHref', label: 'Mollie Payment Link' },
+            { key: 'note',       label: 'Subline (bijv. "Max. 20 plekken")' },
+          ]}
+          onChange={(v) => patch('slots', { items: v })} />
+        <Field label="Notitie onder de knoppen" value={c.slots.payNote} onChange={(v) => patch('slots', { payNote: v })} textarea />
+      </Section>
+
+      <Section title="Voorinschrijving (wachtlijst)">
+        <Field label="Kop" value={c.waitlist.heading} onChange={(v) => patch('waitlist', { heading: v })} />
+        <Field label="Intro" value={c.waitlist.intro} onChange={(v) => patch('waitlist', { intro: v })} textarea />
+        <Field label="Succesmelding na verzenden" value={c.waitlist.successMessage} onChange={(v) => patch('waitlist', { successMessage: v })} textarea />
       </Section>
 
       <Section title="FAQ">
@@ -182,7 +207,7 @@ export default function AIGEditor({ initial }: { initial: AIGContent }) {
           className="bg-brand-accent text-white font-semibold px-6 py-3 rounded-lg disabled:opacity-50">
           {saving ? 'Opslaan…' : 'Opslaan & live zetten'}
         </button>
-        <a href="/ai-governance" target="_blank" className="text-sm text-gray-500 underline">Bekijk pagina ↗</a>
+        <a href="/ai-leiderschap" target="_blank" className="text-sm text-gray-500 underline">Bekijk pagina ↗</a>
         {msg && <span className={`text-sm ${msg.startsWith('Fout') ? 'text-red-600' : 'text-green-600'}`}>{msg}</span>}
       </div>
     </div>

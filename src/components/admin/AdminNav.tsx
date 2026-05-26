@@ -45,10 +45,10 @@ const GROUPS: NavGroup[] = [
     key:   'compass',
     label: 'Compass producten',
     items: [
-      { href: '/admin/peri-compass',           label: '🧭 Peri-Compass' },
-      { href: '/admin/cyber-compass',          label: '🛡 Cyber Compass · HCSS' },
-      { href: '/admin/ai-governance',          label: '⚖️ AI Governance' },
-      { href: '/admin/ai-governance/signups',  label: '↳ Voorinschrijvingen' },
+      { href: '/admin/peri-compass',            label: '🧭 Peri-Compass' },
+      { href: '/admin/cyber-compass',           label: '🛡 Cyber Compass · HCSS' },
+      { href: '/admin/ai-leiderschap',          label: '🎯 AI Leiderschap' },
+      { href: '/admin/ai-leiderschap/waitlist', label: '↳ Voorinschrijvingen' },
     ],
   },
   {

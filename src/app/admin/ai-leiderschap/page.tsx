@@ -1,13 +1,13 @@
 import { createServiceClient } from '@/lib/supabase/server'
-import { DEFAULT_CONTENT, mergeContent, type AIGContent } from '@/app/ai-governance/content'
-import AIGEditor from './Editor'
+import { DEFAULT_CONTENT, mergeContent, type AILContent } from '@/app/ai-leiderschap/content'
+import AILEditor from './Editor'
 
 export const dynamic = 'force-dynamic'
 
-const PRODUCT_KEY = 'ai_governance'
+const PRODUCT_KEY = 'ai_leiderschap'
 const LOCALE = 'nl'
 
-async function loadContent(): Promise<AIGContent> {
+async function loadContent(): Promise<AILContent> {
   try {
     const supabase = createServiceClient()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -23,19 +23,19 @@ async function loadContent(): Promise<AIGContent> {
   }
 }
 
-export default async function AdminAIGovernancePage() {
+export default async function AdminAILeiderschapPage() {
   const initial = await loadContent()
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-brand">AI Governance · pagina-inhoud</h1>
+        <h1 className="text-2xl font-bold text-brand">AI Leiderschap · pagina-inhoud</h1>
         <p className="text-sm text-gray-500 mt-1">
           Bewerk alle tekst van{' '}
-          <a href="/ai-governance" target="_blank" className="text-brand-accent underline">markdekock.com/ai-governance</a>.
+          <a href="/ai-leiderschap" target="_blank" className="text-brand-accent underline">markdekock.com/ai-leiderschap</a>.
           Wijzigingen zijn na opslaan direct live.
         </p>
       </div>
-      <AIGEditor initial={initial} />
+      <AILEditor initial={initial} />
     </div>
   )
 }
