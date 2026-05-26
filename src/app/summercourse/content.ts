@@ -61,7 +61,19 @@ export interface SummerCourseContent {
     scarcity: string
   }
   faq: { heading: string; items: SCFaq[] }
-  signup: { heading: string; intro: string; ctaLabel: string; ctaHref: string }
+  signup: {
+    heading: string
+    intro: string
+    ebLabel: string
+    ebPrice: string
+    ebSub: string
+    ebHref: string
+    regLabel: string
+    regPrice: string
+    regSub: string
+    regHref: string
+    note: string
+  }
 }
 
 export const DEFAULT_CONTENT: SummerCourseContent = {
@@ -288,11 +300,19 @@ export const DEFAULT_CONTENT: SummerCourseContent = {
     ],
   },
   signup: {
-    heading: 'Reserveer je plek',
+    heading: 'Reserveer en betaal je plek',
     intro:
-      'De online inschrijving met aanbetaling volgt binnenkort. Wil je nu al een plek? Mail ons — dan zetten we je op de lijst.',
-    ctaLabel: 'Mail ons je interesse',
-    ctaHref: 'mailto:hello@markdekock.com?subject=Summer%20Course%20Claude%20AI',
+      'Vooruitbetaling vooraf via Mollie — veilig en in één keer geregeld, zoals een concertkaartje. Je krijgt direct een bevestiging en daarna van ons de voorbereiding voor dag 1.',
+    // ── Frank: vervang de twee href-waarden hieronder door je Mollie Payment Links.
+    ebLabel: 'Early-bird',
+    ebPrice: '€799',
+    ebSub: 'eerste 6 plekken · excl. btw',
+    ebHref: 'https://www.mollie.com/payment/REPLACE_WITH_EARLYBIRD_LINK',
+    regLabel: 'Regulier',
+    regPrice: '€999',
+    regSub: 'excl. btw',
+    regHref: 'https://www.mollie.com/payment/REPLACE_WITH_REGULAR_LINK',
+    note: 'Veilig betalen via Mollie · iDEAL, creditcard, Bancontact. Gaat de cursus niet door (min. 6 deelnemers)? Dan krijg je 100% terug.',
   },
 }
 

@@ -287,11 +287,20 @@ export default function SummerCourseEditor({ initial }: { initial: SummerCourseC
       </Section>
 
       {/* SIGNUP */}
-      <Section title="Inschrijf-blok">
+      <Section title="Inschrijf- en betaalblok">
         <Field label="Kop" value={c.signup.heading} onChange={(v) => patch('signup', { heading: v })} />
         <Field label="Intro" value={c.signup.intro} onChange={(v) => patch('signup', { intro: v })} textarea />
-        <Field label="CTA-label" value={c.signup.ctaLabel} onChange={(v) => patch('signup', { ctaLabel: v })} />
-        <Field label="CTA-link (mailto: of URL)" value={c.signup.ctaHref} onChange={(v) => patch('signup', { ctaHref: v })} />
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="Early-bird label" value={c.signup.ebLabel} onChange={(v) => patch('signup', { ebLabel: v })} />
+          <Field label="Early-bird prijs" value={c.signup.ebPrice} onChange={(v) => patch('signup', { ebPrice: v })} />
+          <Field label="Early-bird subline" value={c.signup.ebSub} onChange={(v) => patch('signup', { ebSub: v })} />
+          <Field label="Early-bird Mollie-link" value={c.signup.ebHref} onChange={(v) => patch('signup', { ebHref: v })} />
+          <Field label="Regulier label" value={c.signup.regLabel} onChange={(v) => patch('signup', { regLabel: v })} />
+          <Field label="Regulier prijs" value={c.signup.regPrice} onChange={(v) => patch('signup', { regPrice: v })} />
+          <Field label="Regulier subline" value={c.signup.regSub} onChange={(v) => patch('signup', { regSub: v })} />
+          <Field label="Regulier Mollie-link" value={c.signup.regHref} onChange={(v) => patch('signup', { regHref: v })} />
+        </div>
+        <Field label="Notitie onder de knoppen" value={c.signup.note} onChange={(v) => patch('signup', { note: v })} textarea />
       </Section>
 
       {/* SAVE BAR */}
