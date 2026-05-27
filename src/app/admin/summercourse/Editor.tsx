@@ -300,6 +300,20 @@ export default function SummerCourseEditor({ initial }: { initial: SummerCourseC
           <Field label="Regulier subline" value={c.signup.regSub} onChange={(v) => patch('signup', { regSub: v })} />
           <Field label="Regulier Mollie-link" value={c.signup.regHref} onChange={(v) => patch('signup', { regHref: v })} />
         </div>
+        <div className="rounded-lg border border-amber-300 bg-amber-50 p-4 mb-3">
+          <p className="text-xs font-semibold text-amber-900 mb-3">Uitverkocht-status — handmatige schakelaar voor wanneer een tier vol zit. De knop op de pagina wordt grijs en niet-klikbaar, met label "{c.signup.soldOutLabel}".</p>
+          <label className="flex items-center gap-2 mb-2 text-sm font-semibold">
+            <input type="checkbox" checked={c.signup.ebSoldOut}
+              onChange={(e) => patch('signup', { ebSoldOut: e.target.checked })} />
+            Early-bird is uitverkocht
+          </label>
+          <label className="flex items-center gap-2 text-sm font-semibold">
+            <input type="checkbox" checked={c.signup.regSoldOut}
+              onChange={(e) => patch('signup', { regSoldOut: e.target.checked })} />
+            Regulier is uitverkocht
+          </label>
+        </div>
+        <Field label="Uitverkocht-label" value={c.signup.soldOutLabel} onChange={(v) => patch('signup', { soldOutLabel: v })} />
         <Field label="Notitie onder de knoppen" value={c.signup.note} onChange={(v) => patch('signup', { note: v })} textarea />
       </Section>
 

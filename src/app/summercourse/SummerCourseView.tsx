@@ -4,6 +4,27 @@ import type { SummerCourseContent } from './content'
 // (all selectors prefixed with .sc-root) so it doesn't leak into the rest of
 // the app. Uses native <details> for the accordions — no client JS needed.
 
+function PayCard({ label, price, sub, href, soldOut, soldOutLabel, variant }: {
+  label: string; price: string; sub: string; href: string;
+  soldOut: boolean; soldOutLabel: string; variant: 'eb' | 'reg'
+}) {
+  const variantClass = variant === 'eb' ? 'sc-pay-eb' : 'sc-pay-reg'
+  const inner = (
+    <>
+      <span className="sc-pay-label">{label}</span>
+      <span className="sc-pay-price">{price}</span>
+      <span className="sc-pay-sub">{sub}</span>
+      <span className="sc-pay-cta">
+        {soldOut ? soldOutLabel : 'Reserveer en betaal →'}
+      </span>
+    </>
+  )
+  if (soldOut) {
+    return <div className={`sc-pay-card ${variantClass} sc-pay-sold`} aria-disabled="true">{inner}</div>
+  }
+  return <a href={href} className={`sc-pay-card ${variantClass}`}>{inner}</a>
+}
+
 export default function SummerCourseView({ c }: { c: SummerCourseContent }) {
   return (
     <div className="sc-root">
@@ -213,24 +234,30 @@ export default function SummerCourseView({ c }: { c: SummerCourseContent }) {
         </div>
       </section>
 
-      {/* SIGNUP — Frank: hrefs in content.ts → signup.{ebHref,regHref} */}
+      {/* SIGNUP — Mollie Payment Links + sold-out toggle in CMS */}
       <section className="sc-alt" id="inschrijven">
         <div className="sc-wrap sc-signup">
           <h2>{c.signup.heading}</h2>
           <p className="sc-muted">{c.signup.intro}</p>
           <div className="sc-pay">
-            <a href={c.signup.ebHref} className="sc-pay-card sc-pay-eb">
-              <span className="sc-pay-label">{c.signup.ebLabel}</span>
-              <span className="sc-pay-price">{c.signup.ebPrice}</span>
-              <span className="sc-pay-sub">{c.signup.ebSub}</span>
-              <span className="sc-pay-cta">Reserveer en betaal →</span>
-            </a>
-            <a href={c.signup.regHref} className="sc-pay-card sc-pay-reg">
-              <span className="sc-pay-label">{c.signup.regLabel}</span>
-              <span className="sc-pay-price">{c.signup.regPrice}</span>
-              <span className="sc-pay-sub">{c.signup.regSub}</span>
-              <span className="sc-pay-cta">Reserveer en betaal →</span>
-            </a>
+            <PayCard
+              label={c.signup.ebLabel}
+              price={c.signup.ebPrice}
+              sub={c.signup.ebSub}
+              href={c.signup.ebHref}
+              soldOut={c.signup.ebSoldOut}
+              soldOutLabel={c.signup.soldOutLabel}
+              variant="eb"
+            />
+            <PayCard
+              label={c.signup.regLabel}
+              price={c.signup.regPrice}
+              sub={c.signup.regSub}
+              href={c.signup.regHref}
+              soldOut={c.signup.regSoldOut}
+              soldOutLabel={c.signup.soldOutLabel}
+              variant="reg"
+            />
           </div>
           <p className="sc-pay-note">{c.signup.note}</p>
         </div>
@@ -345,6 +372,10 @@ const CSS = `
 .sc-pay-price{font-size:42px;font-weight:800;letter-spacing:-.02em}
 .sc-pay-sub{font-size:13px;color:var(--sc-muted)}
 .sc-pay-cta{margin-top:14px;background:linear-gradient(135deg,var(--sc-gold),var(--sc-accent));color:#fff;font-weight:700;padding:12px 22px;border-radius:10px;font-size:15px}
+.sc-pay-sold{opacity:.55;cursor:not-allowed;background:#f4f5f7!important;border-style:dashed!important;border-color:var(--sc-line)!important}
+.sc-pay-sold:hover{transform:none;box-shadow:none;border-color:var(--sc-line)!important}
+.sc-pay-sold .sc-pay-cta{background:#7a8a98;text-transform:uppercase;letter-spacing:.06em;font-size:13px}
+.sc-pay-sold .sc-pay-price{text-decoration:line-through;text-decoration-color:#7a8a98}
 .sc-pay-note{margin-top:22px!important;font-size:14px;color:var(--sc-muted);max-width:520px;margin-left:auto;margin-right:auto}
 .sc-footer{background:var(--sc-teal-dk);color:#aebcc7;padding:36px 0;font-size:14px}
 .sc-footer a{color:#fff;text-decoration:none}

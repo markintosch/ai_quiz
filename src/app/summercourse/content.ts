@@ -68,10 +68,13 @@ export interface SummerCourseContent {
     ebPrice: string
     ebSub: string
     ebHref: string
+    ebSoldOut: boolean
     regLabel: string
     regPrice: string
     regSub: string
     regHref: string
+    regSoldOut: boolean
+    soldOutLabel: string
     note: string
   }
 }
@@ -308,10 +311,13 @@ export const DEFAULT_CONTENT: SummerCourseContent = {
     ebPrice: '€799',
     ebSub: 'eerste 6 plekken · excl. btw',
     ebHref: 'https://www.mollie.com/payment/REPLACE_WITH_EARLYBIRD_LINK',
+    ebSoldOut: false,
     regLabel: 'Regulier',
     regPrice: '€999',
     regSub: 'excl. btw',
     regHref: 'https://www.mollie.com/payment/REPLACE_WITH_REGULAR_LINK',
+    regSoldOut: false,
+    soldOutLabel: 'Uitverkocht',
     note: 'Veilig betalen via Mollie · iDEAL, creditcard, Bancontact. Gaat de cursus niet door (min. 6 deelnemers)? Dan krijg je 100% terug.',
   },
 }
