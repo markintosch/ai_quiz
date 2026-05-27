@@ -287,6 +287,10 @@ export default function AILEditor({ initial }: { initial: AILContent }) {
         <Field label="Hero-titel" value={c.projectenPage.heroTitle} onChange={(v) => patch('projectenPage', { heroTitle: v })} />
         <Field label="Hero-sub" value={c.projectenPage.heroSub} onChange={(v) => patch('projectenPage', { heroSub: v })} textarea />
         <Field label="Intro-alinea (onder hero)" value={c.projectenPage.intro} onChange={(v) => patch('projectenPage', { intro: v })} textarea />
+        <Field label="'Het team'-kop" value={c.projectenPage.teamHeading} onChange={(v) => patch('projectenPage', { teamHeading: v })} />
+        <ObjectList label="Team-bios (Ben + Mark)" items={c.projectenPage.team} empty={{ name: '', role: '', bio: '' }}
+          fields={[{ key: 'name', label: 'Naam' }, { key: 'role', label: 'Rol / functies (komma-gescheiden)' }, { key: 'bio', label: 'Bio', textarea: true }]}
+          onChange={(v) => patch('projectenPage', { team: v })} />
         <Field label="'Hoe we werken'-kop" value={c.projectenPage.workingHeading} onChange={(v) => patch('projectenPage', { workingHeading: v })} />
         <ObjectList label="Hoe we werken (3 punten)" items={c.projectenPage.working} empty={{ title: '', body: '' }}
           fields={[{ key: 'title', label: 'Titel' }, { key: 'body', label: 'Tekst', textarea: true }]}

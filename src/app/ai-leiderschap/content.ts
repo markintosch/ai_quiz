@@ -54,6 +54,8 @@ export interface AILContent {
     heroTitle: string
     heroSub: string
     intro: string
+    teamHeading: string
+    team: { name: string; role: string; bio: string }[]
     workingHeading: string
     working: AILItem[]
     scenariosHeading: string
@@ -241,10 +243,23 @@ export const DEFAULT_CONTENT: AILContent = {
     heroTitle: 'Wanneer moet je ons bellen?',
     heroSub: 'Technologie verandert markten. Een transformatie of AI waardevol inzetten vraagt om meer dan visie. Het vraagt om mensen die doorpakken. Die snappen hoe strategie, technologie en executie samenkomen. Die niet blijven hangen in analyse of tools, maar resultaat leveren.',
     intro: 'Wij werken met bedrijven die willen groeien, transformeren of klaarstomen voor een volgende fase. Geen bureau, geen consultancy. Wel operators die organisaties van binnenuit in beweging brengen.',
+    teamHeading: 'Het team',
+    team: [
+      {
+        name: 'Ben van der Burg',
+        role: 'Digitale Strategie, Innovatie & AI',
+        bio: 'Veertien jaar commercieel directeur bij Triple, marktleider in mobile streaming. Oprichter van meerdere startups. Co-host van De Technoloog (450+ afleveringen) en vaste tech-commentator bij RTL Tonight, BNR en WNL. Ben brengt technologie, en AI in het bijzonder, terug naar wat het betekent voor bedrijf en mens. Hij ziet vroeg wat eraan komt, en helpt organisaties begrijpen wat ze daar nu mee moeten. Hij is betrokken op strategisch niveau, als sparringpartner, bij cruciale momenten, en waar zijn netwerk en visie het verschil maken.',
+      },
+      {
+        name: 'Mark de Kock',
+        role: 'Strategie, Merk, Commerciële Groei & Go-to-Market',
+        bio: 'Twintig jaar marketing leadership aan bureau- en klantzijde. Oprichter van creatief bureau en nu partner in Kirk Blackbeard. Mark is de hands-on strategische kracht achter de executie: positionering, go-to-market, revenue growth en marketing transformatie. Hij werkt met de tools van nu, inclusief AI, om sneller en scherper te leveren dan traditionele aanpakken toelaten. Hij stuurt, bouwt mee en zorgt dat het gebeurt. Brengt een netwerk van ervaren en betrouwbare professionals mee om het juiste team voor de juiste opdracht samen te stellen.',
+      },
+    ],
     workingHeading: 'Hoe we werken',
     working: [
-      { title: 'Beide in de operatie', body: 'Ben op de momenten die ertoe doen: boardroom, keynote, strategische keuzes. Mark in de wekelijkse executie, hands-on, eventueel als tijdelijk teamlid.' },
-      { title: 'Schaalbare vorm', body: 'Van eenmalige sessie tot doorlopend leiderschap. Van keynote tot 100-dagen-programma. We schalen naar wat de situatie vraagt.' },
+      { title: 'Strategisch én in de operatie', body: 'Ben op de momenten die ertoe doen: boardroom, keynote, strategische keuzes. Mark in de wekelijkse executie, hands-on, eventueel als tijdelijk teamlid.' },
+      { title: 'Flexibel in vorm', body: 'Van eenmalige sessie tot doorlopend leiderschap. Van keynote tot 100-dagen-programma. We schalen naar wat de situatie vraagt.' },
       { title: 'Netwerk als hefboom', body: 'Waar nodig schakelen we specialisten in: van performance marketing tot service design, van operationeel leiderschap tot PR en communicatie.' },
     ],
     scenariosHeading: 'Wanneer moet je ons bellen?',
@@ -253,7 +268,7 @@ export const DEFAULT_CONTENT: AILContent = {
       { title: 'We moeten naar de markt, maar weten niet hoe', body: 'Je hebt iets gebouwd dat werkt. Nu moet het verkocht worden, maar aan wie precies, via welk kanaal, met welk verhaal? We bouwen go-to-market strategieën die niet in een la blijven liggen. Voorbeeld: SaaS-product zonder marktervaring in-house, in 12 weken van propositie naar lancering.' },
       { title: 'Mijn team doet in weken wat anderen in dagen doen', body: 'Je ziet concurrenten sneller bewegen. Niet met meer mensen of meer budget, maar anders. Ze gebruiken AI op een manier die jouw team nog niet kent. We herontwerpen hoe je team werkt, met de tools die het verschil maken. Voorbeeld: marketing output verdrievoudigd zonder extra headcount, doorlooptijd campagnes van weken naar dagen.' },
       { title: 'We worden verkocht, overgenomen of zoeken investering', body: 'Het verhaal moet kloppen, de cijfers moeten staan en de organisatie moet klaar zijn voor due diligence én voor daarna. Wij brengen binnenkant en buitenkant op orde, onder tijdsdruk. Voorbeeld: 100-dagen-programma post-acquisitie, van founder-chaos naar overdraagbare structuur.' },
-      { title: 'Ik heb geen COO of CMO nodig voor een jaar, wel voor nu', body: 'Je hebt senior leiderschap nodig, maar niet fulltime en niet permanent. Iemand die meebouwt, het team aanstuurt en weer loslaat als het staat. Voorbeeld: fractional CMO voor enkele maanden, van founder-led sales naar een werkende marketingengine met een eigen team.' },
+      { title: 'Ik heb geen CDO of CMO nodig voor 5 jaar, wel voor nu', body: 'Je hebt senior marketingleiderschap nodig, maar niet fulltime en niet permanent. Iemand die meebouwt, het team aanstuurt en weer loslaat als het staat. Voorbeeld: fractional CMO voor 6 maanden. Van founder-led sales naar een werkende marketing engine met een eigen team.' },
       { title: 'Ik wil mijn team of board laten zien wat er speelt', body: 'Technologie en AI veranderen sneller dan de meeste organisaties bijhouden. Ben geeft keynotes en interactieve sessies die het concreet maken: wat gebeurt er nu, wat betekent het voor jouw markt, wat moet je morgen anders doen. Geen hype, wel urgentie. Voorbeeld: boardroom-sessie waarna het directieteam van "AI is iets voor later" naar een concrete pilot binnen 30 dagen ging.' },
       { title: 'Ik wil gewoon even sparren met iemand die het snapt', body: 'Geen project, geen traject, gewoon een scherp gesprek met mensen die de vraagstukken kennen. Strategische sparring, een second opinion of een klankbord voordat je een beslissing neemt. Voorbeeld: kwartaalsessies met een founder als klankbord voor strategische keuzes, zonder de overhead van een advisory board.' },
     ],

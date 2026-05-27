@@ -52,6 +52,21 @@ export default async function ProjectenPage() {
 
       <section className="ail-sec ail-alt">
         <div className="ail-wrap">
+          <h2>{c.teamHeading}</h2>
+          <div className="ail-team">
+            {c.team.map((p, i) => (
+              <div key={i} className="ail-team-card">
+                <h3>{p.name}</h3>
+                <p className="ail-team-role">{p.role}</p>
+                <p className="ail-team-bio">{p.bio}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="ail-sec">
+        <div className="ail-wrap">
           <h2>{c.workingHeading}</h2>
           <div className="ail-grid3">
             {c.working.map((it, i) => (
@@ -64,7 +79,7 @@ export default async function ProjectenPage() {
         </div>
       </section>
 
-      <section className="ail-sec">
+      <section className="ail-sec ail-alt">
         <div className="ail-wrap">
           <h2>{c.scenariosHeading}</h2>
           <div className="ail-scenarios-grid">
@@ -129,6 +144,11 @@ const CSS = `
 .ail-card{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:22px}
 .ail-card h3{margin-bottom:8px}
 .ail-card p{color:var(--muted);font-size:14px}
+.ail-team{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:24px}
+.ail-team-card{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:24px}
+.ail-team-card h3{font-size:19px;margin-bottom:4px}
+.ail-team-role{color:var(--acc);font-weight:600;font-size:13px;margin-bottom:14px!important}
+.ail-team-bio{color:var(--muted);font-size:14px;line-height:1.6}
 .ail-scenarios-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:24px}
 .ail-scenario{background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px;border-left:3px solid var(--acc)}
 .ail-scenario h3{margin-bottom:10px;font-size:18px;color:var(--ink)}
@@ -139,5 +159,5 @@ const CSS = `
 .ail-back-link:hover{text-decoration:underline}
 .ail-footer{background:var(--n);color:#9fb2c2;padding:32px 0;font-size:14px}
 .ail-footrow{display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px}
-@media(max-width:880px){.ail-grid3,.ail-scenarios-grid{grid-template-columns:1fr}}
+@media(max-width:880px){.ail-grid3,.ail-scenarios-grid,.ail-team{grid-template-columns:1fr}}
 `
