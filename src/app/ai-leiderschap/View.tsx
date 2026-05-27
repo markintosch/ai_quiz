@@ -23,6 +23,7 @@ export default function AILeiderschapView({ c }: { c: AILContent }) {
           <a href="#programma">Programma</a>
           <a href="#traject">Traject</a>
           <a href="#investering">Prijs</a>
+          <a href="/ai-leiderschap/intro">Intro-gesprek</a>
           <a href="#faq">FAQ</a>
         </div>
         <a href={navCta.href} className="ail-btn ail-btn-primary ail-nav-cta">{navCta.label}</a>
