@@ -186,7 +186,9 @@ export default function AILeiderschapView({ c }: { c: AILContent }) {
               <h2>{c.meetBen.heading}</h2>
               <p className="ail-muted">{c.meetBen.body}</p>
             </div>
-            <a href={c.meetBen.ctaHref} target="_blank" rel="noopener" className="ail-btn ail-btn-primary">{c.meetBen.ctaLabel}</a>
+            {/^https?:\/\//i.test(c.meetBen.ctaHref)
+              ? <a href={c.meetBen.ctaHref} target="_blank" rel="noopener" className="ail-btn ail-btn-primary">{c.meetBen.ctaLabel}</a>
+              : <a href={c.meetBen.ctaHref} className="ail-btn ail-btn-primary">{c.meetBen.ctaLabel}</a>}
           </div>
         </div>
       </section>

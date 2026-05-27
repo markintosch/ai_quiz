@@ -33,6 +33,22 @@ export interface AILContent {
   trajectory: { heading: string; intro: string; steps: AILStep[] }
   hosts: { heading: string; intro: string; people: AILHost[] }
   meetBen: { heading: string; body: string; ctaLabel: string; ctaHref: string }
+  introPage: {
+    heroEyebrow: string
+    heroTitle: string
+    heroSub: string
+    duration: string
+    scenariosHeading: string
+    scenarios: AILItem[]
+    topicsHeading: string
+    topicsIntro: string
+    topics: string[]
+    ctaHeading: string
+    ctaLabel: string
+    ctaHref: string
+    note: string
+    backLabel: string
+  }
   whyWorks: { heading: string; items: AILItem[] }
   testimonials: { heading: string; items: AILTestimonial[] }
   practical: { heading: string; facts: AILFact[] }
@@ -173,10 +189,38 @@ export const DEFAULT_CONTENT: AILContent = {
     ],
   },
   meetBen: {
-    heading: 'Maak kennis met Ben',
-    body: 'Wil je vooraf even sparren of zien aan welke projecten Ben verder werkt? Bekijk z\'n portfolio of plan een korte verkenning. Handig als je nog tussen de twee data twijfelt of wilt aftasten of het past.',
-    ctaLabel: 'Bekijk Ben\'s projecten + plan een gesprek →',
-    ctaHref: 'https://www.benvanderburg.nl/Projecten',
+    heading: 'Twijfel? Plan eerst een intro-gesprek.',
+    body: 'Wil je even sparren of deze sessie past bij jouw organisatie en jouw specifieke vraag? Lees waar een intro-gesprek met Mark zinvol voor is, en plan er een in.',
+    ctaLabel: 'Bekijk wat we kunnen bespreken →',
+    ctaHref: '/ai-leiderschap/intro',
+  },
+  introPage: {
+    heroEyebrow: 'Vrijblijvend · 30 minuten · online',
+    heroTitle: 'Plan een intro-gesprek met Mark',
+    heroSub: 'Voor wie wil aftasten of de sessie past, of een specifieke leiderschapsvraag heeft die niet in een uur klassikaal beantwoord wordt. Geen verkooppraatje, wel een eerlijk gesprek over wat je eraan hebt.',
+    duration: '30 minuten · online via Google Meet of Teams · geen kosten',
+    scenariosHeading: 'Wanneer is dit gesprek zinvol?',
+    scenarios: [
+      { title: 'Je twijfelt of de sessie van 29 juni of 6 juli past', body: 'Logisch. We kijken samen of jouw vraag en jullie organisatie passen bij de groep, of dat een andere vorm beter zou werken.' },
+      { title: 'Je hebt een specifieke AI-leiderschapsvraag', body: 'Iets wat je voor jouw situatie wilt bespreken voordat je een groep instapt. Eén concreet vraagstuk in 30 minuten, scherper dan je het in een groep zou kunnen krijgen.' },
+      { title: 'Je overweegt een in-company variant', body: 'Een variant voor je MT, RvB of een specifiek leiderschapsteam. We bespreken vorm, inhoud, en wat een eigen sessie voor jullie zou opleveren.' },
+      { title: 'Je staat aan het begin van een AI-transformatie', body: 'En zoekt klankbord om de eerste stappen te bepalen. Geen consulting, wel meedenken vanuit ervaring met andere directieteams.' },
+    ],
+    topicsHeading: 'Wat we kunnen bespreken',
+    topicsIntro: 'Onderwerpen waar Mark dagelijks met directieleden over praat. Niet dat we ze in 30 minuten allemaal afhandelen, wel waar je er één van uit kunt lichten.',
+    topics: [
+      'Waar staat jouw organisatie nu met AI, eerlijk gezien',
+      'Welke knoop wil je in de komende 90 dagen doorhakken',
+      'Welke eerste stap is realistisch deze maand',
+      'Hoe je dit boven de waan van de dag krijgt op directieniveau',
+      'Wat een werkbare guardrails-aanpak zou zijn voor jullie context',
+      'In-company sessies, advisory-trajecten of strategische sparring',
+    ],
+    ctaHeading: 'Klaar om te plannen?',
+    ctaLabel: 'Plan je intro-gesprek →',
+    ctaHref: 'https://calendly.com/markiesbpm/ai-intro-meeting-mark-de-kock',
+    note: 'Tip: deel kort vooraf je vraag of context bij de Calendly-boeking. Dan benutten we de 30 minuten beter.',
+    backLabel: '← Terug naar de sessiepagina',
   },
   whyWorks: {
     heading: 'Waarom deze aanpak werkt',

@@ -256,11 +256,30 @@ export default function AILEditor({ initial }: { initial: AILContent }) {
         </div>
       </Section>
 
-      <Section title="Maak kennis met Ben (externe CTA)">
+      <Section title="Intro-gesprek (blok op landing-pagina)">
         <Field label="Kop" value={c.meetBen.heading} onChange={(v) => patch('meetBen', { heading: v })} />
         <Field label="Tekst" value={c.meetBen.body} onChange={(v) => patch('meetBen', { body: v })} textarea />
         <Field label="CTA-label" value={c.meetBen.ctaLabel} onChange={(v) => patch('meetBen', { ctaLabel: v })} />
-        <Field label="CTA-link (Ben's portfolio of Calendly)" value={c.meetBen.ctaHref} onChange={(v) => patch('meetBen', { ctaHref: v })} />
+        <Field label="CTA-link (interne route of externe URL)" value={c.meetBen.ctaHref} onChange={(v) => patch('meetBen', { ctaHref: v })} />
+      </Section>
+
+      <Section title="Intro-gesprek sub-pagina (/ai-leiderschap/intro)">
+        <Field label="Eyebrow" value={c.introPage.heroEyebrow} onChange={(v) => patch('introPage', { heroEyebrow: v })} />
+        <Field label="Hero-titel" value={c.introPage.heroTitle} onChange={(v) => patch('introPage', { heroTitle: v })} textarea />
+        <Field label="Hero-sub" value={c.introPage.heroSub} onChange={(v) => patch('introPage', { heroSub: v })} textarea />
+        <Field label="Duur / praktische regel" value={c.introPage.duration} onChange={(v) => patch('introPage', { duration: v })} />
+        <Field label="Scenario's-kop" value={c.introPage.scenariosHeading} onChange={(v) => patch('introPage', { scenariosHeading: v })} />
+        <ObjectList label="Wanneer-scenario's" items={c.introPage.scenarios} empty={{ title: '', body: '' }}
+          fields={[{ key: 'title', label: 'Titel' }, { key: 'body', label: 'Tekst', textarea: true }]}
+          onChange={(v) => patch('introPage', { scenarios: v })} />
+        <Field label="Onderwerpen-kop" value={c.introPage.topicsHeading} onChange={(v) => patch('introPage', { topicsHeading: v })} />
+        <Field label="Onderwerpen-intro" value={c.introPage.topicsIntro} onChange={(v) => patch('introPage', { topicsIntro: v })} textarea />
+        <StringList label="Onderwerpen-lijst" items={c.introPage.topics} onChange={(v) => patch('introPage', { topics: v })} />
+        <Field label="CTA-kop (onderaan)" value={c.introPage.ctaHeading} onChange={(v) => patch('introPage', { ctaHeading: v })} />
+        <Field label="CTA-label" value={c.introPage.ctaLabel} onChange={(v) => patch('introPage', { ctaLabel: v })} />
+        <Field label="CTA-link (Calendly)" value={c.introPage.ctaHref} onChange={(v) => patch('introPage', { ctaHref: v })} />
+        <Field label="Notitie onder CTA" value={c.introPage.note} onChange={(v) => patch('introPage', { note: v })} textarea />
+        <Field label="Terug-link label" value={c.introPage.backLabel} onChange={(v) => patch('introPage', { backLabel: v })} />
       </Section>
 
       <Section title="Waarom deze aanpak werkt">
