@@ -256,6 +256,13 @@ export default function AILEditor({ initial }: { initial: AILContent }) {
         </div>
       </Section>
 
+      <Section title="Maak kennis met Ben (externe CTA)">
+        <Field label="Kop" value={c.meetBen.heading} onChange={(v) => patch('meetBen', { heading: v })} />
+        <Field label="Tekst" value={c.meetBen.body} onChange={(v) => patch('meetBen', { body: v })} textarea />
+        <Field label="CTA-label" value={c.meetBen.ctaLabel} onChange={(v) => patch('meetBen', { ctaLabel: v })} />
+        <Field label="CTA-link (Ben's portfolio of Calendly)" value={c.meetBen.ctaHref} onChange={(v) => patch('meetBen', { ctaHref: v })} />
+      </Section>
+
       <Section title="Waarom deze aanpak werkt">
         <Field label="Kop" value={c.whyWorks.heading} onChange={(v) => patch('whyWorks', { heading: v })} />
         <ObjectList label="Punten" items={c.whyWorks.items} empty={{ title: '', body: '' }}
