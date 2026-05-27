@@ -49,6 +49,20 @@ export interface AILContent {
     note: string
     backLabel: string
   }
+  projectenPage: {
+    heroEyebrow: string
+    heroTitle: string
+    heroSub: string
+    intro: string
+    workingHeading: string
+    working: AILItem[]
+    scenariosHeading: string
+    scenarios: AILItem[]
+    ctaHeading: string
+    ctaLabel: string
+    ctaHref: string
+    backLabel: string
+  }
   whyWorks: { heading: string; items: AILItem[] }
   testimonials: { heading: string; items: AILTestimonial[] }
   practical: { heading: string; facts: AILFact[] }
@@ -197,8 +211,42 @@ export const DEFAULT_CONTENT: AILContent = {
   introPage: {
     heroEyebrow: 'Vrijblijvend · 30 minuten · online',
     heroTitle: 'Plan een intro-gesprek met Mark',
-    heroSub: 'Geen bureau, geen consultancy. Wel operators die met je meedenken over AI, groei en transformatie. Bel als één van de scenario\'s hieronder herkenbaar is, of als je gewoon even wilt sparren met iemand die de vraagstukken kent.',
+    heroSub: 'Voor wie wil aftasten of de sessie past, of een specifieke leiderschapsvraag heeft die niet in een uur klassikaal beantwoord wordt. Geen verkooppraatje, wel een eerlijk gesprek over wat je eraan hebt.',
     duration: '30 minuten · online via Google Meet of Teams · geen kosten',
+    scenariosHeading: 'Wanneer is dit gesprek zinvol?',
+    scenarios: [
+      { title: 'Je twijfelt of de sessie van 29 juni of 6 juli past', body: 'Logisch. We kijken samen of jouw vraag en jullie organisatie passen bij de groep, of dat een andere vorm beter zou werken.' },
+      { title: 'Je hebt een specifieke AI-leiderschapsvraag', body: 'Iets wat je voor jouw situatie wilt bespreken voordat je een groep instapt. Eén concreet vraagstuk in 30 minuten, scherper dan je het in een groep zou kunnen krijgen.' },
+      { title: 'Je overweegt een in-company variant', body: 'Een variant voor je MT, RvB of een specifiek leiderschapsteam. We bespreken vorm, inhoud, en wat een eigen sessie voor jullie zou opleveren.' },
+      { title: 'Je staat aan het begin van een AI-transformatie', body: 'En zoekt klankbord om de eerste stappen te bepalen. Geen consulting, wel meedenken vanuit ervaring met andere directieteams.' },
+    ],
+    topicsHeading: 'Wat we kunnen bespreken',
+    topicsIntro: 'Onderwerpen waar Mark dagelijks met directieleden over praat. Niet dat we ze in 30 minuten allemaal afhandelen, wel waar je er één van uit kunt lichten.',
+    topics: [
+      'Waar staat jouw organisatie nu met AI, eerlijk gezien',
+      'Welke knoop wil je in de komende 90 dagen doorhakken',
+      'Welke eerste stap is realistisch deze maand',
+      'Hoe je dit boven de waan van de dag krijgt op directieniveau',
+      'Wat een werkbare guardrails-aanpak zou zijn voor jullie context',
+      'In-company sessies, advisory-trajecten of strategische sparring',
+    ],
+    ctaHeading: 'Klaar om te plannen?',
+    ctaLabel: 'Plan je intro-gesprek →',
+    ctaHref: 'https://calendly.com/markiesbpm/ai-intro-meeting-mark-de-kock',
+    note: 'Tip: deel kort vooraf je vraag of context bij de Calendly-boeking. Dan benutten we de 30 minuten beter.',
+    backLabel: '← Terug naar de sessiepagina',
+  },
+  projectenPage: {
+    heroEyebrow: 'Werkwijze · Ben & Mark',
+    heroTitle: 'Wanneer moet je ons bellen?',
+    heroSub: 'Technologie verandert markten. Een transformatie of AI waardevol inzetten vraagt om meer dan visie. Het vraagt om mensen die doorpakken. Die snappen hoe strategie, technologie en executie samenkomen. Die niet blijven hangen in analyse of tools, maar resultaat leveren.',
+    intro: 'Wij werken met bedrijven die willen groeien, transformeren of klaarstomen voor een volgende fase. Geen bureau, geen consultancy. Wel operators die organisaties van binnenuit in beweging brengen.',
+    workingHeading: 'Hoe we werken',
+    working: [
+      { title: 'Beide in de operatie', body: 'Ben op de momenten die ertoe doen: boardroom, keynote, strategische keuzes. Mark in de wekelijkse executie, hands-on, eventueel als tijdelijk teamlid.' },
+      { title: 'Schaalbare vorm', body: 'Van eenmalige sessie tot doorlopend leiderschap. Van keynote tot 100-dagen-programma. We schalen naar wat de situatie vraagt.' },
+      { title: 'Netwerk als hefboom', body: 'Waar nodig schakelen we specialisten in: van performance marketing tot service design, van operationeel leiderschap tot PR en communicatie.' },
+    ],
     scenariosHeading: 'Wanneer moet je ons bellen?',
     scenarios: [
       { title: 'De groei stokt en niemand weet precies waarom', body: 'Je hebt een goed product en een sterk team, maar de cijfers blijven achter. Marketing draait, sales belt, toch gebeurt er te weinig. Ergens zit een blokkade in de propositie, de funnel of de focus. Voorbeeld: B2B scale-up met stagnerende pipeline. Binnen 3 tot 12 weken nieuwe positionering, aangepaste funnel en meer grip op qualified leads.' },
@@ -209,19 +257,9 @@ export const DEFAULT_CONTENT: AILContent = {
       { title: 'Ik wil mijn team of board laten zien wat er speelt', body: 'Technologie en AI veranderen sneller dan de meeste organisaties bijhouden. Ben geeft keynotes en interactieve sessies die het concreet maken: wat gebeurt er nu, wat betekent het voor jouw markt, wat moet je morgen anders doen. Geen hype, wel urgentie. Voorbeeld: boardroom-sessie waarna het directieteam van "AI is iets voor later" naar een concrete pilot binnen 30 dagen ging.' },
       { title: 'Ik wil gewoon even sparren met iemand die het snapt', body: 'Geen project, geen traject, gewoon een scherp gesprek met mensen die de vraagstukken kennen. Strategische sparring, een second opinion of een klankbord voordat je een beslissing neemt. Voorbeeld: kwartaalsessies met een founder als klankbord voor strategische keuzes, zonder de overhead van een advisory board.' },
     ],
-    topicsHeading: 'Hoe we werken',
-    topicsIntro: 'Twee perspectieven, één aanpak. Ben in de boardroom en op het podium voor de momenten die ertoe doen. Mark in de wekelijkse executie, hands-on, eventueel als tijdelijk teamlid. Samen brengen we een netwerk van senior operators mee dat schaalt naar wat de situatie vraagt.',
-    topics: [
-      'Ben op de momenten die ertoe doen: boardroom, keynote, strategische keuzes',
-      'Mark in de wekelijkse executie: positionering, go-to-market, revenue growth, marketing transformatie',
-      'Van eenmalige sessie tot doorlopend leiderschap',
-      'Van keynote tot 100-dagen-programma',
-      'Specialisten uit ons netwerk waar nodig: performance marketing, service design, PR, operationeel leiderschap',
-    ],
     ctaHeading: 'Maak nu een afspraak met Mark',
-    ctaLabel: 'Plan je intro-gesprek →',
+    ctaLabel: 'Plan je gesprek →',
     ctaHref: 'https://calendly.com/markiesbpm/ai-intro-meeting-mark-de-kock',
-    note: 'Tip: deel kort vooraf je vraag of context bij de Calendly-boeking. Dan benutten we de 30 minuten beter.',
     backLabel: '← Terug naar de sessiepagina',
   },
   whyWorks: {
