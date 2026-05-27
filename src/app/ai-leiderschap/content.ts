@@ -58,12 +58,12 @@ export const DEFAULT_CONTENT: AILContent = {
     eyebrow: 'Executive sessie · met Ben van den Burg & Mark de Kock',
     title: 'Van AI-experimenten naar leiderschapskeuzes in 90 dagen.',
     subtitle: 'Een halve dag waarin je met andere directieleden de richting kiest, en een 90-dagen-ritme dat zorgt dat die keuze ook landt. Voor CEO, CMO en CDO.',
-    eventDate: 'Maandag 29 juni 2026',
+    eventDate: 'Maandag 29 juni of 6 juli 2026',
     eventLocation: 'Utrecht (locatie wordt gedeeld bij bevestiging)',
     bullets: [
-      '📅 Maandag 29 juni 2026',
+      '📅 Maandag 29 juni of 6 juli 2026',
       '📍 Utrecht',
-      'Kies tussen ochtend of middag',
+      'Twee identieke middag-sessies, kies de datum die past',
       'Max. 20 deelnemers per sessie',
       '€1.595 p.p. excl. btw',
     ],
@@ -145,7 +145,7 @@ export const DEFAULT_CONTENT: AILContent = {
     intro: 'De sessie is het anker. Daarna word je niet losgelaten: vier momenten waarop het systeem aan je trekt, plus een 1-op-1 met Mark.',
     steps: [
       { label: 'Voor de dag', title: 'Baseline-assessment', body: 'Vul de AI-maturity-scan in (~10 min). Resultaten landen in het cohort en vormen je vertrekpunt.' },
-      { label: '29 juni', title: 'De sessie zelf', body: 'Keynote, diagnose, canvas, commitments en Q&A. Je vertrekt met een persoonlijk rapport en een 90-dagen-canvas.' },
+      { label: 'Sessiedag', title: 'De sessie zelf', body: 'Keynote, diagnose, canvas, commitments en Q&A. Je vertrekt met een persoonlijk rapport en een 90-dagen-canvas.' },
       { label: 'Vanaf dag 15', title: '1-op-1 met Mark', body: 'Een persoonlijk gesprek van 30 minuten over hoe je ervoor staat, waar je hapert en welke ondersteuning helpt. We spreiden de calls over een week of twee, zodat iedereen een passend moment kan vinden.' },
       { label: 'Dag 30 / 60 / 90', title: 'Progressiemetingen', body: 'Drie korte gepersonaliseerde metingen op precies de mijlpalen van je canvas. Je krijgt je delta-rapport, zo zie je waar je beweegt en waar niet.' },
       { label: 'Dag 90', title: 'Cohort-slotrapport', body: 'Hoe heeft jullie zaal als geheel zich ontwikkeld? Met een optionele afsluitcall om de balans op te maken.' },
@@ -190,9 +190,9 @@ export const DEFAULT_CONTENT: AILContent = {
   practical: {
     heading: 'Praktisch',
     facts: [
-      { label: 'Datum', value: 'Maandag 29 juni 2026' },
+      { label: 'Data', value: 'Maandag 29 juni of maandag 6 juli 2026 (kies één)' },
       { label: 'Locatie', value: 'Utrecht (locatie bevestigd bij boeking)' },
-      { label: 'Vorm', value: 'Halve dag, kies ochtend of middag' },
+      { label: 'Vorm', value: 'Middag-sessie van ca. 4 uur' },
       { label: 'Groep', value: 'Min. 10, max. 20 per sessie' },
       { label: 'Investering', value: '€1.595 p.p. (excl. btw)' },
       { label: 'Taal', value: 'Nederlands' },
@@ -213,13 +213,13 @@ export const DEFAULT_CONTENT: AILContent = {
     ],
   },
   slots: {
-    heading: 'Boek je plek voor 29 juni 2026',
-    intro: 'Kies het tijdslot dat je het beste uitkomt. Beide sessies hebben hetzelfde programma en gaan door bij minimaal 10 inschrijvingen.',
+    heading: 'Boek je plek',
+    intro: 'Twee identieke middag-sessies, kies de datum die je het beste uitkomt. Beide sessies hebben hetzelfde programma en gaan door bij minimaal 10 inschrijvingen.',
     items: [
       {
-        id: 'ochtend',
-        label: 'Ochtend',
-        time: '09:00 – 13:00 (incl. afsluitende lunch)',
+        id: 'jun29',
+        label: 'Maandag 29 juni 2026',
+        time: '13:30 – 17:30 (incl. afsluitende borrel)',
         price: '€1.595',
         // Vervang door je Mollie Payment Link (begint met https://). Zolang
         // hier "#" of een placeholder staat, toont de View een "Boeking opent
@@ -228,8 +228,8 @@ export const DEFAULT_CONTENT: AILContent = {
         note: 'Max. 20 plekken',
       },
       {
-        id: 'middag',
-        label: 'Middag',
+        id: 'jul06',
+        label: 'Maandag 6 juli 2026',
         time: '13:30 – 17:30 (incl. afsluitende borrel)',
         price: '€1.595',
         mollieHref: '#boeken',
@@ -248,8 +248,8 @@ export const DEFAULT_CONTENT: AILContent = {
   faq: {
     heading: 'Veelgestelde vragen',
     items: [
-      { q: 'Wat is het verschil tussen ochtend en middag?', a: 'Niets inhoudelijk. Beide sessies bieden hetzelfde programma met dezelfde begeleiders. Je kiest puur op wat jou logistiek het beste schikt.' },
-      { q: 'Wat als mijn slot niet doorgaat?', a: 'Bij minder dan 10 inschrijvingen voor een slot gaat dat slot niet door en krijg je je betaling 100% terug. Eventueel kun je overstappen naar het andere slot.' },
+      { q: 'Wat is het verschil tussen 29 juni en 6 juli?', a: 'Niets inhoudelijk. Beide sessies bieden hetzelfde programma met dezelfde begeleiders. Je kiest puur op wat jou logistiek het beste schikt.' },
+      { q: 'Wat als mijn sessie niet doorgaat?', a: 'Bij minder dan 10 inschrijvingen voor een sessie gaat die niet door en krijg je je betaling 100% terug. Eventueel kun je overstappen naar de andere datum.' },
       { q: 'Heb ik AI-voorkennis nodig?', a: 'Nee. We gaan ervan uit dat je in je organisatie met AI bezig bent, maar dit is geen technische sessie. Het gaat over leiderschap, niet over tooling.' },
       { q: 'Is de baseline-assessment verplicht?', a: 'Aanbevolen, niet verplicht. Wie vooraf invult haalt veel meer uit de cohort-spiegel en de werkblokken. Daar komt de data van de zaal terug.' },
       { q: 'Hoe werkt het 90-dagen-traject precies?', a: 'Vanaf dag 15 plannen we een 1-op-1 met Mark in (30 min, online). De calls worden over een week of twee gespreid, zodat iedereen een passend moment kan kiezen. Op dag 30, 60 en 90 ontvang je een korte gepersonaliseerde meting met je delta-rapport. Op dag 90 een cohort-slotrapport.' },

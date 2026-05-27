@@ -41,12 +41,12 @@ export default function WaitlistForm({ successMessage }: { successMessage: strin
         <label>Organisatie<input name="organisation" /></label>
         <label>Rol<input name="role" placeholder="bijv. CEO, CMO, CDO" /></label>
       </div>
-      <label className="ail-full">Voorkeur dagdeel (optioneel)
+      <label className="ail-full">Voorkeur datum (optioneel)
         <select name="preference" defaultValue="">
           <option value="">Geen voorkeur</option>
-          <option value="ochtend">Ochtend (09:00–13:00)</option>
-          <option value="middag">Middag (13:30–17:30)</option>
-          <option value="geen-voorkeur">Maakt niet uit</option>
+          <option value="29-juni">Maandag 29 juni 2026</option>
+          <option value="6-juli">Maandag 6 juli 2026</option>
+          <option value="volgende-editie">Volgende editie</option>
         </select>
       </label>
       <label className="ail-check"><input type="checkbox" name="consent" required /> Ik wil op de hoogte gehouden worden van volgende edities.</label>
