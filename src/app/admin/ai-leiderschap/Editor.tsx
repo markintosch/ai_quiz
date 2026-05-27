@@ -282,6 +282,25 @@ export default function AILEditor({ initial }: { initial: AILContent }) {
         <Field label="Terug-link label" value={c.introPage.backLabel} onChange={(v) => patch('introPage', { backLabel: v })} />
       </Section>
 
+      <Section title="Ben & Mark sub-pagina (/ai-leiderschap/ben-en-mark)">
+        <Field label="Eyebrow" value={c.projectenPage.heroEyebrow} onChange={(v) => patch('projectenPage', { heroEyebrow: v })} />
+        <Field label="Hero-titel" value={c.projectenPage.heroTitle} onChange={(v) => patch('projectenPage', { heroTitle: v })} />
+        <Field label="Hero-sub" value={c.projectenPage.heroSub} onChange={(v) => patch('projectenPage', { heroSub: v })} textarea />
+        <Field label="Intro-alinea (onder hero)" value={c.projectenPage.intro} onChange={(v) => patch('projectenPage', { intro: v })} textarea />
+        <Field label="'Hoe we werken'-kop" value={c.projectenPage.workingHeading} onChange={(v) => patch('projectenPage', { workingHeading: v })} />
+        <ObjectList label="Hoe we werken (3 punten)" items={c.projectenPage.working} empty={{ title: '', body: '' }}
+          fields={[{ key: 'title', label: 'Titel' }, { key: 'body', label: 'Tekst', textarea: true }]}
+          onChange={(v) => patch('projectenPage', { working: v })} />
+        <Field label="Scenario's-kop" value={c.projectenPage.scenariosHeading} onChange={(v) => patch('projectenPage', { scenariosHeading: v })} />
+        <ObjectList label="Wanneer-bellen-scenario's" items={c.projectenPage.scenarios} empty={{ title: '', body: '' }}
+          fields={[{ key: 'title', label: 'Titel (citaat)' }, { key: 'body', label: 'Tekst + voorbeeld', textarea: true }]}
+          onChange={(v) => patch('projectenPage', { scenarios: v })} />
+        <Field label="CTA-kop onderaan" value={c.projectenPage.ctaHeading} onChange={(v) => patch('projectenPage', { ctaHeading: v })} />
+        <Field label="CTA-label" value={c.projectenPage.ctaLabel} onChange={(v) => patch('projectenPage', { ctaLabel: v })} />
+        <Field label="CTA-link (Calendly)" value={c.projectenPage.ctaHref} onChange={(v) => patch('projectenPage', { ctaHref: v })} />
+        <Field label="Terug-link label" value={c.projectenPage.backLabel} onChange={(v) => patch('projectenPage', { backLabel: v })} />
+      </Section>
+
       <Section title="Waarom deze aanpak werkt">
         <Field label="Kop" value={c.whyWorks.heading} onChange={(v) => patch('whyWorks', { heading: v })} />
         <ObjectList label="Punten" items={c.whyWorks.items} empty={{ title: '', body: '' }}

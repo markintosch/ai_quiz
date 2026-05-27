@@ -49,6 +49,20 @@ export interface AILContent {
     note: string
     backLabel: string
   }
+  projectenPage: {
+    heroEyebrow: string
+    heroTitle: string
+    heroSub: string
+    intro: string
+    workingHeading: string
+    working: AILItem[]
+    scenariosHeading: string
+    scenarios: AILItem[]
+    ctaHeading: string
+    ctaLabel: string
+    ctaHref: string
+    backLabel: string
+  }
   whyWorks: { heading: string; items: AILItem[] }
   testimonials: { heading: string; items: AILTestimonial[] }
   practical: { heading: string; facts: AILFact[] }
@@ -220,6 +234,32 @@ export const DEFAULT_CONTENT: AILContent = {
     ctaLabel: 'Plan je intro-gesprek →',
     ctaHref: 'https://calendly.com/markiesbpm/ai-intro-meeting-mark-de-kock',
     note: 'Tip: deel kort vooraf je vraag of context bij de Calendly-boeking. Dan benutten we de 30 minuten beter.',
+    backLabel: '← Terug naar de sessiepagina',
+  },
+  projectenPage: {
+    heroEyebrow: 'Werkwijze · Ben & Mark',
+    heroTitle: 'Wanneer moet je ons bellen?',
+    heroSub: 'Technologie verandert markten. Een transformatie of AI waardevol inzetten vraagt om meer dan visie. Het vraagt om mensen die doorpakken. Die snappen hoe strategie, technologie en executie samenkomen. Die niet blijven hangen in analyse of tools, maar resultaat leveren.',
+    intro: 'Wij werken met bedrijven die willen groeien, transformeren of klaarstomen voor een volgende fase. Geen bureau, geen consultancy. Wel operators die organisaties van binnenuit in beweging brengen.',
+    workingHeading: 'Hoe we werken',
+    working: [
+      { title: 'Beide in de operatie', body: 'Ben op de momenten die ertoe doen: boardroom, keynote, strategische keuzes. Mark in de wekelijkse executie, hands-on, eventueel als tijdelijk teamlid.' },
+      { title: 'Schaalbare vorm', body: 'Van eenmalige sessie tot doorlopend leiderschap. Van keynote tot 100-dagen-programma. We schalen naar wat de situatie vraagt.' },
+      { title: 'Netwerk als hefboom', body: 'Waar nodig schakelen we specialisten in: van performance marketing tot service design, van operationeel leiderschap tot PR en communicatie.' },
+    ],
+    scenariosHeading: 'Wanneer moet je ons bellen?',
+    scenarios: [
+      { title: 'De groei stokt en niemand weet precies waarom', body: 'Je hebt een goed product en een sterk team, maar de cijfers blijven achter. Marketing draait, sales belt, toch gebeurt er te weinig. Ergens zit een blokkade in de propositie, de funnel of de focus. Voorbeeld: B2B scale-up met stagnerende pipeline. Binnen 3 tot 12 weken nieuwe positionering, aangepaste funnel en meer grip op qualified leads.' },
+      { title: 'We moeten naar de markt, maar weten niet hoe', body: 'Je hebt iets gebouwd dat werkt. Nu moet het verkocht worden, maar aan wie precies, via welk kanaal, met welk verhaal? We bouwen go-to-market strategieën die niet in een la blijven liggen. Voorbeeld: SaaS-product zonder marktervaring in-house, in 12 weken van propositie naar lancering.' },
+      { title: 'Mijn team doet in weken wat anderen in dagen doen', body: 'Je ziet concurrenten sneller bewegen. Niet met meer mensen of meer budget, maar anders. Ze gebruiken AI op een manier die jouw team nog niet kent. We herontwerpen hoe je team werkt, met de tools die het verschil maken. Voorbeeld: marketing output verdrievoudigd zonder extra headcount, doorlooptijd campagnes van weken naar dagen.' },
+      { title: 'We worden verkocht, overgenomen of zoeken investering', body: 'Het verhaal moet kloppen, de cijfers moeten staan en de organisatie moet klaar zijn voor due diligence én voor daarna. Wij brengen binnenkant en buitenkant op orde, onder tijdsdruk. Voorbeeld: 100-dagen-programma post-acquisitie, van founder-chaos naar overdraagbare structuur.' },
+      { title: 'Ik heb geen COO of CMO nodig voor een jaar, wel voor nu', body: 'Je hebt senior leiderschap nodig, maar niet fulltime en niet permanent. Iemand die meebouwt, het team aanstuurt en weer loslaat als het staat. Voorbeeld: fractional CMO voor enkele maanden, van founder-led sales naar een werkende marketingengine met een eigen team.' },
+      { title: 'Ik wil mijn team of board laten zien wat er speelt', body: 'Technologie en AI veranderen sneller dan de meeste organisaties bijhouden. Ben geeft keynotes en interactieve sessies die het concreet maken: wat gebeurt er nu, wat betekent het voor jouw markt, wat moet je morgen anders doen. Geen hype, wel urgentie. Voorbeeld: boardroom-sessie waarna het directieteam van "AI is iets voor later" naar een concrete pilot binnen 30 dagen ging.' },
+      { title: 'Ik wil gewoon even sparren met iemand die het snapt', body: 'Geen project, geen traject, gewoon een scherp gesprek met mensen die de vraagstukken kennen. Strategische sparring, een second opinion of een klankbord voordat je een beslissing neemt. Voorbeeld: kwartaalsessies met een founder als klankbord voor strategische keuzes, zonder de overhead van een advisory board.' },
+    ],
+    ctaHeading: 'Maak nu een afspraak met Mark',
+    ctaLabel: 'Plan je gesprek →',
+    ctaHref: 'https://calendly.com/markiesbpm/ai-intro-meeting-mark-de-kock',
     backLabel: '← Terug naar de sessiepagina',
   },
   whyWorks: {
