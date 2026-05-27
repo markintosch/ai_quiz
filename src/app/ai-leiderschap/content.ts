@@ -32,6 +32,7 @@ export interface AILContent {
   assessment: { heading: string; intro: string; steps: AILItem[]; privacyNote: string }
   trajectory: { heading: string; intro: string; steps: AILStep[] }
   hosts: { heading: string; intro: string; people: AILHost[] }
+  meetBen: { heading: string; body: string; ctaLabel: string; ctaHref: string }
   whyWorks: { heading: string; items: AILItem[] }
   testimonials: { heading: string; items: AILTestimonial[] }
   practical: { heading: string; facts: AILFact[] }
@@ -170,6 +171,12 @@ export const DEFAULT_CONTENT: AILContent = {
         photo: '/markdekock_2026.png',
       },
     ],
+  },
+  meetBen: {
+    heading: 'Maak kennis met Ben',
+    body: 'Wil je vooraf even sparren of zien aan welke projecten Ben verder werkt? Bekijk z\'n portfolio of plan een korte verkenning. Handig als je nog tussen de twee data twijfelt of wilt aftasten of het past.',
+    ctaLabel: 'Bekijk Ben\'s projecten + plan een gesprek →',
+    ctaHref: 'https://www.benvanderburg.nl/Projecten',
   },
   whyWorks: {
     heading: 'Waarom deze aanpak werkt',

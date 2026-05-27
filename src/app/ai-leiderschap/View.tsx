@@ -178,8 +178,21 @@ export default function AILeiderschapView({ c }: { c: AILContent }) {
         </div>
       </section>
 
-      {/* WHY THIS APPROACH WORKS */}
+      {/* MEET BEN — externe link naar Ben's portfolio / Calendly */}
       <section className="ail-sec">
+        <div className="ail-wrap ail-narrow">
+          <div className="ail-meet">
+            <div>
+              <h2>{c.meetBen.heading}</h2>
+              <p className="ail-muted">{c.meetBen.body}</p>
+            </div>
+            <a href={c.meetBen.ctaHref} target="_blank" rel="noopener" className="ail-btn ail-btn-primary">{c.meetBen.ctaLabel}</a>
+          </div>
+        </div>
+      </section>
+
+      {/* WHY THIS APPROACH WORKS */}
+      <section className="ail-sec ail-alt">
         <div className="ail-wrap">
           <h2>{c.whyWorks.heading}</h2>
           <div className="ail-grid">
@@ -368,6 +381,10 @@ const CSS = `
 /* Hosts */
 .ail-hosts{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:28px}
 .ail-host{display:flex;gap:16px;align-items:flex-start;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:20px}
+.ail-meet{display:flex;align-items:center;justify-content:space-between;gap:24px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px 30px}
+.ail-meet h2{margin-bottom:8px;font-size:24px}
+.ail-meet p{color:var(--muted);font-size:15px;max-width:520px}
+@media(max-width:640px){.ail-meet{flex-direction:column;align-items:flex-start;padding:22px}}
 .ail-host p{color:var(--muted);font-size:14px;margin-top:6px!important}
 .ail-host-role{color:var(--acc)!important;font-weight:600;font-size:13px!important;margin-top:2px!important}
 .ail-avatar{flex:0 0 56px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--n));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
