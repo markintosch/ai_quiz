@@ -108,7 +108,7 @@ export async function GET(req: Request) {
       .limit(1)
       .maybeSingle()
 
-    const rawLang = (assessment?.language ?? 'nl') as string
+    const rawLang = ((assessment as { language?: string } | null)?.language ?? 'nl') as string
     const lang: Lang = VALID_LANGS.has(rawLang as Lang) ? (rawLang as Lang) : 'nl'
 
     // Fetch yesterday's scores
@@ -125,7 +125,7 @@ export async function GET(req: Request) {
       : null
 
     // Calculate day number
-    const day = dayNumber(p.onboarded_at, tz)
+    const day = dayNumber(p.onboarded_at as string, tz)
 
     try {
       await resend.emails.send({
