@@ -16,7 +16,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import Anthropic from '@anthropic-ai/sdk'
 import { z } from 'zod'
-import { parseJsonOutput } from '@/lib/atelier/llm'
+import { parseJsonOutput, modelForTier } from '@/lib/atelier/llm'
 import { IcpProfileSchema } from '@/lib/atelier/schemas'
 import { rateLimit, getClientIp } from '@/lib/rateLimit'
 
@@ -120,7 +120,7 @@ Geef je antwoord als geldige JSON met 'answer' + 'updated_icp'.`
   let raw = ''
   try {
     const response = await client.messages.create({
-      model:       'claude-sonnet-4-6',
+      model:       modelForTier('sonnet'),
       max_tokens:  3500,
       temperature: 0.4,
       system:      SYSTEM_PROMPT,

@@ -15,7 +15,7 @@ import type { CompassScore } from './scoring'
 import type { Lang } from './i18n'
 import { ALL_ACTIONS, getActionByCode, actionsForPrompt, SPECIALIST_TOPICS, type ActionCategory } from './actions'
 
-const CLAUDE_MODEL = 'claude-sonnet-4-5-20250929'
+const CLAUDE_MODEL = 'claude-sonnet-4-6'
 const MAX_TOKENS   = 2500
 const TIMEOUT_MS   = 90_000
 

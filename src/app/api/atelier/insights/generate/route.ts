@@ -23,7 +23,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import Anthropic from '@anthropic-ai/sdk'
 import { z } from 'zod'
-import { parseJsonOutput } from '@/lib/atelier/llm'
+import { parseJsonOutput, modelForTier } from '@/lib/atelier/llm'
 import { rateLimit, getClientIp } from '@/lib/rateLimit'
 
 const sb = createClient(
@@ -265,7 +265,7 @@ export async function POST(req: NextRequest) {
   try {
     type WebSearchTool = { type: 'web_search_20250305'; name: 'web_search'; max_uses?: number }
     const response = await client.messages.create({
-      model:       'claude-sonnet-4-6',
+      model:       modelForTier('sonnet'),
       max_tokens:  6000,
       temperature: 0.4,
       system:      SYSTEM_PROMPT,
@@ -277,7 +277,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.warn('[atelier/insights] web_search unavailable, falling back:', err instanceof Error ? err.message : err)
     const response = await client.messages.create({
-      model:       'claude-sonnet-4-6',
+      model:       modelForTier('sonnet'),
       max_tokens:  6000,
       temperature: 0.4,
       system:      SYSTEM_PROMPT + '\n\nLET OP: web_search niet beschikbaar — geen "web"-cards. Gebruik observed (corpus) en inferred (eigen kennis).',

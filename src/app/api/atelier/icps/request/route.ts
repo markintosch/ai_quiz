@@ -11,7 +11,7 @@ export const maxDuration = 60
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import Anthropic from '@anthropic-ai/sdk'
-import { parseJsonOutput } from '@/lib/atelier/llm'
+import { parseJsonOutput, modelForTier } from '@/lib/atelier/llm'
 import { IcpProfileSchema } from '@/lib/atelier/schemas'
 import { rateLimit, getClientIp } from '@/lib/rateLimit'
 
@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
   let raw = ''
   try {
     const response = await client.messages.create({
-      model:       'claude-sonnet-4-6',
+      model:       modelForTier('sonnet'),
       max_tokens:  3000,
       temperature: 0.3,
       system:      SYSTEM_PROMPT,

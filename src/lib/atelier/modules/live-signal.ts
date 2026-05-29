@@ -7,7 +7,7 @@
 
 import { createHash } from 'crypto'
 import Anthropic from '@anthropic-ai/sdk'
-import { parseJsonOutput } from '../llm'
+import { parseJsonOutput, modelForTier } from '../llm'
 import { serverSupabase } from '../run-logger'
 import {
   LiveSignalSchema,
@@ -78,7 +78,7 @@ Vind 4-6 actuele Nederlandse signalen (nieuws, opinie, sociale momenten) die rak
   const client = new Anthropic({ apiKey })
 
   let raw = ''
-  let model = 'claude-sonnet-4-6'
+  let model = modelForTier('sonnet')
   let promptTokens = 0
   let outputTokens = 0
   let usedWebSearch = false
@@ -124,7 +124,7 @@ Vind 4-6 actuele Nederlandse signalen (nieuws, opinie, sociale momenten) die rak
     // mark every signal as inferred_fallback so the UI doesn't pretend.
     console.warn('[atelier/live-signal] web_search unavailable, falling back:', err instanceof Error ? err.message : err)
     const response = await client.messages.create({
-      model: 'claude-sonnet-4-6',
+      model: modelForTier('sonnet'),
       max_tokens: 3000,
       temperature: 0.3,
       system: SYSTEM_PROMPT + `\n\nLET OP: Web-search is niet beschikbaar voor deze run. Markeer ALLE signalen als retrieved_via="inferred_fallback".`,

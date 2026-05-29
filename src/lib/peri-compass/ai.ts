@@ -14,7 +14,7 @@ import type { Stage } from './questions'
 import type { Lang } from './i18n'
 import { ALL_EXPERIMENTS, getExperimentByCode, experimentsForPrompt, EXP_BASELINE_TRACK } from './experiments'
 
-const CLAUDE_MODEL = 'claude-sonnet-4-5-20250929'
+const CLAUDE_MODEL = 'claude-sonnet-4-6'
 const MAX_TOKENS   = 2500
 const TIMEOUT_MS   = 90_000
 

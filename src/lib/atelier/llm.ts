@@ -46,7 +46,16 @@ const ANTHROPIC_MODEL_BY_TIER: Record<ModelTier, string> = {
   haiku:  'claude-haiku-4-5-20251001',
   sonnet: 'claude-sonnet-4-6',
   // Opus reserved for monthly review / heavy synthesis. Keep an eye on cost.
-  opus:   'claude-opus-4-7',
+  opus:   'claude-opus-4-8',
+}
+
+/**
+ * Resolve a tier to its Anthropic model ID. Use this from callers that build
+ * their own `messages.create` request (e.g. with web_search tools) so the model
+ * string stays centralised here instead of being hardcoded per route.
+ */
+export function modelForTier(tier: ModelTier): string {
+  return ANTHROPIC_MODEL_BY_TIER[tier]
 }
 
 // Indicative pricing (€/M tokens) — used only for cost-cents logging.
@@ -54,7 +63,7 @@ const ANTHROPIC_MODEL_BY_TIER: Record<ModelTier, string> = {
 const PRICING_PER_M_TOKENS_EUR: Record<ModelTier, { input: number; output: number }> = {
   haiku:  { input: 0.85, output: 4.20 },   // ~ $1 / $5
   sonnet: { input: 2.85, output: 14.20 },  // ~ $3 / $15
-  opus:   { input: 14.00, output: 70.00 }, // ~ $15 / $75
+  opus:   { input: 4.70, output: 23.50 },  // ~ $5 / $25
 }
 
 // ── Client init ────────────────────────────────────────────────────────────
