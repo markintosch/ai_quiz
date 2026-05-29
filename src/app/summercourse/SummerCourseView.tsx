@@ -1,4 +1,5 @@
 import type { SummerCourseContent } from './content'
+import SummerCourseQuestionForm from './SummerCourseQuestionForm'
 
 // Self-contained presentational view. Styling lives in a scoped <style> block
 // (all selectors prefixed with .sc-root) so it doesn't leak into the rest of
@@ -219,6 +220,18 @@ export default function SummerCourseView({ c }: { c: SummerCourseContent }) {
         </div>
       </section>
 
+      {/* QUESTION FORM */}
+      <section className="sc-alt" id="vragen">
+        <div className="sc-wrap sc-narrow-block">
+          <h2>Nog een vraag?</h2>
+          <p className="sc-muted">
+            Twijfel je over je case, je niveau, of past de cursus bij je werk?
+            Stel je vraag direct aan Mark — je krijgt persoonlijk antwoord.
+          </p>
+          <SummerCourseQuestionForm />
+        </div>
+      </section>
+
       {/* FAQ */}
       <section>
         <div className="sc-wrap">
@@ -381,4 +394,18 @@ const CSS = `
 .sc-footer a{color:#fff;text-decoration:none}
 .sc-footrow{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
 @media(max-width:760px){.sc-grid2,.sc-price-wrap,.sc-cases,.sc-pay{grid-template-columns:1fr}.sc-srow{grid-template-columns:110px 1fr}.sc-case dl{grid-template-columns:1fr}.sc-case dt{padding-top:8px}}
+.sc-qform{margin-top:24px;display:grid;gap:18px;background:#fff;border:1px solid var(--sc-line);border-radius:16px;padding:24px}
+.sc-qform-row{display:grid;gap:6px;position:relative}
+.sc-qform label{font-size:13px;font-weight:700;color:var(--sc-teal);letter-spacing:.02em}
+.sc-qform input,.sc-qform textarea{font:inherit;color:var(--sc-ink);background:var(--sc-bg);border:1.5px solid var(--sc-line);border-radius:10px;padding:12px 14px;width:100%;transition:border-color .15s ease,box-shadow .15s ease}
+.sc-qform input:focus,.sc-qform textarea:focus{outline:none;border-color:var(--sc-accent);box-shadow:0 0 0 3px rgba(232,97,26,.18)}
+.sc-qform textarea{resize:vertical;min-height:120px;line-height:1.5}
+.sc-qform-counter{position:absolute;right:6px;bottom:-18px;font-size:11px;color:var(--sc-muted)}
+.sc-qform-error{margin:0;padding:10px 14px;background:#fdecea;color:#9b1c1c;border-left:3px solid #9b1c1c;border-radius:6px;font-size:14px}
+.sc-qform-note{margin:0!important;font-size:13px;color:var(--sc-muted)}
+.sc-qform .sc-btn{justify-self:start}
+.sc-qform-ok{margin-top:24px;background:#fff;border:1px solid var(--sc-line);border-left:4px solid #1f9d57;border-radius:16px;padding:24px;display:grid;gap:12px}
+.sc-qform-ok h3{color:#1f9d57}
+.sc-qform-ok p{color:var(--sc-muted);font-size:15px}
+.sc-qform-ok .sc-btn{justify-self:start}
 `
