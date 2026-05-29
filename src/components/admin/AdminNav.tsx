@@ -80,9 +80,11 @@ const GROUPS: NavGroup[] = [
     key:   'commerce',
     label: 'Commerce & cursussen',
     items: [
-      { href: '/admin/summercourse', label: '☀️ Summer Course' },
+      { href: '/admin/summercourse',           label: '☀️ Summer Course' },
+      { href: '/admin/summercourse/questions', label: '   ↳ Vragen' },
       { href: '/admin/shop',         label: '🛍 Shop' },
       { href: '/admin/games',        label: '🎮 Games' },
+      { href: '/admin/arena',        label: '   ↳ 🏟️ Cloud Arena' },
       { href: '/admin/interests',    label: 'Interests' },
     ],
   },
@@ -167,7 +169,7 @@ export default function AdminNav() {
           type="search"
           value={query}
           onChange={e => setQuery(e.target.value)}
-          placeholder="Zoek… (alle 27 pagina's)"
+          placeholder="Zoek… (alle 28 pagina's)"
           className="w-full px-3 py-2 text-sm bg-white/10 text-white placeholder-gray-400 border border-white/10 rounded-lg focus:outline-none focus:bg-white/15 focus:border-white/20"
         />
       </div>
