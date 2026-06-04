@@ -25,7 +25,8 @@ const T = {
   en: {
     badge: 'Growth Flywheel Scan',
     h1a: 'Where does your', h1b: 'growth flywheel stall?',
-    sub: 'Eight pillars, sixteen statements, about three minutes. A clear read on where your growth engine is strong, where it leaks, and what to do next.',
+    sub: 'Founders and CMOs call me with the same instinct: add more budget, hire another specialist, buy one more tool. Almost always the real problem sits one level down, in a flywheel that stalls somewhere specific.',
+    sub2: 'Before you add anything, find the stall. This scan checks your growth setup across eight pillars in about three minutes and points you straight at your weakest link. That is where the next euro should go.',
     cta: 'Start the scan →', sample: 'See a sample result',
     trust: '16 statements · ~3 minutes · No signup to start',
     pillarsTitle: '8 Performance Pillars', tiersTitle: '4 Maturity Tiers',
@@ -34,7 +35,8 @@ const T = {
   nl: {
     badge: 'Growth Flywheel Scan',
     h1a: 'Waar hapert jouw', h1b: 'growth flywheel?',
-    sub: 'Acht pijlers, zestien stellingen, ongeveer drie minuten. Een helder beeld van waar je groeimotor sterk is, waar hij lekt en wat de volgende stap is.',
+    sub: 'Oprichters en CMO\'s bellen me met hetzelfde instinct: meer budget erbij, nog een specialist aannemen, nog één tool kopen. Bijna altijd zit het echte probleem een niveau lager, in een flywheel die ergens specifiek hapert.',
+    sub2: 'Voordat je iets toevoegt: vind de hapering. Deze scan checkt je groeisetup over acht pijlers in ongeveer drie minuten en wijst je direct op je zwakste schakel. Daar hoort de volgende euro heen te gaan.',
     cta: 'Start de scan →', sample: 'Bekijk een voorbeeldresultaat',
     trust: '16 stellingen · ~3 minuten · Geen aanmelding nodig',
     pillarsTitle: '8 Performance Pillars', tiersTitle: '4 Volwassenheidsniveaus',
@@ -43,7 +45,8 @@ const T = {
   de: {
     badge: 'Growth Flywheel Scan',
     h1a: 'Wo stockt dein', h1b: 'Growth-Flywheel?',
-    sub: 'Acht Säulen, sechzehn Aussagen, rund drei Minuten. Ein klares Bild davon, wo deine Wachstumsmaschine stark ist, wo sie leckt und was als Nächstes zu tun ist.',
+    sub: 'Gründer und CMOs rufen mich mit demselben Reflex an: mehr Budget, noch einen Spezialisten einstellen, noch ein Tool kaufen. Fast immer sitzt das eigentliche Problem eine Ebene tiefer, in einem Flywheel, das an einer bestimmten Stelle stockt.',
+    sub2: 'Bevor du etwas hinzufügst: finde die Stockstelle. Dieser Scan prüft dein Wachstums-Setup über acht Säulen in rund drei Minuten und zeigt dir direkt dein schwächstes Glied. Dorthin gehört der nächste Euro.',
     cta: 'Scan starten →', sample: 'Beispielergebnis ansehen',
     trust: '16 Aussagen · ~3 Minuten · Keine Anmeldung zum Start',
     pillarsTitle: '8 Performance-Pillars', tiersTitle: '4 Reifegrade',
@@ -112,7 +115,8 @@ function LandingInner() {
           <h1 style={{ fontSize: 'clamp(34px, 5.5vw, 60px)', fontWeight: 900, lineHeight: 1.1, marginBottom: 20, color: NAVY, letterSpacing: '-0.02em' }}>
             {t.h1a}<br />{t.h1b}
           </h1>
-          <p style={{ fontSize: 18, color: MUTED, lineHeight: 1.6, marginBottom: 36, maxWidth: 540 }}>{t.sub}</p>
+          <p style={{ fontSize: 17, color: PRIMARY, lineHeight: 1.6, marginBottom: 16, maxWidth: 560, fontWeight: 500 }}>{t.sub}</p>
+          <p style={{ fontSize: 17, color: MUTED, lineHeight: 1.6, marginBottom: 36, maxWidth: 560 }}>{t.sub2}</p>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center', marginBottom: 20 }}>
             <Link href={assessHref} style={{
               background: ACCENT, color: '#fff', fontWeight: 700, fontSize: 16, padding: '14px 32px',
