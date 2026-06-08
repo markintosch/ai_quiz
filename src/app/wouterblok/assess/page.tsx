@@ -1,9 +1,9 @@
 'use client'
 
-import { Suspense, useState } from 'react'
+import { Suspense, useState, type CSSProperties } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { getContent, PILLAR_ORDER, normaliseLocale, type Locale, type RoleId, type StageId } from '@/products/wouterblok/data'
+import { getContent, PILLAR_ORDER, normaliseLocale } from '@/products/wouterblok/data'
 
 // ── Brand tokens (emerald / navy) ────────────────────────────────────────────
 const ACCENT      = '#0E9F6E'
@@ -15,7 +15,7 @@ const BORDER      = '#E5E7EB'
 const BG_GRAY     = '#F5F8F6'
 const FONT        = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
 
-type Step = 'role' | 'stage' | 'scan'
+type Step = 'role' | 'stage' | 'scan' | 'lead'
 
 const T = {
   en: {
@@ -25,6 +25,14 @@ const T = {
     pillarOf: (a: number, b: number) => `Pillar ${a} of ${b}`,
     prev: '← Previous', next: 'Next pillar →', see: 'See my result →',
     remaining: (n: number) => `${n} statement${n !== 1 ? 's' : ''} left`,
+    leadBadge: 'Last step', leadTitle: 'Where should we send your result?',
+    leadIntro: 'Your full breakdown opens on the next screen. We also email you a copy you can forward to your team.',
+    name: 'Your name', email: 'Work email', company: 'Company',
+    gdpr: 'I agree my answers and contact details may be stored to deliver and discuss my result.',
+    marketing: 'Send me the occasional growth insight from Wouter. (optional)',
+    submit: 'See my result →', submitting: 'Calculating…',
+    errGeneric: 'Something went wrong. Please try again.',
+    privacy: 'No spam. You can unsubscribe at any time.',
   },
   nl: {
     sub: 'Growth Flywheel Scan', back: '← Terug',
@@ -33,6 +41,14 @@ const T = {
     pillarOf: (a: number, b: number) => `Pijler ${a} van ${b}`,
     prev: '← Vorige', next: 'Volgende pijler →', see: 'Bekijk mijn resultaat →',
     remaining: (n: number) => `Nog ${n} stelling${n !== 1 ? 'en' : ''}`,
+    leadBadge: 'Laatste stap', leadTitle: 'Waar mogen we je resultaat heen sturen?',
+    leadIntro: 'Je volledige analyse opent op het volgende scherm. We mailen je ook een kopie die je met je team kunt delen.',
+    name: 'Je naam', email: 'Werk-e-mail', company: 'Bedrijf',
+    gdpr: 'Ik ga ermee akkoord dat mijn antwoorden en contactgegevens worden bewaard om mijn resultaat te leveren en te bespreken.',
+    marketing: 'Stuur me af en toe een groei-inzicht van Wouter. (optioneel)',
+    submit: 'Bekijk mijn resultaat →', submitting: 'Berekenen…',
+    errGeneric: 'Er ging iets mis. Probeer het opnieuw.',
+    privacy: 'Geen spam. Je kunt je altijd uitschrijven.',
   },
   de: {
     sub: 'Growth Flywheel Scan', back: '← Zurück',
@@ -41,6 +57,14 @@ const T = {
     pillarOf: (a: number, b: number) => `Säule ${a} von ${b}`,
     prev: '← Zurück', next: 'Nächste Säule →', see: 'Mein Ergebnis ansehen →',
     remaining: (n: number) => `Noch ${n} Aussage${n !== 1 ? 'n' : ''}`,
+    leadBadge: 'Letzter Schritt', leadTitle: 'Wohin sollen wir dein Ergebnis schicken?',
+    leadIntro: 'Deine vollständige Auswertung öffnet sich im nächsten Schritt. Wir mailen dir auch eine Kopie für dein Team.',
+    name: 'Dein Name', email: 'Geschäftliche E-Mail', company: 'Unternehmen',
+    gdpr: 'Ich bin einverstanden, dass meine Antworten und Kontaktdaten gespeichert werden, um mein Ergebnis zu liefern und zu besprechen.',
+    marketing: 'Schick mir gelegentlich einen Growth-Impuls von Wouter. (optional)',
+    submit: 'Mein Ergebnis ansehen →', submitting: 'Wird berechnet…',
+    errGeneric: 'Etwas ist schiefgelaufen. Bitte versuche es erneut.',
+    privacy: 'Kein Spam. Du kannst dich jederzeit abmelden.',
   },
 }
 
@@ -113,9 +137,34 @@ function AssessInner() {
   const [answers, setAnswers]         = useState<Record<string, number>>({})
   const [activePillar, setActivePillar] = useState(0)
 
-  const goToResults = () => {
-    const payload = btoa(JSON.stringify({ a: answers, r: role as RoleId, s: stage as StageId }))
-    router.push(`/wouterblok/results?d=${encodeURIComponent(payload)}&lang=${lang}`)
+  // Lead capture (final step)
+  const [name, setName]           = useState('')
+  const [email, setEmail]         = useState('')
+  const [company, setCompany]     = useState('')
+  const [gdpr, setGdpr]           = useState(false)
+  const [marketing, setMarketing] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError]         = useState('')
+
+  const submitLead = async () => {
+    setSubmitting(true)
+    setError('')
+    try {
+      const res = await fetch('/api/wouterblok/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          answers, role, stage, lang,
+          lead: { name, email, company, gdprConsent: gdpr, marketingConsent: marketing },
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setError(data.error || t.errGeneric); setSubmitting(false); return }
+      router.push(`/wouterblok/results?id=${data.responseId}&lang=${lang}`)
+    } catch {
+      setError(t.errGeneric)
+      setSubmitting(false)
+    }
   }
 
   if (step === 'role') {
@@ -125,6 +174,56 @@ function AssessInner() {
   if (step === 'stage') {
     return <ProfilingStep badge={t.stageStep} question={labels.stageQuestion} options={stages}
       value={stage} onSelect={setStage} onNext={() => setStep('scan')} nextLabel={t.nextStage} backHref={backHref} t={t} />
+  }
+
+  if (step === 'lead') {
+    const inputStyle: CSSProperties = {
+      width: '100%', padding: '12px 14px', borderRadius: 8, border: `1.5px solid ${BORDER}`,
+      fontSize: 15, color: PRIMARY, fontFamily: FONT, outline: 'none', boxSizing: 'border-box',
+    }
+    const valid = name.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) && gdpr
+    return (
+      <div style={{ minHeight: '100vh', background: BG_GRAY, fontFamily: FONT }}>
+        <Header backHref={backHref} t={t} />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 60px)', padding: '48px 24px' }}>
+          <div style={{ width: '100%', maxWidth: 480 }}>
+            <span style={{
+              display: 'inline-block', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em',
+              textTransform: 'uppercase', color: ACCENT_DEEP, border: `1px solid ${ACCENT}44`,
+              padding: '3px 12px', borderRadius: 4, marginBottom: 18,
+            }}>{t.leadBadge}</span>
+            <h1 style={{ fontSize: 26, fontWeight: 900, color: NAVY, marginBottom: 10, lineHeight: 1.2, letterSpacing: '-0.01em' }}>{t.leadTitle}</h1>
+            <p style={{ fontSize: 14, color: MUTED, lineHeight: 1.6, marginBottom: 24 }}>{t.leadIntro}</p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <input style={inputStyle} placeholder={t.name} value={name} onChange={e => setName(e.target.value)} />
+              <input style={inputStyle} type="email" placeholder={t.email} value={email} onChange={e => setEmail(e.target.value)} />
+              <input style={inputStyle} placeholder={t.company} value={company} onChange={e => setCompany(e.target.value)} />
+
+              <label style={{ display: 'flex', gap: 10, alignItems: 'flex-start', cursor: 'pointer', fontSize: 13, color: PRIMARY, lineHeight: 1.5 }}>
+                <input type="checkbox" checked={gdpr} onChange={e => setGdpr(e.target.checked)} style={{ marginTop: 3, accentColor: ACCENT, width: 16, height: 16, flexShrink: 0 }} />
+                <span>{t.gdpr}</span>
+              </label>
+              <label style={{ display: 'flex', gap: 10, alignItems: 'flex-start', cursor: 'pointer', fontSize: 13, color: MUTED, lineHeight: 1.5 }}>
+                <input type="checkbox" checked={marketing} onChange={e => setMarketing(e.target.checked)} style={{ marginTop: 3, accentColor: ACCENT, width: 16, height: 16, flexShrink: 0 }} />
+                <span>{t.marketing}</span>
+              </label>
+            </div>
+
+            {error && <p style={{ color: '#B91C1C', fontSize: 13, marginTop: 14 }}>{error}</p>}
+
+            <button disabled={!valid || submitting} onClick={submitLead} style={{
+              width: '100%', marginTop: 22, padding: '14px 24px', borderRadius: 6,
+              background: valid && !submitting ? ACCENT : BORDER, color: valid && !submitting ? '#fff' : MUTED,
+              fontWeight: 700, fontSize: 15, border: 'none',
+              cursor: valid && !submitting ? 'pointer' : 'not-allowed', transition: 'all 0.15s',
+            }}>{submitting ? t.submitting : t.submit}</button>
+
+            <p style={{ fontSize: 12, color: MUTED, marginTop: 14, textAlign: 'center' }}>{t.privacy}</p>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   // Step 3: diagnostic statements, grouped by pillar (2 each)
@@ -212,7 +311,7 @@ function AssessInner() {
               cursor: pillarAnswered ? 'pointer' : 'not-allowed', transition: 'all 0.15s',
             }}>{t.next}</button>
           ) : (
-            <button disabled={totalAnswered < totalStmts} onClick={goToResults} style={{
+            <button disabled={totalAnswered < totalStmts} onClick={() => setStep('lead')} style={{
               flex: 1, padding: '13px 24px', borderRadius: 6,
               background: totalAnswered >= totalStmts ? ACCENT : BORDER, color: totalAnswered >= totalStmts ? '#fff' : MUTED,
               border: 'none', fontWeight: 700, fontSize: 14,

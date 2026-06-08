@@ -88,6 +88,10 @@ interface LocaleContent {
     workshop_practitioner: string
     growth_audit_fallback: string
   }
+  // Two-sided read: names the strongest lever and the one drag on the flywheel.
+  narrative:    { both: string; flat: string }
+  // One concrete first move per pillar (used on the weakest pillar in results).
+  moves:        Record<PillarId, string>
 }
 
 const EN: LocaleContent = {
@@ -152,6 +156,20 @@ const EN: LocaleContent = {
     advisory_high:         'You are {tierLabel}. You do not need rebuilding, you need a sharp outside sparring partner on {weakestPillar}.',
     workshop_practitioner: 'Your strongest lever is your team’s capability on {weakestPillar}. A focused Brandformance workshop moves the whole flywheel.',
     growth_audit_fallback: 'Start with a diagnosis of where your flywheel stalls, beginning with {weakestPillar}.',
+  },
+  narrative: {
+    both: 'Your engine runs strongest on {strongPillar}. The one thing holding the flywheel back is {weakPillar}.',
+    flat: 'Your pillars are evenly matched. The fastest gains are in {weakPillar}.',
+  },
+  moves: {
+    business_targets:    'Agree one north-star growth number for the quarter and make every channel report against it.',
+    audiences:           'Define your two highest-value customer segments and check whether your spend actually reaches them.',
+    investment:          'Rebuild next quarter’s budget from a simple growth model, not last year plus a percentage.',
+    creative:            'Give each piece of creative one job in the funnel before it goes live, and judge it on that job.',
+    customer_experience: 'Map the journey after the click and fix the single biggest drop-off first.',
+    data:                'Run one incrementality test (a geo or a holdout) before you trust another last-click report.',
+    experimentation:     'Set a fixed test cadence, one test per cycle, and write down what each one taught you.',
+    automation:          'Add exclusions and incrementality thresholds to Performance Max so it stops spending on its own goals.',
   },
 }
 
@@ -218,6 +236,20 @@ const NL: LocaleContent = {
     workshop_practitioner: 'Je sterkste hefboom is de capaciteit van je team op {weakestPillar}. Een gerichte Brandformance workshop zet de hele flywheel in beweging.',
     growth_audit_fallback: 'Begin met een diagnose van waar je flywheel hapert, te beginnen bij {weakestPillar}.',
   },
+  narrative: {
+    both: 'Je motor draait het sterkst op {strongPillar}. Het enige dat de flywheel afremt is {weakPillar}.',
+    flat: 'Je pijlers liggen dicht bij elkaar. De snelste winst zit in {weakPillar}.',
+  },
+  moves: {
+    business_targets:    'Spreek één noordster-groeicijfer af voor het kwartaal en laat elk kanaal daarop rapporteren.',
+    audiences:           'Bepaal je twee waardevolste klantsegmenten en check of je budget ze echt bereikt.',
+    investment:          'Bouw het budget voor komend kwartaal op uit een simpel groeimodel, niet uit vorig jaar plus een percentage.',
+    creative:            'Geef elke creatie één taak in de funnel voordat ze live gaat, en beoordeel haar op die taak.',
+    customer_experience: 'Breng de reis na de klik in kaart en los eerst de grootste uitval op.',
+    data:                'Draai één incrementaliteitstest (een geo of een holdout) voordat je weer op last-click vertrouwt.',
+    experimentation:     'Zet een vast testritme neer, één test per cyclus, en noteer wat elke test je leerde.',
+    automation:          'Voeg exclusions en incrementaliteitsdrempels toe aan Performance Max zodat het niet voor eigen doelen besteedt.',
+  },
 }
 
 const DE: LocaleContent = {
@@ -283,6 +315,20 @@ const DE: LocaleContent = {
     workshop_practitioner: 'Dein stärkster Hebel ist die Fähigkeit deines Teams bei {weakestPillar}. Ein fokussierter Brandformance-Workshop bringt das ganze Flywheel in Bewegung.',
     growth_audit_fallback: 'Beginne mit einer Diagnose, wo dein Flywheel stockt, angefangen bei {weakestPillar}.',
   },
+  narrative: {
+    both: 'Deine Maschine läuft am stärksten bei {strongPillar}. Das Einzige, was das Flywheel bremst, ist {weakPillar}.',
+    flat: 'Deine Säulen liegen dicht beieinander. Den schnellsten Gewinn bringt {weakPillar}.',
+  },
+  moves: {
+    business_targets:    'Legt eine Nordstern-Wachstumszahl fürs Quartal fest und lasst jeden Kanal darauf einzahlen.',
+    audiences:           'Definiert eure zwei wertvollsten Kundensegmente und prüft, ob euer Budget sie wirklich erreicht.',
+    investment:          'Baut das Budget fürs nächste Quartal aus einem einfachen Wachstumsmodell auf, nicht aus letztem Jahr plus Prozent.',
+    creative:            'Gebt jeder Kreation eine Aufgabe im Funnel, bevor sie live geht, und bewertet sie daran.',
+    customer_experience: 'Bildet die Reise nach dem Klick ab und behebt zuerst den größten Absprung.',
+    data:                'Macht einen Inkrementalitätstest (Geo oder Holdout), bevor ihr dem nächsten Last-Click-Report traut.',
+    experimentation:     'Setzt einen festen Testrhythmus, ein Test pro Zyklus, und haltet fest, was jeder gelehrt hat.',
+    automation:          'Fügt Performance Max Exclusions und Inkrementalitäts-Schwellen hinzu, damit es nicht für eigene Ziele ausgibt.',
+  },
 }
 
 const CONTENT: Record<Locale, LocaleContent> = { en: EN, nl: NL, de: DE }
@@ -340,6 +386,12 @@ export function weakestPillarOf(pillarPct: Record<PillarId, number>): PillarId {
   return WEAKEST_TIEBREAK.find(p => pillarPct[p] === min) ?? WEAKEST_TIEBREAK[0]
 }
 
+export function strongestPillarOf(pillarPct: Record<PillarId, number>): PillarId {
+  const max = Math.max(...PILLAR_ORDER.map(p => pillarPct[p]))
+  // Tie-break: last in WEAKEST_TIEBREAK (least urgent) reads as the natural strength.
+  return [...WEAKEST_TIEBREAK].reverse().find(p => pillarPct[p] === max) ?? PILLAR_ORDER[0]
+}
+
 export function routeService(role: RoleId, stage: StageId, tier: TierKey): ServiceKey {
   const senior = SENIOR_ROLES.includes(role)
   if (stage === 'transition' && senior)                          return 'fractional_cmo'
@@ -390,6 +442,50 @@ export function reasoningFor(
   else                                                          tpl = c.reasoning.growth_audit_fallback
 
   return tpl.replace('{tierLabel}', tierLabel).replace('{weakestPillar}', weakestPillar)
+}
+
+// Two-sided read: strongest lever + the one drag. Falls back to a flat read
+// when every pillar sits at the same score (e.g. all 0 or all maxed).
+export function narrativeFor(rawLocale: string, result: ScanResult): string {
+  const locale = normaliseLocale(rawLocale)
+  const c = CONTENT[locale]
+  const strong = strongestPillarOf(result.pillarPct)
+  const weak   = result.weakestPillar
+  const weakName   = c.pillars[weak].name
+  if (strong === weak || result.pillarPct[strong] === result.pillarPct[weak]) {
+    return c.narrative.flat.replace('{weakPillar}', weakName)
+  }
+  return c.narrative.both
+    .replace('{strongPillar}', c.pillars[strong].name)
+    .replace('{weakPillar}', weakName)
+}
+
+// The single concrete first move for the weakest pillar.
+export function moveFor(rawLocale: string, pillar: PillarId): string {
+  const c = CONTENT[normaliseLocale(rawLocale)]
+  return c.moves[pillar]
+}
+
+// Stored-result shape: written to responses.scores so the admin dashboard and
+// benchmark queries can read a wouterblok scan the same way they read any other.
+// `overall` mirrors the AI-maturity shape so existing admin score columns work.
+export interface StoredScanScores extends ScanResult {
+  overall:       number      // = pct, for admin compatibility
+  maturityLabel: string      // localised tier label
+  role:          RoleId
+  stage:         StageId
+  lang:          Locale
+}
+
+export function buildStoredScores(
+  result: ScanResult, role: RoleId, stage: StageId, lang: Locale,
+): StoredScanScores {
+  return {
+    ...result,
+    overall:       result.pct,
+    maturityLabel: CONTENT[lang].tiers[result.tier].label,
+    role, stage, lang,
+  }
 }
 
 // Booking deep-link. Replace BOOKING_URL with Wouter's real appointment link.
