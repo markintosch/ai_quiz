@@ -488,9 +488,9 @@ export function buildStoredScores(
   }
 }
 
-// Booking deep-link. Replace BOOKING_URL with Wouter's real appointment link.
+// Booking deep-link. Wouter's Google Calendar appointment schedule.
 // PRD: append recommended service as a query param so context is pre-set.
-export const BOOKING_URL = 'https://www.linkedin.com/in/wouterblok/' // TODO: real booking link
+export const BOOKING_URL = 'https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0arWbtr1Xvb074l2Dpg6-kqFoS8bREGn7aE2QFlvGbcQvn-lX_r6Vi0B_ZH6Ez5hQQdA6d15Gv'
 export function bookingHref(service: ServiceKey, locale: Locale): string {
   const sep = BOOKING_URL.includes('?') ? '&' : '?'
   return `${BOOKING_URL}${sep}service=${service}&lang=${locale}`
