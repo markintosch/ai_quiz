@@ -38,12 +38,24 @@ function points(values: number[], cx: number, cy: number, r: number): string {
   }).join(' ')
 }
 
+function wrapLabel(label: string): string[] {
+  const words = label.split(' ')
+  if (words.length < 2) return [label]
+  if (words.length === 2) return words
+  const mid = Math.ceil(words.length / 2)
+  return [words.slice(0, mid).join(' '), words.slice(mid).join(' ')]
+}
+
 export function WouterRadar({ axes, size = 320, animate = true }: WouterRadarProps) {
   const n   = axes.length
-  const cx  = size / 2
+  // Extra horizontal room inside the viewBox so left/right axis labels never
+  // clip (they render outside the square, which clipped on narrow screens).
+  const marginX  = size * 0.24
+  const viewW    = size + marginX * 2
+  const cx  = viewW / 2
   const cy  = size / 2
-  const r   = size * 0.30
-  const pad = size * 0.115
+  const r   = size * 0.32
+  const pad = size * 0.105
 
   const [progress, setProgress] = useState(animate ? 0 : 1)
   const rafRef  = useRef<number | null>(null)
@@ -68,8 +80,8 @@ export function WouterRadar({ axes, size = 320, animate = true }: WouterRadarPro
   return (
     <svg
       width="100%"
-      viewBox={`0 0 ${size} ${size}`}
-      style={{ maxWidth: size, display: 'block', margin: '0 auto', overflow: 'visible' }}
+      viewBox={`0 0 ${viewW} ${size}`}
+      style={{ maxWidth: viewW, display: 'block', margin: '0 auto', overflow: 'hidden' }}
       role="img"
       aria-label="Growth flywheel radar"
     >
@@ -93,10 +105,14 @@ export function WouterRadar({ axes, size = 320, animate = true }: WouterRadarPro
       {values.map((v, i) => {
         const angle = toRad(-90 + (360 / n) * i)
         const frac  = v / 100
+        const x = cx + frac * r * Math.cos(angle)
+        const y = cy + frac * r * Math.sin(angle)
+        const weak = axes[i].weak
         return (
-          <circle key={i}
-            cx={cx + frac * r * Math.cos(angle)} cy={cy + frac * r * Math.sin(angle)}
-            r={4} fill={axes[i].weak ? GOLD : ACCENT} stroke="#fff" strokeWidth={1.5} />
+          <g key={i}>
+            {weak && <circle cx={x} cy={y} r={8} fill="none" stroke={GOLD} strokeWidth={1.5} opacity={0.35} />}
+            <circle cx={x} cy={y} r={weak ? 5 : 4} fill={weak ? GOLD : ACCENT} stroke="#fff" strokeWidth={1.5} />
+          </g>
         )
       })}
 
@@ -105,12 +121,17 @@ export function WouterRadar({ axes, size = 320, animate = true }: WouterRadarPro
         const x = cx + (r + pad) * Math.cos(angle)
         const y = cy + (r + pad) * Math.sin(angle)
         const anchor = x < cx - 4 ? 'end' : x > cx + 4 ? 'start' : 'middle'
+        const lines = wrapLabel(a.label)
+        const fs = size * 0.038
+        const lh = fs * 1.15
         return (
           <text key={i} x={x} y={y} textAnchor={anchor} dominantBaseline="middle"
-            fontSize={size * 0.039} fontWeight={a.weak ? 800 : 600}
+            fontSize={fs} fontWeight={a.weak ? 800 : 600}
             fill={a.weak ? GOLD : LABEL}
             fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
-            {a.label}
+            {lines.map((ln, li) => (
+              <tspan key={li} x={x} dy={li === 0 ? -((lines.length - 1) * lh) / 2 : lh}>{ln}</tspan>
+            ))}
           </text>
         )
       })}

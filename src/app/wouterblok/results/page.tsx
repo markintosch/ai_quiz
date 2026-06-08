@@ -176,11 +176,11 @@ function ResultsInner() {
 
         {/* Radar + pillar bars */}
         <div style={{ background: '#fff', borderRadius: 14, padding: '28px 26px', border: `1px solid ${BORDER}`, marginBottom: 24 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(260px, 340px) 1fr', gap: 28, alignItems: 'center' }} className="wb-results-grid">
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(260px, 320px) 1fr', gap: 32, alignItems: 'start' }} className="wb-results-grid">
             {/* Radar */}
             <div>
               <h2 style={{ fontSize: 13, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: MUTED, marginBottom: 14 }}>{t.shapeTitle}</h2>
-              <WouterRadar axes={axes} />
+              <div style={{ marginTop: 8 }}><WouterRadar axes={axes} /></div>
             </div>
             {/* Bars */}
             <div>
@@ -207,13 +207,15 @@ function ResultsInner() {
           </div>
 
           {/* Strongest / weakest read */}
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 22, paddingTop: 18, borderTop: `1px solid ${BORDER}` }}>
-            <div style={{ flex: '1 1 240px' }}>
-              <p style={{ fontSize: 12, fontWeight: 700, color: ACCENT_DEEP, marginBottom: 4 }}>{t.strongest}: {pillarOf(strongest).icon} {pillarOf(strongest).name}</p>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginTop: 24, paddingTop: 22, borderTop: `1px solid ${BORDER}` }} className="wb-readout-grid">
+            <div style={{ background: '#F0F7F3', borderRadius: 10, padding: '14px 16px', borderLeft: `3px solid ${ACCENT}` }}>
+              <p style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: ACCENT_DEEP, marginBottom: 6 }}>{t.strongest}</p>
+              <p style={{ fontSize: 14, fontWeight: 800, color: NAVY, marginBottom: 5 }}>{pillarOf(strongest).icon} {pillarOf(strongest).name}</p>
               <p style={{ fontSize: 13, color: MUTED, lineHeight: 1.55 }}>{pillarOf(strongest).blurb}</p>
             </div>
-            <div style={{ flex: '1 1 240px' }}>
-              <p style={{ fontSize: 12, fontWeight: 700, color: GOLD, marginBottom: 4 }}>{t.weakest}: {pillarOf(result.weakestPillar).icon} {pillarOf(result.weakestPillar).name}</p>
+            <div style={{ background: '#FCF6EC', borderRadius: 10, padding: '14px 16px', borderLeft: `3px solid ${GOLD}` }}>
+              <p style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: '#B0710A', marginBottom: 6 }}>{t.weakest}</p>
+              <p style={{ fontSize: 14, fontWeight: 800, color: NAVY, marginBottom: 5 }}>{pillarOf(result.weakestPillar).icon} {pillarOf(result.weakestPillar).name}</p>
               <p style={{ fontSize: 13, color: MUTED, lineHeight: 1.55 }}>{pillarOf(result.weakestPillar).blurb}</p>
             </div>
           </div>
@@ -246,6 +248,7 @@ function ResultsInner() {
       <style>{`
         @media (max-width: 640px) {
           .wb-results-grid { grid-template-columns: 1fr !important; }
+          .wb-readout-grid { grid-template-columns: 1fr !important; }
         }
         @keyframes spin { to { transform: rotate(360deg) } }
       `}</style>
