@@ -10,13 +10,14 @@ const MIN_BENCHMARK = 3   // don't show a "peers" number until it's meaningful
 // Returns a stored Growth Flywheel scan plus an aggregate benchmark, so the
 // results page can render from a saved id (shareable, emailable) instead of only
 // from the URL-encoded payload.
-export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(_req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const { id } = await props.params
   const supabase = createServiceClient()
 
   const { data: row, error } = await supabase
     .from('responses')
     .select('id, answers, scores, respondent_id')
-    .eq('id', params.id)
+    .eq('id', id)
     .maybeSingle()
 
   if (error || !row) {
