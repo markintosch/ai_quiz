@@ -105,29 +105,47 @@ function LandingInner() {
       </nav>
 
       {/* Hero */}
-      <section style={{ background: '#fff', padding: '80px 24px 88px' }}>
-        <div style={{ maxWidth: 720, margin: '0 auto' }}>
-          <span style={{
-            display: 'inline-block', fontSize: 11, fontWeight: 700, letterSpacing: '0.18em',
-            textTransform: 'uppercase', color: ACCENT_DEEP, border: `1px solid ${ACCENT}44`,
-            padding: '4px 14px', borderRadius: 4, marginBottom: 28,
-          }}>{t.badge}</span>
-          <h1 style={{ fontSize: 'clamp(34px, 5.5vw, 60px)', fontWeight: 900, lineHeight: 1.1, marginBottom: 20, color: NAVY, letterSpacing: '-0.02em' }}>
-            {t.h1a}<br />{t.h1b}
-          </h1>
-          <p style={{ fontSize: 17, color: PRIMARY, lineHeight: 1.6, marginBottom: 16, maxWidth: 560, fontWeight: 500 }}>{t.sub}</p>
-          <p style={{ fontSize: 17, color: MUTED, lineHeight: 1.6, marginBottom: 36, maxWidth: 560 }}>{t.sub2}</p>
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center', marginBottom: 20 }}>
-            <Link href={assessHref} style={{
-              background: ACCENT, color: '#fff', fontWeight: 700, fontSize: 16, padding: '14px 32px',
-              borderRadius: 6, textDecoration: 'none', boxShadow: '0 4px 20px rgba(14,159,110,0.25)',
-            }}>{t.cta}</Link>
-            <Link href={sampleHref(lang)} style={{
-              color: PRIMARY, fontWeight: 600, fontSize: 15, padding: '14px 24px', borderRadius: 6,
-              textDecoration: 'none', border: `1px solid ${BORDER}`,
-            }}>{t.sample}</Link>
+      <section style={{ background: '#fff', padding: '72px 24px 80px' }}>
+        <div
+          className="wb-hero-grid"
+          style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.05fr 0.95fr', gap: 56, alignItems: 'center' }}
+        >
+          {/* Copy */}
+          <div>
+            <span style={{
+              display: 'inline-block', fontSize: 11, fontWeight: 700, letterSpacing: '0.18em',
+              textTransform: 'uppercase', color: ACCENT_DEEP, border: `1px solid ${ACCENT}44`,
+              padding: '4px 14px', borderRadius: 4, marginBottom: 28,
+            }}>{t.badge}</span>
+            <h1 style={{ fontSize: 'clamp(34px, 5.5vw, 56px)', fontWeight: 900, lineHeight: 1.1, marginBottom: 20, color: NAVY, letterSpacing: '-0.02em' }}>
+              {t.h1a}<br />{t.h1b}
+            </h1>
+            <p style={{ fontSize: 17, color: PRIMARY, lineHeight: 1.6, marginBottom: 16, fontWeight: 500 }}>{t.sub}</p>
+            <p style={{ fontSize: 17, color: MUTED, lineHeight: 1.6, marginBottom: 36 }}>{t.sub2}</p>
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center', marginBottom: 20 }}>
+              <Link href={assessHref} style={{
+                background: ACCENT, color: '#fff', fontWeight: 700, fontSize: 16, padding: '14px 32px',
+                borderRadius: 6, textDecoration: 'none', boxShadow: '0 4px 20px rgba(14,159,110,0.25)',
+              }}>{t.cta}</Link>
+              <Link href={sampleHref(lang)} style={{
+                color: PRIMARY, fontWeight: 600, fontSize: 15, padding: '14px 24px', borderRadius: 6,
+                textDecoration: 'none', border: `1px solid ${BORDER}`,
+              }}>{t.sample}</Link>
+            </div>
+            <p style={{ fontSize: 13, color: MUTED }}>{t.trust}</p>
           </div>
-          <p style={{ fontSize: 13, color: MUTED }}>{t.trust}</p>
+
+          {/* Portrait */}
+          <div className="wb-hero-img" style={{
+            borderRadius: 16, overflow: 'hidden', aspectRatio: '4 / 5',
+            boxShadow: '0 24px 60px rgba(12,43,58,0.20)', background: BG_GRAY,
+          }}>
+            <img
+              src="/wouter.png"
+              alt="Wouter Blok"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: '66% 38%', display: 'block' }}
+            />
+          </div>
         </div>
       </section>
 
@@ -179,6 +197,13 @@ function LandingInner() {
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>{t.poweredBy}</p>
         </div>
       </footer>
+
+      <style>{`
+        @media (max-width: 860px) {
+          .wb-hero-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+          .wb-hero-img { max-width: 380px; margin: 0 auto; width: 100%; aspect-ratio: 1 / 1 !important; }
+        }
+      `}</style>
     </div>
   )
 }
