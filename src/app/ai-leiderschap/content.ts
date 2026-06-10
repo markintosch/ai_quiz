@@ -88,7 +88,7 @@ export interface AILContent {
 
 export const DEFAULT_CONTENT: AILContent = {
   hero: {
-    eyebrow: 'Executive sessie · met Ben van den Burg & Mark de Kock',
+    eyebrow: 'Executive sessie · met Ben van der Burg & Mark de Kock',
     title: 'Van AI-experimenten naar leiderschapskeuzes in 90 dagen.',
     subtitle: 'Een halve dag waarin je met andere directieleden de richting kiest, en een 90-dagen-ritme dat zorgt dat die keuze ook landt. Voor CEO, CMO en CDO.',
     eventDate: 'Maandag 29 juni of 6 juli 2026',
@@ -190,7 +190,7 @@ export const DEFAULT_CONTENT: AILContent = {
     people: [
       {
         initials: 'BvdB',
-        name: 'Ben van den Burg',
+        name: 'Ben van der Burg',
         role: 'Dagvoorzitter & keynote',
         bio: 'Strateeg en spreker over leiderschap in technologische transitie. Begeleidt directieteams bij strategische heroriëntatie wanneer markt, organisatie en technologie tegelijk schuiven. Schrijft en spreekt regelmatig over de menselijke kant van digitale transformatie.',
         photo: '/Ben_van_den_Burg.jpg',
@@ -365,7 +365,7 @@ export const DEFAULT_CONTENT: AILContent = {
     ],
   },
   footer: {
-    tagline: 'Een initiatief van Ben van den Burg & Mark de Kock.',
+    tagline: 'Een initiatief van Ben van der Burg & Mark de Kock.',
     legal: '© 2026. Alle rechten voorbehouden.',
   },
 }

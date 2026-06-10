@@ -53,7 +53,7 @@ export default function OGImage() {
             lineHeight: 1.45,
           }}
         >
-          Voor CEO, CMO en CDO. Inclusief 90-dagen-vervolgtraject met Ben van den Burg &amp; Mark de Kock.
+          Voor CEO, CMO en CDO. Inclusief 90-dagen-vervolgtraject met Ben van der Burg &amp; Mark de Kock.
         </div>
         <div style={{ fontSize: 14, color: '#5a6678', marginTop: 'auto' }}>
           markdekock.com
