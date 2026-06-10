@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-
-// Admin auth is enforced by middleware (cookie HMAC check on /admin/* and
-// /api/admin/* — see middleware.ts). No additional rate limiting needed for
-// authenticated admin endpoints.
+import { isAuthorised } from '@/lib/admin/auth'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -35,6 +32,10 @@ function csvCell(v: unknown): string {
 }
 
 export async function GET(req: NextRequest) {
+  if (!(await isAuthorised())) {
+    return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  }
+
   const url   = new URL(req.url)
   const role  = url.searchParams.get('role') ?? 'all'
 

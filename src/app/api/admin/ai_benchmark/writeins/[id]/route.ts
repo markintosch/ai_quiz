@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-
-// Admin auth is enforced by middleware (HMAC cookie on /api/admin/*).
-// No additional rate limit needed for authenticated admin endpoints.
+import { isAuthorised } from '@/lib/admin/auth'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -12,6 +10,10 @@ const supabase = createClient(
 const VALID_STATUSES = new Set(['pending', 'reviewed', 'promoted', 'merged', 'rejected'])
 
 export async function PATCH(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  if (!(await isAuthorised())) {
+    return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  }
+
   const params = await props.params;
   try {
     const body = await req.json() as {
