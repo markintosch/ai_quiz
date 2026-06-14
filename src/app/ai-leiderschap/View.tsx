@@ -264,10 +264,12 @@ export default function AILeiderschapView({ c }: { c: AILContent }) {
           </div>
           <p className="ail-pay-note">{c.slots.payNote}</p>
 
-          <div className="ail-duo">
-            <span className="ail-duo-label">{c.slots.duoLabel}</span>
-            <p>{c.slots.duoBody}</p>
-          </div>
+          {(c.slots.duoLabel || c.slots.duoBody) && (
+            <div className="ail-duo">
+              <span className="ail-duo-label">{c.slots.duoLabel}</span>
+              <p>{c.slots.duoBody}</p>
+            </div>
+          )}
         </div>
       </section>
 

@@ -39,7 +39,7 @@ function buildEvent(name: string, startISO: string, endISO: string) {
     ],
     offers: {
       '@type': 'Offer',
-      price: '1595',
+      price: '1199',
       priceCurrency: 'EUR',
       availability: 'https://schema.org/InStock',
       url: `${BASE}/ai-leiderschap#boeken`,

@@ -98,7 +98,7 @@ export const DEFAULT_CONTENT: AILContent = {
       '📍 Utrecht',
       'Twee identieke middag-sessies, kies de datum die past',
       'Max. 20 deelnemers per sessie',
-      '€1.595 p.p. excl. btw',
+      '€1.199 p.p. excl. btw',
     ],
     outputs: [
       'Persoonlijke AI-leiderschap-spiegel',
@@ -159,7 +159,7 @@ export const DEFAULT_CONTENT: AILContent = {
       { title: 'Cohort-spiegel: wat kunnen we van elkaar leren?', body: 'De geaggregeerde, anonieme data van deze zaal op het scherm. Wat doet deze groep al, wat blijft liggen, en wat zegt dat?' },
       { title: '90-dagen-canvas: welke keuze maak ik?', body: 'Eén concrete keuze waar je je 90 dagen aan committeert. Met je eerste stap en je teamboodschap erbij.' },
       { title: 'Afsluiting & Q&A', body: 'Ben en Mark vatten samen, prikkelen, beantwoorden wat er nog ligt.' },
-      { title: 'Borrel of lunch + netwerken', body: 'Peers die hetzelfde dragen, dezelfde vragen stellen, andere antwoorden gevonden hebben.' },
+      { title: 'Lunch + netwerken', body: 'Peers die hetzelfde dragen, dezelfde vragen stellen, andere antwoorden gevonden hebben.' },
     ],
   },
   assessment: {
@@ -300,7 +300,7 @@ export const DEFAULT_CONTENT: AILContent = {
       { label: 'Locatie', value: 'Utrecht (locatie bevestigd bij boeking)' },
       { label: 'Vorm', value: 'Middag-sessie van ca. 4 uur' },
       { label: 'Groep', value: 'Min. 10, max. 20 per sessie' },
-      { label: 'Investering', value: '€1.595 p.p. (excl. btw)' },
+      { label: 'Investering', value: '€1.199 p.p. (excl. btw)' },
       { label: 'Taal', value: 'Nederlands' },
     ],
   },
@@ -311,7 +311,8 @@ export const DEFAULT_CONTENT: AILContent = {
       'Baseline-assessment vooraf',
       'Persoonlijk rapport',
       '90-dagen-canvas (A3) + leiderschapsboekje',
-      'Lunch of borrel',
+      'Lunch',
+      'WhatsApp-groep met Mark (optioneel) om ervaringen en inzichten te delen',
       '30-min 1-op-1 follow-up met Mark op dag 15',
       'Progressiemetingen op dag 30, 60 en 90',
       'Persoonlijk delta-rapport',
@@ -325,8 +326,8 @@ export const DEFAULT_CONTENT: AILContent = {
       {
         id: 'jun29',
         label: 'Maandag 29 juni 2026',
-        time: '13:30 – 17:30 (incl. afsluitende borrel)',
-        price: '€1.595',
+        time: '13:30 – 17:30 (incl. lunch)',
+        price: '€1.199',
         // Vervang door je Mollie Payment Link (begint met https://). Zolang
         // hier "#" of een placeholder staat, toont de View een "Boeking opent
         // binnenkort"-staat in plaats van een dode link.
@@ -336,15 +337,15 @@ export const DEFAULT_CONTENT: AILContent = {
       {
         id: 'jul06',
         label: 'Maandag 6 juli 2026',
-        time: '13:30 – 17:30 (incl. afsluitende borrel)',
-        price: '€1.595',
+        time: '13:30 – 17:30 (incl. lunch)',
+        price: '€1.199',
         mollieHref: '#boeken',
         note: 'Max. 20 plekken',
       },
     ],
     payNote: 'Veilig betalen via Mollie · iDEAL, creditcard, Bancontact. Bij minder dan 10 inschrijvingen voor jouw slot krijg je je betaling volledig terug. Prijzen excl. btw.',
-    duoLabel: 'Kom met een MT-collega',
-    duoBody: 'Twee deelnemers uit één organisatie halen aantoonbaar meer uit het 90-dagen-traject. Duo-tarief op aanvraag: €2.750 voor twee (excl. btw). Neem contact op via de wachtlijst hieronder of mail rechtstreeks.',
+    duoLabel: '',
+    duoBody: '',
   },
   waitlist: {
     heading: 'Kan je niet op 29 juni?',
@@ -360,7 +361,7 @@ export const DEFAULT_CONTENT: AILContent = {
       { q: 'Is de baseline-assessment verplicht?', a: 'Aanbevolen, niet verplicht. Wie vooraf invult haalt veel meer uit de cohort-spiegel en de werkblokken. Daar komt de data van de zaal terug.' },
       { q: 'Hoe werkt het 90-dagen-traject precies?', a: 'Vanaf dag 15 plannen we een 1-op-1 met Mark in (30 min, online). De calls worden over een week of twee gespreid, zodat iedereen een passend moment kan kiezen. Op dag 30, 60 en 90 ontvang je een korte gepersonaliseerde meting met je delta-rapport. Op dag 90 een cohort-slotrapport.' },
       { q: 'Kan ik op bedrijfsnaam factureren?', a: 'Ja. Bij de Mollie-checkout vul je je bedrijfs- en btw-gegevens in. Je ontvangt een factuur op naam van je bedrijf.' },
-      { q: 'Kan ik met twee mensen uit één organisatie komen?', a: 'Ja, dat raden we zelfs aan. Twee directieleden uit dezelfde organisatie halen meer uit het 90-dagen-traject, want jullie kunnen samen terugkomen op de inzichten. Duo-tarief op aanvraag: €2.750 voor twee (excl. btw). Neem contact op via de wachtlijst of mail rechtstreeks.' },
+      { q: 'Kan ik met twee mensen uit één organisatie komen?', a: 'Ja, dat raden we zelfs aan. Twee directieleden uit dezelfde organisatie halen meer uit het 90-dagen-traject, want jullie kunnen samen terugkomen op de inzichten. Boek gewoon twee plekken via de checkout.' },
       { q: 'Wat gebeurt er met mijn assessmentdata?', a: 'Je persoonlijke rapport is en blijft van jou. We delen geen individuele scores met andere deelnemers, je werkgever of derden. In de zaal tonen we alleen geaggregeerde, anonieme patronen, bijvoorbeeld "deze zaal scoort gemiddeld X op governance". We verkopen geen data en de assessment is GDPR-conform opgeslagen.' },
     ],
   },
