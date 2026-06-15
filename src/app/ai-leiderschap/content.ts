@@ -104,6 +104,7 @@ export const DEFAULT_CONTENT: AILContent = {
       'Persoonlijke AI-leiderschap-spiegel',
       'Eén concrete 90-dagen-leiderschapskeuze',
       'Opvolgritme met voortgangsmetingen',
+      'Een besloten peer-netwerk dat na de dag doorloopt',
     ],
     ctaPrimary: { label: 'Boek je plek', href: '#boeken' },
     ctaSecondary: { label: 'Bekijk het 90-dagen-traject', href: '#traject' },
@@ -159,7 +160,7 @@ export const DEFAULT_CONTENT: AILContent = {
       { title: 'Cohort-spiegel: wat kunnen we van elkaar leren?', body: 'De geaggregeerde, anonieme data van deze zaal op het scherm. Wat doet deze groep al, wat blijft liggen, en wat zegt dat?' },
       { title: '90-dagen-canvas: welke keuze maak ik?', body: 'Eén concrete keuze waar je je 90 dagen aan committeert. Met je eerste stap en je teamboodschap erbij.' },
       { title: 'Afsluiting & Q&A', body: 'Ben en Mark vatten samen, prikkelen, beantwoorden wat er nog ligt.' },
-      { title: 'Lunch + netwerken', body: 'Peers die hetzelfde dragen, dezelfde vragen stellen, andere antwoorden gevonden hebben.' },
+      { title: 'Lunch + netwerken', body: 'Peers die hetzelfde dragen, dezelfde vragen stellen, andere antwoorden gevonden hebben. Wie wil, blijft daarna verbonden in een besloten WhatsApp-groep met de groep en Mark.' },
     ],
   },
   assessment: {
@@ -175,10 +176,11 @@ export const DEFAULT_CONTENT: AILContent = {
   },
   trajectory: {
     heading: 'Een 90-dagen-traject met de sessie als startpunt',
-    intro: 'De sessie is het anker. Daarna word je niet losgelaten: vier momenten waarop het systeem aan je trekt, plus een 1-op-1 met Mark.',
+    intro: 'De sessie is het anker. Daarna word je niet losgelaten: vier momenten waarop het systeem aan je trekt, een 1-op-1 met Mark, en een besloten groep met je mededeelnemers.',
     steps: [
       { label: 'Voor de dag', title: 'Baseline-assessment', body: 'Vul de AI-maturity-scan in (~10 min). Resultaten landen in het cohort en vormen je vertrekpunt.' },
       { label: 'Sessiedag', title: 'De sessie zelf', body: 'Keynote, diagnose, canvas, commitments en Q&A. Je vertrekt met een persoonlijk rapport en een 90-dagen-canvas.' },
+      { label: 'Vanaf de sessie', title: 'Besloten peer-groep', body: 'Alle deelnemers die willen, komen samen in één WhatsApp-groep, Mark inbegrepen. Een plek om ervaringen, vragen en inzichten te blijven delen terwijl je je keuze uitvoert.' },
       { label: 'Vanaf dag 15', title: '1-op-1 met Mark', body: 'Een persoonlijk gesprek van 30 minuten over hoe je ervoor staat, waar je hapert en welke ondersteuning helpt. We spreiden de calls over een week of twee, zodat iedereen een passend moment kan vinden.' },
       { label: 'Dag 30 / 60 / 90', title: 'Progressiemetingen', body: 'Drie korte gepersonaliseerde metingen op precies de mijlpalen van je canvas. Je krijgt je delta-rapport, zo zie je waar je beweegt en waar niet.' },
       { label: 'Dag 90', title: 'Cohort-slotrapport', body: 'Hoe heeft jullie zaal als geheel zich ontwikkeld? Met een optionele afsluitcall om de balans op te maken.' },
@@ -285,6 +287,7 @@ export const DEFAULT_CONTENT: AILContent = {
       { title: 'Eén concrete keuze', body: 'Geen lijst van twintig dingen. Eén keuze, scherp ingebed in een ritme van 90 dagen.' },
       { title: 'Opvolgritme', body: 'Drie metingen op precies de mijlpalen van je canvas. Niemand komt er goedkoop vanaf.' },
       { title: 'Accountability zonder zwaarte', body: 'Een 1-op-1 met Mark vanaf dag 15. Geen masterclass, wel een spiegel die zorgt dat je niet vergeet wat je koos.' },
+      { title: 'Een netwerk dat blijft', body: 'Alle deelnemers die willen, komen samen in een besloten WhatsApp-groep, Mark inbegrepen. Ervaringen en inzichten blijven stromen, ook na de dag zelf.' },
     ],
   },
   testimonials: {
@@ -312,7 +315,7 @@ export const DEFAULT_CONTENT: AILContent = {
       'Persoonlijk rapport',
       '90-dagen-canvas (A3) + leiderschapsboekje',
       'Lunch',
-      'WhatsApp-groep met Mark (optioneel) om ervaringen en inzichten te delen',
+      'Besloten WhatsApp-groep met alle deelnemers en Mark, om ervaringen en inzichten te blijven delen (optioneel)',
       '30-min 1-op-1 follow-up met Mark op dag 15',
       'Progressiemetingen op dag 30, 60 en 90',
       'Persoonlijk delta-rapport',
