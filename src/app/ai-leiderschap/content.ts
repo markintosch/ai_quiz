@@ -160,7 +160,7 @@ export const DEFAULT_CONTENT: AILContent = {
       { title: 'Cohort-spiegel: wat kunnen we van elkaar leren?', body: 'De geaggregeerde, anonieme data van deze zaal op het scherm. Wat doet deze groep al, wat blijft liggen, en wat zegt dat?' },
       { title: '90-dagen-canvas: welke keuze maak ik?', body: 'Eén concrete keuze waar je je 90 dagen aan committeert. Met je eerste stap en je teamboodschap erbij.' },
       { title: 'Afsluiting & Q&A', body: 'Ben en Mark vatten samen, prikkelen, beantwoorden wat er nog ligt.' },
-      { title: 'Netwerken', body: 'Peers die hetzelfde dragen, dezelfde vragen stellen, andere antwoorden gevonden hebben. Wie wil, blijft daarna verbonden in een besloten WhatsApp-groep met de groep en Mark.' },
+      { title: 'Lunch & netwerken', body: 'Peers die hetzelfde dragen, dezelfde vragen stellen, andere antwoorden gevonden hebben. Wie wil, blijft daarna verbonden in een besloten WhatsApp-groep met de groep en Mark.' },
     ],
   },
   assessment: {
@@ -314,6 +314,7 @@ export const DEFAULT_CONTENT: AILContent = {
       'Baseline-assessment vooraf',
       'Persoonlijk rapport',
       '90-dagen-canvas (A3) + leiderschapsboekje',
+      'Lunch (invulling hangt af van de locatie)',
       'Besloten WhatsApp-groep met alle deelnemers en Mark, om ervaringen en inzichten te blijven delen (optioneel)',
       '30-min 1-op-1 follow-up met Mark op dag 15',
       'Progressiemetingen op dag 30, 60 en 90',
