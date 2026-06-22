@@ -44,8 +44,8 @@ export default function WaitlistForm({ successMessage }: { successMessage: strin
       <label className="ail-full">Voorkeur datum (optioneel)
         <select name="preference" defaultValue="">
           <option value="">Geen voorkeur</option>
-          <option value="29-juni">Maandag 29 juni 2026</option>
-          <option value="6-juli">Maandag 6 juli 2026</option>
+          <option value="14-september">Maandag 14 september 2026</option>
+          <option value="7-oktober">Woensdag 7 oktober 2026</option>
           <option value="volgende-editie">Volgende editie</option>
         </select>
       </label>

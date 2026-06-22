@@ -91,13 +91,13 @@ export const DEFAULT_CONTENT: AILContent = {
     eyebrow: 'Executive sessie · met Ben van der Burg & Mark de Kock',
     title: 'Van AI-experimenten naar leiderschapskeuzes in 90 dagen.',
     subtitle: 'Een halve dag waarin je met andere directieleden de richting kiest, en een 90-dagen-ritme dat zorgt dat die keuze ook landt. Voor CEO, CMO en CDO.',
-    eventDate: 'Maandag 29 juni of 6 juli 2026',
+    eventDate: 'Maandag 14 september of woensdag 7 oktober 2026',
     eventLocation: 'Utrecht (locatie wordt gedeeld bij bevestiging)',
     bullets: [
-      '📅 Maandag 29 juni of 6 juli 2026',
+      '📅 Maandag 14 september of woensdag 7 oktober 2026',
       '📍 Utrecht',
-      'Twee identieke middag-sessies, kies de datum die past',
-      'Max. 20 deelnemers per sessie',
+      'Twee identieke sessies (14 sept middag, 7 okt ochtend), kies de datum die past',
+      'Max. 30 deelnemers per sessie',
       '€1.199 p.p. excl. btw',
     ],
     outputs: [
@@ -108,7 +108,7 @@ export const DEFAULT_CONTENT: AILContent = {
     ],
     ctaPrimary: { label: 'Boek je plek', href: '#boeken' },
     ctaSecondary: { label: 'Bekijk het 90-dagen-traject', href: '#traject' },
-    note: 'Beide sessies gaan door bij minimaal 10 inschrijvingen. Vooruitbetaling via Mollie. Excl. btw.',
+    note: 'Beide sessies gaan door bij minimaal 10 inschrijvingen. Betaling verloopt via Het Sprekershuys. Excl. btw.',
   },
   problem: {
     heading: 'AI is een leiderschapsvraagstuk, geen IT-project',
@@ -219,7 +219,7 @@ export const DEFAULT_CONTENT: AILContent = {
     duration: '30 minuten · online via Google Meet of Teams · geen kosten',
     scenariosHeading: 'Wanneer is dit gesprek zinvol?',
     scenarios: [
-      { title: 'Je twijfelt of de sessie van 29 juni of 6 juli past', body: 'Logisch. We kijken samen of jouw vraag en jullie organisatie passen bij de groep, of dat een andere vorm beter zou werken.' },
+      { title: 'Je twijfelt of de sessie van 14 september of 7 oktober past', body: 'Logisch. We kijken samen of jouw vraag en jullie organisatie passen bij de groep, of dat een andere vorm beter zou werken.' },
       { title: 'Je hebt een specifieke AI-leiderschapsvraag', body: 'Iets wat je voor jouw situatie wilt bespreken voordat je een groep instapt. Eén concreet vraagstuk in 30 minuten, scherper dan je het in een groep zou kunnen krijgen.' },
       { title: 'Je overweegt een in-company variant', body: 'Een variant voor je MT, RvB of een specifiek leiderschapsteam. We bespreken vorm, inhoud, en wat een eigen sessie voor jullie zou opleveren.' },
       { title: 'Je staat aan het begin van een AI-transformatie', body: 'En zoekt klankbord om de eerste stappen te bepalen. Geen consulting, wel meedenken vanuit ervaring met andere directieteams.' },
@@ -299,10 +299,10 @@ export const DEFAULT_CONTENT: AILContent = {
   practical: {
     heading: 'Praktisch',
     facts: [
-      { label: 'Data', value: 'Maandag 29 juni of maandag 6 juli 2026 (kies één)' },
+      { label: 'Data', value: 'Maandag 14 september of woensdag 7 oktober 2026 (kies één)' },
       { label: 'Locatie', value: 'Utrecht (locatie bevestigd bij boeking)' },
-      { label: 'Vorm', value: 'Middag-sessie van ca. 4 uur' },
-      { label: 'Groep', value: 'Min. 10, max. 20 per sessie' },
+      { label: 'Vorm', value: 'Sessie van ca. 4 uur (ochtend of middag)' },
+      { label: 'Groep', value: 'Min. 10, max. 30 per sessie' },
       { label: 'Investering', value: '€1.199 p.p. (excl. btw)' },
       { label: 'Taal', value: 'Nederlands' },
     ],
@@ -324,46 +324,44 @@ export const DEFAULT_CONTENT: AILContent = {
   },
   slots: {
     heading: 'Boek je plek',
-    intro: 'Twee identieke middag-sessies, kies de datum die je het beste uitkomt. Beide sessies hebben hetzelfde programma en gaan door bij minimaal 10 inschrijvingen.',
+    intro: 'Twee identieke sessies, kies de datum die je het beste uitkomt. 14 september is een middagsessie, 7 oktober een ochtendsessie. Beide hebben hetzelfde programma en gaan door bij minimaal 10 inschrijvingen.',
     items: [
       {
-        id: 'jun29',
-        label: 'Maandag 29 juni 2026',
-        time: '13:30 – 17:30 (incl. lunch)',
+        id: 'sep14',
+        label: 'Maandag 14 september 2026',
+        time: '13:30 – 17:30 (middag)',
         price: '€1.199',
-        // Vervang door je Mollie Payment Link (begint met https://). Zolang
-        // hier "#" of een placeholder staat, toont de View een "Boeking opent
-        // binnenkort"-staat in plaats van een dode link.
-        mollieHref: '#boeken',
-        note: 'Max. 20 plekken',
+        // Boeking + betaling verlopen via het PlugAndPay-platform van Het Sprekershuys.
+        mollieHref: 'https://sprekershuys.plugandpay.com/checkout/masterclass-ben-van-der-burg',
+        note: 'Max. 30 plekken',
       },
       {
-        id: 'jul06',
-        label: 'Maandag 6 juli 2026',
-        time: '13:30 – 17:30 (incl. lunch)',
+        id: 'oct07',
+        label: 'Woensdag 7 oktober 2026',
+        time: '09:00 – 13:30 (ochtend)',
         price: '€1.199',
-        mollieHref: '#boeken',
-        note: 'Max. 20 plekken',
+        mollieHref: 'https://sprekershuys.plugandpay.com/checkout/masterclass-ben-van-der-burg-1781790562',
+        note: 'Max. 30 plekken',
       },
     ],
-    payNote: 'Veilig betalen via Mollie · iDEAL, creditcard, Bancontact. Bij minder dan 10 inschrijvingen voor jouw slot krijg je je betaling volledig terug. Prijzen excl. btw.',
+    payNote: 'Veilig betalen via Het Sprekershuys met iDEAL, Wero of creditcard. Bij minder dan 10 inschrijvingen voor jouw slot krijg je je betaling volledig terug. Prijzen excl. btw.',
     duoLabel: '',
     duoBody: '',
   },
   waitlist: {
-    heading: 'Kan je niet op 29 juni?',
+    heading: 'Kan je niet op 14 september of 7 oktober?',
     intro: 'Schrijf je vrijblijvend voor. We plannen regelmatig een nieuwe editie en voorinschrijvers worden als eerste uitgenodigd zodra de volgende datum vaststaat.',
     successMessage: 'Bedankt, je staat op de lijst. We laten weten zodra de volgende editie gepland is.',
   },
   faq: {
     heading: 'Veelgestelde vragen',
     items: [
-      { q: 'Wat is het verschil tussen 29 juni en 6 juli?', a: 'Niets inhoudelijk. Beide sessies bieden hetzelfde programma met dezelfde begeleiders. Je kiest puur op wat jou logistiek het beste schikt.' },
+      { q: 'Wat is het verschil tussen 14 september en 7 oktober?', a: 'Niets inhoudelijk. Beide sessies bieden hetzelfde programma met dezelfde begeleiders. 14 september is een middagsessie (13:30 – 17:30), 7 oktober een ochtendsessie (09:00 – 13:30). Je kiest puur op wat jou logistiek het beste schikt.' },
       { q: 'Wat als mijn sessie niet doorgaat?', a: 'Bij minder dan 10 inschrijvingen voor een sessie gaat die niet door en krijg je je betaling 100% terug. Eventueel kun je overstappen naar de andere datum.' },
       { q: 'Heb ik AI-voorkennis nodig?', a: 'Nee. We gaan ervan uit dat je in je organisatie met AI bezig bent, maar dit is geen technische sessie. Het gaat over leiderschap, niet over tooling.' },
       { q: 'Is de baseline-assessment verplicht?', a: 'Aanbevolen, niet verplicht. Wie vooraf invult haalt veel meer uit de cohort-spiegel en de werkblokken. Daar komt de data van de zaal terug.' },
       { q: 'Hoe werkt het 90-dagen-traject precies?', a: 'Vanaf dag 15 plannen we een 1-op-1 met Mark in (30 min, online). De calls worden over een week of twee gespreid, zodat iedereen een passend moment kan kiezen. Op dag 30, 60 en 90 ontvang je een korte gepersonaliseerde meting met je delta-rapport. Op dag 90 een cohort-slotrapport.' },
-      { q: 'Kan ik op bedrijfsnaam factureren?', a: 'Ja. Bij de Mollie-checkout vul je je bedrijfs- en btw-gegevens in. Je ontvangt een factuur op naam van je bedrijf.' },
+      { q: 'Kan ik op bedrijfsnaam factureren?', a: 'Ja. Bij de checkout van Het Sprekershuys vul je je bedrijfs- en btw-gegevens in. Je ontvangt een factuur op naam van je bedrijf.' },
       { q: 'Kan ik met twee mensen uit één organisatie komen?', a: 'Ja, dat raden we zelfs aan. Twee directieleden uit dezelfde organisatie halen meer uit het 90-dagen-traject, want jullie kunnen samen terugkomen op de inzichten. Boek gewoon twee plekken via de checkout.' },
       { q: 'Wat gebeurt er met mijn assessmentdata?', a: 'Je persoonlijke rapport is en blijft van jou. We delen geen individuele scores met andere deelnemers, je werkgever of derden. In de zaal tonen we alleen geaggregeerde, anonieme patronen, bijvoorbeeld "deze zaal scoort gemiddeld X op governance". We verkopen geen data en de assessment is GDPR-conform opgeslagen.' },
     ],

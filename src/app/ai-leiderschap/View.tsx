@@ -252,7 +252,7 @@ export default function AILeiderschapView({ c }: { c: AILContent }) {
             {c.slots.items.map((slot) => {
               const bookable = isBookable(slot.mollieHref)
               return (
-                <a key={slot.id} href={bookable ? slot.mollieHref : '#voorinschrijving'} className={`ail-slot ${bookable ? '' : 'ail-slot-soon'}`}>
+                <a key={slot.id} href={bookable ? slot.mollieHref : '#voorinschrijving'} target={bookable ? '_blank' : undefined} rel={bookable ? 'noopener' : undefined} className={`ail-slot ${bookable ? '' : 'ail-slot-soon'}`}>
                   <span className="ail-slot-label">{slot.label}</span>
                   <span className="ail-slot-time">{slot.time}</span>
                   <span className="ail-slot-price">{slot.price}</span>
