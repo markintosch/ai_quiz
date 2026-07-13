@@ -296,6 +296,11 @@ export interface Database {
           shadow_ai_severity: string | null
           recommendation_payload: Json
           product_key: string
+          ref_source: string | null
+          utm_source: string | null
+          utm_medium: string | null
+          utm_campaign: string | null
+          parent_response_id: string | null
           created_at: string
         }
         Insert: {
@@ -310,6 +315,11 @@ export interface Database {
           shadow_ai_severity?: string | null
           recommendation_payload: Json
           product_key?: string
+          ref_source?: string | null
+          utm_source?: string | null
+          utm_medium?: string | null
+          utm_campaign?: string | null
+          parent_response_id?: string | null
           created_at?: string
         }
         Update: {
@@ -324,6 +334,11 @@ export interface Database {
           shadow_ai_severity?: string | null
           recommendation_payload?: Json
           product_key?: string
+          ref_source?: string | null
+          utm_source?: string | null
+          utm_medium?: string | null
+          utm_campaign?: string | null
+          parent_response_id?: string | null
           created_at?: string
         }
         Relationships: []
@@ -478,6 +493,9 @@ export interface Database {
           company_id: string | null
           join_code: string
           host_name: string
+          title: string | null
+          scheduled_at: string | null
+          product_key: string
           status: string
           question_count: number
           time_per_q: number
@@ -491,6 +509,9 @@ export interface Database {
           company_id?: string | null
           join_code: string
           host_name: string
+          title?: string | null
+          scheduled_at?: string | null
+          product_key?: string
           status?: string
           question_count?: number
           time_per_q?: number
@@ -504,6 +525,9 @@ export interface Database {
           company_id?: string | null
           join_code?: string
           host_name?: string
+          title?: string | null
+          scheduled_at?: string | null
+          product_key?: string
           status?: string
           question_count?: number
           time_per_q?: number
@@ -522,6 +546,7 @@ export interface Database {
           email: string | null
           score: number
           rank: number | null
+          attempt_number: number
           joined_at: string
         }
         Insert: {
@@ -531,6 +556,7 @@ export interface Database {
           email?: string | null
           score?: number
           rank?: number | null
+          attempt_number?: number
           joined_at?: string
         }
         Update: {
@@ -540,6 +566,7 @@ export interface Database {
           email?: string | null
           score?: number
           rank?: number | null
+          attempt_number?: number
           joined_at?: string
         }
         Relationships: []

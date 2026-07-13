@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 import { isAuthorised } from '@/lib/admin/auth'
+import type { Database } from '@/types/supabase'
 
 export const dynamic = 'force-dynamic'
 
@@ -64,7 +65,7 @@ export async function PUT(req: NextRequest, props: Params) {
 
   const { data, error } = await supabase
     .from('pulse_themes')
-    .update(updatePayload)
+    .update(updatePayload as Database['public']['Tables']['pulse_themes']['Update'])
     .eq('id', params.id)
     .select()
     .single()

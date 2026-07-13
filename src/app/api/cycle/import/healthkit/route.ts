@@ -16,6 +16,7 @@ import { rateLimit } from '@/lib/rateLimit'
 import { detectPhase, inferPeriodStarts } from '@/lib/cycle/phase'
 import { computeReadiness } from '@/lib/cycle/score'
 import type { CyclePhase, ActivityType, ActivityIntensity } from '@/lib/cycle/types'
+import type { Database } from '@/types/supabase'
 
 interface IncomingDay {
   date?: string
@@ -160,7 +161,7 @@ export async function POST(req: Request) {
         }
         const { error } = await supabase
           .from('cycle_daily_entries')
-          .update(update)
+          .update(update as Database['public']['Tables']['cycle_daily_entries']['Update'])
           .eq('user_id', user.id)
           .eq('entry_date', date)
         if (error) { errored++; continue }

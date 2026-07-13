@@ -5,6 +5,7 @@ import { NextResponse } from 'next/server'
 import { requireCycleUser } from '@/lib/cycle/auth'
 import { createClient } from '@/lib/supabase/server'
 import { rateLimit } from '@/lib/rateLimit'
+import type { Database } from '@/types/supabase'
 
 export async function PATCH(req: Request) {
   const user = await requireCycleUser()
@@ -36,7 +37,7 @@ export async function PATCH(req: Request) {
   const supabase = await createClient()
   const { error } = await supabase
     .from('cycle_profiles')
-    .update(update)
+    .update(update as Database['public']['Tables']['cycle_profiles']['Update'])
     .eq('user_id', user.id)
 
   if (error) return NextResponse.json({ ok: false, error: 'db' }, { status: 500 })
