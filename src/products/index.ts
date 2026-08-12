@@ -13,6 +13,7 @@ import { HR_READINESS_CONFIG } from './hr_readiness/config'
 import { UTRECHTZORG_CONFIG } from './utrechtzorg/config'
 import { FITNESS_READINESS_CONFIG } from './fitness_readiness/config'
 import { PR_MATURITY_CONFIG } from './pr_maturity/config'
+import { MOBA_MARKETING_CONFIG } from './moba_marketing/config'
 import type { QuizProductConfig } from './types'
 
 const REGISTRY: Record<string, QuizProductConfig> = {
@@ -23,6 +24,7 @@ const REGISTRY: Record<string, QuizProductConfig> = {
   zorgmarkt_readiness: UTRECHTZORG_CONFIG,
   fitness_readiness:  FITNESS_READINESS_CONFIG,
   pr_maturity:        PR_MATURITY_CONFIG,
+  moba_marketing:     MOBA_MARKETING_CONFIG,
   // digital_readiness: DIGITAL_READINESS_CONFIG,   ← add future products here
   // esg_maturity:      ESG_MATURITY_CONFIG,
 }
@@ -65,6 +67,7 @@ const SUBDOMAIN_MAP: Record<string, string> = {
   'prevo':        'pr_maturity',        // prevo.brandpwrdmedia.nl (Mareille Prevo)
   'pr':           'pr_maturity',        // pr.brandpwrdmedia.nl (alias)
   'proserve':     'cloud_readiness',    // proserve.brandpwrdmedia.nl (ProServe NL partnership)
+  'moba':         'moba_marketing',     // moba.brandpwrdmedia.nl (MOBA marketing team survey)
   // 'digital-readiness': 'digital_readiness',  ← add when product is launched
 }
 

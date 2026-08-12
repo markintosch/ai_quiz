@@ -56,6 +56,7 @@ const GROUPS: NavGroup[] = [
     label: 'Klanten',
     items: [
       { href: '/admin/hcss', label: '🛡️ HCSS' },
+      { href: '/admin/moba', label: '🥚 MOBA Marketing Survey' },
     ],
   },
   {

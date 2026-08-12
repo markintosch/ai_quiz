@@ -16,6 +16,13 @@ export type Dimension =
   | 'commercial_narrative'
   | 'value_creation'
   | 'psychological_safety'
+  // ── MOBA Marketing Survey ─────────────────────────────────
+  | 'moba_positioning'
+  | 'moba_integrated_comms'
+  | 'moba_business_partner'
+  | 'moba_channel_strategy'
+  | 'moba_data_roi'
+  | 'moba_ai_future'
 
 export interface QuestionOption {
   value: number | null // null for unscored multiselect
