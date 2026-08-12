@@ -16,6 +16,13 @@ interface Team {
   submission_count: number
 }
 
+interface Feedback {
+  id: string
+  message: string
+  context: string | null
+  created_at: string
+}
+
 function CopyField({ label, url }: { label: string; url: string }) {
   const [copied, setCopied] = useState(false)
   return (
@@ -42,6 +49,7 @@ function CopyField({ label, url }: { label: string; url: string }) {
 
 export default function AdminMobaPage() {
   const [teams, setTeams] = useState<Team[]>([])
+  const [feedback, setFeedback] = useState<Feedback[]>([])
   const [loading, setLoading] = useState(true)
   const [origin, setOrigin] = useState('')
 
@@ -62,7 +70,7 @@ export default function AdminMobaPage() {
     try {
       const res = await fetch('/api/admin/moba')
       const b = await res.json()
-      if (res.ok) setTeams(b.data ?? [])
+      if (res.ok) { setTeams(b.data ?? []); setFeedback(b.feedback ?? []) }
     } finally {
       setLoading(false)
     }
@@ -148,6 +156,23 @@ export default function AdminMobaPage() {
           {creating ? 'Aanmaken…' : 'Team aanmaken'}
         </button>
       </form>
+
+      {/* Feedback */}
+      {feedback.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-base font-semibold text-gray-900 mb-3">Feedback op de demo ({feedback.length})</h2>
+          <div className="space-y-2">
+            {feedback.map(f => (
+              <div key={f.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+                <p className="text-sm text-gray-700 whitespace-pre-wrap">{f.message}</p>
+                <p className="text-xs text-gray-400 mt-2">
+                  {new Date(f.created_at).toLocaleString('nl-NL')}{f.context ? ` · ${f.context}` : ''}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Teams list */}
       {loading ? (

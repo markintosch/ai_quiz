@@ -33,7 +33,20 @@ export async function GET() {
     submission_count: counts.get(t.id as string) ?? 0,
   }))
 
-  return NextResponse.json({ data })
+  // Evaluation feedback (durable store). Defensive: table may not exist yet.
+  let feedback: Array<Record<string, unknown>> = []
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: fb } = await (supabase.from('moba_feedback') as any)
+      .select('id, message, context, created_at')
+      .order('created_at', { ascending: false })
+      .limit(100)
+    feedback = fb ?? []
+  } catch {
+    feedback = []
+  }
+
+  return NextResponse.json({ data, feedback })
 }
 
 // POST /api/admin/moba — create a new MOBA team (afname)
