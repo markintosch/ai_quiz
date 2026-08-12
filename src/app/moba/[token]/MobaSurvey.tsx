@@ -219,6 +219,16 @@ export function MobaSurvey({ submitToken, teamName, segmentationEnabled, demo = 
             >
               Doorloop de survey zelf →
             </button>
+
+            {demo && (
+              <button
+                type="button"
+                onClick={() => { setStep('demoReport'); window.scrollTo({ top: 0 }) }}
+                className="mt-3 w-full px-8 py-3 text-brand-accent font-semibold rounded-xl border border-brand-accent/40 hover:bg-orange-50 transition-all"
+              >
+                Of bekijk direct een voorbeeld-uitkomst →
+              </button>
+            )}
           </motion.div>
         )}
 
