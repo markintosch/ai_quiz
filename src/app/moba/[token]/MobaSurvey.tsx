@@ -2,16 +2,10 @@
 
 import { useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { MOBA_QUESTIONS } from '@/products/moba_marketing/questions'
-import {
-  MOBA_PRIORITY_OPTIONS,
-  MOBA_PRIORITY_TOTAL,
-  MOBA_OPEN_QUESTIONS,
-  MOBA_SEGMENT_QUESTION,
-} from '@/products/moba_marketing/config'
 import { DEMO_SUBMISSIONS } from '@/products/moba_marketing/demo'
 import { aggregateMoba } from '@/lib/moba/aggregate'
 import { MobaGroupReport } from '@/components/moba/MobaGroupReport'
+import type { MobaContent } from '@/lib/moba/content'
 import { MobaFeedback } from './MobaFeedback'
 
 type Step = 'intro' | 'questions' | 'priority' | 'open' | 'segment' | 'submitting' | 'done' | 'error' | 'demoReport'
@@ -20,27 +14,35 @@ interface MobaSurveyProps {
   submitToken: string
   teamName: string
   segmentationEnabled: boolean
+  /** Editable survey copy, merged (DB overrides on code defaults) server-side. */
+  content: MobaContent
   /** Demo/evaluation mode: walk through the flow without saving anything. */
   demo?: boolean
   /** Start directly on a given step (demo only) — e.g. jump to the sample report. */
   initialStep?: Step
 }
 
-export function MobaSurvey({ submitToken, teamName, segmentationEnabled, demo = false, initialStep = 'intro' }: MobaSurveyProps) {
+export function MobaSurvey({ submitToken, teamName, segmentationEnabled, content, demo = false, initialStep = 'intro' }: MobaSurveyProps) {
+  const questions = content.questions
+  const priorityOptions = content.priorityOptions
+  const priorityTotal = content.priorityTotal
+  const openQuestions = content.openQuestions
+  const segmentQuestion = content.segment
+
   const [step, setStep] = useState<Step>(initialStep)
   const [qIndex, setQIndex] = useState(0)
   const [direction, setDirection] = useState<1 | -1>(1)
 
   const [answers, setAnswers] = useState<Record<string, number>>({})
   const [priorities, setPriorities] = useState<Record<string, number>>(
-    () => Object.fromEntries(MOBA_PRIORITY_OPTIONS.map(o => [o.key, 0]))
+    () => Object.fromEntries(priorityOptions.map(o => [o.key, 0]))
   )
   const [openAnswers, setOpenAnswers] = useState<Record<string, string>>({})
   const [segment, setSegment] = useState<number | null>(null)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
-  const totalQ = MOBA_QUESTIONS.length
-  const currentQ = MOBA_QUESTIONS[qIndex]
+  const totalQ = questions.length
+  const currentQ = questions[qIndex]
   const answered = answers[currentQ?.code] !== undefined
 
   // Progress across the whole survey (questions + 3 closing steps)
@@ -58,7 +60,7 @@ export function MobaSurvey({ submitToken, teamName, segmentationEnabled, demo = 
     () => Object.values(priorities).reduce((a, b) => a + b, 0),
     [priorities]
   )
-  const priorityRemaining = MOBA_PRIORITY_TOTAL - prioritySum
+  const priorityRemaining = priorityTotal - prioritySum
 
   // ── Navigation ─────────────────────────────────────────────
   function answerQuestion(value: number) {
@@ -89,13 +91,13 @@ export function MobaSurvey({ submitToken, teamName, segmentationEnabled, demo = 
       const next = Math.max(0, (prev[key] ?? 0) + delta)
       // Don't allow going over the total budget
       const others = Object.entries(prev).reduce((s, [k, v]) => (k === key ? s : s + v), 0)
-      if (others + next > MOBA_PRIORITY_TOTAL) return prev
+      if (others + next > priorityTotal) return prev
       return { ...prev, [key]: next }
     })
   }
 
   // Demo aggregate (n=12) — computed once, stable.
-  const demoData = useMemo(() => aggregateMoba(DEMO_SUBMISSIONS, [...MOBA_OPEN_QUESTIONS]), [])
+  const demoData = useMemo(() => aggregateMoba(DEMO_SUBMISSIONS, openQuestions), [openQuestions])
 
   async function submit() {
     // Demo/evaluation mode: nothing is saved — show the sample dashboard.
@@ -294,15 +296,15 @@ export function MobaSurvey({ submitToken, teamName, segmentationEnabled, demo = 
               Waar moet onze marketingenergie in 2027 vooral heen?
             </h2>
             <p className="text-sm text-gray-500 mb-5">
-              Verdeel {MOBA_PRIORITY_TOTAL} punten over de zes thema's. Meer punten = hogere prioriteit.
+              Verdeel {priorityTotal} punten over de zes thema's. Meer punten = hogere prioriteit.
             </p>
 
             <div className={`mb-5 text-sm font-semibold ${priorityRemaining === 0 ? 'text-green-600' : 'text-brand-accent'}`}>
-              Nog te verdelen: {priorityRemaining} van {MOBA_PRIORITY_TOTAL}
+              Nog te verdelen: {priorityRemaining} van {priorityTotal}
             </div>
 
             <div className="space-y-3">
-              {MOBA_PRIORITY_OPTIONS.map(opt => {
+              {priorityOptions.map(opt => {
                 const v = priorities[opt.key] ?? 0
                 return (
                   <div key={opt.key} className="flex items-center gap-3">
@@ -345,7 +347,7 @@ export function MobaSurvey({ submitToken, teamName, segmentationEnabled, demo = 
               Kort mag. Deze antwoorden tonen we anoniem in het teamoverzicht. Overslaan mag ook.
             </p>
             <div className="space-y-5">
-              {MOBA_OPEN_QUESTIONS.map(q => (
+              {openQuestions.map(q => (
                 <div key={q.key}>
                   <label className="block text-sm font-medium text-gray-700 mb-2">{q.text}</label>
                   <textarea
@@ -378,7 +380,7 @@ export function MobaSurvey({ submitToken, teamName, segmentationEnabled, demo = 
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
             className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
             <h2 className="text-xl font-semibold text-gray-900 mb-2 leading-snug">
-              {MOBA_SEGMENT_QUESTION.text}
+              {segmentQuestion.text}
             </h2>
             <p className="text-sm text-gray-500 mb-6">
               Eén laatste vraag. Dit helpt ons in het overzicht te zien of verschillende
@@ -398,8 +400,8 @@ export function MobaSurvey({ submitToken, teamName, segmentationEnabled, demo = 
               ))}
             </div>
             <div className="flex justify-between mt-2 text-xs text-gray-500">
-              <span>{MOBA_SEGMENT_QUESTION.minLabel}</span>
-              <span>{MOBA_SEGMENT_QUESTION.maxLabel}</span>
+              <span>{segmentQuestion.minLabel}</span>
+              <span>{segmentQuestion.maxLabel}</span>
             </div>
 
             <div className="mt-8 flex justify-between items-center">
