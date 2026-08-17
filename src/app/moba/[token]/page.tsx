@@ -1,4 +1,5 @@
 import { createServiceClient } from '@/lib/supabase/server'
+import { getMobaContent } from '@/lib/moba/content'
 import { MobaSurvey } from './MobaSurvey'
 
 export const dynamic = 'force-dynamic'
@@ -17,20 +18,22 @@ export default async function MobaSurveyPage({ params, searchParams }: PageProps
   const { token } = await params
   const { view } = await searchParams
 
-  // ── Demo / evaluation mode — no DB, nothing saved ──────────
+  const supabase = createServiceClient()
+  const content = await getMobaContent(supabase)
+
+  // ── Demo / evaluation mode — no DB write, nothing saved ────
   if (token === 'demo') {
     return (
       <MobaSurvey
         submitToken="demo"
         teamName="Demo — MOBA Marketing Survey"
         segmentationEnabled
+        content={content}
         demo
         initialStep={view === 'report' ? 'demoReport' : 'intro'}
       />
     )
   }
-
-  const supabase = createServiceClient()
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: team } = await (supabase.from('moba_teams') as any)
@@ -56,6 +59,7 @@ export default async function MobaSurveyPage({ params, searchParams }: PageProps
       submitToken={team.submit_token}
       teamName={team.name}
       segmentationEnabled={team.segmentation_enabled !== false}
+      content={content}
     />
   )
 }

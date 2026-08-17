@@ -1,6 +1,6 @@
 import { createServiceClient } from '@/lib/supabase/server'
 import { aggregateMoba, type MobaSubmissionLike } from '@/lib/moba/aggregate'
-import { MOBA_OPEN_QUESTIONS } from '@/products/moba_marketing/config'
+import { getMobaContent } from '@/lib/moba/content'
 import { MobaGroupReport } from '@/components/moba/MobaGroupReport'
 
 export const dynamic = 'force-dynamic'
@@ -73,7 +73,8 @@ export default async function MobaResultsPage({ params }: PageProps) {
     )
   }
 
-  const data = aggregateMoba(submissions, [...MOBA_OPEN_QUESTIONS])
+  const content = await getMobaContent(supabase)
+  const data = aggregateMoba(submissions, content.openQuestions)
 
   return (
     <Shell>
