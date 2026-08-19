@@ -1,10 +1,12 @@
 // FILE: src/app/api/moba-signal/cron/route.ts
 // ─── Moba Signal — scheduled collection with rotation ─────────────────────────
 //
-// Fires every 2 hours (vercel.json). Each firing runs the BATCH_SIZE active
-// sources with the oldest last_run_at, so all sources get covered roughly 4x
-// daily (PRD cadence) while no single invocation ever runs long, and one slow
-// site cannot starve the others: it just goes to the back of the rotation.
+// Vercel Hobby allows each cron job to fire once per day, so vercel.json
+// registers FOUR daily entries on this route (05:30, 11:30, 17:30, 23:30 UTC,
+// each ±59 min on Hobby). Each firing runs the BATCH_SIZE active sources with
+// the oldest last_run_at: 16 source-runs a day, so every source is collected
+// at least daily and one slow site just rotates to the back. A Pro upgrade
+// would allow a single 2-hourly entry instead; the route needs no change.
 //
 // Authorization: Vercel Cron sends `Authorization: Bearer ${CRON_SECRET}`.
 
@@ -15,7 +17,7 @@ import { runSource } from '@/lib/signal/runner'
 export const dynamic = 'force-dynamic'
 export const maxDuration = 300
 
-const BATCH_SIZE = 3
+const BATCH_SIZE = 4
 
 export async function GET(req: Request) {
   const auth = req.headers.get('authorization')

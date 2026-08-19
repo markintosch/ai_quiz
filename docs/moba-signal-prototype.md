@@ -113,3 +113,32 @@ Verifier's cross-source clustering, the backfill queue, the Asia-report
 import job, and Wayback claims diffing. Live collection was not run in the
 build environment (no database or API key there); the fetch, extraction and
 review paths are exercised by the admin console against production config.
+
+## Source list v2: the tested briefing (added later)
+
+`supabase/migration_moba_signal_sources_v2.sql` integrates the "Moba Signal
+Sources" briefing (endpoints probed 19 Aug 2026):
+
+- Nine verified RSS feeds ingest directly (The Poultry Site, Poultry Network,
+  Zootecnica, Asian Agribiz, Poultry News UK, MEAT+POULTRY, Pluimveebedrijf,
+  moba.net as own-voice baseline, Ovotrack as competitor-adjacent win list).
+  The runner now prefers the feed when a source has one: RSS carries the
+  publication date and canonical article URL, so extraction starts from facts.
+- Endpoints that tested as blocked keep honest failure notes on the source
+  row (WATT and Sanovo behind Cloudflare, Poultry World feedless).
+- Untested tier-two sources enter as curator proposals for the analyst.
+
+Follow-ups the briefing calls for, deliberately not built yet:
+
+1. **Headless fetch path** for the Cloudflare rows (WATT, Sanovo, Boerderij,
+   AviNews) plus page-diffing of the Sanovo news section. Roughly half the
+   useful sources need this, so it is the next collector investment.
+2. **Numeric indicator store**: EU egg dashboard, USDA, EIC flock trends,
+   HPAI, Pluimveebeurs quotations. Series data wants threshold alerts on the
+   derivative, not rows in the news feed. Separate small pipeline.
+3. **Newsletter-to-inbox ingest** for WATT's Egg Industry Insight, which is
+   also the PRD's forward-to-address contribution channel (P1).
+4. **Tagging axes** from the briefing (chain position, direction, urgency) as
+   extractor fields once the current classification proves itself.
+5. **Known gap, stated**: no Chinese-language sources yet, while China is the
+   largest producer. Real blind spot for the Asia growth story.
