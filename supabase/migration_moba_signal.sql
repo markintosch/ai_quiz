@@ -180,3 +180,17 @@ insert into moba_signal_context (id, name, owner, review_by, note, account_names
   ('ctx-events',          'Moba event calendar',                'Events team',        current_date + 30, null, '{}'),
   ('ctx-asia-research',   'Asia landscape research (baseline)', 'Chief Analyst',      current_date + 180, 'Timeline baseline for Asia; load as one-off extraction job.', '{}')
 on conflict (id) do nothing;
+
+-- ── Row level security: deny-all, service role only ───────────────────────────
+-- No policies on purpose. All pipeline access goes through the service-role
+-- key server-side (which bypasses RLS); the anon key must never read
+-- competitive intelligence. Enabling RLS with zero policies makes that
+-- explicit rather than dependent on project defaults.
+alter table moba_signal_entities    enable row level security;
+alter table moba_signal_sources     enable row level security;
+alter table moba_signal_items       enable row level security;
+alter table moba_signal_annotations enable row level security;
+alter table moba_signal_proposals   enable row level security;
+alter table moba_signal_questions   enable row level security;
+alter table moba_signal_context     enable row level security;
+alter table moba_signal_runs        enable row level security;
