@@ -50,22 +50,47 @@ export default function MobaSignalAdmin() {
 
   useEffect(() => { load() }, [load])
 
-  async function runSource(sourceId: string) {
-    setBusy(`run:${sourceId}`)
-    setNotice(null)
+  async function runOne(sourceId: string): Promise<string> {
     try {
       const res = await fetch('/api/admin/moba-signal/run', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sourceId }),
       })
       const json = await res.json()
-      setNotice(res.ok
-        ? `${sourceId}: ${json.pagesFetched} pages, ${json.itemsFound} items found, ${json.itemsNew} new`
-        : `${sourceId} failed: ${json.error ?? res.status}`)
+      return res.ok
+        ? `${sourceId}: ${json.pagesFetched} pages, ${json.itemsFound} found, ${json.itemsNew} new`
+        : `${sourceId} failed: ${json.error ?? res.status}`
     } catch (e) {
-      setNotice(`${sourceId} failed: ${e instanceof Error ? e.message : e}`)
+      return `${sourceId} failed: ${e instanceof Error ? e.message : e}`
+    }
+  }
+
+  async function runSource(sourceId: string) {
+    setBusy(`run:${sourceId}`)
+    setNotice(null)
+    setNotice(await runOne(sourceId))
+    setBusy(null)
+    load()
+  }
+
+  // Full sweep, sequential so one slow site cannot pile up parallel load.
+  // Failures are isolated per source; the summary counts them.
+  async function runAll() {
+    const active = (state?.sources ?? []).filter(s => s.active !== false)
+    let newTotal = 0
+    let failures = 0
+    for (let i = 0; i < active.length; i++) {
+      const src = active[i]
+      setBusy(`run:${src.id}`)
+      setNotice(`Sweep ${i + 1}/${active.length}: running ${src.id}…`)
+      const msg = await runOne(src.id)
+      const m = msg.match(/(\d+) new$/)
+      if (m) newTotal += Number(m[1])
+      if (msg.includes('failed')) failures++
+      load()
     }
     setBusy(null)
+    setNotice(`Sweep done: ${active.length} sources, ${newTotal} new items${failures ? `, ${failures} failed` : ''}`)
     load()
   }
 
@@ -110,7 +135,16 @@ export default function MobaSignalAdmin() {
 
       {/* ── Sources ── */}
       <section>
-        <h2 className="text-sm font-bold text-gray-900 mb-2">Sources</h2>
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="text-sm font-bold text-gray-900">Sources</h2>
+          <button
+            onClick={runAll}
+            disabled={busy !== null}
+            className="text-xs font-semibold px-4 py-1.5 rounded-lg bg-brand text-white disabled:opacity-40"
+          >
+            {busy?.startsWith('run:') ? 'Sweeping…' : 'Run all sources'}
+          </button>
+        </div>
         <div className="rounded-xl border border-gray-200 bg-white divide-y divide-gray-100">
           {state.sources.map(s => (
             <div key={s.id} className="px-4 py-2.5 flex flex-wrap items-center gap-3">
