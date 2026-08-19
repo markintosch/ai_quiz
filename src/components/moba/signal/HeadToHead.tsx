@@ -8,6 +8,7 @@
 import { useState } from 'react'
 import type { SignalDataset } from '@/products/moba_signal/types'
 import { entityById, entityLabel, fmtDate } from '@/products/moba_signal/selectors'
+import { EdgeStrip } from './viz'
 
 function ConfidenceDots({ n }: { n: 1 | 2 | 3 }) {
   return (
@@ -46,8 +47,15 @@ export function HeadToHead({ data }: { data: SignalDataset }) {
       {card && (
         <div className="rounded-xl border border-gray-100 bg-white overflow-hidden">
           <p className="px-4 py-3 text-sm text-gray-600 bg-gray-50 border-b border-gray-100">{card.summary}</p>
+          <div className="px-4 py-3 border-b border-gray-100">
+            <h4 className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">Where we stand, per axis</h4>
+            <EdgeStrip axes={card.cells.map(c => ({
+              label: data.axes.find(a => a.key === c.axis)?.label ?? c.axis,
+              edge: c.edge,
+            }))} />
+          </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm min-w-[560px]">
+            <table className="w-full text-sm min-w-[460px]">
               <thead>
                 <tr className="text-left text-[11px] uppercase tracking-wide text-gray-400 border-b border-gray-100">
                   <th className="px-4 py-2 font-medium w-40">Axis</th>

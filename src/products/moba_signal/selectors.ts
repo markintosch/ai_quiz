@@ -75,6 +75,8 @@ export interface StatusMetric {
   label: string
   value: number | string
   baseline: string
+  /** Short count series behind the number (oldest first). */
+  spark?: number[]
   /** 'up-bad' | 'up-good' | 'flat' — colours the delta correctly per metric */
   tone: 'alert' | 'watch' | 'ok'
 }
@@ -126,9 +128,11 @@ export function statusMetrics(data: SignalDataset): StatusMetric[] {
 
   return [
     { key: 'announcements', label: 'Competitor announcements, 7d', value: last7,
-      baseline: `vs ${weeklyAvg}/wk 12-wk avg`, tone: last7 > weeklyAvg * 1.5 ? 'alert' : last7 > weeklyAvg ? 'watch' : 'ok' },
+      baseline: `vs ${weeklyAvg}/wk 12-wk avg`, tone: last7 > weeklyAvg * 1.5 ? 'alert' : last7 > weeklyAvg ? 'watch' : 'ok',
+      spark: weeklyCompetitorCounts(data, 12) },
     { key: 'wins', label: 'Announced wins, 30d', value: wins30,
-      baseline: `vs ${winsPrior30} prior 30d`, tone: wins30 > winsPrior30 ? 'alert' : 'ok' },
+      baseline: `vs ${winsPrior30} prior 30d`, tone: wins30 > winsPrior30 ? 'alert' : 'ok',
+      spark: monthlyWinCounts(data, 6) },
     { key: 'contested', label: 'Contested claims', value: contested,
       baseline: `of ${totalClaims} in messaging house`, tone: contested >= 3 ? 'alert' : contested > 0 ? 'watch' : 'ok' },
     { key: 'tech', label: 'New tech signals, 30d', value: tech30,
@@ -210,4 +214,145 @@ export function fmtDate(iso: string): string {
 export function fmtMonth(iso: string): string {
   const d = new Date(iso.length === 7 ? iso + '-01T00:00:00Z' : iso)
   return `${MONTHS[d.getUTCMonth()]} '${String(d.getUTCFullYear()).slice(2)}`
+}
+
+// ── Relative time: the reader should never have to compute an age ─────────────
+
+/** "today", "3d ago", "6w ago", "5m ago" — always relative to data.asOf. */
+export function relTime(iso: string, asOf: string): string {
+  const d = daysBetween(iso.slice(0, 10), asOf)
+  if (d <= 0) return 'today'
+  if (d === 1) return 'yesterday'
+  if (d < 14) return `${d}d ago`
+  if (d < 70) return `${Math.round(d / 7)}w ago`
+  if (d < 365) return `${Math.round(d / 30)}m ago`
+  return `${Math.round((d / 365) * 10) / 10}y ago`
+}
+
+/** "in 7d", "in 3w", "today" — for upcoming events. */
+export function relUntil(iso: string, asOf: string): string {
+  const d = daysBetween(asOf, iso.slice(0, 10))
+  if (d < 0) return relTime(iso, asOf)
+  if (d === 0) return 'today'
+  if (d === 1) return 'tomorrow'
+  if (d < 21) return `in ${d}d`
+  if (d < 90) return `in ${Math.round(d / 7)}w`
+  return `in ${Math.round(d / 30)}m`
+}
+
+/** Time buckets for the feed: recency is the primary reading order. */
+export type TimeBucket = { key: string; label: string; test: (days: number) => boolean }
+
+export const TIME_BUCKETS: TimeBucket[] = [
+  { key: 'week',    label: 'Last 7 days',   test: d => d < 7 },
+  { key: 'month',   label: 'Last 30 days',  test: d => d >= 7 && d < 30 },
+  { key: 'quarter', label: 'This quarter',  test: d => d >= 30 && d < 90 },
+  { key: 'older',   label: 'Earlier',       test: d => d >= 90 },
+]
+
+export function bucketFor(iso: string, asOf: string): string {
+  const d = daysBetween(iso.slice(0, 10), asOf)
+  return (TIME_BUCKETS.find(b => b.test(d)) ?? TIME_BUCKETS[TIME_BUCKETS.length - 1]).key
+}
+
+// ── Chart helpers ─────────────────────────────────────────────────────────────
+// Color follows the entity, never its rank: one fixed map for every chart.
+// Palette validated (CVD + normal-vision floors) on the white card surface;
+// the contrast WARN on aqua/yellow/magenta is relieved by visible text labels
+// beside every mark.
+
+export const ENTITY_COLORS: Record<string, string> = {
+  moba:    '#E8611A', // brand accent, reserved for Moba everywhere
+  sanovo:  '#2a78d6',
+  zenyer:  '#1baf7a',
+  nabel:   '#eda100',
+  prinzen: '#e87ba4',
+}
+export const ENTITY_COLOR_OTHER = '#898781'
+
+export function entityColor(laneId: string): string {
+  return ENTITY_COLORS[laneId] ?? ENTITY_COLOR_OTHER
+}
+
+/** Weekly competitor-announcement counts, oldest first, ending at asOf. */
+export function weeklyCompetitorCounts(data: SignalDataset, weeks = 12): number[] {
+  const out = new Array(weeks).fill(0)
+  for (const s of data.signals) {
+    if (laneEntityId(data, s.entityId) === 'moba') continue
+    const age = daysBetween(s.date, data.asOf)
+    if (age < 0 || age >= weeks * 7) continue
+    out[weeks - 1 - Math.floor(age / 7)] += 1
+  }
+  return out
+}
+
+/** Monthly competitor-win counts, oldest first, ending at asOf. */
+export function monthlyWinCounts(data: SignalDataset, months = 6): number[] {
+  const out = new Array(months).fill(0)
+  for (const s of data.signals) {
+    if (s.type !== 'win' || laneEntityId(data, s.entityId) === 'moba') continue
+    const age = daysBetween(s.date, data.asOf)
+    if (age < 0 || age >= months * 30) continue
+    out[months - 1 - Math.floor(age / 30)] += 1
+  }
+  return out
+}
+
+/** Calendar quarters covering the last `n`, oldest first: [{label, from, to}]. */
+export function lastQuarters(asOf: string, n = 8): Array<{ label: string; from: string; to: string }> {
+  const d = new Date(asOf + 'T00:00:00Z')
+  const quarters: Array<{ label: string; from: string; to: string }> = []
+  let y = d.getUTCFullYear()
+  let q = Math.floor(d.getUTCMonth() / 3) // 0-based quarter
+  for (let i = 0; i < n; i++) {
+    const from = new Date(Date.UTC(y, q * 3, 1)).toISOString().slice(0, 10)
+    const to = new Date(Date.UTC(y, q * 3 + 3, 0)).toISOString().slice(0, 10)
+    quarters.unshift({ label: `Q${q + 1}'${String(y).slice(2)}`, from, to })
+    q -= 1
+    if (q < 0) { q = 3; y -= 1 }
+  }
+  return quarters
+}
+
+/** Signal counts per competitor lane per quarter. Rows ordered by total, desc. */
+export function quarterlyLaneCounts(data: SignalDataset, n = 8): {
+  quarters: Array<{ label: string; from: string; to: string }>
+  rows: Array<{ laneId: string; counts: number[]; total: number }>
+} {
+  const quarters = lastQuarters(data.asOf, n)
+  const byLane = new Map<string, number[]>()
+  for (const s of data.signals) {
+    const lane = laneEntityId(data, s.entityId)
+    if (lane === 'moba') continue
+    const qi = quarters.findIndex(q => s.date >= q.from && s.date <= q.to)
+    if (qi === -1) continue
+    if (!byLane.has(lane)) byLane.set(lane, new Array(n).fill(0))
+    byLane.get(lane)![qi] += 1
+  }
+  const rows = [...byLane.entries()]
+    .map(([laneId, counts]) => ({ laneId, counts, total: counts.reduce((a, b) => a + b, 0) }))
+    .sort((a, b) => b.total - a.total)
+  return { quarters, rows }
+}
+
+/** Competitor wins per quarter, stacked by lane. Lanes ordered by total, desc. */
+export function quarterlyWinsByLane(data: SignalDataset, n = 6): {
+  quarters: Array<{ label: string; from: string; to: string }>
+  lanes: string[]
+  stacks: number[][] // [quarter][laneIndex]
+} {
+  const quarters = lastQuarters(data.asOf, n)
+  const totals = new Map<string, number>()
+  const wins = data.signals.filter(s => s.type === 'win' && laneEntityId(data, s.entityId) !== 'moba')
+  for (const s of wins) {
+    const lane = laneEntityId(data, s.entityId)
+    totals.set(lane, (totals.get(lane) ?? 0) + 1)
+  }
+  const lanes = [...totals.entries()].sort((a, b) => b[1] - a[1]).map(([id]) => id)
+  const stacks = quarters.map(q =>
+    lanes.map(lane => wins.filter(s =>
+      laneEntityId(data, s.entityId) === lane && s.date >= q.from && s.date <= q.to
+    ).length)
+  )
+  return { quarters, lanes, stacks }
 }

@@ -6,12 +6,25 @@
 // signals, and the attendance gap flag.
 
 import type { SignalDataset } from '@/products/moba_signal/types'
-import { entityById, entityLabel, eventPhase, fmtDate } from '@/products/moba_signal/selectors'
+import { entityById, entityLabel, eventPhase, fmtDate, relUntil } from '@/products/moba_signal/selectors'
+import { EventStrip } from './viz'
 
 export function Events({ data }: { data: SignalDataset }) {
   const events = [...data.events].sort((a, b) => a.startDate.localeCompare(b.startDate))
+  const upcoming = events.filter(ev => ev.startDate >= data.asOf)
   return (
     <div className="space-y-3">
+      <EventStrip
+        asOf={data.asOf}
+        events={upcoming.map(ev => ({
+          id: ev.id,
+          name: ev.name,
+          startDate: ev.startDate,
+          mobaExhibiting: ev.mobaExhibiting,
+          gap: !ev.mobaExhibiting && ev.competitors.some(c => entityById(data, c.entityId)?.priority),
+          competitors: ev.competitors.length,
+        }))}
+      />
       {events.map(ev => {
         const phase = eventPhase(data, ev.startDate, ev.endDate)
         const priorityCount = ev.competitors.filter(c => entityById(data, c.entityId)?.priority).length
@@ -23,6 +36,7 @@ export function Events({ data }: { data: SignalDataset }) {
                 <h4 className="text-sm font-semibold text-gray-800">{ev.name}</h4>
                 <p className="text-xs text-gray-400">
                   {ev.location}, {ev.country} · {fmtDate(ev.startDate)} – {fmtDate(ev.endDate)}
+                  <span className="ml-1.5 font-semibold text-gray-600">{relUntil(ev.startDate, data.asOf)}</span>
                 </p>
               </div>
               <div className="flex items-center gap-2 text-[11px]">

@@ -238,6 +238,8 @@ export interface ComparisonCell {
   axis: string
   moba: string
   competitor: string
+  /** Analyst judgement: 1 Moba ahead, 0 par, -1 behind. Drives the advantage strip. */
+  edge: -1 | 0 | 1
   /** Confidence in the competitor side of the cell. */
   confidence: Credibility
   lastVerified: string

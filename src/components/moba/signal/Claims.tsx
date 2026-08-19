@@ -6,7 +6,7 @@
 
 import type { SignalDataset, ContestedStatus } from '@/products/moba_signal/types'
 import { CONTESTED_LABELS } from '@/products/moba_signal/types'
-import { entityById, entityLabel, fmtDate } from '@/products/moba_signal/selectors'
+import { entityById, entityLabel, fmtDate, relTime } from '@/products/moba_signal/selectors'
 
 const STATUS_CLS: Record<ContestedStatus, string> = {
   uncontested: 'bg-emerald-50 text-emerald-700 border-emerald-200',
@@ -21,10 +21,39 @@ function Trend({ t }: { t: -1 | 0 | 1 }) {
   return <span className="text-gray-300" title="Stable over the last two quarters">→</span>
 }
 
+const SUMMARY_COLORS: Record<ContestedStatus, string> = {
+  uncontested: '#0ca30c',
+  adjacent:    '#fab219',
+  contested:   '#d03b3b',
+  conceded:    '#898781',
+}
+const STATUS_ORDER: ContestedStatus[] = ['contested', 'conceded', 'adjacent', 'uncontested']
+
 export function Claims({ data }: { data: SignalDataset }) {
   const houseStale = data.context.find(c => c.id === 'ctx-01' && c.reviewBy < data.asOf)
+  const counts = STATUS_ORDER
+    .map(st => ({ st, n: data.claims.filter(c => c.status === st).length }))
+    .filter(x => x.n > 0)
+  const total = data.claims.length
   return (
     <div>
+      {/* Contest pressure at a glance: one stacked bar, worst first */}
+      <div className="mb-4">
+        <div className="flex h-3 rounded-full overflow-hidden gap-0.5">
+          {counts.map(x => (
+            <div key={x.st} title={`${CONTESTED_LABELS[x.st]}: ${x.n} of ${total}`}
+              style={{ width: `${(x.n / total) * 100}%`, backgroundColor: SUMMARY_COLORS[x.st] }} />
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1.5">
+          {counts.map(x => (
+            <span key={x.st} className="inline-flex items-center gap-1.5 text-[11px] text-gray-500">
+              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: SUMMARY_COLORS[x.st] }} />
+              {CONTESTED_LABELS[x.st]} · {x.n}
+            </span>
+          ))}
+        </div>
+      </div>
       {houseStale && (
         <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-800">
           The messaging house passed its review date ({fmtDate(houseStale.reviewBy)}). Rows below are provisional
@@ -57,7 +86,7 @@ export function Claims({ data }: { data: SignalDataset }) {
                         &ldquo;{cc.wording}&rdquo;
                       </a>
                       {cc.translation && <span className="text-gray-400"> ({cc.sourceLanguage}: &ldquo;{cc.translation}&rdquo;)</span>}
-                      <span className="text-gray-300"> · last seen {fmtDate(cc.lastSeen)}</span>
+                      <span className="text-gray-300" title={fmtDate(cc.lastSeen)}> · last seen {relTime(cc.lastSeen, data.asOf)}</span>
                     </li>
                   )
                 })}

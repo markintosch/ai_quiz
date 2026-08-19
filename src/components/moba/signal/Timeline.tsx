@@ -118,6 +118,8 @@ export function Timeline({ data, onSelect }: {
                   {months.map(m => (
                     <div key={m} className="absolute top-0 bottom-0 w-px bg-gray-200/70" style={{ left: `${pct(m)}%` }} />
                   ))}
+                  {/* now marker: the right edge is always today */}
+                  <div className="absolute top-0 bottom-0 right-0 w-0.5 bg-brand-accent/50" />
                   {laneSignals.map(s => {
                     const critical = band(s) === 'critical' && !isMoba
                     return (
@@ -149,6 +151,7 @@ export function Timeline({ data, onSelect }: {
                   </span>
                 ) : null
               ))}
+              <span className="absolute right-0 text-[10px] font-semibold text-brand-accent">today</span>
             </div>
           </div>
         </div>

@@ -6,7 +6,7 @@
 
 import type { SignalDataset, ProposalKind } from '@/products/moba_signal/types'
 import { CHANNEL_LABELS } from '@/products/moba_signal/types'
-import { fmtDate } from '@/products/moba_signal/selectors'
+import { fmtDate, relTime } from '@/products/moba_signal/selectors'
 
 const KIND_LABELS: Record<ProposalKind, string> = {
   'source':        'New source',
@@ -21,7 +21,7 @@ export function Queue({ data }: { data: SignalDataset }) {
   const decided = data.proposals.filter(p => p.state !== 'pending')
 
   return (
-    <div className="grid lg:grid-cols-2 gap-6">
+    <div className="space-y-6">
       {/* Approval queue */}
       <div>
         <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">
@@ -34,7 +34,7 @@ export function Queue({ data }: { data: SignalDataset }) {
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-brand/5 text-brand border border-brand/20 font-semibold uppercase tracking-wide">
                   {KIND_LABELS[p.kind]}
                 </span>
-                <span className="text-[11px] text-gray-400">by {p.proposedBy} · {fmtDate(p.proposedOn)}</span>
+                <span className="text-[11px] text-gray-400" title={fmtDate(p.proposedOn)}>by {p.proposedBy} · {relTime(p.proposedOn, data.asOf)}</span>
               </div>
               <h5 className="text-sm font-semibold text-gray-800">{p.title}</h5>
               <p className="text-xs text-gray-500 mt-1">{p.rationale}</p>
@@ -80,7 +80,7 @@ export function Queue({ data }: { data: SignalDataset }) {
               <div key={q.id} className={`rounded-xl border p-4 ${q.state === 'resolved' ? 'border-gray-100 bg-gray-50/60' : 'border-gray-100 bg-white'}`}>
                 <p className={`text-sm ${q.state === 'resolved' ? 'text-gray-400' : 'text-gray-700 font-medium'}`}>{q.question}</p>
                 <p className="text-[11px] text-gray-400 mt-1">
-                  Asked by {q.askedBy}, {fmtDate(q.askedOn)} · {q.attempts} attempts · last tried {fmtDate(q.lastAttempt)}
+                  Asked by {q.askedBy}, {relTime(q.askedOn, data.asOf)} · {q.attempts} attempts · last tried {relTime(q.lastAttempt, data.asOf)}
                 </p>
                 {q.resolution && <p className="text-xs text-emerald-700 mt-1.5">Resolved: {q.resolution}</p>}
               </div>

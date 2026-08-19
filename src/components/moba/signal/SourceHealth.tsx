@@ -17,7 +17,7 @@ export function SourceHealth({ data }: { data: SignalDataset }) {
   const staleContext = data.context.filter(c => c.reviewBy < data.asOf)
 
   return (
-    <div className="grid lg:grid-cols-2 gap-6">
+    <div className="grid lg:grid-cols-2 2xl:grid-cols-3 gap-6 items-start">
       {/* Sources */}
       <div>
         <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">Sources</h4>
@@ -45,9 +45,8 @@ export function SourceHealth({ data }: { data: SignalDataset }) {
         </div>
       </div>
 
-      {/* Method, context corpus, blind spots */}
-      <div className="space-y-5">
-        <div>
+      {/* Context corpus */}
+      <div>
           <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">Context corpus</h4>
           <div className="divide-y divide-gray-100 border border-gray-100 rounded-xl bg-white">
             {data.context.map(c => {
@@ -74,9 +73,10 @@ export function SourceHealth({ data }: { data: SignalDataset }) {
               lens the agent reads everything through; a stale lens corrupts silently.
             </p>
           )}
-        </div>
+      </div>
 
-        <div>
+      {/* Method and blind spots */}
+      <div>
           <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">Method and known blind spots</h4>
           <ul className="text-xs text-gray-500 space-y-1.5 rounded-xl border border-gray-100 bg-white p-4">
             <li>Public sources only. No authenticated access, no circumvention, no misrepresentation.</li>
@@ -86,7 +86,6 @@ export function SourceHealth({ data }: { data: SignalDataset }) {
             <li>Blind spot: Japanese-language sources are stale this week (NABEL site, Kyowa scraper failed).</li>
             <li>Blind spot: Americas history not yet backfilled. That research phase is in progress.</li>
           </ul>
-        </div>
       </div>
     </div>
   )
