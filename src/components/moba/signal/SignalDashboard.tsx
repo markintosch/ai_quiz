@@ -76,7 +76,7 @@ const VIEWS: Record<ViewKey, { label: string; hint: string; main: CardId[]; a: C
   },
 }
 
-export function SignalDashboard({ data }: { data: SignalDataset }) {
+export function SignalDashboard({ data, sourceLabel = 'prototype, sample data' }: { data: SignalDataset; sourceLabel?: string }) {
   const [selected, setSelected] = useState<Signal | null>(null)
   const [view, setView] = useState<ViewKey>('overview')
 
@@ -165,7 +165,7 @@ export function SignalDashboard({ data }: { data: SignalDataset }) {
           <div className="flex items-center justify-between gap-4 mb-1.5">
             <div className="flex items-baseline gap-2 min-w-0">
               <span className="font-bold text-brand whitespace-nowrap">Moba Signal</span>
-              <span className="text-[11px] text-gray-400 whitespace-nowrap hidden sm:inline">as of {fmtDate(data.asOf)} · prototype, sample data</span>
+              <span className="text-[11px] text-gray-400 whitespace-nowrap hidden sm:inline">as of {fmtDate(data.asOf)} · {sourceLabel}</span>
             </div>
             <div className="flex items-center gap-1" role="tablist" aria-label="View">
               {(Object.keys(VIEWS) as ViewKey[]).map(k => (
@@ -264,7 +264,7 @@ export function SignalDashboard({ data }: { data: SignalDataset }) {
         </Card>
 
         <footer className="pt-2 pb-8 text-[11px] text-gray-400 space-y-1">
-          <p>Internal prototype for Moba marketing and innovation. All items above are illustrative sample data, not collected intelligence.</p>
+          <p>Internal prototype for Moba marketing and innovation. Mode: {sourceLabel}. In live mode the claims tracker, head to head and event calendar still show curated sample content until their pipeline phases land.</p>
           <p>Impact model: proximity + materiality + credibility. Critical 8-9 · Notable 5-7 · Context 3-4 · Noise below 3. An item can never be Critical on credibility 1.</p>
         </footer>
       </div>

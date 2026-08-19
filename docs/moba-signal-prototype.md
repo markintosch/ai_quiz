@@ -69,3 +69,47 @@ illustrative sample data, clearly labelled as such on the page.
    model against this UI.
 3. P0 build: entity graph with provenance in Supabase, Collector/Verifier/
    Analyst on cadence, approval queue wired, contribution ingress.
+
+## Phase A + B: the live pipeline (added later)
+
+The dashboard now has a real data path next to the sample dataset. The code
+lives in `src/lib/signal/` — copied and refined from the Atelier pattern, but
+a fully separate namespace (no shared imports, tables prefixed
+`moba_signal_*`) so the two products never mix.
+
+### Flow
+
+1. `supabase/migration_moba_signal.sql` creates the tables and seeds the
+   entities (with ownership relations), sources and context corpus.
+2. `/admin/moba-signal` is the collection console: run a collector per
+   source, review what the agents propose, decide curator proposals.
+3. A run (`src/lib/signal/runner.ts`) fetches the source's listing page plus
+   up to five article pages, extracts dated facts with Claude Haiku against a
+   strict schema (`extract.ts` — items without a resolvable date, or dated in
+   the future, are dropped at the gate), links entities by name and alias,
+   and scores deterministically (`score.ts`) so the analyst can always see
+   why an item scored what it did. Everything lands `review_status='proposed'`.
+4. Approval requires a linked entity. Approved items render on
+   `/moba/signal`; rejected items are kept with the review note — that is the
+   learning loop's raw material. Unknown company names become curator entity
+   proposals.
+5. `/moba/signal` renders live data when approved items exist, and falls back
+   to the labelled sample dataset otherwise (or with `?demo`). In live mode
+   the claims tracker, head to head and event calendar still show curated
+   sample content until their phases land; the footer says so.
+
+### To activate in production
+
+1. Run `supabase/migration_moba_signal.sql` in the Supabase SQL editor.
+2. Ensure `ANTHROPIC_API_KEY` is set in the Vercel environment.
+3. Open `/admin/moba-signal`, hit "Run now" on a source, review the queue.
+4. Fill `account_names` on the `ctx-accounts` context row so proximity
+   scoring can flag strategic accounts.
+
+### Not yet in this phase
+
+Cron cadence (the run route is admin-triggered; add a Vercel cron next), the
+Verifier's cross-source clustering, the backfill queue, the Asia-report
+import job, and Wayback claims diffing. Live collection was not run in the
+build environment (no database or API key there); the fetch, extraction and
+review paths are exercised by the admin console against production config.

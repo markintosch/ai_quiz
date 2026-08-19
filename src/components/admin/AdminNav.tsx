@@ -58,6 +58,7 @@ const GROUPS: NavGroup[] = [
       { href: '/admin/hcss', label: '🛡️ HCSS' },
       { href: '/admin/moba', label: '🥚 MOBA Marketing Survey' },
       { href: '/admin/moba/questions', label: '   ↳ Vragen' },
+      { href: '/admin/moba-signal', label: '📡 MOBA Signal collectie' },
     ],
   },
   {

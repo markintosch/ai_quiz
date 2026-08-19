@@ -1,0 +1,165 @@
+// FILE: src/lib/signal/runner.ts
+// ─── Moba Signal — collection run ─────────────────────────────────────────────
+//
+// One run = one source: fetch the listing page, follow a few article links,
+// extract dated facts, link entities, score deterministically, and store
+// everything as review_status='proposed'. Nothing a run writes is visible on
+// the dashboard until the analyst approves it.
+//
+// Every run is logged to moba_signal_runs; the source health panel reads that
+// log, so a failed run is visible rather than a quiet zero (PRD §8.6).
+
+import type { SupabaseClient } from '@supabase/supabase-js'
+import { discoverArticleLinks, fetchPage, htmlToText } from './crawl'
+import { extractItems, type ExtractedItem } from './extract'
+import { credibilityFor, dedupeKey, linkEntities, materialityFor, proximityFor, type EntityRow } from './score'
+
+const MAX_ARTICLES = 5
+const CONCURRENCY = 3
+
+export interface RunResult {
+  sourceId: string
+  ok: boolean
+  pagesFetched: number
+  itemsFound: number
+  itemsNew: number
+  error?: string
+}
+
+async function withConcurrency<T, R>(items: T[], n: number, worker: (t: T) => Promise<R>): Promise<R[]> {
+  const results: R[] = []
+  let cursor = 0
+  async function lane() {
+    while (cursor < items.length) {
+      const i = cursor++
+      results[i] = await worker(items[i])
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(n, items.length) }, () => lane()))
+  return results
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Db = SupabaseClient<any, any, any>
+
+export async function runSource(supabase: Db, sourceId: string): Promise<RunResult> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = supabase as any
+  const { data: source } = await db.from('moba_signal_sources').select('*').eq('id', sourceId).maybeSingle()
+  if (!source) return { sourceId, ok: false, pagesFetched: 0, itemsFound: 0, itemsNew: 0, error: 'Unknown source' }
+
+  const { data: runRow } = await db.from('moba_signal_runs')
+    .insert({ source_id: sourceId }).select('id').single()
+
+  const { data: entityRows } = await db.from('moba_signal_entities')
+    .select('id, name, ownership_kind, aliases, regions, priority')
+  const entities: EntityRow[] = entityRows ?? []
+
+  const { data: ctx } = await db.from('moba_signal_context').select('account_names')
+  const accountNames: string[] = (ctx ?? []).flatMap((c: { account_names: string[] | null }) => c.account_names ?? [])
+
+  let pagesFetched = 0
+  let itemsFound = 0
+  let itemsNew = 0
+  let error: string | undefined
+
+  try {
+    // 1. Listing page
+    const listingHtml = await fetchPage(source.url)
+    pagesFetched++
+    const listingText = htmlToText(listingHtml)
+    const links = discoverArticleLinks(listingHtml, source.url, MAX_ARTICLES)
+
+    // 2. Extract from the listing itself plus each article page
+    const pages: Array<{ url: string; text: string }> = [{ url: source.url, text: listingText }]
+    const articles = await withConcurrency(links, CONCURRENCY, async l => {
+      try {
+        const html = await fetchPage(l.url)
+        return { url: l.url, text: htmlToText(html) }
+      } catch {
+        return null
+      }
+    })
+    for (const a of articles) if (a) { pages.push(a); pagesFetched++ }
+
+    const batches = await withConcurrency(pages, 2, p => extractItems(p.url, p.text).catch(() => [] as ExtractedItem[]))
+    const extracted = batches.flat()
+    itemsFound = extracted.length
+
+    // 3. Link, score, store as proposed. The unique dedupe index makes
+    //    re-runs idempotent: an existing key refreshes last_confirmed instead.
+    const unknownNames = new Map<string, number>()
+    for (const item of extracted) {
+      const link = linkEntities(item.entities, entities)
+      if (link.entityGuess) unknownNames.set(link.entityGuess, (unknownNames.get(link.entityGuess) ?? 0) + 1)
+      const row = {
+        event_date:        item.date,
+        entity_id:         link.entityId,
+        entity_guess:      link.entityGuess,
+        linked_entity_ids: link.linkedIds,
+        title:             item.title,
+        summary:           item.summary,
+        type:              item.type,
+        region:            item.region,
+        category:          item.category,
+        proximity:         proximityFor(item, link, entities, accountNames),
+        materiality:       materialityFor(item.type),
+        credibility:       credibilityFor(source.source_class),
+        inference:         item.inference,
+        quotes:            item.quotes,
+        source_id:         sourceId,
+        source_url:        item.url ?? source.url,
+        dedupe_key:        dedupeKey(item, link),
+        raw:               item,
+      }
+      const { error: insErr } = await db.from('moba_signal_items').insert(row)
+      if (!insErr) {
+        itemsNew++
+      } else if (String(insErr.code) === '23505') {
+        await db.from('moba_signal_items')
+          .update({ last_confirmed: new Date().toISOString() })
+          .eq('dedupe_key', row.dedupe_key)
+      }
+    }
+
+    // 4. Curator-lite: an unknown company seen on this source becomes an
+    //    entity proposal. Unique index keeps proposals from repeating.
+    for (const [name, count] of unknownNames) {
+      if (count < 1) continue
+      await db.from('moba_signal_proposals').insert({
+        kind: 'entity',
+        title: `Track new entity: ${name}`,
+        rationale: `Seen ${count}x in ${source.name} on this run without matching a tracked entity or alias.`,
+        proposed_by: 'curator',
+        source_url: source.url,
+      })
+    }
+
+    await db.from('moba_signal_sources').update({
+      status: 'ok',
+      last_run_at: new Date().toISOString(),
+      ...(itemsNew > 0 ? { last_item_at: new Date().toISOString() } : {}),
+      failure_reason: null,
+    }).eq('id', sourceId)
+  } catch (err) {
+    error = err instanceof Error ? err.message : String(err)
+    await db.from('moba_signal_sources').update({
+      status: 'failed',
+      last_run_at: new Date().toISOString(),
+      failure_reason: error,
+    }).eq('id', sourceId)
+  }
+
+  if (runRow?.id) {
+    await db.from('moba_signal_runs').update({
+      finished_at: new Date().toISOString(),
+      ok: !error,
+      pages_fetched: pagesFetched,
+      items_found: itemsFound,
+      items_new: itemsNew,
+      error: error ?? null,
+    }).eq('id', runRow.id)
+  }
+
+  return { sourceId, ok: !error, pagesFetched, itemsFound, itemsNew, error }
+}
