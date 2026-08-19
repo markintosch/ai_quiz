@@ -69,3 +69,71 @@ export function discoverArticleLinks(html: string, pageUrl: string, max = 6): Ar
   }
   return [...out.values()]
 }
+
+// ── RSS ingestion ─────────────────────────────────────────────────────────────
+// Verified feeds are the preferred path: they carry publication dates and
+// canonical article URLs, which the extractor otherwise has to infer. Source
+// list and endpoint status come from the "Moba Signal Sources" briefing
+// (probed 19 Aug 2026); sources without a working feed fall back to the HTML
+// listing scrape above.
+
+import { XMLParser } from 'fast-xml-parser'
+
+export interface FeedEntry {
+  url: string
+  title: string
+  publishedAt?: string   // ISO date when the feed carries one
+  description?: string
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function asArray<T = any>(v: T | T[] | undefined): T[] {
+  if (v === undefined || v === null) return []
+  return Array.isArray(v) ? v : [v]
+}
+
+function toIsoDate(v: unknown): string | undefined {
+  if (typeof v !== 'string') return undefined
+  const t = Date.parse(v)
+  return Number.isNaN(t) ? undefined : new Date(t).toISOString().slice(0, 10)
+}
+
+/** Parse RSS 2.0 or Atom into entries. Returns [] for non-feed responses. */
+export function parseFeed(xml: string, max = 8): FeedEntry[] {
+  if (!/<(rss|feed|rdf:RDF)[\s>]/i.test(xml.slice(0, 2000))) return []
+  const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '@_' })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let doc: any
+  try { doc = parser.parse(xml) } catch { return [] }
+
+  const out: FeedEntry[] = []
+  // RSS 2.0: rss.channel.item[]
+  for (const item of asArray(doc?.rss?.channel?.item)) {
+    const url = typeof item.link === 'string' ? item.link : item.link?.['#text']
+    const title = typeof item.title === 'string' ? item.title : item.title?.['#text']
+    if (!url || !title) continue
+    const desc = typeof item.description === 'string' ? item.description : undefined
+    out.push({
+      url, title: String(title).trim(),
+      publishedAt: toIsoDate(item.pubDate ?? item['dc:date']),
+      description: desc ? htmlToText(desc).slice(0, 2000) : undefined,
+    })
+    if (out.length >= max) return out
+  }
+  if (out.length > 0) return out
+  // Atom: feed.entry[] with link[@href]
+  for (const entry of asArray(doc?.feed?.entry)) {
+    const links = asArray(entry.link)
+    const alt = links.find(l => l?.['@_rel'] === 'alternate') ?? links[0]
+    const url = alt?.['@_href']
+    const title = typeof entry.title === 'string' ? entry.title : entry.title?.['#text']
+    if (!url || !title) continue
+    out.push({
+      url, title: String(title).trim(),
+      publishedAt: toIsoDate(entry.published ?? entry.updated),
+      description: typeof entry.summary === 'string' ? htmlToText(entry.summary).slice(0, 2000) : undefined,
+    })
+    if (out.length >= max) break
+  }
+  return out
+}

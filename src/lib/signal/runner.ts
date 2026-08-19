@@ -10,7 +10,7 @@
 // log, so a failed run is visible rather than a quiet zero (PRD §8.6).
 
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { discoverArticleLinks, fetchPage, htmlToText } from './crawl'
+import { discoverArticleLinks, fetchPage, htmlToText, parseFeed } from './crawl'
 import { extractItems, type ExtractedItem } from './extract'
 import { credibilityFor, dedupeKey, linkEntities, materialityFor, proximityFor, type EntityRow } from './score'
 
@@ -64,25 +64,54 @@ export async function runSource(supabase: Db, sourceId: string): Promise<RunResu
   let error: string | undefined
 
   try {
-    // 1. Listing page
-    const listingHtml = await fetchPage(source.url)
-    pagesFetched++
-    const listingText = htmlToText(listingHtml)
-    const links = discoverArticleLinks(listingHtml, source.url, MAX_ARTICLES)
-
-    // 2. Extract from the listing itself plus each article page
-    const pages: Array<{ url: string; text: string }> = [{ url: source.url, text: listingText }]
-    const articles = await withConcurrency(links, CONCURRENCY, async l => {
+    // 1. Prefer the verified feed when the source has one: RSS carries the
+    //    publication date and the canonical article URL, so the extractor
+    //    starts from facts instead of inferring them from page furniture.
+    const pages: Array<{ url: string; text: string; dateHint?: string }> = []
+    let feedWorked = false
+    if (source.feed_url) {
       try {
-        const html = await fetchPage(l.url)
-        return { url: l.url, text: htmlToText(html) }
+        const feedXml = await fetchPage(source.feed_url)
+        pagesFetched++
+        const entries = parseFeed(feedXml, MAX_ARTICLES)
+        if (entries.length > 0) {
+          feedWorked = true
+          const bodies = await withConcurrency(entries, CONCURRENCY, async e => {
+            try {
+              const html = await fetchPage(e.url)
+              return { url: e.url, text: `${e.title}\n\n${htmlToText(html)}`, dateHint: e.publishedAt }
+            } catch {
+              // Article page blocked: the feed description is still usable
+              return e.description
+                ? { url: e.url, text: `${e.title}\n\n${e.description}`, dateHint: e.publishedAt }
+                : null
+            }
+          })
+          for (const b of bodies) if (b) { pages.push(b); pagesFetched++ }
+        }
       } catch {
-        return null
+        // fall through to the listing scrape
       }
-    })
-    for (const a of articles) if (a) { pages.push(a); pagesFetched++ }
+    }
 
-    const batches = await withConcurrency(pages, 2, p => extractItems(p.url, p.text).catch(() => [] as ExtractedItem[]))
+    // 2. Fallback: scrape the listing page plus discovered article links
+    if (!feedWorked) {
+      const listingHtml = await fetchPage(source.url)
+      pagesFetched++
+      pages.push({ url: source.url, text: htmlToText(listingHtml) })
+      const links = discoverArticleLinks(listingHtml, source.url, MAX_ARTICLES)
+      const articles = await withConcurrency(links, CONCURRENCY, async l => {
+        try {
+          const html = await fetchPage(l.url)
+          return { url: l.url, text: htmlToText(html) }
+        } catch {
+          return null
+        }
+      })
+      for (const a of articles) if (a) { pages.push(a); pagesFetched++ }
+    }
+
+    const batches = await withConcurrency(pages, 2, p => extractItems(p.url, p.text, p.dateHint).catch(() => [] as ExtractedItem[]))
     const extracted = batches.flat()
     itemsFound = extracted.length
 
