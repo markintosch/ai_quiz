@@ -21,6 +21,7 @@ import { Claims } from './Claims'
 import { HeadToHead } from './HeadToHead'
 import { Events } from './Events'
 import { Wins } from './Wins'
+import { ShareOfVoice } from './ShareOfVoice'
 import { SourceHealth } from './SourceHealth'
 import { Queue } from './Queue'
 
@@ -55,20 +56,20 @@ function Card({ id, title, sub, tall, scroll = true, children }: {
 // PRD scopes sales access (a battlecard view) as P2 with its own owner.
 
 type ViewKey = 'overview' | 'marketing' | 'innovation' | 'analyst'
-type CardId = 'feed' | 'claims' | 'h2h' | 'wins' | 'events' | 'queue' | 'tech' | 'momentum'
+type CardId = 'feed' | 'claims' | 'h2h' | 'wins' | 'events' | 'queue' | 'tech' | 'momentum' | 'sov'
 
 const VIEWS: Record<ViewKey, { label: string; hint: string; main: CardId[]; a: CardId[]; b: CardId[] }> = {
   overview: {
     label: 'Overview', hint: 'The shared picture: what happened, ranked',
-    main: ['feed'], a: ['momentum', 'claims', 'wins'], b: ['h2h', 'events', 'queue', 'tech'],
+    main: ['feed'], a: ['momentum', 'claims', 'wins'], b: ['h2h', 'sov', 'events', 'queue', 'tech'],
   },
   marketing: {
     label: 'Marketing', hint: 'Positioning and comms: claims first',
-    main: ['claims'], a: ['h2h', 'wins'], b: ['momentum', 'events', 'feed', 'tech'],
+    main: ['claims'], a: ['sov', 'h2h', 'wins'], b: ['momentum', 'events', 'feed', 'tech'],
   },
   innovation: {
     label: 'Innovation', hint: 'Product and research: capability first',
-    main: ['h2h'], a: ['tech', 'momentum', 'events'], b: ['feed', 'wins'],
+    main: ['h2h'], a: ['tech', 'momentum', 'events'], b: ['sov', 'feed', 'wins'],
   },
   analyst: {
     label: 'Analyst', hint: 'The working view: feed and queue',
@@ -140,6 +141,12 @@ export function SignalDashboard({ data, sourceLabel = 'prototype, sample data' }
           rows={momentum.rows}
           laneLabel={id => { const e = entityById(data, id); return e ? entityLabel(e) : id }}
         />
+      </Card>
+    ),
+    sov: () => (
+      <Card key="sov" id="sov" title="Share of voice" scroll={false}
+        sub="LinkedIn competitor analytics: who is publishing, who is resonating. Monthly import.">
+        <ShareOfVoice data={data} />
       </Card>
     ),
     tech: () => (
