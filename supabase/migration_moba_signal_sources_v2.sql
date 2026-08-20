@@ -8,7 +8,7 @@
 -- New columns: preferred feed endpoint and ingest method
 alter table moba_signal_sources add column if not exists feed_url text;
 alter table moba_signal_sources add column if not exists ingest text not null default 'scrape'
-  check (ingest in ('rss','scrape','page-diff','newsletter','headless'));
+  check (ingest in ('rss','scrape','page-diff','newsletter','headless','wayback'));
 
 -- ── Tier one and verified feeds: ingest directly ──────────────────────────────
 insert into moba_signal_sources (id, name, url, feed_url, ingest, source_class, language) values
