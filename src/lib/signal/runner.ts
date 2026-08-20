@@ -42,6 +42,75 @@ async function withConcurrency<T, R>(items: T[], n: number, worker: (t: T) => Pr
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Db = SupabaseClient<any, any, any>
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export interface SourceRow { id: string; name: string; url: string; source_class: string; [k: string]: any }
+
+/**
+ * The shared second half of ingestion: link entities, score deterministically,
+ * store everything as review_status='proposed', and turn unknown company
+ * names into curator proposals. Used by the crawler and by manual uploads,
+ * so both channels meet exactly the same standard.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function storeExtracted(db: any, source: SourceRow, extracted: ExtractedItem[], opts?: {
+  assertedBy?: string
+  /** Extra provenance kept in the raw payload (e.g. uploaded filename). */
+  provenance?: Record<string, unknown>
+}): Promise<{ itemsNew: number }> {
+  const { data: entityRows } = await db.from('moba_signal_entities')
+    .select('id, name, ownership_kind, aliases, regions, priority')
+  const entities: EntityRow[] = entityRows ?? []
+  const { data: ctx } = await db.from('moba_signal_context').select('account_names')
+  const accountNames: string[] = (ctx ?? []).flatMap((c: { account_names: string[] | null }) => c.account_names ?? [])
+
+  let itemsNew = 0
+  const unknownNames = new Map<string, number>()
+  for (const item of extracted) {
+    const link = linkEntities(item.entities, entities)
+    if (link.entityGuess) unknownNames.set(link.entityGuess, (unknownNames.get(link.entityGuess) ?? 0) + 1)
+    const row = {
+      event_date:        item.date,
+      entity_id:         link.entityId,
+      entity_guess:      link.entityGuess,
+      linked_entity_ids: link.linkedIds,
+      title:             item.title,
+      summary:           item.summary,
+      type:              item.type,
+      region:            item.region,
+      category:          item.category,
+      proximity:         proximityFor(item, link, entities, accountNames),
+      materiality:       materialityFor(item.type),
+      credibility:       credibilityFor(source.source_class),
+      inference:         item.inference,
+      quotes:            item.quotes,
+      source_id:         source.id,
+      source_url:        item.url ?? source.url,
+      asserted_by:       opts?.assertedBy ?? 'collector',
+      dedupe_key:        dedupeKey(item, link),
+      raw:               opts?.provenance ? { ...item, ...opts.provenance } : item,
+    }
+    const { error: insErr } = await db.from('moba_signal_items').insert(row)
+    if (!insErr) {
+      itemsNew++
+    } else if (String(insErr.code) === '23505') {
+      await db.from('moba_signal_items')
+        .update({ last_confirmed: new Date().toISOString() })
+        .eq('dedupe_key', row.dedupe_key)
+    }
+  }
+
+  for (const [name, count] of unknownNames) {
+    await db.from('moba_signal_proposals').insert({
+      kind: 'entity',
+      title: `Track new entity: ${name}`,
+      rationale: `Seen ${count}x in ${source.name} without matching a tracked entity or alias.`,
+      proposed_by: 'curator',
+      source_url: source.url,
+    })
+  }
+  return { itemsNew }
+}
+
 export async function runSource(supabase: Db, sourceId: string): Promise<RunResult> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const db = supabase as any
@@ -50,13 +119,6 @@ export async function runSource(supabase: Db, sourceId: string): Promise<RunResu
 
   const { data: runRow } = await db.from('moba_signal_runs')
     .insert({ source_id: sourceId }).select('id').single()
-
-  const { data: entityRows } = await db.from('moba_signal_entities')
-    .select('id, name, ownership_kind, aliases, regions, priority')
-  const entities: EntityRow[] = entityRows ?? []
-
-  const { data: ctx } = await db.from('moba_signal_context').select('account_names')
-  const accountNames: string[] = (ctx ?? []).flatMap((c: { account_names: string[] | null }) => c.account_names ?? [])
 
   let pagesFetched = 0
   let itemsFound = 0
@@ -120,54 +182,9 @@ export async function runSource(supabase: Db, sourceId: string): Promise<RunResu
     const extracted = batches.flat()
     itemsFound = extracted.length
 
-    // 3. Link, score, store as proposed. The unique dedupe index makes
-    //    re-runs idempotent: an existing key refreshes last_confirmed instead.
-    const unknownNames = new Map<string, number>()
-    for (const item of extracted) {
-      const link = linkEntities(item.entities, entities)
-      if (link.entityGuess) unknownNames.set(link.entityGuess, (unknownNames.get(link.entityGuess) ?? 0) + 1)
-      const row = {
-        event_date:        item.date,
-        entity_id:         link.entityId,
-        entity_guess:      link.entityGuess,
-        linked_entity_ids: link.linkedIds,
-        title:             item.title,
-        summary:           item.summary,
-        type:              item.type,
-        region:            item.region,
-        category:          item.category,
-        proximity:         proximityFor(item, link, entities, accountNames),
-        materiality:       materialityFor(item.type),
-        credibility:       credibilityFor(source.source_class),
-        inference:         item.inference,
-        quotes:            item.quotes,
-        source_id:         sourceId,
-        source_url:        item.url ?? source.url,
-        dedupe_key:        dedupeKey(item, link),
-        raw:               item,
-      }
-      const { error: insErr } = await db.from('moba_signal_items').insert(row)
-      if (!insErr) {
-        itemsNew++
-      } else if (String(insErr.code) === '23505') {
-        await db.from('moba_signal_items')
-          .update({ last_confirmed: new Date().toISOString() })
-          .eq('dedupe_key', row.dedupe_key)
-      }
-    }
-
-    // 4. Curator-lite: an unknown company seen on this source becomes an
-    //    entity proposal. Unique index keeps proposals from repeating.
-    for (const [name, count] of unknownNames) {
-      if (count < 1) continue
-      await db.from('moba_signal_proposals').insert({
-        kind: 'entity',
-        title: `Track new entity: ${name}`,
-        rationale: `Seen ${count}x in ${source.name} on this run without matching a tracked entity or alias.`,
-        proposed_by: 'curator',
-        source_url: source.url,
-      })
-    }
+    // 3+4. Shared store step: link, score, propose
+    const stored = await storeExtracted(db, source, extracted)
+    itemsNew = stored.itemsNew
 
     await db.from('moba_signal_sources').update({
       status: 'ok',

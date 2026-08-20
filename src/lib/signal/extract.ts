@@ -43,10 +43,19 @@ Rules:
 Answer with valid JSON only:
 {"items":[{"title":"...","summary":"...","date":"YYYY-MM-DD","entities":["..."],"type":"launch|win|partnership|personnel|facility|funding|certification","region":"europe|americas|asia|mea|global","category":"grading|processing|detection|digital|service|sustainability|corporate","quotes":[],"url":null,"inference":false}]}`
 
-export async function extractItems(pageUrl: string, pageText: string, pageDateHint?: string): Promise<ExtractedItem[]> {
+const MODE_HINTS: Record<string, string> = {
+  news: '',
+  research: 'This text is a research report or whitepaper. Extract every dated company event it documents, including historical ones from past years: installations, orders, launches, expansions. Also capture capability claims as quotes. Historical items are wanted here, not noise.',
+  notes: 'This text is informal field intelligence (meeting notes, a call summary, observations). Extract concrete company events only; mark uncertain conclusions as inference. Skip opinions with no factual core.',
+}
+
+export type ExtractMode = keyof typeof MODE_HINTS
+
+export async function extractItems(pageUrl: string, pageText: string, pageDateHint?: string, mode: ExtractMode = 'news'): Promise<ExtractedItem[]> {
   const text = pageText.slice(0, 14_000)
   if (text.length < 80) return []
-  const user = `Page URL: ${pageUrl}\nFetched: ${pageDateHint ?? new Date().toISOString().slice(0, 10)}\n\nPage text:\n${text}`
+  const hint = MODE_HINTS[mode] ? `\n${MODE_HINTS[mode]}` : ''
+  const user = `Page URL: ${pageUrl}\nFetched: ${pageDateHint ?? new Date().toISOString().slice(0, 10)}${hint}\n\nPage text:\n${text}`
   const raw = await signalLlmCall({ tier: 'haiku', system: SYSTEM_PROMPT, user, maxTokens: 3000 })
   const parsed = ResponseSchema.safeParse(parseJson(raw))
   if (!parsed.success) return []
