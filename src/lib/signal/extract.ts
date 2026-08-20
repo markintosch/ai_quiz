@@ -45,7 +45,7 @@ Answer with valid JSON only:
 
 export async function extractItems(pageUrl: string, pageText: string, pageDateHint?: string): Promise<ExtractedItem[]> {
   const text = pageText.slice(0, 14_000)
-  if (text.length < 200) return []
+  if (text.length < 80) return []
   const user = `Page URL: ${pageUrl}\nFetched: ${pageDateHint ?? new Date().toISOString().slice(0, 10)}\n\nPage text:\n${text}`
   const raw = await signalLlmCall({ tier: 'haiku', system: SYSTEM_PROMPT, user, maxTokens: 3000 })
   const parsed = ResponseSchema.safeParse(parseJson(raw))

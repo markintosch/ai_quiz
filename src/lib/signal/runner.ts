@@ -77,6 +77,11 @@ export async function runSource(supabase: Db, sourceId: string): Promise<RunResu
         if (entries.length > 0) {
           feedWorked = true
           const bodies = await withConcurrency(entries, CONCURRENCY, async e => {
+            // Aggregator entries (Google News) link to redirect pages, not
+            // articles: the feed's own title and description are the content.
+            if (/(^|\.)news\.google\.com$/.test(new URL(e.url).hostname)) {
+              return { url: e.url, text: `${e.title}\n\n${e.description ?? ''}`, dateHint: e.publishedAt }
+            }
             try {
               const html = await fetchPage(e.url)
               return { url: e.url, text: `${e.title}\n\n${htmlToText(html)}`, dateHint: e.publishedAt }
