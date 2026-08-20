@@ -137,3 +137,36 @@ export function parseFeed(xml: string, max = 8): FeedEntry[] {
   }
   return out
 }
+
+// ── Wayback ingestion ─────────────────────────────────────────────────────────
+// For sources whose live site blocks plain fetches: the Internet Archive
+// crawls them anyway and serves the copies publicly. Days of lag, which a
+// newsroom can afford. Reading the public archive is not circumvention: the
+// site's own access controls stay untouched.
+
+export interface WaybackSnapshot {
+  url: string
+  /** ISO date of the snapshot, used as the extractor's date hint. */
+  date: string
+}
+
+export async function resolveWaybackSnapshot(originalUrl: string): Promise<WaybackSnapshot | null> {
+  const api = `https://archive.org/wayback/available?url=${encodeURIComponent(originalUrl)}`
+  let raw: string
+  try {
+    raw = await fetchPage(api)
+  } catch {
+    return null
+  }
+  try {
+    const json = JSON.parse(raw)
+    const snap = json?.archived_snapshots?.closest
+    if (!snap?.available || !snap?.url) return null
+    const ts = String(snap.timestamp ?? '')
+    const date = ts.length >= 8 ? `${ts.slice(0, 4)}-${ts.slice(4, 6)}-${ts.slice(6, 8)}` : new Date().toISOString().slice(0, 10)
+    // Force https: the API sometimes hands back http URLs
+    return { url: String(snap.url).replace(/^http:/, 'https:'), date }
+  } catch {
+    return null
+  }
+}
