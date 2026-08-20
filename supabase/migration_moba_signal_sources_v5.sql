@@ -4,6 +4,11 @@
 -- snapshot instead. Days of lag, acceptable for a newsroom; the Google News
 -- feed stays the fast lane. Run in the Supabase SQL editor. Idempotent.
 
+-- Databases created with the earlier v2 constraint need it widened first
+alter table moba_signal_sources drop constraint if exists moba_signal_sources_ingest_check;
+alter table moba_signal_sources add constraint moba_signal_sources_ingest_check
+  check (ingest in ('rss','scrape','page-diff','newsletter','headless','wayback'));
+
 update moba_signal_sources set
   ingest = 'wayback',
   active = true,
