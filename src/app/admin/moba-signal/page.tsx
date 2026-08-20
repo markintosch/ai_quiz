@@ -36,6 +36,11 @@ export default function MobaSignalAdmin() {
   const [notice, setNotice] = useState<string | null>(null)
   const [noticeErr, setNoticeErr] = useState(false)
   const [entityPick, setEntityPick] = useState<Record<string, string>>({})
+  const [upFile, setUpFile] = useState<File | null>(null)
+  const [upSource, setUpSource] = useState('')
+  const [upUrl, setUpUrl] = useState('')
+  const [upKind, setUpKind] = useState('news')
+  const [upNote, setUpNote] = useState('')
 
   const load = useCallback(async () => {
     try {
@@ -113,6 +118,32 @@ export default function MobaSignalAdmin() {
     load()
   }
 
+  async function uploadDocument() {
+    if (!upFile || !upSource || !upUrl) return
+    setBusy('upload')
+    setNotice(`Processing ${upFile.name}…`)
+    try {
+      const fd = new FormData()
+      fd.append('file', upFile)
+      fd.append('sourceId', upSource)
+      fd.append('sourceUrl', upUrl)
+      fd.append('kind', upKind)
+      if (upNote) fd.append('note', upNote)
+      const res = await fetch('/api/admin/moba-signal/upload', { method: 'POST', body: fd })
+      const json = await res.json()
+      if (!res.ok) { setNotice(json.error ?? `HTTP ${res.status}`); setNoticeErr(true) }
+      else {
+        setNotice(`${upFile.name}: ${json.chunks} chunks, ${json.itemsFound} items found, ${json.itemsNew} new in the review queue`)
+        setNoticeErr(false)
+        setUpFile(null); setUpUrl(''); setUpNote('')
+      }
+    } catch (e) {
+      setNotice(e instanceof Error ? e.message : String(e)); setNoticeErr(true)
+    }
+    setBusy(null)
+    load()
+  }
+
   if (error) {
     return (
       <main className="p-8 max-w-3xl">
@@ -172,6 +203,62 @@ export default function MobaSignalAdmin() {
               </button>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* ── Upload evidence ── */}
+      <section>
+        <h2 className="text-sm font-bold text-gray-900 mb-1">Upload evidence</h2>
+        <p className="text-xs text-gray-500 mb-3">
+          For what the crawler cannot reach: save a blocked press page as PDF or HTML, or feed in a research
+          report. Same pipeline, same review queue — uploading never publishes directly.
+        </p>
+        <div className="rounded-xl border border-gray-200 bg-white p-4 space-y-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <select value={upKind} onChange={e => setUpKind(e.target.value)}
+              className="text-xs border border-gray-200 rounded-lg px-2 py-1.5 text-gray-600 bg-white">
+              <option value="news">Press or news page</option>
+              <option value="research">Research report / whitepaper</option>
+              <option value="notes">Field notes / meeting intel</option>
+            </select>
+            <select value={upSource} onChange={e => setUpSource(e.target.value)}
+              className="text-xs border border-gray-200 rounded-lg px-2 py-1.5 text-gray-600 bg-white">
+              <option value="">— file under source —</option>
+              {state.sources.map(s2 => (
+                <option key={s2.id} value={s2.id}>{s2.name}{s2.active === false ? ' (blocked: uploads welcome)' : ''}</option>
+              ))}
+            </select>
+            <input
+              type="file"
+              accept=".pdf,.html,.htm,.txt,.md"
+              onChange={e => setUpFile(e.target.files?.[0] ?? null)}
+              className="text-xs text-gray-600 file:mr-2 file:px-3 file:py-1.5 file:rounded-lg file:border file:border-gray-300 file:bg-white file:text-xs file:font-semibold"
+            />
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <input
+              type="url" placeholder="Original page URL (provenance, required)"
+              value={upUrl} onChange={e => setUpUrl(e.target.value)}
+              className="flex-1 min-w-[260px] text-xs border border-gray-200 rounded-lg px-3 py-2 text-gray-700"
+            />
+            <input
+              type="text" placeholder="Why you are adding this (optional)"
+              value={upNote} onChange={e => setUpNote(e.target.value)}
+              className="flex-1 min-w-[200px] text-xs border border-gray-200 rounded-lg px-3 py-2 text-gray-700"
+            />
+            <button
+              onClick={uploadDocument}
+              disabled={busy !== null || !upFile || !upSource || !upUrl}
+              className="text-xs font-semibold px-4 py-2 rounded-lg bg-brand text-white disabled:opacity-40"
+            >
+              {busy === 'upload' ? 'Processing…' : 'Ingest'}
+            </button>
+          </div>
+          <p className="text-[11px] text-gray-400">
+            PDF, HTML or text, max 4 MB. Research reports are chunked deep and historical items are kept:
+            that is also the route for loading the Asia landscape research into the timeline. Field notes
+            enter at credibility 1 by rule.
+          </p>
         </div>
       </section>
 
