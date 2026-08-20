@@ -24,6 +24,20 @@ interface State {
 
 const SCORE_HINT = 'proximity · materiality · credibility'
 
+/** Platform errors (413 Request Entity Too Large, timeouts) are plain text, not JSON. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function safeJson(res: Response): Promise<Record<string, any>> {
+  const text = await res.text()
+  try {
+    return JSON.parse(text)
+  } catch {
+    const msg = text.slice(0, 120) || `HTTP ${res.status}`
+    return { error: /request entity too large/i.test(text)
+      ? 'File too large for the server (limit ~4 MB). Save the page as HTML instead of PDF, or split the file.'
+      : msg }
+  }
+}
+
 function fmtTs(v?: string | null): string {
   if (!v) return '—'
   return new Date(v).toLocaleString('nl-NL', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
@@ -46,9 +60,9 @@ export default function MobaSignalAdmin() {
   const load = useCallback(async () => {
     try {
       const res = await fetch('/api/admin/moba-signal')
-      const json = await res.json()
-      if (!res.ok) throw new Error(json.error ?? `HTTP ${res.status}`)
-      setState(json)
+      const json = await safeJson(res)
+      if (!res.ok || json.error) throw new Error(json.error ?? `HTTP ${res.status}`)
+      setState(json as State)
       setError(null)
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e))
@@ -63,7 +77,7 @@ export default function MobaSignalAdmin() {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sourceId }),
       })
-      const json = await res.json()
+      const json = await safeJson(res)
       return res.ok
         ? `${sourceId}: ${json.pagesFetched} pages, ${json.itemsFound} found, ${json.itemsNew} new`
         : `${sourceId} failed: ${json.error ?? res.status}`
@@ -109,7 +123,7 @@ export default function MobaSignalAdmin() {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       })
-      const json = await res.json()
+      const json = await safeJson(res)
       if (!res.ok) { setNotice(json.error ?? `HTTP ${res.status}`); setNoticeErr(true) }
       else { setNotice(json.created ? `Created ${json.created}` : null); setNoticeErr(false) }
     } catch (e) {
@@ -121,6 +135,11 @@ export default function MobaSignalAdmin() {
 
   async function uploadDocument() {
     if (!upFile || !upSource || !upUrl) return
+    if (upFile.size > 4_000_000) {
+      setNotice(`${upFile.name} is ${(upFile.size / 1e6).toFixed(1)} MB — over the 4 MB upload limit. Save the page as HTML instead of PDF (far smaller, extracts better), or split the file.`)
+      setNoticeErr(true)
+      return
+    }
     setBusy('upload')
     setNotice(`Processing ${upFile.name}…`)
     try {
@@ -131,7 +150,7 @@ export default function MobaSignalAdmin() {
       fd.append('kind', upKind)
       if (upNote) fd.append('note', upNote)
       const res = await fetch('/api/admin/moba-signal/upload', { method: 'POST', body: fd })
-      const json = await res.json()
+      const json = await safeJson(res)
       if (!res.ok) { setNotice(json.error ?? `HTTP ${res.status}`); setNoticeErr(true) }
       else {
         setNotice(`${upFile.name}: ${json.chunks} chunks, ${json.itemsFound} items found, ${json.itemsNew} new in the review queue`)
@@ -153,7 +172,7 @@ export default function MobaSignalAdmin() {
       const fd = new FormData()
       fd.append('file', sovFile)
       const res = await fetch('/api/admin/moba-signal/social', { method: 'POST', body: fd })
-      const json = await res.json()
+      const json = await safeJson(res)
       if (!res.ok) { setNotice(json.error ?? `HTTP ${res.status}`); setNoticeErr(true) }
       else {
         const bits = [`${json.statsUpserted} page-periods stored (${json.sheetsParsed} sheet${json.sheetsParsed === 1 ? '' : 's'})`]
