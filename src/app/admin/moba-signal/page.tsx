@@ -34,6 +34,7 @@ export default function MobaSignalAdmin() {
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState<string | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
+  const [noticeErr, setNoticeErr] = useState(false)
   const [entityPick, setEntityPick] = useState<Record<string, string>>({})
 
   const load = useCallback(async () => {
@@ -103,9 +104,10 @@ export default function MobaSignalAdmin() {
         body: JSON.stringify(body),
       })
       const json = await res.json()
-      if (!res.ok) setNotice(json.error ?? `HTTP ${res.status}`)
+      if (!res.ok) { setNotice(json.error ?? `HTTP ${res.status}`); setNoticeErr(true) }
+      else { setNotice(json.created ? `Created ${json.created}` : null); setNoticeErr(false) }
     } catch (e) {
-      setNotice(e instanceof Error ? e.message : String(e))
+      setNotice(e instanceof Error ? e.message : String(e)); setNoticeErr(true)
     }
     setBusy(null)
     load()
@@ -130,7 +132,7 @@ export default function MobaSignalAdmin() {
             Agents collect and propose; nothing reaches <a className="underline" href="/moba/signal" target="_blank">/moba/signal</a> until approved here.
           </p>
         </div>
-        {notice && <span className="text-xs px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700">{notice}</span>}
+        {notice && <span className={`text-xs px-3 py-1.5 rounded-lg ${noticeErr ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-gray-100 text-gray-700'}`}>{noticeErr ? '⚠ ' : ''}{notice}</span>}
       </header>
 
       {/* ── Sources ── */}
@@ -209,6 +211,9 @@ export default function MobaSignalAdmin() {
                     className="text-xs border border-gray-200 rounded-lg px-2 py-1.5 text-gray-600 bg-white"
                   >
                     <option value="">— link entity —</option>
+                    {item.entity_guess && (
+                      <option value="__new__">＋ Create &ldquo;{item.entity_guess}&rdquo; as new tracked entity</option>
+                    )}
                     {state.entities.map(e => (
                       <option key={e.id} value={e.id}>
                         {e.name}{e.ownership_kind === 'moba' ? ' (part of Moba)' : e.parent_name ? ` (part of ${e.parent_name})` : ''}
@@ -216,7 +221,7 @@ export default function MobaSignalAdmin() {
                     ))}
                   </select>
                   <button
-                    onClick={() => review({ itemId: item.id, action: 'approve', entityId: picked || undefined }, `ap:${item.id}`)}
+                    onClick={() => review({ itemId: item.id, action: 'approve', entityId: picked || undefined, newEntityName: picked === '__new__' ? item.entity_guess : undefined }, `ap:${item.id}`)}
                     disabled={busy !== null || !picked}
                     className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-brand text-white disabled:opacity-40"
                   >
@@ -229,6 +234,9 @@ export default function MobaSignalAdmin() {
                   >
                     Reject
                   </button>
+                  {!picked && (
+                    <span className="text-[11px] text-amber-700">Link an entity (or create one from the dropdown) to enable Approve.</span>
+                  )}
                 </div>
               </div>
             )
@@ -255,8 +263,9 @@ export default function MobaSignalAdmin() {
             ))}
           </div>
           <p className="text-[11px] text-gray-400 mt-2">
-            Accepting an entity proposal does not create the entity yet: add it to moba_signal_entities with its
-            ownership relation, then re-run the source. Automating that step is the next iteration.
+            Accepting an entity or source proposal creates the row immediately (entities as independent
+            competitors; adjust ownership in Supabase when a brand belongs to a group). Data-pipeline and
+            watchlist proposals are workplans: accepting records the decision only.
           </p>
         </section>
       )}

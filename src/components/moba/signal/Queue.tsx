@@ -43,14 +43,10 @@ export function Queue({ data }: { data: SignalDataset }) {
                   &ldquo;{p.why}&rdquo; ({p.contributor}, via {p.channel ? CHANNEL_LABELS[p.channel] : 'unknown channel'})
                 </p>
               )}
-              <div className="flex gap-2 mt-3">
-                <button className="px-3 py-1 rounded-lg bg-brand text-white text-xs font-medium opacity-60 cursor-not-allowed" title="Read-only prototype">
-                  Accept
-                </button>
-                <button className="px-3 py-1 rounded-lg border border-gray-200 text-gray-500 text-xs font-medium opacity-60 cursor-not-allowed" title="Read-only prototype">
-                  Reject
-                </button>
-              </div>
+              <p className="mt-3 text-[11px] text-gray-400">
+                Decisions happen in the{' '}
+                <a href="/admin/moba-signal" className="text-brand underline">collection console</a>.
+              </p>
             </div>
           ))}
         </div>

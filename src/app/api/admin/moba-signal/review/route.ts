@@ -12,6 +12,23 @@ import { isAuthorised } from '@/lib/admin/auth'
 
 export const dynamic = 'force-dynamic'
 
+/** Slug for entities/sources created from the console: 'Huanong Machinery' -> 'huanong-machinery' */
+function slugify(name: string): string {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'entity'
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function createEntity(db: any, name: string, note?: string): Promise<{ id?: string; error?: string }> {
+  const id = slugify(name)
+  const { error } = await db.from('moba_signal_entities').insert({
+    id, name, type: 'competitor', ownership_kind: 'independent',
+    aliases: [name], note: note ?? 'Created from the review console.',
+  })
+  // 23505 = already exists, which is fine: link to the existing row
+  if (error && String(error.code) !== '23505') return { error: error.message }
+  return { id }
+}
+
 export async function POST(req: NextRequest) {
   if (!(await isAuthorised())) {
     return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
@@ -28,12 +45,36 @@ export async function POST(req: NextRequest) {
   const action = String(body.action ?? '')
 
   if (action === 'accept-proposal' || action === 'reject-proposal') {
+    const { data: prop } = await db.from('moba_signal_proposals').select('*').eq('id', body.proposalId).maybeSingle()
+    if (!prop) return NextResponse.json({ error: 'Unknown proposal' }, { status: 404 })
+
+    // Accepting is not just bookkeeping: entity and source proposals
+    // materialise into real rows, so the pipeline can use them immediately.
+    let created: string | undefined
+    if (action === 'accept-proposal') {
+      const name = String(prop.title).replace(/^(Add source|Track new entity|Add data pipeline|Add watchlist):\s*/i, '').trim()
+      if (prop.kind === 'entity') {
+        const r = await createEntity(db, name, prop.rationale)
+        if (r.error) return NextResponse.json({ error: r.error }, { status: 500 })
+        created = `entity ${r.id}`
+      } else if (prop.kind === 'source' && prop.source_url) {
+        const id = slugify(name)
+        const { error } = await db.from('moba_signal_sources').insert({
+          id, name, url: prop.source_url, source_class: 'trade-press', ingest: 'scrape',
+        })
+        if (error && String(error.code) !== '23505') {
+          return NextResponse.json({ error: error.message }, { status: 500 })
+        }
+        created = `source ${id}`
+      }
+    }
+
     const { error } = await db.from('moba_signal_proposals').update({
       state: action === 'accept-proposal' ? 'accepted' : 'rejected',
       decided_at: new Date().toISOString(),
     }).eq('id', body.proposalId)
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-    return NextResponse.json({ ok: true })
+    return NextResponse.json({ ok: true, created })
   }
 
   const itemId = String(body.itemId ?? '')
@@ -51,8 +92,16 @@ export async function POST(req: NextRequest) {
   }
 
   if (action === 'approve') {
-    const { data: item } = await db.from('moba_signal_items').select('entity_id').eq('id', itemId).maybeSingle()
-    const entityId = body.entityId ?? item?.entity_id
+    const { data: item } = await db.from('moba_signal_items').select('entity_id, entity_guess').eq('id', itemId).maybeSingle()
+    let entityId = body.entityId ?? item?.entity_id
+    // One-step path for unmatched items: create the guessed entity and link it
+    if (entityId === '__new__') {
+      const name = String(body.newEntityName ?? item?.entity_guess ?? '').trim()
+      if (!name) return NextResponse.json({ error: 'No entity name to create.' }, { status: 400 })
+      const r = await createEntity(db, name)
+      if (r.error) return NextResponse.json({ error: r.error }, { status: 500 })
+      entityId = r.id
+    }
     if (!entityId) {
       return NextResponse.json({ error: 'Approval requires a linked entity. Pick one first.' }, { status: 400 })
     }
