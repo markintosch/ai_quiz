@@ -12,7 +12,7 @@
 
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type {
-  Entity, OpenQuestion, Ownership, Proposal, Signal, SignalDataset, Source, SourceStatus,
+  Entity, OpenQuestion, Ownership, Proposal, Signal, SignalDataset, SocialStat, Source, SourceStatus,
 } from '@/products/moba_signal/types'
 import { SIGNAL_DEMO } from '@/products/moba_signal/data'
 
@@ -133,6 +133,36 @@ export async function loadLiveDataset(supabase: Db): Promise<LiveDataset | null>
       state: r.state, resolution: r.resolution ?? undefined,
     }))
 
+    // Share of voice: roll pages up to entities per period; excluded pages
+    // (namesakes) and unmapped pages never reach the dashboard.
+    let social: SocialStat[] = []
+    try {
+      const [pagesQ, statsQ] = await Promise.all([
+        db.from('moba_signal_social_pages').select('*'),
+        db.from('moba_signal_social_stats').select('*'),
+      ])
+      const pageEntity = new Map<string, string>()
+      for (const p of (pagesQ.data ?? []) as Row[]) {
+        if (p.include !== false && p.entity_id) pageEntity.set(p.page_name, p.entity_id)
+      }
+      const agg = new Map<string, SocialStat>()
+      for (const r of (statsQ.data ?? []) as Row[]) {
+        const entityId = pageEntity.get(r.page_name)
+        if (!entityId) continue
+        const key = `${entityId}|${day(r.period_start)}|${day(r.period_end)}`
+        const cur = agg.get(key) ?? {
+          entityId, periodStart: day(r.period_start), periodEnd: day(r.period_end),
+          followers: 0, newFollowers: 0, engagements: 0, posts: 0,
+        }
+        cur.followers += r.followers ?? 0
+        cur.newFollowers += r.new_followers ?? 0
+        cur.engagements += r.engagements ?? 0
+        cur.posts += r.posts ?? 0
+        agg.set(key, cur)
+      }
+      social = [...agg.values()].sort((a, b) => a.periodEnd.localeCompare(b.periodEnd))
+    } catch { /* tables may not exist yet — the card explains itself */ }
+
     const contextQ = await db.from('moba_signal_context').select('*')
     const context = (contextQ.data ?? []).map((r: Row) => ({
       id: r.id, name: r.name, owner: r.owner, loadedOn: day(r.loaded_on),
@@ -147,6 +177,7 @@ export async function loadLiveDataset(supabase: Db): Promise<LiveDataset | null>
       proposals,
       questions,
       context,
+      social,
       // Curated modules keep the sample until their pipeline phases land
       claims: SIGNAL_DEMO.claims,
       whitespace: SIGNAL_DEMO.whitespace,

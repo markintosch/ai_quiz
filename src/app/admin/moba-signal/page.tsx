@@ -41,6 +41,7 @@ export default function MobaSignalAdmin() {
   const [upUrl, setUpUrl] = useState('')
   const [upKind, setUpKind] = useState('news')
   const [upNote, setUpNote] = useState('')
+  const [sovFile, setSovFile] = useState<File | null>(null)
 
   const load = useCallback(async () => {
     try {
@@ -136,6 +137,32 @@ export default function MobaSignalAdmin() {
         setNotice(`${upFile.name}: ${json.chunks} chunks, ${json.itemsFound} items found, ${json.itemsNew} new in the review queue`)
         setNoticeErr(false)
         setUpFile(null); setUpUrl(''); setUpNote('')
+      }
+    } catch (e) {
+      setNotice(e instanceof Error ? e.message : String(e)); setNoticeErr(true)
+    }
+    setBusy(null)
+    load()
+  }
+
+  async function importSocial() {
+    if (!sovFile) return
+    setBusy('sov')
+    setNotice(`Importing ${sovFile.name}…`)
+    try {
+      const fd = new FormData()
+      fd.append('file', sovFile)
+      const res = await fetch('/api/admin/moba-signal/social', { method: 'POST', body: fd })
+      const json = await res.json()
+      if (!res.ok) { setNotice(json.error ?? `HTTP ${res.status}`); setNoticeErr(true) }
+      else {
+        const bits = [`${json.statsUpserted} page-periods stored (${json.sheetsParsed} sheet${json.sheetsParsed === 1 ? '' : 's'})`]
+        if (json.excluded?.length) bits.push(`excluded: ${json.excluded.join(', ')}`)
+        if (json.unmapped?.length) bits.push(`unmapped pages (not on dashboard yet): ${json.unmapped.join(', ')}`)
+        if (json.newPages?.length) bits.push(`new pages: ${json.newPages.join('; ')}`)
+        setNotice(bits.join(' · '))
+        setNoticeErr(false)
+        setSovFile(null)
       }
     } catch (e) {
       setNotice(e instanceof Error ? e.message : String(e)); setNoticeErr(true)
@@ -259,6 +286,26 @@ export default function MobaSignalAdmin() {
             that is also the route for loading the Asia landscape research into the timeline. Field notes
             enter at credibility 1 by rule.
           </p>
+          <div className="pt-3 border-t border-gray-100 flex flex-wrap items-center gap-2">
+            <span className="text-xs font-semibold text-gray-700">Share of voice:</span>
+            <input
+              type="file"
+              accept=".xlsx,.xls"
+              onChange={e => setSovFile(e.target.files?.[0] ?? null)}
+              className="text-xs text-gray-600 file:mr-2 file:px-3 file:py-1.5 file:rounded-lg file:border file:border-gray-300 file:bg-white file:text-xs file:font-semibold"
+            />
+            <button
+              onClick={importSocial}
+              disabled={busy !== null || !sovFile}
+              className="text-xs font-semibold px-4 py-1.5 rounded-lg bg-brand text-white disabled:opacity-40"
+            >
+              {busy === 'sov' ? 'Importing…' : 'Import LinkedIn export'}
+            </button>
+            <span className="text-[11px] text-gray-400">
+              The LinkedIn competitor analytics .xlsx, any period length. Numbers, not items: feeds the
+              Share of voice card, never the signal feed.
+            </span>
+          </div>
         </div>
       </section>
 

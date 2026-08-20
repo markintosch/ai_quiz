@@ -371,6 +371,19 @@ export interface ContextItem {
   note?: string
 }
 
+// ── Share of voice (LinkedIn competitor analytics) ────────────────────────────
+
+/** One period's totals for one entity, pages rolled up, namesakes excluded. */
+export interface SocialStat {
+  entityId: string
+  periodStart: string
+  periodEnd: string
+  followers: number
+  newFollowers: number
+  engagements: number
+  posts: number
+}
+
 // ── The dataset the dashboard renders ─────────────────────────────────────────
 
 export interface SignalDataset {
@@ -387,6 +400,8 @@ export interface SignalDataset {
   proposals: Proposal[]
   questions: OpenQuestion[]
   context: ContextItem[]
+  /** LinkedIn share-of-voice periods, entity-rolled. Empty until an export is imported. */
+  social?: SocialStat[]
   /** Analyst-written headline. Immutable to the agent once set (PRD §8.6). */
   headlineOverride?: { text: string; author: string; writtenOn: string }
 }
