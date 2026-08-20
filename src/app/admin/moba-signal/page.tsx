@@ -61,8 +61,8 @@ export default function MobaSignalAdmin() {
     try {
       const res = await fetch('/api/admin/moba-signal')
       const json = await safeJson(res)
-      if (!res.ok) throw new Error(json.error ?? `HTTP ${res.status}`)
-      setState(json)
+      if (!res.ok || json.error) throw new Error(json.error ?? `HTTP ${res.status}`)
+      setState(json as State)
       setError(null)
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e))
