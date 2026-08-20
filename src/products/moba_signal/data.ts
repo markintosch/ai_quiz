@@ -698,6 +698,24 @@ export const SIGNAL_DEMO: SignalDataset = {
       note: 'Context and public claims in one. The agent tracks these for contestation.' },
   ],
 
+  // ── Share of voice (illustrative, mirrors the LinkedIn import shape) ────────
+  social: [
+    // 12-month baseline window
+    { entityId: 'moba',   periodStart: '2025-08-19', periodEnd: '2026-06-18', followers: 32000, newFollowers: 3300, engagements: 9400,  posts: 126 },
+    { entityId: 'sanovo', periodStart: '2025-08-19', periodEnd: '2026-06-18', followers: 17600, newFollowers: 2600, engagements: 8800,  posts: 148 },
+    { entityId: 'nabel',  periodStart: '2025-08-19', periodEnd: '2026-06-18', followers: 4100,  newFollowers: 500,  engagements: 2100,  posts: 60 },
+    { entityId: 'zenyer', periodStart: '2025-08-19', periodEnd: '2026-06-18', followers: 2900,  newFollowers: 700,  engagements: 1500,  posts: 52 },
+    // two monthly points
+    { entityId: 'moba',   periodStart: '2026-06-19', periodEnd: '2026-07-18', followers: 33000, newFollowers: 310, engagements: 640, posts: 10 },
+    { entityId: 'sanovo', periodStart: '2026-06-19', periodEnd: '2026-07-18', followers: 17900, newFollowers: 180, engagements: 690, posts: 14 },
+    { entityId: 'nabel',  periodStart: '2026-06-19', periodEnd: '2026-07-18', followers: 4200,  newFollowers: 60,  engagements: 240, posts: 6 },
+    { entityId: 'zenyer', periodStart: '2026-06-19', periodEnd: '2026-07-18', followers: 3000,  newFollowers: 90,  engagements: 170, posts: 5 },
+    { entityId: 'moba',   periodStart: '2026-07-19', periodEnd: '2026-08-18', followers: 33400, newFollowers: 320, engagements: 380, posts: 8 },
+    { entityId: 'sanovo', periodStart: '2026-07-19', periodEnd: '2026-08-18', followers: 18100, newFollowers: 150, engagements: 710, posts: 17 },
+    { entityId: 'nabel',  periodStart: '2026-07-19', periodEnd: '2026-08-18', followers: 4260,  newFollowers: 70,  engagements: 310, posts: 7 },
+    { entityId: 'zenyer', periodStart: '2026-07-19', periodEnd: '2026-08-18', followers: 3080,  newFollowers: 110, engagements: 220, posts: 6 },
+  ],
+
   // ── Analyst headline (immutable to the agent) ───────────────────────────────
   headlineOverride: {
     text: 'Sanovo has announced three processing-line wins in Southeast Asia this quarter against one in the prior quarter, including one at a Moba strategic account. Our processing claim is now the most contested position in the messaging house.',
