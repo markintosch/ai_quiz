@@ -10,7 +10,7 @@
 // log, so a failed run is visible rather than a quiet zero (PRD §8.6).
 
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { discoverArticleLinks, fetchPage, htmlToText, parseFeed } from './crawl'
+import { discoverArticleLinks, fetchPage, htmlToText, parseFeed, resolveWaybackSnapshot } from './crawl'
 import { extractItems, type ExtractedItem } from './extract'
 import { credibilityFor, dedupeKey, linkEntities, materialityFor, proximityFor, type EntityRow } from './score'
 
@@ -161,12 +161,23 @@ export async function runSource(supabase: Db, sourceId: string): Promise<RunResu
       }
     }
 
-    // 2. Fallback: scrape the listing page plus discovered article links
+    // 2. Fallback: scrape the listing page plus discovered article links.
+    //    Wayback sources scrape the latest archived snapshot instead of the
+    //    live page; article links inside the snapshot are archive-hosted, so
+    //    the same-host link discovery follows them naturally.
     if (!feedWorked) {
-      const listingHtml = await fetchPage(source.url)
+      let listingUrl = source.url
+      let dateHint: string | undefined
+      if (source.ingest === 'wayback') {
+        const snap = await resolveWaybackSnapshot(source.url)
+        if (!snap) throw new Error('No Wayback snapshot available for this URL')
+        listingUrl = snap.url
+        dateHint = snap.date
+      }
+      const listingHtml = await fetchPage(listingUrl)
       pagesFetched++
-      pages.push({ url: source.url, text: htmlToText(listingHtml) })
-      const links = discoverArticleLinks(listingHtml, source.url, MAX_ARTICLES)
+      pages.push({ url: listingUrl, text: htmlToText(listingHtml), dateHint })
+      const links = discoverArticleLinks(listingHtml, listingUrl, MAX_ARTICLES)
       const articles = await withConcurrency(links, CONCURRENCY, async l => {
         try {
           const html = await fetchPage(l.url)
