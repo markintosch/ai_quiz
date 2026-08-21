@@ -12,7 +12,7 @@
 
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type {
-  Entity, OpenQuestion, Ownership, Proposal, Signal, SignalDataset, SocialStat, Source, SourceStatus,
+  CompetitiveBrief, Entity, OpenQuestion, Ownership, Proposal, Signal, SignalDataset, SocialStat, Source, SourceStatus,
 } from '@/products/moba_signal/types'
 import { SIGNAL_DEMO } from '@/products/moba_signal/data'
 
@@ -88,6 +88,8 @@ export async function loadLiveDataset(supabase: Db): Promise<LiveDataset | null>
         assertedBy: r.asserted_by,
         humanReviewed: r.human_reviewed,
         inference: r.inference || undefined,
+        disposition: r.disposition ?? undefined,
+        recommendedAction: r.recommended_action ?? undefined,
         annotations: (annByItem.get(r.id) ?? []).map(a => ({
           id: a.id, author: a.author, role: a.role, createdAt: a.created_at,
           means: a.means, consider: a.consider, whoNeedsToKnow: a.who_needs_to_know,
@@ -163,6 +165,24 @@ export async function loadLiveDataset(supabase: Db): Promise<LiveDataset | null>
       social = [...agg.values()].sort((a, b) => a.periodEnd.localeCompare(b.periodEnd))
     } catch { /* tables may not exist yet — the card explains itself */ }
 
+    // Latest approved weekly brief
+    let brief: CompetitiveBrief | undefined
+    try {
+      const { data: b } = await db.from('moba_signal_briefs').select('*')
+        .eq('status', 'approved').order('week_start', { ascending: false }).limit(1).maybeSingle()
+      if (b) {
+        brief = {
+          weekStart: day(b.week_start), temperature: b.temperature ?? 'normal',
+          headline: b.headline ?? '', whatHappened: b.what_happened ?? '',
+          keyDevelopment: b.key_development ?? '', whyItMatters: b.why_it_matters ?? '',
+          mobaAdvantage: b.moba_advantage ?? '', marketingResponse: b.marketing_response ?? '',
+          salesResponse: b.sales_response ?? '', watchNext: b.watch_next ?? '',
+          changes: Array.isArray(b.changes) ? b.changes : [],
+          approvedBy: b.approved_by ?? undefined, approvedAt: b.approved_at ?? undefined,
+        }
+      }
+    } catch { /* table may not exist yet */ }
+
     const contextQ = await db.from('moba_signal_context').select('*')
     const context = (contextQ.data ?? []).map((r: Row) => ({
       id: r.id, name: r.name, owner: r.owner, loadedOn: day(r.loaded_on),
@@ -178,6 +198,7 @@ export async function loadLiveDataset(supabase: Db): Promise<LiveDataset | null>
       questions,
       context,
       social,
+      brief,
       // Curated modules keep the sample until their pipeline phases land
       claims: SIGNAL_DEMO.claims,
       whitespace: SIGNAL_DEMO.whitespace,

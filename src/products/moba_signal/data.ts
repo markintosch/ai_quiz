@@ -175,6 +175,7 @@ export const SIGNAL_DEMO: SignalDataset = {
       proximity: 2, materiality: 3, credibility: 3, status: 'verified',
       sourceId: 'src-viv', sourceUrl: 'https://www.ippexpo.org/exhibitors/zenyer',
       firstSeen: '2026-08-05', lastConfirmed: '2026-08-05', assertedBy: 'curator', humanReviewed: true,
+      disposition: 'watch', recommendedAction: 'monitor',
       annotations: [{
         id: 'a-02', author: 'Mark de Kock', role: 'Product marketing', createdAt: '2026-08-11T14:00:00Z',
         means: 'Zenyer stepping outside its home region changes the Americas picture, even at small scale.',
@@ -217,6 +218,7 @@ export const SIGNAL_DEMO: SignalDataset = {
       firstSeen: '2026-08-05', lastConfirmed: '2026-08-15', assertedBy: 'collector', humanReviewed: true,
       claimIds: ['c-processing', 'c-partner'],
       touchesMobaAccount: 'Ba Huan JSC',
+      disposition: 'threat', recommendedAction: 'respond',
       annotations: [{
         id: 'a-03', author: 'Chief Analyst', role: 'Analyst', createdAt: '2026-08-06T10:00:00Z',
         means: 'A named win at a strategic account, in the segment where we are weakest. Third Sanovo processing win in SEA this quarter.',
@@ -293,6 +295,7 @@ export const SIGNAL_DEMO: SignalDataset = {
       sourceId: 'src-wattpoultry', sourceUrl: 'https://www.wattagnet.com/nabel-ai-inspection',
       firstSeen: '2026-08-05', lastConfirmed: '2026-08-16', assertedBy: 'collector', humanReviewed: true,
       claimIds: ['c-detection'],
+      disposition: 'threat', recommendedAction: 'investigate',
       annotations: [{
         id: 'a-05', author: 'Chief Analyst', role: 'Analyst', createdAt: '2026-08-08T09:30:00Z',
         means: 'Direct contest of our detection accuracy claim, with a number attached. The 99.5 figure is their lab condition, not field.',
@@ -715,6 +718,27 @@ export const SIGNAL_DEMO: SignalDataset = {
     { entityId: 'nabel',  periodStart: '2026-07-19', periodEnd: '2026-08-18', followers: 4260,  newFollowers: 70,  engagements: 310, posts: 7 },
     { entityId: 'zenyer', periodStart: '2026-07-19', periodEnd: '2026-08-18', followers: 3080,  newFollowers: 110, engagements: 220, posts: 6 },
   ],
+
+  // ── Weekly brief (illustrative: agent-drafted, analyst-approved) ────────────
+  brief: {
+    weekStart: '2026-08-17',
+    temperature: 'elevated',
+    headline: 'Sanovo holds its processing momentum into a third Southeast Asia win while NABEL puts a number on detection. Both touch contested claims; neither is answered in market yet.',
+    whatHappened: 'Four competitor items this week: a third Sanovo processing win in Thailand, a NABEL session slot in Riyadh, a Prinzen connected-packer teaser for SPACE, and a Diamond installed-base article classified under Moba.',
+    keyDevelopment: 'Sanovo explicitly frames its Thailand win as regional momentum, the third SEA processing announcement this quarter.',
+    whyItMatters: 'The processing claim is the most contested position in the messaging house, and the pattern is now a quarter-long streak at strategic-account level.',
+    mobaAdvantage: 'iMoba multi-site benchmarking and the integrated grading-to-processing story remain unmatched in the week\'s material.',
+    marketingResponse: 'Hold processing claims out of Vietnam material until the Ba Huan scope is verified; brief the SPACE team to capture Prinzen wording.',
+    salesResponse: 'Update the Sanovo battlecard processing section with the three SEA wins and the stated delivery timelines.',
+    watchNext: 'Prinzen connected-packer reveal at SPACE (15 Sep) and any Ba Huan delivery confirmation.',
+    changes: [
+      { entity: 'Sanovo', change: 'Third SEA processing win this quarter, framed as regional momentum.' },
+      { entity: 'NABEL', change: 'First Saudi Agriculture appearance, speaking on AI in egg quality.' },
+      { entity: 'Prinzen (part of Vencomatic)', change: 'Connected packer teased for SPACE 2026.' },
+    ],
+    approvedBy: 'Chief Analyst',
+    approvedAt: '2026-08-17T08:00:00Z',
+  },
 
   // ── Analyst headline (immutable to the agent) ───────────────────────────────
   headlineOverride: {

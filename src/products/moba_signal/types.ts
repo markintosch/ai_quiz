@@ -111,6 +111,17 @@ export type VerificationStatus = 'verified' | 'unverified' | 'disputed' | 'super
 
 export type AgentName = 'collector' | 'verifier' | 'analyst' | 'positioning' | 'editor' | 'curator' | 'human'
 
+/** Analyst decision label, set at approval: what kind of signal is this for Moba. */
+export type Disposition = 'threat' | 'opportunity' | 'watch' | 'neutral'
+export type RecommendedAction = 'ignore' | 'monitor' | 'investigate' | 'respond'
+
+export const DISPOSITION_META: Record<Disposition, { label: string; badge: string }> = {
+  threat:      { label: 'Threat',      badge: 'bg-red-50 text-red-700 border-red-200' },
+  opportunity: { label: 'Opportunity', badge: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+  watch:       { label: 'Watch',       badge: 'bg-amber-50 text-amber-700 border-amber-200' },
+  neutral:     { label: 'Neutral',     badge: 'bg-gray-100 text-gray-600 border-gray-200' },
+}
+
 export interface Reply {
   id: string
   author: string
@@ -165,6 +176,9 @@ export interface Signal {
   claimIds?: string[]
   /** Set when the item names or sits inside a Moba reference account or region. */
   touchesMobaAccount?: string
+  /** Analyst decision labels, set at approval time. */
+  disposition?: Disposition
+  recommendedAction?: RecommendedAction
   annotations: Annotation[]
   /** Contributed by a human rather than collected by the agent (PRD §8.8). */
   contribution?: {
@@ -371,6 +385,26 @@ export interface ContextItem {
   note?: string
 }
 
+// ── Weekly competitive brief (Editor agent drafts, analyst approves) ──────────
+
+export interface BriefChange { entity: string; change: string }
+
+export interface CompetitiveBrief {
+  weekStart: string
+  temperature: 'elevated' | 'normal' | 'quiet'
+  headline: string
+  whatHappened: string
+  keyDevelopment: string
+  whyItMatters: string
+  mobaAdvantage: string
+  marketingResponse: string
+  salesResponse: string
+  watchNext: string
+  changes: BriefChange[]
+  approvedBy?: string
+  approvedAt?: string
+}
+
 // ── Share of voice (LinkedIn competitor analytics) ────────────────────────────
 
 /** One period's totals for one entity, pages rolled up, namesakes excluded. */
@@ -402,6 +436,8 @@ export interface SignalDataset {
   context: ContextItem[]
   /** LinkedIn share-of-voice periods, entity-rolled. Empty until an export is imported. */
   social?: SocialStat[]
+  /** Latest APPROVED weekly brief. Absent until the analyst approves one. */
+  brief?: CompetitiveBrief
   /** Analyst-written headline. Immutable to the agent once set (PRD §8.6). */
   headlineOverride?: { text: string; author: string; writtenOn: string }
 }

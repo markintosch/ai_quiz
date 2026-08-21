@@ -7,7 +7,7 @@
 
 import { useMemo, useState } from 'react'
 import type { Signal, SignalDataset } from '@/products/moba_signal/types'
-import { CATEGORY_LABELS, REGION_LABELS, SIGNAL_TYPE_LABELS } from '@/products/moba_signal/types'
+import { CATEGORY_LABELS, DISPOSITION_META, REGION_LABELS, SIGNAL_TYPE_LABELS } from '@/products/moba_signal/types'
 import {
   band, BAND_META, bucketFor, entityById, entityLabel, fmtDate, impactScore,
   laneEntityId, relTime, sortForFeed, TIME_BUCKETS,
@@ -103,7 +103,12 @@ export function Feed({ data, onSelect }: {
                       <span className="block text-xs text-gray-400 mt-0.5">
                         <span className="text-gray-500" title={fmtDate(s.date)}>{relTime(s.date, data.asOf)}</span>
                         {' · '}{entity ? entityLabel(entity) : s.entityId} · {SIGNAL_TYPE_LABELS[s.type]} · {REGION_LABELS[s.region]}
-                        {s.annotations.length > 0 && <span className="ml-2 text-brand">✎ {s.annotations.length}</span>}
+                        {s.disposition && s.disposition !== 'neutral' && (
+                    <span className={`ml-2 px-1.5 py-0.5 rounded-full border font-medium ${DISPOSITION_META[s.disposition].badge}`}>
+                      {DISPOSITION_META[s.disposition].label}{s.recommendedAction ? ` · ${s.recommendedAction}` : ''}
+                    </span>
+                  )}
+                  {s.annotations.length > 0 && <span className="ml-2 text-brand">✎ {s.annotations.length}</span>}
                         {s.status === 'disputed' && <span className="ml-2 text-red-500">disputed</span>}
                         {s.inference && <span className="ml-2 text-purple-500">inference</span>}
                       </span>

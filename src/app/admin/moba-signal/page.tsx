@@ -56,6 +56,10 @@ export default function MobaSignalAdmin() {
   const [upKind, setUpKind] = useState('news')
   const [upNote, setUpNote] = useState('')
   const [sovFile, setSovFile] = useState<File | null>(null)
+  const [brief, setBrief] = useState<Row | null>(null)
+  const [briefEdits, setBriefEdits] = useState<Record<string, string>>({})
+  const [dispoPick, setDispoPick] = useState<Record<string, string>>({})
+  const [actionPick, setActionPick] = useState<Record<string, string>>({})
 
   const load = useCallback(async () => {
     try {
@@ -67,6 +71,11 @@ export default function MobaSignalAdmin() {
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e))
     }
+    try {
+      const res = await fetch('/api/admin/moba-signal/brief')
+      const json = await safeJson(res)
+      if (res.ok && !json.error) { setBrief(json.draft ?? null); setBriefEdits({}) }
+    } catch { /* brief table may not exist yet */ }
   }, [])
 
   useEffect(() => { load() }, [load])
@@ -183,6 +192,26 @@ export default function MobaSignalAdmin() {
         setNoticeErr(false)
         setSovFile(null)
       }
+    } catch (e) {
+      setNotice(e instanceof Error ? e.message : String(e)); setNoticeErr(true)
+    }
+    setBusy(null)
+    load()
+  }
+
+  async function briefAction(action: 'draft' | 'approve') {
+    setBusy(`brief:${action}`)
+    setNotice(action === 'draft' ? 'Drafting the brief…' : 'Approving…')
+    try {
+      const res = await fetch('/api/admin/moba-signal/brief', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(action === 'draft'
+          ? { action: 'draft' }
+          : { action: 'approve', briefId: brief?.id, edits: briefEdits }),
+      })
+      const json = await safeJson(res)
+      if (!res.ok || json.error) { setNotice(json.error ?? `HTTP ${res.status}`); setNoticeErr(true) }
+      else { setNotice(action === 'draft' ? `Brief drafted from ${json.itemsUsed ?? '?'} items` : 'Brief approved: now live on the dashboard'); setNoticeErr(false) }
     } catch (e) {
       setNotice(e instanceof Error ? e.message : String(e)); setNoticeErr(true)
     }
@@ -328,6 +357,52 @@ export default function MobaSignalAdmin() {
         </div>
       </section>
 
+      {/* ── Weekly brief ── */}
+      <section>
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+          <h2 className="text-sm font-bold text-gray-900">Weekly competitive brief</h2>
+          <button onClick={() => briefAction('draft')} disabled={busy !== null}
+            className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-gray-300 hover:border-brand-accent hover:text-brand-accent transition-colors disabled:opacity-40">
+            {busy === 'brief:draft' ? 'Drafting…' : brief ? 'Redraft from current items' : 'Draft now'}
+          </button>
+        </div>
+        {!brief && <p className="text-sm text-gray-400">No draft waiting. The Editor agent drafts one every Monday morning, or draft now.</p>}
+        {brief && (
+          <div className="rounded-xl border border-gray-200 bg-white p-4 space-y-3">
+            <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
+              <span>Week of {brief.week_start}</span>
+              <span>· temperature</span>
+              <select
+                value={briefEdits.temperature ?? brief.temperature ?? 'normal'}
+                onChange={e => setBriefEdits(p2 => ({ ...p2, temperature: e.target.value }))}
+                className="border border-gray-200 rounded-lg px-2 py-1 bg-white text-gray-700">
+                <option value="elevated">Elevated</option>
+                <option value="normal">Normal</option>
+                <option value="quiet">Quiet</option>
+              </select>
+            </div>
+            {([['headline','Headline'],['what_happened','What happened'],['key_development','Key development'],['why_it_matters','Why it matters'],['moba_advantage','Moba advantage'],['marketing_response','Marketing response'],['sales_response','Sales response'],['watch_next','Watch next']] as const).map(([k, label]) => (
+              <div key={k}>
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-0.5">{label}</label>
+                <textarea
+                  value={briefEdits[k] ?? brief[k] ?? ''}
+                  onChange={e => setBriefEdits(p2 => ({ ...p2, [k]: e.target.value }))}
+                  rows={k === 'headline' ? 2 : 2}
+                  className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 text-gray-700"
+                />
+              </div>
+            ))}
+            <div className="flex items-center gap-2">
+              <button onClick={() => briefAction('approve')} disabled={busy !== null}
+                className="text-xs font-semibold px-4 py-2 rounded-lg bg-brand text-white disabled:opacity-40">
+                {busy === 'brief:approve' ? '…' : 'Approve and publish'}
+              </button>
+              <span className="text-[11px] text-gray-400">Your wording is final: the agent never edits an approved brief.</span>
+            </div>
+          </div>
+        )}
+      </section>
+
       {/* ── Review queue ── */}
       <section>
         <h2 className="text-sm font-bold text-gray-900 mb-2">
@@ -373,8 +448,30 @@ export default function MobaSignalAdmin() {
                       </option>
                     ))}
                   </select>
+                  <select
+                    value={dispoPick[item.id] ?? 'watch'}
+                    onChange={e => setDispoPick(p2 => ({ ...p2, [item.id]: e.target.value }))}
+                    className="text-xs border border-gray-200 rounded-lg px-2 py-1.5 text-gray-600 bg-white"
+                    title="What is this for Moba?"
+                  >
+                    <option value="threat">Threat</option>
+                    <option value="opportunity">Opportunity</option>
+                    <option value="watch">Watch</option>
+                    <option value="neutral">Neutral</option>
+                  </select>
+                  <select
+                    value={actionPick[item.id] ?? 'monitor'}
+                    onChange={e => setActionPick(p2 => ({ ...p2, [item.id]: e.target.value }))}
+                    className="text-xs border border-gray-200 rounded-lg px-2 py-1.5 text-gray-600 bg-white"
+                    title="Recommended action"
+                  >
+                    <option value="ignore">Ignore</option>
+                    <option value="monitor">Monitor</option>
+                    <option value="investigate">Investigate</option>
+                    <option value="respond">Respond</option>
+                  </select>
                   <button
-                    onClick={() => review({ itemId: item.id, action: 'approve', entityId: picked || undefined, newEntityName: picked === '__new__' ? item.entity_guess : undefined }, `ap:${item.id}`)}
+                    onClick={() => review({ itemId: item.id, action: 'approve', entityId: picked || undefined, newEntityName: picked === '__new__' ? item.entity_guess : undefined, disposition: dispoPick[item.id] ?? 'watch', recommended_action: actionPick[item.id] ?? 'monitor' }, `ap:${item.id}`)}
                     disabled={busy !== null || !picked}
                     className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-brand text-white disabled:opacity-40"
                   >
