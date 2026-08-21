@@ -21,6 +21,7 @@ import { Claims } from './Claims'
 import { HeadToHead } from './HeadToHead'
 import { Events } from './Events'
 import { Wins } from './Wins'
+import { BriefCard, Implications } from './Brief'
 import { ShareOfVoice } from './ShareOfVoice'
 import { SourceHealth } from './SourceHealth'
 import { Queue } from './Queue'
@@ -55,13 +56,17 @@ function Card({ id, title, sub, tall, scroll = true, children }: {
 // Same modules, re-weighted per audience. Sales is deliberately absent: the
 // PRD scopes sales access (a battlecard view) as P2 with its own owner.
 
-type ViewKey = 'overview' | 'marketing' | 'innovation' | 'analyst'
-type CardId = 'feed' | 'claims' | 'h2h' | 'wins' | 'events' | 'queue' | 'tech' | 'momentum' | 'sov'
+type ViewKey = 'executive' | 'overview' | 'marketing' | 'innovation' | 'analyst'
+type CardId = 'feed' | 'claims' | 'h2h' | 'wins' | 'events' | 'queue' | 'tech' | 'momentum' | 'sov' | 'brief' | 'implications'
 
 const VIEWS: Record<ViewKey, { label: string; hint: string; main: CardId[]; a: CardId[]; b: CardId[] }> = {
+  executive: {
+    label: 'Executive', hint: 'The Monday picture: temperature, changes, responses',
+    main: ['brief'], a: ['implications', 'sov'], b: ['momentum', 'wins'],
+  },
   overview: {
     label: 'Overview', hint: 'The shared picture: what happened, ranked',
-    main: ['feed'], a: ['momentum', 'claims', 'wins'], b: ['h2h', 'sov', 'events', 'queue', 'tech'],
+    main: ['feed'], a: ['implications', 'momentum', 'claims'], b: ['h2h', 'sov', 'events', 'queue', 'tech'],
   },
   marketing: {
     label: 'Marketing', hint: 'Positioning and comms: claims first',
@@ -141,6 +146,18 @@ export function SignalDashboard({ data, sourceLabel = 'prototype, sample data' }
           rows={momentum.rows}
           laneLabel={id => { const e = entityById(data, id); return e ? entityLabel(e) : id }}
         />
+      </Card>
+    ),
+    brief: () => (
+      <Card key="brief" id="brief" title="Competitive brief" scroll={false}
+        sub="Drafted by the Editor agent every Monday, worded and approved by the analyst.">
+        <BriefCard data={data} />
+      </Card>
+    ),
+    implications: tall => (
+      <Card key="implications" id="implications" title="Implications for Moba" tall={tall}
+        sub="Promoted interpretations: what it means and what to consider doing.">
+        <Implications data={data} onSelect={setSelected} />
       </Card>
     ),
     sov: () => (

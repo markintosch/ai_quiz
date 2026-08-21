@@ -114,7 +114,7 @@ export async function POST(req: NextRequest) {
       entity_id: entityId,
       entity_guess: null,
     }
-    for (const k of ['verification', 'proximity', 'materiality', 'credibility'] as const) {
+    for (const k of ['verification', 'proximity', 'materiality', 'credibility', 'disposition', 'recommended_action'] as const) {
       if (body[k] !== undefined) patch[k] = body[k]
     }
     const { error } = await db.from('moba_signal_items').update(patch).eq('id', itemId)
