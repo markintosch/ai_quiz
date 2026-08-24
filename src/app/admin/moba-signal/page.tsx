@@ -169,7 +169,7 @@ export default function MobaSignalAdmin() {
     // One request per file: each stays under the serverless size limit, and a
     // single bad file cannot fail the whole batch. Same source/URL/kind/note
     // applies to all — a batch is pages from one company's site.
-    let newTotal = 0, foundTotal = 0, done = 0
+    let newTotal = 0, foundTotal = 0, done = 0, ocrCount = 0
     const skipped: string[] = []
     const failed: string[] = []
     for (let i = 0; i < upFiles.length; i++) {
@@ -189,14 +189,14 @@ export default function MobaSignalAdmin() {
         const res = await fetch('/api/admin/moba-signal/upload', { method: 'POST', body: fd })
         const json = await safeJson(res)
         if (!res.ok) { failed.push(`${f.name}: ${json.error ?? res.status}`) }
-        else { newTotal += json.itemsNew ?? 0; foundTotal += json.itemsFound ?? 0; done++ }
+        else { newTotal += json.itemsNew ?? 0; foundTotal += json.itemsFound ?? 0; done++; if (json.ocr) ocrCount++ }
       } catch (e) {
         failed.push(`${f.name}: ${e instanceof Error ? e.message : e}`)
       }
       load()
     }
 
-    const bits = [`${done}/${upFiles.length} file${upFiles.length === 1 ? '' : 's'} ingested · ${foundTotal} items found, ${newTotal} new in the review queue`]
+    const bits = [`${done}/${upFiles.length} file${upFiles.length === 1 ? '' : 's'} ingested${ocrCount ? ` (${ocrCount} read by OCR)` : ''} · ${foundTotal} items found, ${newTotal} new in the review queue`]
     if (skipped.length) bits.push(`skipped: ${skipped.join('; ')} — save as HTML or split`)
     if (failed.length) bits.push(`failed: ${failed.join(' · ')}`)
     setNotice(bits.join(' · '))
@@ -369,7 +369,7 @@ export default function MobaSignalAdmin() {
             <input
               type="file"
               multiple
-              accept=".pdf,.html,.htm,.txt,.md"
+              accept=".pdf,.html,.htm,.txt,.md,.png,.jpg,.jpeg,.webp"
               onChange={e => setUpFiles(e.target.files ? Array.from(e.target.files) : [])}
               className="text-xs text-gray-600 file:mr-2 file:px-3 file:py-1.5 file:rounded-lg file:border file:border-gray-300 file:bg-white file:text-xs file:font-semibold"
             />
@@ -401,8 +401,9 @@ export default function MobaSignalAdmin() {
             URL and note apply to all of them, so batch pages from one company&rsquo;s site (each file is
             processed on its own, one bad file never fails the rest). Research reports are chunked deep and
             historical items are kept: that is also the route for loading the Asia landscape research into
-            the timeline. Field notes enter at credibility 1 by rule. Screenshot PDFs have no text layer:
-            save pages with Print → PDF or as HTML instead.
+            the timeline. Field notes enter at credibility 1 by rule. Screenshot PDFs and image files
+            (PNG/JPG) have no text layer, so they are read by OCR: slower, and accurate on clear captures.
+            Saved HTML or Print → PDF still extract fastest when you have the choice.
           </p>
           <div className="pt-3 border-t border-gray-100 flex flex-wrap items-center gap-2">
             <span className="text-xs font-semibold text-gray-700">Share of voice:</span>
