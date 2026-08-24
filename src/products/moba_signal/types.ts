@@ -418,6 +418,97 @@ export interface SocialStat {
   posts: number
 }
 
+// ── Brand & positioning paper (Positioning agent drafts, analyst approves) ────
+//
+// One edition per quarter, identical structure every time so editions compare.
+// Every profile statement carries a source URL (provenance rule). The theme
+// taxonomy is the comparability backbone: fixed after edition 1.
+
+export const PAPER_THEMES = {
+  integration:    'Integration & keten',
+  foodsafety:     'Food safety & quality',
+  capacity:       'Capacity & throughput',
+  sustainability: 'Sustainability & energy',
+  digital:        'Digitalisation & data',
+  service:        'Service & uptime',
+  welfare:        'Animal welfare',
+  cost:           'Cost efficiency',
+} as const
+export type PaperThemeKey = keyof typeof PAPER_THEMES
+
+/** One sourced statement: nothing enters a paper without a URL behind it. */
+export interface PaperFact {
+  text: string
+  sourceUrl: string
+}
+
+/** 0 = absent from their messaging · 1 = mentioned · 2 = recurring · 3 = core theme */
+export interface PaperThemeScore {
+  score: 0 | 1 | 2 | 3
+  evidence: PaperFact[]
+}
+
+export interface PaperProfile {
+  entityId: string
+  /** Facts only: HQ, ownership, segments, regions. */
+  snapshot: PaperFact[]
+  /** Their own words: tagline and the promise their copy keeps making. */
+  tagline?: string
+  positioningSummary: string
+  /** Claims they repeat, quoted or tightly paraphrased. */
+  claims: PaperFact[]
+  themes: Partial<Record<PaperThemeKey, PaperThemeScore>>
+  /** Who their copy speaks to. */
+  audience: PaperFact[]
+  /** What they lean on: installed base, technology names, certifications. */
+  proofPoints: PaperFact[]
+  /** Publishing behaviour, from the source stats and share-of-voice data. */
+  channelBehaviour: string
+}
+
+/** Position on the fixed 2×2. 0–100 on both axes; the axes never change. */
+export interface PaperMapPlacement {
+  entityId: string
+  /** Integration breadth: 0 = single machine, 100 = full line / keten. */
+  x: number
+  /** Innovation posture: 0 = proven & reliable, 100 = frontier & tech-led. */
+  y: number
+  rationale: string
+}
+
+export interface PaperClaimCollision {
+  claim: string
+  entityIds: string[]
+  note: string
+}
+
+export interface PaperChange {
+  entityId: string
+  field: string
+  change: string
+}
+
+export interface PositioningPaper {
+  /** e.g. '2026-Q3'. One edition per quarter. */
+  edition: string
+  subjects: string[]
+  generatedAt: string
+  profiles: PaperProfile[]
+  map: { placements: PaperMapPlacement[] }
+  collisions: PaperClaimCollision[]
+  /** Field-level differences vs the previous approved edition. Computed, not drafted. */
+  changes: PaperChange[]
+  /** The only opinionated section. Agent drafts, the analyst owns the wording. */
+  implications: string
+  approvedBy?: string
+  approvedAt?: string
+}
+
+export const PAPER_AXES = {
+  x: { label: 'Integration breadth', low: 'Single machine', high: 'Full line / keten' },
+  y: { label: 'Innovation posture', low: 'Proven & reliable', high: 'Frontier & tech-led' },
+} as const
+
 // ── The dataset the dashboard renders ─────────────────────────────────────────
 
 export interface SignalDataset {
@@ -438,6 +529,8 @@ export interface SignalDataset {
   social?: SocialStat[]
   /** Latest APPROVED weekly brief. Absent until the analyst approves one. */
   brief?: CompetitiveBrief
+  /** Latest APPROVED brand & positioning paper. Absent until one is approved. */
+  paper?: PositioningPaper
   /** Analyst-written headline. Immutable to the agent once set (PRD §8.6). */
   headlineOverride?: { text: string; author: string; writtenOn: string }
 }

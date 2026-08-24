@@ -7,6 +7,8 @@
 // on /moba/signal; everything rejected stays stored as learning-loop data.
 
 import { useCallback, useEffect, useState } from 'react'
+import { PositioningPaperView } from '@/components/moba/signal/Positioning'
+import type { PositioningPaper } from '@/products/moba_signal/types'
 
 export const dynamic = 'force-dynamic'
 
@@ -58,6 +60,12 @@ export default function MobaSignalAdmin() {
   const [sovFile, setSovFile] = useState<File | null>(null)
   const [brief, setBrief] = useState<Row | null>(null)
   const [briefEdits, setBriefEdits] = useState<Record<string, string>>({})
+  const [paperDraft, setPaperDraft] = useState<Row | null>(null)
+  const [paperApproved, setPaperApproved] = useState<Row | null>(null)
+  const [paperPages, setPaperPages] = useState<Row[]>([])
+  const [paperImpl, setPaperImpl] = useState<string | null>(null)
+  const [paperXY, setPaperXY] = useState<Record<string, { x: number; y: number }>>({})
+  const [paperOpen, setPaperOpen] = useState(false)
   const [dispoPick, setDispoPick] = useState<Record<string, string>>({})
   const [actionPick, setActionPick] = useState<Record<string, string>>({})
 
@@ -76,6 +84,17 @@ export default function MobaSignalAdmin() {
       const json = await safeJson(res)
       if (res.ok && !json.error) { setBrief(json.draft ?? null); setBriefEdits({}) }
     } catch { /* brief table may not exist yet */ }
+    try {
+      const res = await fetch('/api/admin/moba-signal/paper')
+      const json = await safeJson(res)
+      if (res.ok && !json.error) {
+        setPaperDraft(json.draft ?? null)
+        setPaperApproved(json.approved ?? null)
+        setPaperPages(json.pages ?? [])
+        setPaperImpl(null)
+        setPaperXY({})
+      }
+    } catch { /* paper tables may not exist yet */ }
   }, [])
 
   useEffect(() => { load() }, [load])
@@ -212,6 +231,36 @@ export default function MobaSignalAdmin() {
       const json = await safeJson(res)
       if (!res.ok || json.error) { setNotice(json.error ?? `HTTP ${res.status}`); setNoticeErr(true) }
       else { setNotice(action === 'draft' ? `Brief drafted from ${json.itemsUsed ?? '?'} items` : 'Brief approved: now live on the dashboard'); setNoticeErr(false) }
+    } catch (e) {
+      setNotice(e instanceof Error ? e.message : String(e)); setNoticeErr(true)
+    }
+    setBusy(null)
+    load()
+  }
+
+  async function paperAction(action: 'draft' | 'approve') {
+    setBusy(`paper:${action}`)
+    setNotice(action === 'draft'
+      ? 'Drafting the positioning paper: fetching public pages and running the Positioning agent. This takes a few minutes…'
+      : 'Approving the edition…')
+    setNoticeErr(false)
+    try {
+      const content = paperDraft?.content as PositioningPaper | undefined
+      const res = await fetch('/api/admin/moba-signal/paper', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(action === 'draft'
+          ? { action: 'draft' }
+          : { action: 'approve', edition: content?.edition, implications: paperImpl ?? undefined, placements: paperXY }),
+      })
+      const json = await safeJson(res)
+      if (!res.ok || json.error) { setNotice(json.error ?? `HTTP ${res.status}`); setNoticeErr(true) }
+      else {
+        setNotice(action === 'draft'
+          ? `Edition ${json.edition} drafted: ${json.pagesFetched} pages read${json.pagesFailed?.length ? `, ${json.pagesFailed.length} unreachable` : ''}, ${json.itemsUsed} approved items used. Review below.`
+          : 'Edition approved: now the reference on the dashboard and /moba/signal/paper.')
+        setNoticeErr(false)
+        if (action === 'draft') setPaperOpen(true)
+      }
     } catch (e) {
       setNotice(e instanceof Error ? e.message : String(e)); setNoticeErr(true)
     }
@@ -401,6 +450,87 @@ export default function MobaSignalAdmin() {
             </div>
           </div>
         )}
+      </section>
+
+      {/* ── Brand & positioning paper ── */}
+      <section>
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
+          <h2 className="text-sm font-bold text-gray-900">Brand &amp; positioning paper</h2>
+          <button onClick={() => paperAction('draft')} disabled={busy !== null}
+            className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-gray-300 hover:border-brand-accent hover:text-brand-accent transition-colors disabled:opacity-40">
+            {busy === 'paper:draft' ? 'Drafting (takes minutes)…' : paperDraft ? 'Redraft this edition' : 'Draft edition now'}
+          </button>
+        </div>
+        <p className="text-xs text-gray-500 mb-3">
+          Quarterly reference: how Moba, Sanovo and NABEL position themselves publicly. The Positioning agent
+          reads {paperPages.length || 'the configured'} public pages plus approved signals, drafts to the fixed
+          structure, and the edition goes live only after approval here. Auto-drafts on 1 Feb, 1 May, 1 Aug and 1 Nov.
+          {paperApproved && <> Current approved edition: <a className="underline" href="/moba/signal/paper" target="_blank">{paperApproved.edition}</a>.</>}
+        </p>
+        {!paperDraft && <p className="text-sm text-gray-400 rounded-xl border border-gray-200 bg-white px-4 py-3">No draft waiting.</p>}
+        {paperDraft && (() => {
+          const content = paperDraft.content as PositioningPaper
+          const entityName = (id: string) => {
+            const e = state.entities.find(x => x.id === id)
+            return e ? `${e.name}${e.ownership_kind === 'moba' && id !== 'moba' ? ' (part of Moba)' : e.parent_name ? ` (part of ${e.parent_name})` : ''}` : id
+          }
+          return (
+            <div className="rounded-xl border border-gray-200 bg-white p-4 space-y-4">
+              <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500">
+                <span className="font-semibold text-gray-800">Draft · edition {content.edition}</span>
+                <span>generated {fmtTs(paperDraft.generated_at)}</span>
+                <button onClick={() => setPaperOpen(v => !v)} className="underline text-brand">
+                  {paperOpen ? 'Hide preview' : 'Show full preview'}
+                </button>
+              </div>
+
+              {paperOpen && (
+                <div className="border border-gray-100 rounded-lg p-3 bg-gray-50/60">
+                  <PositioningPaperView paper={content} entityName={entityName} />
+                </div>
+              )}
+
+              {/* Analyst controls: coordinates and the implications wording */}
+              <div className="space-y-2">
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-400">Map placement (0–100: integration breadth × innovation posture)</label>
+                <div className="flex flex-wrap gap-4">
+                  {content.map.placements.map(p => (
+                    <div key={p.entityId} className="flex items-center gap-1.5 text-xs text-gray-600">
+                      <span className="font-semibold">{entityName(p.entityId)}</span>
+                      <input type="number" min={0} max={100}
+                        value={paperXY[p.entityId]?.x ?? p.x}
+                        onChange={e => setPaperXY(prev => ({ ...prev, [p.entityId]: { x: Number(e.target.value), y: prev[p.entityId]?.y ?? p.y } }))}
+                        className="w-14 border border-gray-200 rounded-lg px-1.5 py-1 text-right" aria-label={`${p.entityId} x`} />
+                      <span>×</span>
+                      <input type="number" min={0} max={100}
+                        value={paperXY[p.entityId]?.y ?? p.y}
+                        onChange={e => setPaperXY(prev => ({ ...prev, [p.entityId]: { x: prev[p.entityId]?.x ?? p.x, y: Number(e.target.value) } }))}
+                        className="w-14 border border-gray-200 rounded-lg px-1.5 py-1 text-right" aria-label={`${p.entityId} y`} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-0.5">Implications for Moba (your wording is final)</label>
+                <textarea
+                  value={paperImpl ?? content.implications}
+                  onChange={e => setPaperImpl(e.target.value)}
+                  rows={4}
+                  className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 text-gray-700"
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <button onClick={() => paperAction('approve')} disabled={busy !== null}
+                  className="text-xs font-semibold px-4 py-2 rounded-lg bg-brand text-white disabled:opacity-40">
+                  {busy === 'paper:approve' ? '…' : 'Approve and publish edition'}
+                </button>
+                <span className="text-[11px] text-gray-400">
+                  Profile content regenerates on redraft; wrong facts mean fixing the input (pages, approved items), not the output.
+                </span>
+              </div>
+            </div>
+          )
+        })()}
       </section>
 
       {/* ── Review queue ── */}

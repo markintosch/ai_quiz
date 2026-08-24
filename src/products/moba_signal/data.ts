@@ -740,6 +740,106 @@ export const SIGNAL_DEMO: SignalDataset = {
     approvedAt: '2026-08-17T08:00:00Z',
   },
 
+  // ── Brand & positioning paper (illustrative sample edition) ─────────────────
+  paper: {
+    edition: '2026-Q3',
+    subjects: ['moba', 'sanovo', 'nabel'],
+    generatedAt: '2026-08-01T07:30:00Z',
+    profiles: [
+      {
+        entityId: 'moba',
+        snapshot: [
+          { text: 'Headquarters in Barneveld, the Netherlands; grading, packing and processing equipment.', sourceUrl: 'https://www.moba.net' },
+          { text: 'Global sales and service organisation with regional subsidiaries.', sourceUrl: 'https://www.moba.net' },
+        ],
+        tagline: 'Sample: the complete egg journey, one partner',
+        positioningSummary: 'Presents itself as the integration leader: grading, packing and processing as one connected line with iMoba data on top. The copy leads with scale, uptime and the installed base.',
+        claims: [
+          { text: 'Only supplier covering the full grading-to-processing chain with one control layer.', sourceUrl: 'https://www.moba.net' },
+          { text: 'iMoba benchmarks performance across sites.', sourceUrl: 'https://www.moba.net' },
+        ],
+        themes: {
+          integration: { score: 3, evidence: [{ text: 'One partner for the complete egg journey.', sourceUrl: 'https://www.moba.net' }] },
+          foodsafety: { score: 3, evidence: [{ text: 'Grading accuracy and food safety front and centre.', sourceUrl: 'https://www.moba.net' }] },
+          capacity: { score: 3, evidence: [{ text: 'Flagship capacity figures lead the product pages.', sourceUrl: 'https://www.moba.net' }] },
+          digital: { score: 3, evidence: [{ text: 'iMoba platform carries the digital story.', sourceUrl: 'https://www.moba.net' }] },
+          service: { score: 2, evidence: [{ text: 'Global service network referenced across pages.', sourceUrl: 'https://www.moba.net' }] },
+          sustainability: { score: 2, evidence: [{ text: 'Energy per egg appears in newer copy.', sourceUrl: 'https://www.moba.net' }] },
+          welfare: { score: 1, evidence: [] },
+          cost: { score: 1, evidence: [] },
+        },
+        audience: [{ text: 'Large graders and packers, multi-site operations, integrators.', sourceUrl: 'https://www.moba.net' }],
+        proofPoints: [{ text: 'Installed base and named flagship lines.', sourceUrl: 'https://www.moba.net' }],
+        channelBehaviour: 'LinkedIn, latest imported period: 13 posts, 278 engagements across mapped pages.',
+      },
+      {
+        entityId: 'sanovo',
+        snapshot: [
+          { text: 'Headquarters in Odense, Denmark; egg handling and egg processing technology.', sourceUrl: 'https://www.sanovogroup.com' },
+        ],
+        tagline: 'Sample: from egg to opportunity',
+        positioningSummary: 'Leads with processing: breaking, separating and pasteurising presented as one integrated line. Handling (Staalkat heritage) supports the story; regional momentum wins carry the news feed.',
+        claims: [
+          { text: 'Integrated processing line with a single control layer.', sourceUrl: 'https://www.sanovogroup.com' },
+          { text: 'Regional proximity through hubs and local service.', sourceUrl: 'https://www.sanovogroup.com' },
+        ],
+        themes: {
+          integration: { score: 3, evidence: [{ text: 'One line from breaking to pasteurising.', sourceUrl: 'https://www.sanovogroup.com' }] },
+          foodsafety: { score: 3, evidence: [{ text: 'Pasteurisation and hygiene lead the processing pages.', sourceUrl: 'https://www.sanovogroup.com' }] },
+          capacity: { score: 2, evidence: [{ text: 'Throughput quoted per line, not as headline.', sourceUrl: 'https://www.sanovogroup.com' }] },
+          digital: { score: 2, evidence: [{ text: 'New control layer marketed with the line.', sourceUrl: 'https://www.sanovogroup.com' }] },
+          service: { score: 2, evidence: [{ text: 'Bangkok hub framed around response time.', sourceUrl: 'https://www.sanovogroup.com' }] },
+          sustainability: { score: 2, evidence: [{ text: 'Water and energy reduction per processed egg.', sourceUrl: 'https://www.sanovogroup.com' }] },
+          welfare: { score: 0, evidence: [] },
+          cost: { score: 2, evidence: [{ text: 'Yield and total cost of ownership recur.', sourceUrl: 'https://www.sanovogroup.com' }] },
+        },
+        audience: [{ text: 'Egg processors first, packers second; strong emphasis on Southeast Asia.', sourceUrl: 'https://www.sanovogroup.com' }],
+        proofPoints: [{ text: 'Three announced SEA processing wins this quarter.', sourceUrl: 'https://www.sanovogroup.com' }],
+        channelBehaviour: 'LinkedIn, latest imported period: 8 posts, 323 engagements across mapped pages.',
+      },
+      {
+        entityId: 'nabel',
+        snapshot: [
+          { text: 'Headquarters in Kyoto, Japan; egg grading and packing systems.', sourceUrl: 'https://www.nabel.co.jp/en/' },
+        ],
+        tagline: 'Sample: precision in every egg',
+        positioningSummary: 'Positions on detection precision: crack and dirt detection accuracy with published numbers, AI inspection as the frontier story. Domestic strength in Japan, expanding presence in Asia and the Middle East.',
+        claims: [
+          { text: '99.5% crack-detection accuracy claimed for the AI inspection module.', sourceUrl: 'https://www.nabel.co.jp/en/' },
+          { text: 'Compact footprint for mid-capacity plants.', sourceUrl: 'https://www.nabel.co.jp/en/' },
+        ],
+        themes: {
+          integration: { score: 1, evidence: [] },
+          foodsafety: { score: 3, evidence: [{ text: 'Detection accuracy is the core promise.', sourceUrl: 'https://www.nabel.co.jp/en/' }] },
+          capacity: { score: 2, evidence: [{ text: 'Mid-capacity positioning, 60k eggs per hour.', sourceUrl: 'https://www.nabel.co.jp/en/' }] },
+          digital: { score: 2, evidence: [{ text: 'AI inspection carries the technology story.', sourceUrl: 'https://www.nabel.co.jp/en/' }] },
+          service: { score: 1, evidence: [] },
+          sustainability: { score: 1, evidence: [] },
+          welfare: { score: 0, evidence: [] },
+          cost: { score: 2, evidence: [{ text: 'Footprint and energy use as buying arguments.', sourceUrl: 'https://www.nabel.co.jp/en/' }] },
+        },
+        audience: [{ text: 'Mid-capacity plants; Japan first, Asia Pacific and Middle East growth.', sourceUrl: 'https://www.nabel.co.jp/en/' }],
+        proofPoints: [{ text: 'Published detection-accuracy figures; Riyadh conference session slot.', sourceUrl: 'https://www.nabel.co.jp/en/' }],
+        channelBehaviour: 'No share-of-voice data imported for this company yet.',
+      },
+    ],
+    map: {
+      placements: [
+        { entityId: 'moba', x: 84, y: 62, rationale: 'Full-chain integration claim with a mature digital layer; innovation framed on proven scale.' },
+        { entityId: 'sanovo', x: 72, y: 54, rationale: 'Integrated within processing; new control layer moves the tech story forward.' },
+        { entityId: 'nabel', x: 28, y: 74, rationale: 'Machine-level focus with the most aggressive frontier claim: published AI detection numbers.' },
+      ],
+    },
+    collisions: [
+      { claim: 'One integrated line, one control layer', entityIds: ['moba', 'sanovo'], note: 'Moba claims it across the whole chain, Sanovo within processing. Same words, different scope.' },
+      { claim: 'Detection accuracy leadership', entityIds: ['moba', 'nabel'], note: 'NABEL publishes a number; Moba claims it without one. A number beats an adjective in a bake-off.' },
+    ],
+    changes: [],
+    implications: 'Sample edition. Sanovo’s control-layer language now overlaps the keten claim inside processing: sharpen the scope difference in the messaging house. NABEL’s published accuracy number is the kind of claim that wins bake-offs; consider publishing a verified figure or reframing the comparison. The welfare theme is unclaimed by everyone: whitespace if the market starts asking.',
+    approvedBy: 'Chief Analyst',
+    approvedAt: '2026-08-02T09:00:00Z',
+  },
+
   // ── Analyst headline (immutable to the agent) ───────────────────────────────
   headlineOverride: {
     text: 'Sanovo has announced three processing-line wins in Southeast Asia this quarter against one in the prior quarter, including one at a Moba strategic account. Our processing claim is now the most contested position in the messaging house.',

@@ -12,7 +12,7 @@
 
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type {
-  CompetitiveBrief, Entity, OpenQuestion, Ownership, Proposal, Signal, SignalDataset, SocialStat, Source, SourceStatus,
+  CompetitiveBrief, Entity, OpenQuestion, Ownership, PositioningPaper, Proposal, Signal, SignalDataset, SocialStat, Source, SourceStatus,
 } from '@/products/moba_signal/types'
 import { SIGNAL_DEMO } from '@/products/moba_signal/data'
 
@@ -183,6 +183,14 @@ export async function loadLiveDataset(supabase: Db): Promise<LiveDataset | null>
       }
     } catch { /* table may not exist yet */ }
 
+    // Latest approved brand & positioning paper
+    let paper: PositioningPaper | undefined
+    try {
+      const { data: p } = await db.from('moba_signal_papers').select('content')
+        .eq('status', 'approved').order('edition', { ascending: false }).limit(1).maybeSingle()
+      if (p?.content) paper = p.content as PositioningPaper
+    } catch { /* table may not exist yet */ }
+
     const contextQ = await db.from('moba_signal_context').select('*')
     const context = (contextQ.data ?? []).map((r: Row) => ({
       id: r.id, name: r.name, owner: r.owner, loadedOn: day(r.loaded_on),
@@ -199,6 +207,7 @@ export async function loadLiveDataset(supabase: Db): Promise<LiveDataset | null>
       context,
       social,
       brief,
+      paper,
       // Curated modules keep the sample until their pipeline phases land
       claims: SIGNAL_DEMO.claims,
       whitespace: SIGNAL_DEMO.whitespace,
