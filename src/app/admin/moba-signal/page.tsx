@@ -52,7 +52,7 @@ export default function MobaSignalAdmin() {
   const [notice, setNotice] = useState<string | null>(null)
   const [noticeErr, setNoticeErr] = useState(false)
   const [entityPick, setEntityPick] = useState<Record<string, string>>({})
-  const [upFile, setUpFile] = useState<File | null>(null)
+  const [upFiles, setUpFiles] = useState<File[]>([])
   const [upSource, setUpSource] = useState('')
   const [upUrl, setUpUrl] = useState('')
   const [upKind, setUpKind] = useState('news')
@@ -162,32 +162,46 @@ export default function MobaSignalAdmin() {
   }
 
   async function uploadDocument() {
-    if (!upFile || !upSource || !upUrl) return
-    if (upFile.size > 4_000_000) {
-      setNotice(`${upFile.name} is ${(upFile.size / 1e6).toFixed(1)} MB — over the 4 MB upload limit. Save the page as HTML instead of PDF (far smaller, extracts better), or split the file.`)
-      setNoticeErr(true)
-      return
-    }
+    if (upFiles.length === 0 || !upSource || !upUrl) return
     setBusy('upload')
-    setNotice(`Processing ${upFile.name}…`)
-    try {
-      const fd = new FormData()
-      fd.append('file', upFile)
-      fd.append('sourceId', upSource)
-      fd.append('sourceUrl', upUrl)
-      fd.append('kind', upKind)
-      if (upNote) fd.append('note', upNote)
-      const res = await fetch('/api/admin/moba-signal/upload', { method: 'POST', body: fd })
-      const json = await safeJson(res)
-      if (!res.ok) { setNotice(json.error ?? `HTTP ${res.status}`); setNoticeErr(true) }
-      else {
-        setNotice(`${upFile.name}: ${json.chunks} chunks, ${json.itemsFound} items found, ${json.itemsNew} new in the review queue`)
-        setNoticeErr(false)
-        setUpFile(null); setUpUrl(''); setUpNote('')
+    setNoticeErr(false)
+
+    // One request per file: each stays under the serverless size limit, and a
+    // single bad file cannot fail the whole batch. Same source/URL/kind/note
+    // applies to all — a batch is pages from one company's site.
+    let newTotal = 0, foundTotal = 0, done = 0
+    const skipped: string[] = []
+    const failed: string[] = []
+    for (let i = 0; i < upFiles.length; i++) {
+      const f = upFiles[i]
+      setNotice(`Uploading ${i + 1}/${upFiles.length}: ${f.name}…`)
+      if (f.size > 4_000_000) {
+        skipped.push(`${f.name} (${(f.size / 1e6).toFixed(1)} MB, over 4 MB)`)
+        continue
       }
-    } catch (e) {
-      setNotice(e instanceof Error ? e.message : String(e)); setNoticeErr(true)
+      try {
+        const fd = new FormData()
+        fd.append('file', f)
+        fd.append('sourceId', upSource)
+        fd.append('sourceUrl', upUrl)
+        fd.append('kind', upKind)
+        if (upNote) fd.append('note', upNote)
+        const res = await fetch('/api/admin/moba-signal/upload', { method: 'POST', body: fd })
+        const json = await safeJson(res)
+        if (!res.ok) { failed.push(`${f.name}: ${json.error ?? res.status}`) }
+        else { newTotal += json.itemsNew ?? 0; foundTotal += json.itemsFound ?? 0; done++ }
+      } catch (e) {
+        failed.push(`${f.name}: ${e instanceof Error ? e.message : e}`)
+      }
+      load()
     }
+
+    const bits = [`${done}/${upFiles.length} file${upFiles.length === 1 ? '' : 's'} ingested · ${foundTotal} items found, ${newTotal} new in the review queue`]
+    if (skipped.length) bits.push(`skipped: ${skipped.join('; ')} — save as HTML or split`)
+    if (failed.length) bits.push(`failed: ${failed.join(' · ')}`)
+    setNotice(bits.join(' · '))
+    setNoticeErr(failed.length > 0 || skipped.length > 0)
+    if (done > 0) { setUpFiles([]); setUpNote('') }
     setBusy(null)
     load()
   }
@@ -354,10 +368,14 @@ export default function MobaSignalAdmin() {
             </select>
             <input
               type="file"
+              multiple
               accept=".pdf,.html,.htm,.txt,.md"
-              onChange={e => setUpFile(e.target.files?.[0] ?? null)}
+              onChange={e => setUpFiles(e.target.files ? Array.from(e.target.files) : [])}
               className="text-xs text-gray-600 file:mr-2 file:px-3 file:py-1.5 file:rounded-lg file:border file:border-gray-300 file:bg-white file:text-xs file:font-semibold"
             />
+            {upFiles.length > 1 && (
+              <span className="text-[11px] text-gray-500">{upFiles.length} files selected</span>
+            )}
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <input
@@ -372,16 +390,19 @@ export default function MobaSignalAdmin() {
             />
             <button
               onClick={uploadDocument}
-              disabled={busy !== null || !upFile || !upSource || !upUrl}
+              disabled={busy !== null || upFiles.length === 0 || !upSource || !upUrl}
               className="text-xs font-semibold px-4 py-2 rounded-lg bg-brand text-white disabled:opacity-40"
             >
-              {busy === 'upload' ? 'Processing…' : 'Ingest'}
+              {busy === 'upload' ? 'Processing…' : upFiles.length > 1 ? `Ingest ${upFiles.length} files` : 'Ingest'}
             </button>
           </div>
           <p className="text-[11px] text-gray-400">
-            PDF, HTML or text, max 4 MB. Research reports are chunked deep and historical items are kept:
-            that is also the route for loading the Asia landscape research into the timeline. Field notes
-            enter at credibility 1 by rule.
+            PDF, HTML or text, max 4 MB each. Select several at once to upload a batch: the source, kind,
+            URL and note apply to all of them, so batch pages from one company&rsquo;s site (each file is
+            processed on its own, one bad file never fails the rest). Research reports are chunked deep and
+            historical items are kept: that is also the route for loading the Asia landscape research into
+            the timeline. Field notes enter at credibility 1 by rule. Screenshot PDFs have no text layer:
+            save pages with Print → PDF or as HTML instead.
           </p>
           <div className="pt-3 border-t border-gray-100 flex flex-wrap items-center gap-2">
             <span className="text-xs font-semibold text-gray-700">Share of voice:</span>
