@@ -267,6 +267,10 @@ export const ENTITY_COLORS: Record<string, string> = {
   zenyer:  '#1baf7a',
   nabel:   '#eda100',
   prinzen: '#e87ba4',
+  // LinkedIn tracked-set entities beyond the news lanes
+  innovatec:  '#008300',
+  meggson:    '#4a3aa7',
+  ovoconcept: '#e34948',
 }
 export const ENTITY_COLOR_OTHER = '#898781'
 
