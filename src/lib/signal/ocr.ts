@@ -81,38 +81,62 @@ export interface PdfOcrResult {
   imagesFound: number
 }
 
-/** OCR an image-only PDF (a screenshot capture) to text, page by page. */
+/** Pull raw JPEG (DCTDecode) image streams straight out of the PDF bytes,
+ *  without pdf.js decoding them. Browser full-page captures (GoFullPage etc.)
+ *  embed one JPEG per page, and a JPEG stream's bytes are already a valid
+ *  image, so this sidesteps pdf.js entirely — the decode path throws a
+ *  structured-clone error on some serverless runtimes. Largest first. */
+function extractJpegStreams(bytes: Uint8Array): Uint8Array[] {
+  const s = Buffer.from(bytes).toString('latin1')
+  const re = /<<([\s\S]*?)>>\s*stream\r?\n/g
+  const out: Uint8Array[] = []
+  let m: RegExpExecArray | null
+  while ((m = re.exec(s)) !== null) {
+    const dict = m[1]
+    if (!/\/Subtype\s*\/Image/.test(dict) || !/DCTDecode/.test(dict)) continue
+    const lm = dict.match(/\/Length\s+(\d+)/)
+    if (!lm) continue
+    const len = parseInt(lm[1], 10)
+    const start = m.index + m[0].length
+    const buf = bytes.subarray(start, start + len)
+    if (buf.length === len && buf[0] === 0xff && buf[1] === 0xd8) out.push(buf) // valid JPEG SOI
+  }
+  return out.sort((a, b) => b.length - a.length)
+}
+
+/** OCR an image-only PDF (a screenshot capture) to text, image by image. */
 export async function ocrPdfBytes(bytes: Uint8Array): Promise<PdfOcrResult> {
-  // isOffscreenCanvasSupported:false forces pdf.js to decode images to plain
-  // typed arrays; otherwise JPEG XObjects (browser full-page captures) come
-  // back as an ImageBitmap the fake worker cannot structured-clone.
-  const pdf = await getDocumentProxy(bytes, { isOffscreenCanvasSupported: false })
-  const pageCount = Math.min(pdf.numPages, MAX_PAGES)
   const budget = { left: MAX_STRIPS_TOTAL }
-  const pageTexts: string[] = []
+  const texts: string[] = []
   let imagesFound = 0
   let pagesOcr = 0
 
-  for (let p = 1; p <= pageCount && budget.left > 0; p++) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const images = (await extractImages(pdf, p)) as any as RawImage[]
-    const usable = images
-      .filter(im => im.data && im.width * im.height >= MIN_IMAGE_AREA)
-      .sort((a, b) => b.width * b.height - a.width * a.height)
-    imagesFound += usable.length
-    if (usable.length === 0) continue
+  // Primary: raw JPEG streams, no pdf.js. Covers the common capture case.
+  const jpegs = extractJpegStreams(bytes).slice(0, MAX_PAGES)
+  let images: Array<{ raw?: RawImage; buffer?: Uint8Array }> = jpegs.map(b => ({ buffer: b }))
 
-    // Largest image is the page capture; include others in paint order in case
-    // a tool tiled one tall screenshot into several XObjects.
-    const strips: VisionImage[] = []
-    for (const im of usable) {
-      if (budget.left <= 0) break
-      strips.push(...await toStrips({ raw: im }, budget))
-    }
-    if (strips.length === 0) continue
-    const text = (await signalVisionCall({ tier: 'sonnet', system: OCR_SYSTEM, user: OCR_USER, images: strips })).trim()
-    if (text) { pageTexts.push(text); pagesOcr++ }
+  // Fallback: let pdf.js decode non-JPEG (e.g. Flate) images. Guarded, because
+  // that decode path can throw a structured-clone error on some runtimes.
+  if (images.length === 0) {
+    try {
+      const pdf = await getDocumentProxy(bytes, { isOffscreenCanvasSupported: false, isImageDecoderSupported: false })
+      const pageCount = Math.min(pdf.numPages, MAX_PAGES)
+      for (let p = 1; p <= pageCount; p++) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const imgs = (await extractImages(pdf, p)) as any as RawImage[]
+        for (const im of imgs) if (im.data && im.width * im.height >= MIN_IMAGE_AREA) images.push({ raw: im })
+      }
+    } catch { /* nothing decodable without pdf.js: return what we have (none) */ }
   }
 
-  return { text: pageTexts.join('\n\n'), pagesOcr, imagesFound }
+  imagesFound = images.length
+  for (const img of images) {
+    if (budget.left <= 0) break
+    const strips = img.buffer ? await toStrips({ buffer: img.buffer }, budget) : await toStrips({ raw: img.raw! }, budget)
+    if (strips.length === 0) continue
+    const text = (await signalVisionCall({ tier: 'sonnet', system: OCR_SYSTEM, user: OCR_USER, images: strips })).trim()
+    if (text) { texts.push(text); pagesOcr++ }
+  }
+
+  return { text: texts.join('\n\n'), pagesOcr, imagesFound }
 }
