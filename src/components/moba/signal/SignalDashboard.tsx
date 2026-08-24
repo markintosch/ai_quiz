@@ -22,6 +22,7 @@ import { HeadToHead } from './HeadToHead'
 import { Events } from './Events'
 import { Wins } from './Wins'
 import { BriefCard, Implications } from './Brief'
+import { PositioningCard } from './Positioning'
 import { ShareOfVoice } from './ShareOfVoice'
 import { SourceHealth } from './SourceHealth'
 import { Queue } from './Queue'
@@ -57,24 +58,24 @@ function Card({ id, title, sub, tall, scroll = true, children }: {
 // PRD scopes sales access (a battlecard view) as P2 with its own owner.
 
 type ViewKey = 'executive' | 'overview' | 'marketing' | 'innovation' | 'analyst'
-type CardId = 'feed' | 'claims' | 'h2h' | 'wins' | 'events' | 'queue' | 'tech' | 'momentum' | 'sov' | 'brief' | 'implications'
+type CardId = 'feed' | 'claims' | 'h2h' | 'wins' | 'events' | 'queue' | 'tech' | 'momentum' | 'sov' | 'brief' | 'implications' | 'positioning'
 
 const VIEWS: Record<ViewKey, { label: string; hint: string; main: CardId[]; a: CardId[]; b: CardId[] }> = {
   executive: {
     label: 'Executive', hint: 'The Monday picture: temperature, changes, responses',
-    main: ['brief'], a: ['implications', 'sov'], b: ['momentum', 'wins'],
+    main: ['brief'], a: ['implications', 'sov'], b: ['positioning', 'momentum', 'wins'],
   },
   overview: {
     label: 'Overview', hint: 'The shared picture: what happened, ranked',
-    main: ['feed'], a: ['implications', 'momentum', 'claims'], b: ['h2h', 'sov', 'events', 'queue', 'tech'],
+    main: ['feed'], a: ['implications', 'momentum', 'claims'], b: ['positioning', 'h2h', 'sov', 'events', 'queue', 'tech'],
   },
   marketing: {
     label: 'Marketing', hint: 'Positioning and comms: claims first',
-    main: ['claims'], a: ['sov', 'h2h', 'wins'], b: ['momentum', 'events', 'feed', 'tech'],
+    main: ['claims'], a: ['positioning', 'sov', 'h2h'], b: ['wins', 'momentum', 'events', 'feed', 'tech'],
   },
   innovation: {
     label: 'Innovation', hint: 'Product and research: capability first',
-    main: ['h2h'], a: ['tech', 'momentum', 'events'], b: ['sov', 'feed', 'wins'],
+    main: ['h2h'], a: ['tech', 'positioning', 'momentum'], b: ['sov', 'events', 'feed', 'wins'],
   },
   analyst: {
     label: 'Analyst', hint: 'The working view: feed and queue',
@@ -158,6 +159,12 @@ export function SignalDashboard({ data, sourceLabel = 'prototype, sample data' }
       <Card key="implications" id="implications" title="Implications for Moba" tall={tall}
         sub="Promoted interpretations: what it means and what to consider doing.">
         <Implications data={data} onSelect={setSelected} />
+      </Card>
+    ),
+    positioning: () => (
+      <Card key="positioning" id="positioning" title="Brand positioning" scroll={false}
+        sub="The quarterly reference paper: how each company positions itself publicly. Fixed axes, fixed themes.">
+        <PositioningCard paper={data.paper} entityName={id => { const e = entityById(data, id); return e ? entityLabel(e) : id }} />
       </Card>
     ),
     sov: () => (
