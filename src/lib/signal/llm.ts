@@ -55,6 +55,52 @@ export async function signalLlmCall(params: SignalLlmParams): Promise<string> {
   }
 }
 
+export interface VisionImage {
+  base64: string
+  mediaType: 'image/png' | 'image/jpeg'
+}
+
+export interface SignalVisionParams {
+  tier: SignalModelTier
+  system: string
+  user: string
+  images: VisionImage[]
+  maxTokens?: number
+}
+
+/** Vision variant: image blocks first, then the text instruction. Used for OCR
+ *  of screenshot PDFs and image uploads, where there is no text layer to read. */
+export async function signalVisionCall(params: SignalVisionParams): Promise<string> {
+  if (params.images.length === 0) return ''
+  const ac = new AbortController()
+  const timer = setTimeout(() => ac.abort(), CALL_TIMEOUT_MS)
+  try {
+    const res = await client().messages.create({
+      model:       MODEL_BY_TIER[params.tier],
+      max_tokens:  params.maxTokens ?? 4096,
+      temperature: 0,
+      system:      params.system,
+      messages: [{
+        role: 'user',
+        content: [
+          ...params.images.map(img => ({
+            type: 'image' as const,
+            source: { type: 'base64' as const, media_type: img.mediaType, data: img.base64 },
+          })),
+          { type: 'text' as const, text: params.user },
+        ],
+      }],
+    }, { signal: ac.signal })
+    const block = res.content.find(c => c.type === 'text')
+    return block && block.type === 'text' ? block.text : ''
+  } catch (err) {
+    if (ac.signal.aborted) throw new Error(`Signal vision call timed out after ${CALL_TIMEOUT_MS / 1000}s`)
+    throw err
+  } finally {
+    clearTimeout(timer)
+  }
+}
+
 /** Tolerant JSON parse: strips fences, repairs trailing commas etc. */
 export function parseJson<T>(raw: string): T {
   let s = raw.trim()
