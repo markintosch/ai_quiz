@@ -53,39 +53,29 @@ function Card({ id, title, sub, tall, scroll = true, children }: {
   )
 }
 
-// ── Role views ────────────────────────────────────────────────────────────────
-// Same modules, re-weighted per audience. Sales is deliberately absent: the
-// PRD scopes sales access (a battlecard view) as P2 with its own owner.
+// ── Views ─────────────────────────────────────────────────────────────────────
+// Two jobs, not five personas. Answer = the takeaway (what changed, what it
+// means, what to do), for the time-poor reader. Explore = the working surface
+// (everything collected, ranked, with the queue), for the analyst-curator.
+// Same modules, re-weighted. Sales stays a deferred P2 (battlecard view).
 
-type ViewKey = 'executive' | 'overview' | 'marketing' | 'innovation' | 'analyst'
+type ViewKey = 'answer' | 'explore'
 type CardId = 'feed' | 'claims' | 'h2h' | 'wins' | 'events' | 'queue' | 'tech' | 'momentum' | 'sov' | 'brief' | 'implications' | 'positioning'
 
 const VIEWS: Record<ViewKey, { label: string; hint: string; main: CardId[]; a: CardId[]; b: CardId[] }> = {
-  executive: {
-    label: 'Executive', hint: 'The Monday picture: temperature, changes, responses',
-    main: ['brief'], a: ['implications', 'sov'], b: ['positioning', 'momentum', 'wins'],
+  answer: {
+    label: 'Answer', hint: 'The takeaway: what changed, what it means, what to do',
+    main: ['brief'], a: ['implications', 'positioning', 'claims'], b: ['sov', 'momentum', 'wins', 'events'],
   },
-  overview: {
-    label: 'Overview', hint: 'The shared picture: what happened, ranked',
-    main: ['events', 'feed'], a: ['implications', 'momentum', 'claims'], b: ['positioning', 'h2h', 'sov', 'queue', 'tech'],
-  },
-  marketing: {
-    label: 'Marketing', hint: 'Positioning and comms: claims first',
-    main: ['claims'], a: ['positioning', 'sov', 'h2h'], b: ['wins', 'momentum', 'events', 'feed', 'tech'],
-  },
-  innovation: {
-    label: 'Innovation', hint: 'Product and research: capability first',
-    main: ['h2h'], a: ['tech', 'positioning', 'momentum'], b: ['sov', 'events', 'feed', 'wins'],
-  },
-  analyst: {
-    label: 'Analyst', hint: 'The working view: feed and queue',
-    main: ['events', 'feed'], a: ['queue', 'momentum'], b: ['claims'],
+  explore: {
+    label: 'Explore', hint: 'The working view: everything collected, ranked, with the queue',
+    main: ['events', 'feed'], a: ['implications', 'queue', 'momentum'], b: ['claims', 'h2h', 'sov', 'tech', 'wins'],
   },
 }
 
 export function SignalDashboard({ data, sourceLabel = 'prototype, sample data' }: { data: SignalDataset; sourceLabel?: string }) {
   const [selected, setSelected] = useState<Signal | null>(null)
-  const [view, setView] = useState<ViewKey>('overview')
+  const [view, setView] = useState<ViewKey>('explore')
 
   const metrics = useMemo(() => statusMetrics(data), [data])
   const head = useMemo(() => headline(data), [data])
