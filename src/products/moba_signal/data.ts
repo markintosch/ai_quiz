@@ -517,6 +517,53 @@ export const SIGNAL_DEMO: SignalDataset = {
 
   // ── Event radar ─────────────────────────────────────────────────────────────
   events: [
+    // ── Past editions of the major recurring shows ──────────────────────────
+    // The event radar looks forward, but the historical shows are the backdrop
+    // the 12/24-month news clusters plot against: a burst of competitor
+    // announcements usually trails the show that produced it. In live mode
+    // these come from retaining events after they pass plus a calendar backfill.
+    {
+      id: 'e-eurotier-24', name: 'EuroTier 2024', location: 'Hannover', country: 'Germany', region: 'europe',
+      startDate: '2024-11-12', endDate: '2024-11-15', mobaExhibiting: true,
+      competitors: [
+        { entityId: 'sanovo', standSqm: 320, standSqmLastEdition: 260 },
+        { entityId: 'prinzen' },
+        { entityId: 'nabel' },
+      ],
+      exhibitorListStatus: 'published',
+      notes: 'Biennial. Moba showed the grading portfolio and the iMoba demo; Sanovo grew its stand versus 2022.',
+    },
+    {
+      id: 'e-ippe-25', name: 'IPPE 2025', location: 'Atlanta', country: 'United States', region: 'americas',
+      startDate: '2025-01-28', endDate: '2025-01-30', mobaExhibiting: true,
+      competitors: [{ entityId: 'sanovo' }],
+      exhibitorListStatus: 'published',
+      notes: 'Diamond carried the Moba presence in North America.',
+    },
+    {
+      id: 'e-vivasia-25', name: 'VIV Asia 2025', location: 'Bangkok', country: 'Thailand', region: 'asia',
+      startDate: '2025-03-12', endDate: '2025-03-14', mobaExhibiting: true,
+      competitors: [
+        { entityId: 'sanovo', standSqm: 180, standSqmLastEdition: 140 },
+        { entityId: 'zenyer' },
+        { entityId: 'nabel' },
+      ],
+      exhibitorListStatus: 'published',
+      notes: 'Sanovo presented breaking-separating-pasteurising as one line; stand grew versus 2023. Drove the March processing coverage.',
+    },
+    {
+      id: 'e-space-25', name: 'SPACE 2025', location: 'Rennes', country: 'France', region: 'europe',
+      startDate: '2025-09-16', endDate: '2025-09-18', mobaExhibiting: true,
+      competitors: [{ entityId: 'prinzen' }, { entityId: 'riva' }],
+      exhibitorListStatus: 'published',
+    },
+    {
+      id: 'e-ippe-26', name: 'IPPE 2026', location: 'Atlanta', country: 'United States', region: 'americas',
+      startDate: '2026-01-27', endDate: '2026-01-29', mobaExhibiting: true,
+      competitors: [{ entityId: 'sanovo' }],
+      exhibitorListStatus: 'published',
+    },
+    // ── Upcoming (the event radar's T-90 to T+30 window) ────────────────────
     {
       id: 'e-ildex-ph', name: 'Ildex Philippines', location: 'Pasay City', country: 'Philippines', region: 'asia',
       startDate: '2026-08-26', endDate: '2026-08-27', mobaExhibiting: true,
