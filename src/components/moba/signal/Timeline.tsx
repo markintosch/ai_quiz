@@ -99,17 +99,42 @@ export function Timeline({ data, onSelect }: {
     .sort((a, b) => eventMid(a) - eventMid(b)),
   [events, fromMs, toMs, laneFilter, data])
 
-  // Label thinning: in a tight cluster, keep every diamond but only label ones
-  // far enough apart to stay legible; the rest carry their name on hover.
+  // Earn-its-place: an event is "significant" (labelled diamond + guide line)
+  // only when it has a story — a tracked competitor present, an attendance gap,
+  // or approved news from one of its competitors within ~2 weeks. Everything
+  // else is a faint hover-only tick, so the band shows the few shows that
+  // actually explain a news cluster rather than every date on the calendar.
+  const NEWS_WINDOW = 14 * DAY
+  const significant = useMemo(() => {
+    const keep = new Set<string>()
+    for (const ev of windowEvents) {
+      const tracked = ev.competitors.some(c => entityById(data, c.entityId))
+      const gap = !ev.mobaExhibiting && ev.competitors.some(c => entityById(data, c.entityId)?.priority)
+      const compLanes = new Set(ev.competitors.map(c => laneEntityId(data, c.entityId)))
+      const s0 = Date.parse(ev.startDate) - NEWS_WINDOW
+      const s1 = Date.parse(ev.endDate) + NEWS_WINDOW
+      const nearNews = compLanes.size > 0 && data.signals.some(sig => {
+        const t = Date.parse(sig.date)
+        return t >= s0 && t <= s1 && compLanes.has(laneEntityId(data, sig.entityId))
+      })
+      if (tracked || gap || nearNews) keep.add(ev.id)
+    }
+    return keep
+  }, [windowEvents, data, NEWS_WINDOW])
+
+  const highlightedEvents = useMemo(() => windowEvents.filter(e => significant.has(e.id)), [windowEvents, significant])
+
+  // Label thinning among the significant few, so a tight cluster stays legible;
+  // the rest carry their name on hover.
   const labelled = useMemo(() => {
     const keep = new Set<string>()
     let last = -Infinity
-    for (const ev of windowEvents) {
+    for (const ev of highlightedEvents) {
       const x = pctMs(eventMid(ev))
       if (x - last >= 4.5) { keep.add(ev.id); last = x }
     }
     return keep
-  }, [windowEvents, fromMs, toMs])
+  }, [highlightedEvents, fromMs, toMs])
 
   return (
     <div>
@@ -161,7 +186,9 @@ export function Timeline({ data, onSelect }: {
             <div className="flex items-start gap-3 pb-2 mb-1 border-b border-gray-200">
               <div className="w-36 shrink-0 text-[11px] font-semibold text-gray-500 pt-1">
                 Trade events
-                <span className="block text-[10px] font-normal text-gray-400">{windowEvents.length} in view</span>
+                <span className="block text-[10px] font-normal text-gray-400">
+                  {highlightedEvents.length} with a story · {windowEvents.length - highlightedEvents.length} monitored
+                </span>
               </div>
               <div className="relative h-[86px] flex-1">
                 {/* upcoming region: everything right of today has not happened yet */}
@@ -176,18 +203,24 @@ export function Timeline({ data, onSelect }: {
                 {windowEvents.map(ev => {
                   const x = pctMs(eventMid(ev))
                   const tracked = ev.competitors.filter(c => entityById(data, c.entityId))
-                  const has = tracked.length > 0
                   const phase = eventPhase(data, ev.startDate, ev.endDate)
                   const names = tracked.map(c => { const e = entityById(data, c.entityId); return e ? entityLabel(e) : c.entityId })
                   const tip = `${ev.name} · ${fmtDate(ev.startDate)}${ev.endDate !== ev.startDate ? `–${fmtDate(ev.endDate)}` : ''}\n${ev.location}, ${ev.country} · ${phase.stage} (${phase.note})\nMoba ${ev.mobaExhibiting ? 'exhibiting' : 'not exhibiting'}${names.length ? `\nTracked: ${names.join(', ')}` : ''}${ev.notes ? `\n${ev.notes}` : ''}`
+                  // Faint hover-only tick for events with no story to tell.
+                  if (!significant.has(ev.id)) {
+                    return (
+                      <div key={ev.id} className="absolute top-[5px] -translate-x-1/2 w-1.5 h-1.5 rotate-45 bg-gray-200 hover:bg-gray-400 transition-colors"
+                        style={{ left: `${x}%` }} title={tip} />
+                    )
+                  }
                   return (
                     <div key={ev.id} className="absolute top-0" style={{ left: `${x}%`, zIndex: labelled.has(ev.id) ? 2 : 1 }} title={tip}>
                       {/* stem from the diamond down to the lane divider */}
                       <div className="absolute top-[10px] -translate-x-1/2 w-px bg-gray-300" style={{ height: 76 }} />
-                      <div className={`absolute top-1 -translate-x-1/2 w-2.5 h-2.5 rotate-45 border border-white ${has ? 'bg-brand-accent' : 'bg-gray-300'} ${ev.mobaExhibiting ? 'ring-1 ring-brand/40' : ''}`} />
+                      <div className={`absolute top-1 -translate-x-1/2 w-2.5 h-2.5 rotate-45 border border-white bg-brand-accent ${ev.mobaExhibiting ? 'ring-1 ring-brand/40' : ''}`} />
                       {labelled.has(ev.id) && (
                         <span
-                          className="absolute text-[9px] leading-tight text-gray-500 whitespace-nowrap"
+                          className="absolute text-[9px] leading-tight text-gray-600 whitespace-nowrap"
                           style={x > 82
                             ? { top: 15, right: 3, transformOrigin: 'top right', transform: 'rotate(-28deg)', textAlign: 'right' }
                             : { top: 15, left: 3, transformOrigin: 'top left', transform: 'rotate(28deg)' }}
@@ -222,8 +255,9 @@ export function Timeline({ data, onSelect }: {
                   {months.map(m => (
                     <div key={m} className="absolute top-0 bottom-0 w-px bg-gray-200/70" style={{ left: `${pct(m)}%` }} />
                   ))}
-                  {/* event guide lines: relate a news cluster to the show that drove it */}
-                  {showEvents && windowEvents.map(ev => (
+                  {/* event guide lines: only the shows with a story, so a news
+                      cluster can be read against the event that drove it */}
+                  {showEvents && highlightedEvents.map(ev => (
                     <div key={`g-${ev.id}`} className="absolute top-0 bottom-0 w-px bg-brand-accent/15" style={{ left: `${pctMs(eventMid(ev))}%` }} />
                   ))}
                   {/* now marker */}
@@ -277,10 +311,16 @@ export function Timeline({ data, onSelect }: {
           <span className="w-3 h-3 rounded-full bg-gray-300 ring-2 ring-red-300" />
           Critical item
         </span>
-        {showEvents && windowEvents.length > 0 && (
+        {showEvents && highlightedEvents.length > 0 && (
           <span className="inline-flex items-center gap-1.5">
             <span className="w-2 h-2 rotate-45 bg-brand-accent" />
-            Trade event (tracked competitor present)
+            Event with a story (competitor, gap, or nearby news)
+          </span>
+        )}
+        {showEvents && windowEvents.length - highlightedEvents.length > 0 && (
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rotate-45 bg-gray-300" />
+            Monitored event (hover for detail)
           </span>
         )}
       </div>
