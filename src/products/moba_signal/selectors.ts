@@ -151,14 +151,14 @@ export function headline(data: SignalDataset): { text: string; author: string | 
   if (data.headlineOverride) {
     return { text: data.headlineOverride.text, author: data.headlineOverride.author }
   }
-  // Auto-generated fallback, written the way an analyst would open a briefing
+  // Auto fallback: a quiet status line, not a manufactured page headline.
+  // Positioning facts (contested claims) live in the status bar and the claims
+  // tracker, so they never headline the page on their own.
   const criticals = data.signals.filter(s => band(s) === 'critical' && withinDays(data, s.date, 30))
-  const contested = data.claims.filter(c => c.status === 'contested')
-  const parts: string[] = []
-  if (criticals.length > 0) parts.push(`${criticals.length} critical item${criticals.length > 1 ? 's' : ''} in the last 30 days.`)
-  if (contested.length > 0) parts.push(`${contested.length} messaging-house claim${contested.length > 1 ? 's are' : ' is'} directly contested.`)
-  if (parts.length === 0) parts.push('No critical movement in the last 30 days. Watch items only.')
-  return { text: parts.join(' '), author: null }
+  const text = criticals.length > 0
+    ? `${criticals.length} critical competitor item${criticals.length > 1 ? 's' : ''} in the last 30 days.`
+    : 'No critical competitor movement in the last 30 days. Watch items only.'
+  return { text, author: null }
 }
 
 // ── Feed sorting: critical first, then recency ────────────────────────────────
