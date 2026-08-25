@@ -271,7 +271,7 @@ export function SignalDashboard({ data, sourceLabel = 'prototype, sample data' }
 
         {/* ── Tier 3: timeline, always full width — sequence is the context ── */}
         <Card id="timeline" title="Timeline" scroll={false}
-          sub="24 months of movement, today at the right edge. Moba's lane on top: when we were talking, and when they were. Click any point for the source and annotations.">
+          sub="24 months of movement, Moba's lane on top. The trade-event band and its guide lines relate a news cluster to the show that drove it; the axis runs past today to cover upcoming events. Click any point for the source and annotations.">
           <Timeline data={data} onSelect={setSelected} />
         </Card>
 
