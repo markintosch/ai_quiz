@@ -568,31 +568,37 @@ export const SIGNAL_DEMO: SignalDataset = {
     // so competitor and Moba presence are left unasserted (status not-published).
     {
       id: 'e-saudi-25', name: 'Saudi Agriculture 2025', location: 'Riyadh', country: 'Saudi Arabia', region: 'mea',
-      startDate: '2025-10-20', endDate: '2025-10-23', mobaExhibiting: false,
+      startDate: '2025-10-20', endDate: '2025-10-23', mobaExhibiting: true,
       competitors: [],
-      exhibitorListStatus: 'not-published',
-      notes: '42nd edition, ~370 exhibitors. Dates verified (saudi-agriculture.com). Exhibitor mapping pending.',
+      exhibitorListStatus: 'partial',
+      notes: 'Moba exhibited (grading systems, egg packing). 42nd edition, ~370 exhibitors. Moba presence verified (moba.net); no tracked competitor confirmed.',
     },
     {
       id: 'e-vivmea-25', name: 'VIV MEA 2025', location: 'Abu Dhabi', country: 'United Arab Emirates', region: 'mea',
-      startDate: '2025-11-25', endDate: '2025-11-27', mobaExhibiting: false,
-      competitors: [],
-      exhibitorListStatus: 'not-published',
-      notes: 'Sold out, 500+ exhibitors. Dates verified (vivmea.nl / WATTPoultry). Exhibitor mapping pending.',
+      startDate: '2025-11-25', endDate: '2025-11-27', mobaExhibiting: true,
+      competitors: [
+        { entityId: 'sanovo', hall: '09.P014' },
+        { entityId: 'prinzen' },
+      ],
+      exhibitorListStatus: 'published',
+      notes: 'Moba booth 09.P071; Sanovo 09.P014; Prinzen (Vencomatic) present. 505 exhibitors, 10,830 visitors. Verified via exhibitor listings.',
     },
     {
       id: 'e-poultryindia-25', name: 'Poultry India 2025', location: 'Hyderabad', country: 'India', region: 'asia',
       startDate: '2025-11-26', endDate: '2025-11-28', mobaExhibiting: false,
       competitors: [],
       exhibitorListStatus: 'not-published',
-      notes: '17th edition, South Asia’s largest, 500 exhibitors. India is the #1 growth market to 2035. Dates verified. Exhibitor mapping pending.',
+      notes: '17th edition, ~450 exhibitors. India is the #1 growth market to 2035. Dates verified; no tracked competitor confirmed in the exhibitor list yet.',
     },
     {
       id: 'e-viveurope-26', name: 'VIV Europe 2026', location: 'Utrecht', country: 'Netherlands', region: 'europe',
-      startDate: '2026-06-02', endDate: '2026-06-04', mobaExhibiting: false,
-      competitors: [],
-      exhibitorListStatus: 'not-published',
-      notes: '25th edition, ~600 exhibitors, feed-to-food incl. eggs and hatchery automation. Dates verified (europe.viv.net). Exhibitor mapping pending.',
+      startDate: '2026-06-02', endDate: '2026-06-04', mobaExhibiting: true,
+      competitors: [
+        { entityId: 'sanovo' },
+        { entityId: 'prinzen' },
+      ],
+      exhibitorListStatus: 'published',
+      notes: 'Moba in Hall 11.A010, launched the Magna vision grader; Sanovo and Prinzen (Vencomatic) exhibiting. 25th edition, ~470 exhibitors. Verified.',
     },
     // ── Upcoming (the event radar's T-90 to T+30 window) ────────────────────
     {
