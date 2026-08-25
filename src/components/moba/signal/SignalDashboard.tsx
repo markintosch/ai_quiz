@@ -67,7 +67,7 @@ const VIEWS: Record<ViewKey, { label: string; hint: string; main: CardId[]; a: C
   },
   overview: {
     label: 'Overview', hint: 'The shared picture: what happened, ranked',
-    main: ['feed'], a: ['implications', 'momentum', 'claims'], b: ['positioning', 'h2h', 'sov', 'events', 'queue', 'tech'],
+    main: ['events', 'feed'], a: ['implications', 'momentum', 'claims'], b: ['positioning', 'h2h', 'sov', 'queue', 'tech'],
   },
   marketing: {
     label: 'Marketing', hint: 'Positioning and comms: claims first',
@@ -79,7 +79,7 @@ const VIEWS: Record<ViewKey, { label: string; hint: string; main: CardId[]; a: C
   },
   analyst: {
     label: 'Analyst', hint: 'The working view: feed and queue',
-    main: ['feed'], a: ['queue', 'momentum'], b: ['claims', 'events'],
+    main: ['events', 'feed'], a: ['queue', 'momentum'], b: ['claims'],
   },
 }
 
