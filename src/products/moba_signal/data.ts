@@ -563,6 +563,37 @@ export const SIGNAL_DEMO: SignalDataset = {
       competitors: [{ entityId: 'sanovo' }],
       exhibitorListStatus: 'published',
     },
+    // Researched from the trade calendar to complete the past 12 months. Dates
+    // verified via the organisers and trade press; exhibitor mapping still to do,
+    // so competitor and Moba presence are left unasserted (status not-published).
+    {
+      id: 'e-saudi-25', name: 'Saudi Agriculture 2025', location: 'Riyadh', country: 'Saudi Arabia', region: 'mea',
+      startDate: '2025-10-20', endDate: '2025-10-23', mobaExhibiting: false,
+      competitors: [],
+      exhibitorListStatus: 'not-published',
+      notes: '42nd edition, ~370 exhibitors. Dates verified (saudi-agriculture.com). Exhibitor mapping pending.',
+    },
+    {
+      id: 'e-vivmea-25', name: 'VIV MEA 2025', location: 'Abu Dhabi', country: 'United Arab Emirates', region: 'mea',
+      startDate: '2025-11-25', endDate: '2025-11-27', mobaExhibiting: false,
+      competitors: [],
+      exhibitorListStatus: 'not-published',
+      notes: 'Sold out, 500+ exhibitors. Dates verified (vivmea.nl / WATTPoultry). Exhibitor mapping pending.',
+    },
+    {
+      id: 'e-poultryindia-25', name: 'Poultry India 2025', location: 'Hyderabad', country: 'India', region: 'asia',
+      startDate: '2025-11-26', endDate: '2025-11-28', mobaExhibiting: false,
+      competitors: [],
+      exhibitorListStatus: 'not-published',
+      notes: '17th edition, South Asia’s largest, 500 exhibitors. India is the #1 growth market to 2035. Dates verified. Exhibitor mapping pending.',
+    },
+    {
+      id: 'e-viveurope-26', name: 'VIV Europe 2026', location: 'Utrecht', country: 'Netherlands', region: 'europe',
+      startDate: '2026-06-02', endDate: '2026-06-04', mobaExhibiting: false,
+      competitors: [],
+      exhibitorListStatus: 'not-published',
+      notes: '25th edition, ~600 exhibitors, feed-to-food incl. eggs and hatchery automation. Dates verified (europe.viv.net). Exhibitor mapping pending.',
+    },
     // ── Upcoming (the event radar's T-90 to T+30 window) ────────────────────
     {
       id: 'e-ildex-ph', name: 'Ildex Philippines', location: 'Pasay City', country: 'Philippines', region: 'asia',
