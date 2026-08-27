@@ -44,6 +44,24 @@ export async function POST(req: NextRequest) {
   const db = createServiceClient() as any
   const action = String(body.action ?? '')
 
+  // Context corpus is the lens the agents read everything through; a stale lens
+  // corrupts scoring silently, so each item carries a review date. Marking it
+  // reviewed pushes the date forward (default +90 days) or to a date the analyst set.
+  if (action === 'mark-context-reviewed') {
+    const contextId = String(body.contextId ?? '')
+    if (!contextId) return NextResponse.json({ error: 'contextId required' }, { status: 400 })
+    let reviewBy = typeof body.reviewBy === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(body.reviewBy) ? body.reviewBy : null
+    if (!reviewBy) {
+      const d = new Date()
+      d.setDate(d.getDate() + 90)
+      reviewBy = d.toISOString().slice(0, 10)
+    }
+    const { error } = await db.from('moba_signal_context')
+      .update({ review_by: reviewBy }).eq('id', contextId)
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ ok: true, reviewBy })
+  }
+
   if (action === 'accept-proposal' || action === 'reject-proposal') {
     const { data: prop } = await db.from('moba_signal_proposals').select('*').eq('id', body.proposalId).maybeSingle()
     if (!prop) return NextResponse.json({ error: 'Unknown proposal' }, { status: 404 })
