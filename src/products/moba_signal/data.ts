@@ -380,6 +380,24 @@ export const SIGNAL_DEMO: SignalDataset = {
       firstSeen: '2026-08-18', lastConfirmed: '2026-08-18', assertedBy: 'collector', humanReviewed: false,
       annotations: [],
     },
+    {
+      id: 's-30', date: '2026-08-11', entityId: 'sanovo', linkedEntityIds: ['mkt-sea'],
+      title: 'Sanovo hiring a Field Service Engineer in Malaysia',
+      summary: 'New vacancy on the careers site for a Field Service Engineer based in Petaling Jaya, alongside international field-service and machine-builder roles in the Netherlands. Inference: a service base in Southeast Asia, not a one-off dispatch.',
+      type: 'personnel', region: 'asia', category: 'service',
+      proximity: 2, materiality: 2, credibility: 2, status: 'unverified',
+      sourceId: 'src-sanovo-jobs', sourceUrl: 'https://www.sanovogroup.com/careers',
+      firstSeen: '2026-08-27', lastConfirmed: '2026-08-27', assertedBy: 'analyst', humanReviewed: true,
+      inference: true,
+      disposition: 'watch', recommendedAction: 'investigate',
+      annotations: [{
+        id: 'a-04', author: 'Mark de Kock', role: 'Product marketing', createdAt: '2026-08-27T09:00:00Z',
+        means: 'A locally based service engineer follows an installed base. This lines up with three SEA processing wins this quarter: they are staffing to support what they have sold, which makes the region stickier for them.',
+        consider: 'Confirm whether this is a first local hire or a second. Check our own SEA service coverage against the same map before the next regional review.',
+        whoNeedsToKnow: 'Asia Pacific service lead, processing PM',
+        promotedToBriefing: false, replies: [],
+      }],
+    },
   ],
 
   // ── Claims tracker ──────────────────────────────────────────────────────────
@@ -711,6 +729,7 @@ export const SIGNAL_DEMO: SignalDataset = {
     { id: 'src-linkedin',     name: 'LinkedIn company pages',          url: 'https://www.linkedin.com',             sourceClass: 'social',          status: 'stale',  lastRun: '2026-08-16T06:00:00Z', lastItem: '2026-08-05', itemsLast30d: 4,  scoredItemsLast90d: 5,
       failureReason: 'Public pages only, rate-limited since 16 Aug. Coverage degraded, not zero.' },
     { id: 'src-jobs',         name: 'Job postings sweep',              url: 'https://www.vencomaticgroup.com/careers', sourceClass: 'jobs',         status: 'ok',     lastRun: '2026-08-19T06:00:00Z', lastItem: '2026-08-11', itemsLast30d: 3,  scoredItemsLast90d: 2 },
+    { id: 'src-sanovo-jobs',  name: 'Sanovo careers site',             url: 'https://www.sanovogroup.com/careers',  sourceClass: 'jobs',            status: 'ok',     lastRun: '2026-08-27T06:00:00Z', lastItem: '2026-08-11', itemsLast30d: 1,  scoredItemsLast90d: 1 },
     { id: 'src-moba-events',  name: 'Moba events page (context seed)', url: 'https://www.moba.net/events',          sourceClass: 'events',          status: 'ok',     lastRun: '2026-08-19T06:00:00Z', lastItem: '2026-08-12', itemsLast30d: 2,  scoredItemsLast90d: 1 },
     { id: 'src-wep',          name: 'World egg association bulletins', url: 'https://www.internationalegg.com',     sourceClass: 'association',     status: 'ok',     lastRun: '2026-08-19T05:00:00Z', lastItem: '2026-08-10', itemsLast30d: 2,  scoredItemsLast90d: 1 },
   ],

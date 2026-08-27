@@ -21,6 +21,7 @@ import { Claims } from './Claims'
 import { HeadToHead } from './HeadToHead'
 import { Events } from './Events'
 import { Wins } from './Wins'
+import { Hiring } from './Hiring'
 import { BriefCard, Implications } from './Brief'
 import { PositioningCard } from './Positioning'
 import { ShareOfVoice } from './ShareOfVoice'
@@ -60,16 +61,16 @@ function Card({ id, title, sub, tall, scroll = true, children }: {
 // Same modules, re-weighted. Sales stays a deferred P2 (battlecard view).
 
 type ViewKey = 'answer' | 'explore'
-type CardId = 'feed' | 'claims' | 'h2h' | 'wins' | 'events' | 'queue' | 'tech' | 'momentum' | 'sov' | 'brief' | 'implications' | 'positioning'
+type CardId = 'feed' | 'claims' | 'h2h' | 'wins' | 'events' | 'queue' | 'tech' | 'momentum' | 'sov' | 'brief' | 'implications' | 'positioning' | 'hiring'
 
 const VIEWS: Record<ViewKey, { label: string; hint: string; main: CardId[]; a: CardId[]; b: CardId[] }> = {
   answer: {
     label: 'Answer', hint: 'The takeaway: what changed, what it means, what to do',
-    main: ['brief'], a: ['implications', 'positioning', 'claims'], b: ['sov', 'momentum', 'wins', 'events'],
+    main: ['brief'], a: ['implications', 'positioning', 'claims'], b: ['sov', 'momentum', 'wins', 'hiring', 'events'],
   },
   explore: {
     label: 'Explore', hint: 'The working view: everything collected, ranked, with the queue',
-    main: ['events', 'feed'], a: ['implications', 'queue', 'momentum'], b: ['claims', 'h2h', 'sov', 'tech', 'wins'],
+    main: ['events', 'feed'], a: ['implications', 'queue', 'momentum'], b: ['claims', 'h2h', 'hiring', 'sov', 'tech', 'wins'],
   },
 }
 
@@ -115,6 +116,12 @@ export function SignalDashboard({ data, sourceLabel = 'prototype, sample data' }
       <Card key="wins" id="wins" title="Wins and references" tall={tall}
         sub="Announced wins by region. Red flag: touches a Moba strategic account.">
         <Wins data={data} onSelect={setSelected} />
+      </Card>
+    ),
+    hiring: tall => (
+      <Card key="hiring" id="hiring" title="Hiring signals" tall={tall}
+        sub="Competitor HR mentions read as intent: vacancies and senior hires, with what each may indicate.">
+        <Hiring data={data} onSelect={setSelected} />
       </Card>
     ),
     events: tall => (
