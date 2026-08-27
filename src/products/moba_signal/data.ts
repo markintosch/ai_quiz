@@ -24,7 +24,8 @@ export const SIGNAL_DEMO: SignalDataset = {
     { id: 'vencomatic',name: 'Vencomatic Group', type: 'competitor', ownership: { kind: 'independent' }, addedOn: '2026-08-01', regions: ['europe'] },
     { id: 'prinzen',   name: 'Prinzen',     type: 'competitor', ownership: { kind: 'group', parentId: 'vencomatic', parentName: 'Vencomatic' }, priority: true, addedOn: '2026-08-01', regions: ['europe', 'asia'], backfilledTo: '2025-02-01' },
     { id: 'nabel',     name: 'NABEL',       type: 'competitor', ownership: { kind: 'independent' }, priority: true,  addedOn: '2026-08-01', regions: ['asia'], backfilledTo: '2025-06-01' },
-    { id: 'kyowa',     name: 'Kyowa',       type: 'competitor', ownership: { kind: 'independent' }, addedOn: '2026-08-01', regions: ['asia'] },
+    { id: 'kyowa',     name: 'Kyowa',       type: 'competitor', ownership: { kind: 'independent' }, addedOn: '2026-08-01', regions: ['asia', 'mea', 'europe'], backfilledTo: '2024-08-01',
+      note: 'Kyowa Machinery Co., Ltd. Tsuyama, Okayama, Japan, est. 1969. Grading, in-line defect detection (CEX/DEX/BEX) and egg breaking. Distributor-led exports across Asia into MEA and Europe; China manufacturing JV. Started in egg washers.' },
     { id: 'zenyer',    name: 'Zenyer',      type: 'competitor', ownership: { kind: 'independent' }, priority: true,  addedOn: '2026-08-01', regions: ['asia', 'mea'], backfilledTo: '2025-01-01' },
     { id: 'riva',      name: 'Riva Selegg', type: 'competitor', ownership: { kind: 'independent' }, addedOn: '2026-08-01', regions: ['europe'] },
     // Markets and customers referenced by signals
@@ -425,6 +426,7 @@ export const SIGNAL_DEMO: SignalDataset = {
       competitorClaims: [
         { entityId: 'nabel', wording: 'Human-grade candling, 99.5% dirty-egg detection', sourceUrl: 'https://www.wattagnet.com/nabel-ai-inspection', lastSeen: '2026-07-08' },
         { entityId: 'zenyer', wording: '智能检测，无损分级', sourceLanguage: 'Chinese', translation: 'Intelligent detection, damage-free grading', sourceUrl: 'https://www.zenyer.com', lastSeen: '2026-06-01' },
+        { entityId: 'kyowa', wording: 'Proprietary detection of cracks, shell spots and blood inside the egg, beyond conventional visual inspection (CEX / DEX / BEX)', sourceUrl: 'http://www.kyowa-machinery.co.jp/english/products/', lastSeen: '2026-08-27' },
       ],
     },
     {
@@ -721,7 +723,7 @@ export const SIGNAL_DEMO: SignalDataset = {
     { id: 'src-zenyer',       name: 'Zenyer site (CN/EN)',             url: 'https://www.zenyer.com',               sourceClass: 'competitor-site', status: 'ok',     lastRun: '2026-08-19T06:00:00Z', lastItem: '2026-08-06', itemsLast30d: 2,  scoredItemsLast90d: 5, language: 'Chinese' },
     { id: 'src-kyowa',        name: 'Kyowa newsroom',                  url: 'https://www.kyowa-jpn.co.jp',          sourceClass: 'competitor-site', status: 'failed', lastRun: '2026-08-19T06:00:00Z', lastItem: '2026-07-30', itemsLast30d: 1,  scoredItemsLast90d: 1, language: 'Japanese',
       failureReason: 'Page structure changed 12 Aug. Extractor returns empty. Fix queued.' },
-    { id: 'src-kyowa-machinery', name: 'Kyowa Machinery (EN site)',     url: 'http://www.kyowa-machinery.co.jp/english/', sourceClass: 'competitor-site', status: 'proposed', lastRun: '2026-08-27T06:00:00Z', lastItem: null, itemsLast30d: 0, scoredItemsLast90d: 0, language: 'English' },
+    { id: 'src-kyowa-machinery', name: 'Kyowa Machinery (EN site)',     url: 'http://www.kyowa-machinery.co.jp/english/', sourceClass: 'competitor-site', status: 'ok',       lastRun: '2026-08-27T06:00:00Z', lastItem: '2026-08-27', itemsLast30d: 1, scoredItemsLast90d: 1, language: 'English' },
     { id: 'src-riva',         name: 'Riva Selegg site (IT)',           url: 'https://www.rivaselegg.com',           sourceClass: 'competitor-site', status: 'ok',     lastRun: '2026-08-19T06:00:00Z', lastItem: '2026-07-12', itemsLast30d: 1,  scoredItemsLast90d: 2, language: 'Italian' },
     { id: 'src-wattpoultry',  name: 'WATT Poultry',                    url: 'https://www.wattagnet.com',            sourceClass: 'trade-press',     status: 'ok',     lastRun: '2026-08-19T05:30:00Z', lastItem: '2026-08-18', itemsLast30d: 14, scoredItemsLast90d: 11 },
     { id: 'src-poultryworld', name: 'Poultry World',                   url: 'https://www.poultryworld.net',         sourceClass: 'trade-press',     status: 'ok',     lastRun: '2026-08-19T05:30:00Z', lastItem: '2026-08-17', itemsLast30d: 11, scoredItemsLast90d: 8 },
