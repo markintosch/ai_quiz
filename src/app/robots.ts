@@ -35,6 +35,9 @@ const DISALLOW_PATHS = [
   '/arena-study/',
   '/*/results/',
   '/results/',
+  // HCSS / Cyber Compass is offline — keep every crawler off it.
+  '/HCSS',
+  '/hcss',
 ]
 
 // Explicit AI-crawler welcomes — research shows LLM crawlers respond more
@@ -68,7 +71,7 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
       ...AI_CRAWLERS.map(ua => ({
         userAgent: ua,
         allow:    ALLOW_PATHS,
-        disallow: ['/admin/', '/api/', '/results/', '/*/results/'],
+        disallow: ['/admin/', '/api/', '/results/', '/*/results/', '/HCSS', '/hcss'],
       })),
     ],
     sitemap: `${BASE_URL}/sitemap.xml`,

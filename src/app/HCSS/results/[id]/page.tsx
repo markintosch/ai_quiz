@@ -8,6 +8,7 @@ import { createServiceClient } from '@/lib/supabase/server'
 import { dimensionLabel, type Band } from '@/lib/cyber-compass/scoring'
 import { RESULTS, BAND_COPY, BRAND, pickLang, type Lang } from '@/lib/cyber-compass/i18n'
 import type { Dimension } from '@/lib/cyber-compass/questions'
+import { HCSS_OFFLINE } from '@/lib/cyber-compass/offline'
 
 export const dynamic = 'force-dynamic'
 
@@ -70,6 +71,7 @@ export default async function CyberResultsPage(
     searchParams: Promise<{ lang?: string }>
   }
 ) {
+  if (HCSS_OFFLINE) notFound()
   const searchParams = await props.searchParams;
   const params = await props.params;
   const a = await fetchAssessment(params.id)

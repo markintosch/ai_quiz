@@ -1,5 +1,7 @@
+import { notFound } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase/server'
 import { DEFAULT_CONTENT, mergeContent, type HcssContent } from './content'
+import { HCSS_OFFLINE } from '@/lib/cyber-compass/offline'
 import HcssView from './HcssView'
 
 export const dynamic = 'force-dynamic'
@@ -24,6 +26,7 @@ async function loadContent(): Promise<HcssContent> {
 }
 
 export default async function HcssPage() {
+  if (HCSS_OFFLINE) notFound()
   const content = await loadContent()
   return <HcssView c={content} />
 }

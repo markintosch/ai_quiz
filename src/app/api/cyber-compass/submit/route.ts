@@ -12,6 +12,7 @@ import type { Stage } from '@/lib/cyber-compass/questions'
 import { pickLang, type Lang, BRAND } from '@/lib/cyber-compass/i18n'
 import { CyberCompassResultsEmail } from '@/lib/email/templates/cyberCompassResults'
 import { CyberCompassNotifyEmail }  from '@/lib/email/templates/cyberCompassNotify'
+import { HCSS_OFFLINE } from '@/lib/cyber-compass/offline'
 
 export const dynamic     = 'force-dynamic'
 export const runtime     = 'nodejs'
@@ -42,6 +43,7 @@ const SUBJECT_BY_LANG: Record<Lang, (overall: number, band: string) => string> =
 }
 
 export async function POST(req: Request) {
+  if (HCSS_OFFLINE) return new NextResponse(null, { status: 404 })
   const ip = getClientIp(req.headers)
   const rl = rateLimit(`cybercompass:${ip}`, 5, 60 * 60 * 1000)
   if (!rl.allowed) {
