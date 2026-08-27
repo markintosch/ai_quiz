@@ -328,10 +328,18 @@ export default function MobaSignalAdmin() {
               <div className="min-w-0 flex-1">
                 <span className="block text-sm text-gray-800">{s.name}</span>
                 <span className="block text-[11px] text-gray-400">
-                  {s.url} · last run {fmtTs(s.last_run_at)}
+                  <a href={s.url} target="_blank" rel="noopener noreferrer" className="underline break-all hover:text-brand">{s.url}</a> · last run {fmtTs(s.last_run_at)}
                   {s.failure_reason && <span className="text-red-600"> · {s.failure_reason}</span>}
                 </span>
               </div>
+              <a
+                href={s.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-gray-300 hover:border-brand-accent hover:text-brand-accent transition-colors"
+              >
+                Review ↗
+              </a>
               <button
                 onClick={() => runSource(s.id)}
                 disabled={busy !== null}
