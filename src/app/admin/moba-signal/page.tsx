@@ -172,7 +172,14 @@ export default function MobaSignalAdmin() {
       })
       const json = await safeJson(res)
       if (!res.ok) { setNotice(json.error ?? `HTTP ${res.status}`); setNoticeErr(true) }
-      else { setNotice(json.created ? `Created ${json.created}` : null); setNoticeErr(false) }
+      else {
+        setNotice(
+          json.reviewBy ? `Review date updated to ${json.reviewBy}`
+          : json.created ? `Created ${json.created}`
+          : 'Saved',
+        )
+        setNoticeErr(false)
+      }
     } catch (e) {
       setNotice(e instanceof Error ? e.message : String(e)); setNoticeErr(true)
     }
