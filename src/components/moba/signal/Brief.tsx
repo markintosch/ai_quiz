@@ -78,6 +78,31 @@ export function BriefCard({ data }: { data: SignalDataset }) {
 
 // ── Implications for Moba: promoted "so what" annotations, decision-labelled ──
 
+/**
+ * Illustrative examples of what a promoted implication reads like. Shown, clearly
+ * labelled as demo, only while real promoted implications are sparse, so the card
+ * demonstrates its intent instead of looking empty. They recede once three or
+ * more real "so whats" are promoted.
+ */
+type Disposition = keyof typeof DISPOSITION_META
+const DEMO_IMPLICATIONS: Array<{ disposition: Disposition; action: string; entity: string; means: string; consider: string }> = [
+  {
+    disposition: 'threat', action: 'respond', entity: 'Sanovo',
+    means: 'A third Southeast Asia processing win this quarter concentrates their momentum in the one segment where we are weakest.',
+    consider: 'Hold processing out of the lead in Vietnam and Thailand material until the account team confirms scope. Brief the CMO.',
+  },
+  {
+    disposition: 'opportunity', action: 'investigate', entity: 'NABEL',
+    means: 'Their robotics partnership is Japan-anchored and slow to reach Europe, so the integrated-line story still owns the European keten conversation.',
+    consider: 'Press the advantage at VIV Europe with a full-line proof point and a named reference customer.',
+  },
+  {
+    disposition: 'watch', action: 'monitor', entity: 'Vencomatic / Prinzen',
+    means: 'The Meggsius data brand plus a 47-role hiring wave reads as a connected-services push, the same direction as their connected-packer teaser.',
+    consider: 'Map their roadmap against iMoba now, before a data gap becomes a public proof point.',
+  },
+]
+
 export function Implications({ data, onSelect }: {
   data: SignalDataset
   onSelect: (s: Signal) => void
@@ -86,9 +111,10 @@ export function Implications({ data, onSelect }: {
     .filter(s => s.annotations.some(a => a.promotedToBriefing))
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, 6)
-  if (promoted.length === 0) {
-    return <p className="text-xs text-gray-400">No promoted interpretations yet. Promote a &ldquo;so what&rdquo; to surface it here.</p>
-  }
+
+  // Scaffold with clearly-labelled demo examples while real content is thin.
+  const showDemo = promoted.length < 3
+
   return (
     <div className="space-y-2.5">
       {promoted.map(s => {
@@ -108,6 +134,30 @@ export function Implications({ data, onSelect }: {
           </button>
         )
       })}
+
+      {showDemo && (
+        <div className="space-y-2.5">
+          <div className="flex items-center gap-2 pt-1">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-50 border border-amber-200 rounded px-1.5 py-0.5">Demo data</span>
+            <span className="text-[11px] text-gray-400">Illustrative, not live. Promote real &ldquo;so whats&rdquo; and these drop away.</span>
+          </div>
+          {DEMO_IMPLICATIONS.map((x, i) => {
+            const d = DISPOSITION_META[x.disposition]
+            return (
+              <div key={i} className="rounded-lg border border-dashed border-amber-300/70 bg-amber-50/30 p-3">
+                <div className="flex flex-wrap items-center gap-1.5 text-[10px] mb-1">
+                  <span className={`px-1.5 py-0.5 rounded-full border font-semibold ${d.badge}`}>{d.label}</span>
+                  <span className="px-1.5 py-0.5 rounded-full border bg-gray-50 text-gray-500 border-gray-200 uppercase tracking-wide">{x.action}</span>
+                  <span className="text-gray-400">{x.entity}</span>
+                  <span className="ml-auto text-[9px] font-bold uppercase tracking-wider text-amber-600">Demo</span>
+                </div>
+                <p className="text-sm text-gray-800">{x.means}</p>
+                <p className="text-xs text-gray-500 mt-0.5"><span className="font-medium text-gray-600">Consider:</span> {x.consider}</p>
+              </div>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }

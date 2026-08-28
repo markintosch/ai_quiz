@@ -70,7 +70,7 @@ const VIEWS: Record<ViewKey, { label: string; hint: string; main: CardId[]; a: C
   },
   explore: {
     label: 'Explore', hint: 'The working view: everything collected, ranked, with the queue',
-    main: ['events', 'feed'], a: ['implications', 'queue', 'momentum'], b: ['claims', 'h2h', 'hiring', 'sov', 'tech', 'wins'],
+    main: ['events', 'feed'], a: ['implications', 'momentum', 'hiring'], b: ['wins', 'claims', 'h2h', 'sov', 'tech', 'queue'],
   },
 }
 
