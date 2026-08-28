@@ -22,9 +22,27 @@ interface State {
   runs: Row[]
   proposals: Row[]
   entities: Row[]
+  context: Row[]
 }
 
 const SCORE_HINT = 'proximity · materiality · credibility'
+
+/** Review-date state for a context item: overdue, due soon, or fine. */
+function ctxReviewState(reviewBy?: string | null): { label: string; cls: string; urgent: boolean } {
+  if (!reviewBy) return { label: 'no review date', cls: 'bg-gray-100 text-gray-500 border-gray-200', urgent: false }
+  const today = new Date(); today.setHours(0, 0, 0, 0)
+  const due = new Date(`${reviewBy}T00:00:00`)
+  const days = Math.round((due.getTime() - today.getTime()) / 86_400_000)
+  if (days < 0)  return { label: `overdue ${-days}d`,  cls: 'bg-red-50 text-red-700 border-red-200',       urgent: true }
+  if (days <= 30) return { label: `due in ${days}d`,    cls: 'bg-amber-50 text-amber-700 border-amber-200', urgent: true }
+  return { label: `review ${reviewBy}`, cls: 'bg-gray-100 text-gray-500 border-gray-200', urgent: false }
+}
+
+/** Default next review date: today + 90 days, as YYYY-MM-DD. */
+function defaultNextReview(): string {
+  const d = new Date(); d.setDate(d.getDate() + 90)
+  return d.toISOString().slice(0, 10)
+}
 
 /** Platform errors (413 Request Entity Too Large, timeouts) are plain text, not JSON. */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -68,6 +86,7 @@ export default function MobaSignalAdmin() {
   const [paperOpen, setPaperOpen] = useState(false)
   const [dispoPick, setDispoPick] = useState<Record<string, string>>({})
   const [actionPick, setActionPick] = useState<Record<string, string>>({})
+  const [ctxDate, setCtxDate] = useState<Record<string, string>>({})
 
   const load = useCallback(async () => {
     try {
@@ -328,10 +347,18 @@ export default function MobaSignalAdmin() {
               <div className="min-w-0 flex-1">
                 <span className="block text-sm text-gray-800">{s.name}</span>
                 <span className="block text-[11px] text-gray-400">
-                  {s.url} · last run {fmtTs(s.last_run_at)}
+                  <a href={s.url} target="_blank" rel="noopener noreferrer" className="underline break-all hover:text-brand">{s.url}</a> · last run {fmtTs(s.last_run_at)}
                   {s.failure_reason && <span className="text-red-600"> · {s.failure_reason}</span>}
                 </span>
               </div>
+              <a
+                href={s.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-gray-300 hover:border-brand-accent hover:text-brand-accent transition-colors"
+              >
+                Review ↗
+              </a>
               <button
                 onClick={() => runSource(s.id)}
                 disabled={busy !== null}
@@ -639,6 +666,59 @@ export default function MobaSignalAdmin() {
                   {!picked && (
                     <span className="text-[11px] text-amber-700">Link an entity (or create one from the dropdown) to enable Approve.</span>
                   )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </section>
+
+      {/* ── Context corpus review ── */}
+      <section>
+        <h2 className="text-sm font-bold text-gray-900 mb-2">
+          Context — review
+          {(() => {
+            const due = state.context.filter(c => ctxReviewState(c.review_by).urgent).length
+            return due > 0 ? <span className="ml-2 text-amber-700">· {due} need review</span> : null
+          })()}
+        </h2>
+        <p className="text-xs text-gray-500 mb-2">
+          The internal material the agents read everything through: messaging house, strategic accounts,
+          research baselines. Never scored, never in the feed. A stale lens corrupts scoring silently, so
+          each item carries a review date. Mark it reviewed to push the date forward.
+        </p>
+        {state.context.length === 0 && (
+          <p className="text-sm text-gray-400">No context loaded yet.</p>
+        )}
+        <div className="space-y-2">
+          {state.context.map(c => {
+            const st = ctxReviewState(c.review_by)
+            return (
+              <div key={c.id} className={`rounded-xl border bg-white px-4 py-3 ${st.urgent ? 'border-amber-200' : 'border-gray-200'}`}>
+                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                  <h3 className="text-sm font-semibold text-gray-900">{c.name}</h3>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full border font-semibold ${st.cls}`}>{st.label}</span>
+                </div>
+                <p className="text-[11px] text-gray-400 mt-0.5">
+                  Owner: {c.owner} · loaded {c.loaded_on}
+                  {Array.isArray(c.account_names) && c.account_names.length > 0 && <> · {c.account_names.length} account{c.account_names.length === 1 ? '' : 's'}</>}
+                </p>
+                {c.note && <p className="text-xs text-gray-600 mt-1">{c.note}</p>}
+                <div className="flex flex-wrap items-center gap-2 mt-3">
+                  <label className="text-[11px] text-gray-500">Next review</label>
+                  <input
+                    type="date"
+                    value={ctxDate[c.id] ?? defaultNextReview()}
+                    onChange={e => setCtxDate(p => ({ ...p, [c.id]: e.target.value }))}
+                    className="text-xs border border-gray-200 rounded-lg px-2 py-1.5 text-gray-700 bg-white"
+                  />
+                  <button
+                    onClick={() => review({ action: 'mark-context-reviewed', contextId: c.id, reviewBy: ctxDate[c.id] ?? defaultNextReview() }, `ctx:${c.id}`)}
+                    disabled={busy !== null}
+                    className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-brand text-white disabled:opacity-40"
+                  >
+                    {busy === `ctx:${c.id}` ? '…' : 'Mark reviewed'}
+                  </button>
                 </div>
               </div>
             )

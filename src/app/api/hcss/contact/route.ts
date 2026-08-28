@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { rateLimit, getClientIp } from '@/lib/rateLimit'
+import { HCSS_OFFLINE } from '@/lib/cyber-compass/offline'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 const FROM = 'HCSS Website <results@brandpwrdmedia.com>'
@@ -15,6 +16,7 @@ function esc(s: string): string {
 }
 
 export async function POST(req: NextRequest) {
+  if (HCSS_OFFLINE) return new NextResponse(null, { status: 404 })
   const ip = getClientIp(req.headers)
   const rl = rateLimit(`hcss-contact:${ip}`, 5, 60 * 60 * 1000) // 5 per hour
   if (!rl.allowed) {
