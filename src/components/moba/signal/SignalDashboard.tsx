@@ -66,11 +66,11 @@ type CardId = 'feed' | 'claims' | 'h2h' | 'wins' | 'events' | 'queue' | 'tech' |
 const VIEWS: Record<ViewKey, { label: string; hint: string; main: CardId[]; a: CardId[]; b: CardId[] }> = {
   answer: {
     label: 'Answer', hint: 'The takeaway: what changed, what it means, what to do',
-    main: ['brief'], a: ['implications', 'positioning', 'claims'], b: ['sov', 'momentum', 'wins', 'hiring', 'events'],
+    main: ['brief'], a: ['implications', 'positioning', 'claims'], b: ['momentum', 'wins', 'hiring', 'sov', 'events'],
   },
   explore: {
     label: 'Explore', hint: 'The working view: everything collected, ranked, with the queue',
-    main: ['events', 'feed'], a: ['implications', 'momentum', 'hiring'], b: ['wins', 'claims', 'h2h', 'sov', 'tech', 'queue'],
+    main: ['events', 'feed'], a: ['implications', 'momentum', 'hiring', 'sov'], b: ['wins', 'claims', 'h2h', 'tech', 'queue'],
   },
 }
 
