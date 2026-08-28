@@ -22,6 +22,8 @@ import { HeadToHead } from './HeadToHead'
 import { Events } from './Events'
 import { Wins } from './Wins'
 import { Hiring } from './Hiring'
+import { Regions } from './Regions'
+import { TechRadar } from './Tech'
 import { BriefCard, Implications } from './Brief'
 import { PositioningCard } from './Positioning'
 import { ShareOfVoice } from './ShareOfVoice'
@@ -61,16 +63,16 @@ function Card({ id, title, sub, tall, scroll = true, children }: {
 // Same modules, re-weighted. Sales stays a deferred P2 (battlecard view).
 
 type ViewKey = 'answer' | 'explore'
-type CardId = 'feed' | 'claims' | 'h2h' | 'wins' | 'events' | 'queue' | 'tech' | 'momentum' | 'sov' | 'brief' | 'implications' | 'positioning' | 'hiring'
+type CardId = 'feed' | 'claims' | 'h2h' | 'wins' | 'events' | 'queue' | 'tech' | 'momentum' | 'sov' | 'brief' | 'implications' | 'positioning' | 'hiring' | 'regions'
 
 const VIEWS: Record<ViewKey, { label: string; hint: string; main: CardId[]; a: CardId[]; b: CardId[] }> = {
   answer: {
     label: 'Answer', hint: 'The takeaway: what changed, what it means, what to do',
-    main: ['brief'], a: ['implications', 'positioning', 'claims'], b: ['momentum', 'wins', 'hiring', 'sov', 'events'],
+    main: ['brief'], a: ['implications', 'positioning', 'claims'], b: ['regions', 'momentum', 'wins', 'hiring', 'sov', 'events'],
   },
   explore: {
     label: 'Explore', hint: 'The working view: everything collected, ranked, with the queue',
-    main: ['events', 'feed'], a: ['implications', 'momentum', 'hiring', 'sov'], b: ['wins', 'claims', 'h2h', 'tech', 'queue'],
+    main: ['events', 'feed'], a: ['implications', 'regions', 'momentum', 'hiring', 'sov'], b: ['wins', 'claims', 'h2h', 'tech', 'queue'],
   },
 }
 
@@ -124,6 +126,12 @@ export function SignalDashboard({ data, sourceLabel = 'prototype, sample data' }
         <Hiring data={data} onSelect={setSelected} />
       </Card>
     ),
+    regions: tall => (
+      <Card key="regions" id="regions" title="Regional pressure" tall={tall}
+        sub="Where the competitive heat sits, by world region. Weighted by recent activity and threat level.">
+        <Regions data={data} onSelect={setSelected} />
+      </Card>
+    ),
     events: tall => (
       <Card key="events" id="events" title="Event radar" tall={tall}
         sub="The only predictive module. T-90 to T+30 monitoring cadence.">
@@ -173,12 +181,7 @@ export function SignalDashboard({ data, sourceLabel = 'prototype, sample data' }
     tech: () => (
       <Card key="tech" id="tech" title="Technology radar" scroll={false}
         sub="Adopt / trial / assess / watch.">
-        <p className="text-xs text-gray-500">
-          Designed for, not built in v1 (P2). Deliberately slow-moving: this tier should change monthly, not daily.
-        </p>
-        <p className="text-[11px] text-gray-400 mt-1">
-          Early signals already collected: Zenyer optical-detection patents, NABEL AI inspection, Prinzen connected-services hiring.
-        </p>
+        <TechRadar />
       </Card>
     ),
   }
