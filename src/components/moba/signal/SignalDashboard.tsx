@@ -11,7 +11,8 @@
 // modules, re-weighted, never forked content.
 
 import { useMemo, useState } from 'react'
-import type { Signal, SignalDataset } from '@/products/moba_signal/types'
+import type { Signal, SignalDataset, Region } from '@/products/moba_signal/types'
+import { REGION_LABELS } from '@/products/moba_signal/types'
 import { band, daysBetween, entityById, entityLabel, headline, laneEntityId, quarterlyLaneCounts, relTime, sortForFeed, statusMetrics, fmtDate } from '@/products/moba_signal/selectors'
 import { HeatStrip, Sparkline } from './viz'
 import { SignalDetail } from './SignalDetail'
@@ -79,6 +80,20 @@ const VIEWS: Record<ViewKey, { label: string; hint: string; main: CardId[]; a: C
 export function SignalDashboard({ data, sourceLabel = 'prototype, sample data' }: { data: SignalDataset; sourceLabel?: string }) {
   const [selected, setSelected] = useState<Signal | null>(null)
   const [view, setView] = useState<ViewKey>('explore')
+  const [regionFilter, setRegionFilter] = useState<Region | null>(null)
+
+  // The region lens: when a region is picked in Regional pressure, the
+  // region-scoped modules (feed, timeline, events, wins, hiring) narrow to it.
+  // Cross-cutting modules (claims, head-to-head, share of voice, brief) ignore it.
+  const viewData: SignalDataset = useMemo(() => {
+    if (!regionFilter) return data
+    return {
+      ...data,
+      signals: data.signals.filter(s => s.region === regionFilter),
+      events: data.events.filter(e => e.region === regionFilter),
+    }
+  }, [data, regionFilter])
+  const toggleRegion = (r: Region) => setRegionFilter(cur => (cur === r ? null : r))
 
   const metrics = useMemo(() => statusMetrics(data), [data])
   const head = useMemo(() => headline(data), [data])
@@ -99,7 +114,7 @@ export function SignalDashboard({ data, sourceLabel = 'prototype, sample data' }
     feed: tall => (
       <Card key="feed" id="feed" title="Signal feed" tall={tall}
         sub="Everything collected, newest first, impact-ranked within each period. Noise is collapsed, not deleted.">
-        <Feed data={data} onSelect={setSelected} />
+        <Feed data={viewData} onSelect={setSelected} />
       </Card>
     ),
     claims: tall => (
@@ -117,25 +132,25 @@ export function SignalDashboard({ data, sourceLabel = 'prototype, sample data' }
     wins: tall => (
       <Card key="wins" id="wins" title="Wins and references" tall={tall}
         sub="Announced wins by region. Red flag: touches a Moba strategic account.">
-        <Wins data={data} onSelect={setSelected} />
+        <Wins data={viewData} onSelect={setSelected} />
       </Card>
     ),
     hiring: tall => (
       <Card key="hiring" id="hiring" title="Hiring signals" tall={tall}
         sub="Competitor HR mentions read as intent: vacancies and senior hires, with what each may indicate.">
-        <Hiring data={data} onSelect={setSelected} />
+        <Hiring data={viewData} onSelect={setSelected} />
       </Card>
     ),
     regions: tall => (
       <Card key="regions" id="regions" title="Regional pressure" tall={tall}
-        sub="Where the competitive heat sits, by world region. Weighted by recent activity and threat level.">
-        <Regions data={data} onSelect={setSelected} />
+        sub="Where the competitive heat sits, by world region. Click a region to focus the feed, timeline, events, wins and hiring on it.">
+        <Regions data={data} onSelect={setSelected} activeRegion={regionFilter} onRegionFilter={toggleRegion} />
       </Card>
     ),
     events: tall => (
       <Card key="events" id="events" title="Event radar" tall={tall}
         sub="The only predictive module. T-90 to T+30 monitoring cadence.">
-        <Events data={data} />
+        <Events data={viewData} />
       </Card>
     ),
     queue: tall => (
@@ -197,6 +212,15 @@ export function SignalDashboard({ data, sourceLabel = 'prototype, sample data' }
             <div className="flex items-baseline gap-2 min-w-0">
               <span className="font-bold text-brand whitespace-nowrap">Moba Signal</span>
               <span className="text-[11px] text-gray-400 whitespace-nowrap hidden sm:inline">as of {fmtDate(data.asOf)} · {sourceLabel}</span>
+              {regionFilter && (
+                <button
+                  onClick={() => setRegionFilter(null)}
+                  className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-brand/10 text-brand border border-brand/20 hover:bg-brand/15 transition-colors whitespace-nowrap"
+                  title="Clear the region lens"
+                >
+                  Lens: {REGION_LABELS[regionFilter]} <span aria-hidden>✕</span>
+                </button>
+              )}
             </div>
             <div className="flex items-center gap-1" role="tablist" aria-label="View">
               {(Object.keys(VIEWS) as ViewKey[]).map(k => (
@@ -278,7 +302,7 @@ export function SignalDashboard({ data, sourceLabel = 'prototype, sample data' }
         {/* ── Tier 3: timeline, always full width — sequence is the context ── */}
         <Card id="timeline" title="Timeline" scroll={false}
           sub="24 months of movement, Moba's lane on top. The event band highlights only shows with a story (a tracked competitor, an attendance gap, or nearby news) and drops a guide line so a news cluster reads against the show that drove it; other dates stay as faint hover ticks. The axis runs past today to cover upcoming events. Click any point for the source and annotations.">
-          <Timeline data={data} onSelect={setSelected} />
+          <Timeline data={viewData} onSelect={setSelected} />
         </Card>
 
         {/* ── The asymmetric module grid: main column + two supporting ── */}
