@@ -56,9 +56,12 @@ export async function POST(req: NextRequest) {
       d.setDate(d.getDate() + 90)
       reviewBy = d.toISOString().slice(0, 10)
     }
-    const { error } = await db.from('moba_signal_context')
-      .update({ review_by: reviewBy }).eq('id', contextId)
+    const { data, error } = await db.from('moba_signal_context')
+      .update({ review_by: reviewBy }).eq('id', contextId).select('id, review_by')
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    if (!data || data.length === 0) {
+      return NextResponse.json({ error: `No context item found with id "${contextId}"` }, { status: 404 })
+    }
     return NextResponse.json({ ok: true, reviewBy })
   }
 
