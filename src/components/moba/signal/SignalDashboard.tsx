@@ -237,12 +237,13 @@ export function SignalDashboard({ data, sourceLabel = 'prototype, sample data' }
                   {VIEWS[k].label}
                 </button>
               ))}
-              <span
-                className="px-2.5 py-1 rounded-full text-xs border border-dashed border-gray-200 text-gray-300 cursor-not-allowed select-none"
-                title="Sales access is P2: a battlecard view with its own owner, decided after v1."
+              <a
+                href="/moba/signal/v2"
+                className="px-2.5 py-1 rounded-full text-xs font-medium border border-dashed border-brand/40 text-brand hover:bg-brand/5 transition-colors"
+                title="The V2 preview: attention first, actions with owners, Executive / Sales / Marketing lenses."
               >
-                Sales · P2
-              </span>
+                V2 preview
+              </a>
             </div>
           </div>
           <div className="grid grid-cols-3 md:grid-cols-6 gap-x-4 gap-y-2">
