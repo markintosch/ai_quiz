@@ -131,3 +131,27 @@ export const MOBA_SEGMENT_QUESTION = {
   minLabel: 'Techniek-/productgedreven',
   maxLabel: 'Markt-/klantgedreven',
 } as const
+
+/**
+ * Rol-van-marketing vraag — meerkeuze waar meerdere antwoorden mogen, met een
+ * open veld voor een eigen aanvulling. Geen likert, geen score: het gaat om het
+ * beeld dat het team heeft van wat marketing zou moeten zijn. De option-codes
+ * liggen vast (ze worden zo opgeslagen); alleen de labels zijn tekst.
+ */
+export const MOBA_ROLE_QUESTION = {
+  text: 'Wat vind jij dat de rol van marketing moet zijn?',
+  helper: 'Meer dan één antwoord mag. Vul onderaan gerust je eigen antwoord aan.',
+  options: [
+    { code: 'demand',  label: 'Vraag en pipeline aanjagen voor sales' },
+    { code: 'brand',   label: 'Het merk en de positionering bouwen en bewaken' },
+    { code: 'partner', label: 'De klant ontzorgen en adviseren over de hele keten' },
+    { code: 'thought', label: 'Kennis delen en de markt informeren' },
+    { code: 'enable',  label: 'Sales ondersteunen met content en tools' },
+    { code: 'voice',   label: 'De stem van de klant naar binnen brengen' },
+    { code: 'growth',  label: 'Nieuwe markten en proposities aanjagen' },
+  ],
+  otherLabel: 'Anders, namelijk',
+} as const
+
+/** De vaste option-codes van de rol-vraag (voor validatie bij submit). */
+export const MOBA_ROLE_CODES = MOBA_ROLE_QUESTION.options.map(o => o.code)

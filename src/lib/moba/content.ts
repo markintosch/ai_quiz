@@ -22,15 +22,24 @@ import {
   MOBA_PRIORITY_TOTAL,
   MOBA_OPEN_QUESTIONS,
   MOBA_SEGMENT_QUESTION,
+  MOBA_ROLE_QUESTION,
 } from '@/products/moba_marketing/config'
 
 // ── Resolved (ready-to-render) content ────────────────────────────────────────
+export interface MobaRoleContent {
+  text:       string
+  helper:     string
+  options:    { code: string; label: string }[]
+  otherLabel: string
+}
+
 export interface MobaContent {
   questions:       Question[]
   priorityOptions: { key: string; label: string }[]
   priorityTotal:   number
   openQuestions:   { key: string; text: string }[]
   segment:         { text: string; minLabel: string; maxLabel: string }
+  roleQuestion:    MobaRoleContent
 }
 
 // ── Sparse overrides, as persisted in moba_survey_content.content ─────────────
@@ -39,6 +48,7 @@ export interface MobaContentOverrides {
   priorityOptions?: Record<string, string>
   openQuestions?:   Record<string, string>
   segment?:         { text?: string; minLabel?: string; maxLabel?: string }
+  roleQuestion?:    { text?: string; helper?: string; options?: Record<string, string>; otherLabel?: string }
 }
 
 const clean = (v: unknown): string | undefined => {
@@ -58,6 +68,12 @@ export function defaultMobaContent(): MobaContent {
       text:     MOBA_SEGMENT_QUESTION.text,
       minLabel: MOBA_SEGMENT_QUESTION.minLabel,
       maxLabel: MOBA_SEGMENT_QUESTION.maxLabel,
+    },
+    roleQuestion: {
+      text:       MOBA_ROLE_QUESTION.text,
+      helper:     MOBA_ROLE_QUESTION.helper,
+      options:    MOBA_ROLE_QUESTION.options.map(o => ({ code: o.code, label: o.label })),
+      otherLabel: MOBA_ROLE_QUESTION.otherLabel,
     },
   }
 }
@@ -95,6 +111,19 @@ export function resolveMobaContent(overrides?: MobaContentOverrides | null): Mob
       text:     clean(overrides.segment.text)     ?? base.segment.text,
       minLabel: clean(overrides.segment.minLabel) ?? base.segment.minLabel,
       maxLabel: clean(overrides.segment.maxLabel) ?? base.segment.maxLabel,
+    }
+  }
+
+  const rov = overrides.roleQuestion
+  if (rov) {
+    base.roleQuestion = {
+      text:       clean(rov.text)   ?? base.roleQuestion.text,
+      helper:     clean(rov.helper) ?? base.roleQuestion.helper,
+      options: base.roleQuestion.options.map(o => {
+        const lbl = clean(rov.options?.[o.code])
+        return lbl ? { ...o, label: lbl } : o
+      }),
+      otherLabel: clean(rov.otherLabel) ?? base.roleQuestion.otherLabel,
     }
   }
 
@@ -153,6 +182,19 @@ export function diffMobaContent(edited: MobaContent): MobaContentOverrides {
   if (clean(edited.segment.maxLabel) && clean(edited.segment.maxLabel) !== def.segment.maxLabel) seg.maxLabel = clean(edited.segment.maxLabel)
   if (Object.keys(seg).length) out.segment = seg
 
+  const role: { text?: string; helper?: string; options?: Record<string, string>; otherLabel?: string } = {}
+  if (clean(edited.roleQuestion.text)   && clean(edited.roleQuestion.text)   !== def.roleQuestion.text)   role.text   = clean(edited.roleQuestion.text)
+  if (clean(edited.roleQuestion.helper) && clean(edited.roleQuestion.helper) !== def.roleQuestion.helper) role.helper = clean(edited.roleQuestion.helper)
+  const roleOpt: Record<string, string> = {}
+  for (const o of edited.roleQuestion.options) {
+    const dOpt = def.roleQuestion.options.find(d => d.code === o.code)
+    const lbl = clean(o.label)
+    if (dOpt && lbl && lbl !== dOpt.label) roleOpt[o.code] = lbl
+  }
+  if (Object.keys(roleOpt).length) role.options = roleOpt
+  if (clean(edited.roleQuestion.otherLabel) && clean(edited.roleQuestion.otherLabel) !== def.roleQuestion.otherLabel) role.otherLabel = clean(edited.roleQuestion.otherLabel)
+  if (Object.keys(role).length) out.roleQuestion = role
+
   return out
 }
 
@@ -163,7 +205,8 @@ export function isCustomised(overrides?: MobaContentOverrides | null): boolean {
     (overrides.questions && Object.keys(overrides.questions).length) ||
     (overrides.priorityOptions && Object.keys(overrides.priorityOptions).length) ||
     (overrides.openQuestions && Object.keys(overrides.openQuestions).length) ||
-    (overrides.segment && Object.keys(overrides.segment).length)
+    (overrides.segment && Object.keys(overrides.segment).length) ||
+    (overrides.roleQuestion && Object.keys(overrides.roleQuestion).length)
   )
 }
 

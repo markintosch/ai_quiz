@@ -77,6 +77,22 @@ function gaussish(): number {
 
 const DIM_KEYS = Object.keys(SHAPE)
 
+// ── Rol-van-marketing (separate seeded RNG so it doesn't shift the numbers above)
+const roleRand = mulberry32(88123)
+const ROLE_WEIGHTS: [string, number][] = [
+  ['partner', 0.75], ['brand', 0.6], ['demand', 0.55],
+  ['enable', 0.45], ['thought', 0.4], ['voice', 0.35], ['growth', 0.3],
+]
+const ROLE_OTHER: string[] = [
+  'Marketing als motor achter de verschuiving van product naar klantwaarde.',
+  'De brug tussen techniek en markt, zodat het verhaal aan beide kanten klopt.',
+]
+function buildRole(i: number): { selected: string[]; other: string } {
+  const selected = ROLE_WEIGHTS.filter(([, w]) => roleRand() < w).map(([c]) => c)
+  if (selected.length === 0) selected.push('partner')
+  return { selected, other: i < ROLE_OTHER.length ? ROLE_OTHER[i] : '' }
+}
+
 function buildSubmission(i: number): MobaSubmissionLike {
   const segment = SEGMENTS[i]
   const dimension_scores: Record<string, number> = {}
@@ -118,7 +134,7 @@ function buildSubmission(i: number): MobaSubmissionLike {
   if (i < OPEN.q21.length) open_answers.q21 = OPEN.q21[i]
   if (i < OPEN.q22.length) open_answers.q22 = OPEN.q22[i]
 
-  return { dimension_scores, priorities, open_answers, segment }
+  return { dimension_scores, priorities, open_answers, segment, role_answers: buildRole(i) }
 }
 
 export const DEMO_SUBMISSIONS: MobaSubmissionLike[] = Array.from({ length: 12 }, (_, i) =>

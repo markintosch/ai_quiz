@@ -5,7 +5,7 @@ import { createServiceClient } from '@/lib/supabase/server'
 import { calculateScore } from '@/lib/scoring/engine'
 import { getProductConfig } from '@/products'
 import { MOBA_QUESTIONS } from '@/products/moba_marketing/questions'
-import { MOBA_PRIORITY_OPTIONS, MOBA_PRIORITY_TOTAL, MOBA_OPEN_QUESTIONS } from '@/products/moba_marketing/config'
+import { MOBA_PRIORITY_OPTIONS, MOBA_PRIORITY_TOTAL, MOBA_OPEN_QUESTIONS, MOBA_ROLE_CODES } from '@/products/moba_marketing/config'
 import { rateLimit, getClientIp } from '@/lib/rateLimit'
 import type { AnswerMap } from '@/types'
 
@@ -28,6 +28,7 @@ export async function POST(req: NextRequest) {
     priorities?: Record<string, number>
     openAnswers?: Record<string, string>
     segment?: number | null
+    role?: { selected?: string[]; other?: string }
   }
   try {
     body = await req.json()
@@ -35,7 +36,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Ongeldige aanvraag' }, { status: 400 })
   }
 
-  const { submitToken, answers, priorities, openAnswers, segment } = body
+  const { submitToken, answers, priorities, openAnswers, segment, role } = body
 
   if (!submitToken || typeof submitToken !== 'string') {
     return NextResponse.json({ error: 'Ongeldige link' }, { status: 400 })
@@ -88,6 +89,14 @@ export async function POST(req: NextRequest) {
     if (Number.isFinite(s) && s >= 1 && s <= 5) cleanSegment = Math.round(s)
   }
 
+  // ── Rol-van-marketing (optional): multi-select + free text ─
+  const validCodes = MOBA_ROLE_CODES as readonly string[]
+  const roleSelected = Array.isArray(role?.selected)
+    ? [...new Set(role!.selected.filter(c => typeof c === 'string' && validCodes.includes(c)))]
+    : []
+  const roleOther = typeof role?.other === 'string' ? role.other.trim().slice(0, OPEN_MAX) : ''
+  const cleanRole = { selected: roleSelected, other: roleOther }
+
   const supabase = createServiceClient()
 
   // ── Resolve team by submit token ───────────────────────────
@@ -118,6 +127,7 @@ export async function POST(req: NextRequest) {
     priorities:       cleanPriorities,
     open_answers:     cleanOpen,
     segment:          cleanSegment,
+    role_answers:     cleanRole,
   })
 
   if (insertError) {

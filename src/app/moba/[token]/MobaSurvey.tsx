@@ -8,7 +8,7 @@ import { MobaGroupReport } from '@/components/moba/MobaGroupReport'
 import type { MobaContent } from '@/lib/moba/content'
 import { MobaFeedback } from './MobaFeedback'
 
-type Step = 'intro' | 'questions' | 'priority' | 'open' | 'segment' | 'submitting' | 'done' | 'error' | 'demoReport'
+type Step = 'intro' | 'questions' | 'role' | 'priority' | 'open' | 'segment' | 'submitting' | 'done' | 'error' | 'demoReport'
 
 interface MobaSurveyProps {
   submitToken: string
@@ -28,6 +28,7 @@ export function MobaSurvey({ submitToken, teamName, segmentationEnabled, content
   const priorityTotal = content.priorityTotal
   const openQuestions = content.openQuestions
   const segmentQuestion = content.segment
+  const roleQuestion = content.roleQuestion
 
   const [step, setStep] = useState<Step>(initialStep)
   const [qIndex, setQIndex] = useState(0)
@@ -38,21 +39,29 @@ export function MobaSurvey({ submitToken, teamName, segmentationEnabled, content
     () => Object.fromEntries(priorityOptions.map(o => [o.key, 0]))
   )
   const [openAnswers, setOpenAnswers] = useState<Record<string, string>>({})
+  const [roleSelected, setRoleSelected] = useState<string[]>([])
+  const [roleOther, setRoleOther] = useState('')
   const [segment, setSegment] = useState<number | null>(null)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
+
+  function toggleRole(code: string) {
+    setRoleSelected(prev => prev.includes(code) ? prev.filter(c => c !== code) : [...prev, code])
+  }
 
   const totalQ = questions.length
   const currentQ = questions[qIndex]
   const answered = answers[currentQ?.code] !== undefined
 
-  // Progress across the whole survey (questions + 3 closing steps)
-  const closingSteps = segmentationEnabled ? 3 : 2
+  // Progress across the whole survey (questions + closing steps: role, priority,
+  // open, and optionally segment)
+  const closingSteps = segmentationEnabled ? 4 : 3
   const totalSteps = totalQ + closingSteps
   const stepNumber =
     step === 'questions' ? qIndex + 1
-    : step === 'priority' ? totalQ + 1
-    : step === 'open' ? totalQ + 2
-    : step === 'segment' ? totalQ + 3
+    : step === 'role' ? totalQ + 1
+    : step === 'priority' ? totalQ + 2
+    : step === 'open' ? totalQ + 3
+    : step === 'segment' ? totalQ + 4
     : totalSteps
   const pct = Math.round((stepNumber / totalSteps) * 100)
 
@@ -73,7 +82,7 @@ export function MobaSurvey({ submitToken, teamName, segmentationEnabled, content
       setDirection(1)
       setQIndex(i => i + 1)
     } else {
-      setStep('priority')
+      setStep('role')
     }
   }
 
@@ -97,7 +106,7 @@ export function MobaSurvey({ submitToken, teamName, segmentationEnabled, content
   }
 
   // Demo aggregate (n=12) — computed once, stable.
-  const demoData = useMemo(() => aggregateMoba(DEMO_SUBMISSIONS, openQuestions), [openQuestions])
+  const demoData = useMemo(() => aggregateMoba(DEMO_SUBMISSIONS, openQuestions, roleQuestion.options), [openQuestions, roleQuestion])
 
   async function submit() {
     // Demo/evaluation mode: nothing is saved — show the sample dashboard.
@@ -117,6 +126,7 @@ export function MobaSurvey({ submitToken, teamName, segmentationEnabled, content
           answers,
           priorities,
           openAnswers,
+          role: { selected: roleSelected, other: roleOther.trim() },
           segment: segmentationEnabled ? segment : null,
         }),
       })
@@ -288,6 +298,66 @@ export function MobaSurvey({ submitToken, teamName, segmentationEnabled, content
           </div>
         )}
 
+        {/* ── ROLE OF MARKETING (multi-select + free text) ── */}
+        {step === 'role' && (
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-2 leading-snug">
+              {roleQuestion.text}
+            </h2>
+            <p className="text-sm text-gray-500 mb-5">{roleQuestion.helper}</p>
+
+            <div className="space-y-2.5">
+              {roleQuestion.options.map(opt => {
+                const checked = roleSelected.includes(opt.code)
+                return (
+                  <button
+                    key={opt.code}
+                    type="button"
+                    onClick={() => toggleRole(opt.code)}
+                    className={`w-full flex items-center gap-3 text-left px-5 py-3.5 rounded-xl border text-sm font-medium transition-colors ${
+                      checked
+                        ? 'bg-brand text-white border-brand'
+                        : 'bg-white border-gray-200 text-gray-700 hover:border-brand hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className={`w-5 h-5 rounded-md border flex items-center justify-center shrink-0 text-xs ${
+                      checked ? 'bg-white/20 border-white/60' : 'border-gray-300'
+                    }`}>
+                      {checked ? '✓' : ''}
+                    </span>
+                    {opt.label}
+                  </button>
+                )
+              })}
+            </div>
+
+            <div className="mt-5">
+              <label className="block text-sm font-medium text-gray-700 mb-2">{roleQuestion.otherLabel}</label>
+              <textarea
+                value={roleOther}
+                onChange={e => setRoleOther(e.target.value)}
+                rows={2}
+                maxLength={2000}
+                className="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent placeholder-gray-400"
+                placeholder="Jouw eigen antwoord…"
+              />
+            </div>
+
+            <div className="mt-7 flex justify-between items-center">
+              <button type="button" onClick={() => { setStep('questions'); setQIndex(totalQ - 1); setDirection(-1) }}
+                className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
+                ← Terug
+              </button>
+              <button type="button" onClick={() => setStep('priority')}
+                className="px-8 py-3 bg-brand-accent text-white font-semibold rounded-xl hover:bg-orange-700 transition-all">
+                Volgende →
+              </button>
+            </div>
+            <p className="mt-3 text-center text-xs text-gray-400">Je mag deze vraag overslaan.</p>
+          </motion.div>
+        )}
+
         {/* ── PRIORITY (10 points) ── */}
         {step === 'priority' && (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
@@ -326,7 +396,7 @@ export function MobaSurvey({ submitToken, teamName, segmentationEnabled, content
             </div>
 
             <div className="mt-7 flex justify-between items-center">
-              <button type="button" onClick={() => { setStep('questions'); setQIndex(totalQ - 1); setDirection(-1) }}
+              <button type="button" onClick={() => setStep('role')}
                 className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
                 ← Terug
               </button>

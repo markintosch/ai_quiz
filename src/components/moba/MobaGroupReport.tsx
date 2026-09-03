@@ -187,6 +187,41 @@ export function MobaGroupReport({ data, teamName, demo = false }: Props) {
         <NuVsPrioriteit dims={data.dimensions} />
       </Section>
 
+      {/* Rol van marketing */}
+      <Section label="Beeld van het team" title="Wat moet de rol van marketing zijn">
+        {data.role.n === 0 ? (
+          <p className="text-xs text-gray-400">Nog geen antwoorden.</p>
+        ) : (
+          <>
+            <div className="space-y-2.5">
+              {[...data.role.options].sort((a, b) => b.count - a.count).map(o => (
+                <div key={o.code} className="flex items-center gap-3">
+                  <span className="text-sm text-gray-700 w-64 shrink-0">{o.label}</span>
+                  <div className="flex-1 bg-gray-100 rounded-full h-2.5 overflow-hidden">
+                    <div className="h-2.5 rounded-full bg-brand-accent" style={{ width: `${o.sharePct}%` }} />
+                  </div>
+                  <span className="text-xs font-semibold text-gray-600 w-16 text-right">{o.count}× · {o.sharePct}%</span>
+                </div>
+              ))}
+            </div>
+            <p className="mt-3 text-xs text-gray-400">
+              Meerdere antwoorden per persoon mogelijk, dus de percentages tellen niet op tot
+              100. Aandeel is berekend over de {data.role.n} teamleden die deze vraag beantwoordden.
+            </p>
+            {data.role.otherAnswers.length > 0 && (
+              <div className="mt-4">
+                <p className="text-sm font-medium text-gray-700 mb-2">Eigen aanvullingen (anoniem)</p>
+                <ul className="space-y-1.5">
+                  {data.role.otherAnswers.map((a, i) => (
+                    <li key={i} className="text-sm text-gray-600 pl-3 border-l-2 border-gray-200">{a}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </>
+        )}
+      </Section>
+
       {/* Segment overlay */}
       {data.segments.techniek && data.segments.markt && (
         <Section label="Segmenten" title="Techniek-gedreven vs. markt-gedreven">

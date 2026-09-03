@@ -4,7 +4,7 @@
 // The whole point of this survey is the SPREAD, so every dimension carries its
 // full distribution (min/max/std/values), not just a mean.
 
-import { MOBA_MARKETING_CONFIG } from '@/products/moba_marketing/config'
+import { MOBA_MARKETING_CONFIG, MOBA_ROLE_QUESTION } from '@/products/moba_marketing/config'
 
 export interface MobaSubmissionLike {
   /** { moba_positioning: 60, ... } normalised 0–100 per dimension */
@@ -15,6 +15,8 @@ export interface MobaSubmissionLike {
   open_answers: Record<string, string>
   /** 1 = techniek-/productgedreven … 5 = markt-/klantgedreven, or null */
   segment: number | null
+  /** { selected: ["partner", ...], other: "..." } — rol-van-marketing vraag */
+  role_answers?: { selected?: string[]; other?: string } | null
 }
 
 export interface DimensionAgg {
@@ -44,6 +46,15 @@ export interface SegmentAgg {
   marktN: number
 }
 
+export interface RoleAgg {
+  /** How many respondents picked at least one option or wrote an addition */
+  n: number
+  /** Per option: code, label, how many picked it, and share of respondents (0–100) */
+  options: { code: string; label: string; count: number; sharePct: number }[]
+  /** Free-text "anders, namelijk" additions */
+  otherAnswers: string[]
+}
+
 export interface MobaAggregate {
   n: number
   overallMean: number
@@ -53,6 +64,7 @@ export interface MobaAggregate {
   mostDivergent: DimensionAgg[]
   segments: SegmentAgg
   openAnswers: { key: string; text: string; answers: string[] }[]
+  role: RoleAgg
 }
 
 const DIMS = MOBA_MARKETING_CONFIG.dimensions
@@ -76,7 +88,8 @@ function stddev(xs: number[]): number {
 
 export function aggregateMoba(
   submissions: MobaSubmissionLike[],
-  openQuestions: { key: string; text: string }[]
+  openQuestions: { key: string; text: string }[],
+  roleOptions: { code: string; label: string }[] = MOBA_ROLE_QUESTION.options.map(o => ({ code: o.code, label: o.label }))
 ): MobaAggregate {
   const n = submissions.length
 
@@ -142,6 +155,31 @@ export function aggregateMoba(
       .filter((a): a is string => typeof a === 'string' && a.trim().length > 0),
   }))
 
+  // ── Rol-van-marketing aggregatie ─────────────────────────────────────────
+  const roleSelectedLists = submissions.map(s =>
+    Array.isArray(s.role_answers?.selected) ? s.role_answers!.selected! : []
+  )
+  const roleOtherAnswers = submissions
+    .map(s => s.role_answers?.other)
+    .filter((a): a is string => typeof a === 'string' && a.trim().length > 0)
+  const roleN = submissions.filter(
+    (s, i) => roleSelectedLists[i].length > 0 || (typeof s.role_answers?.other === 'string' && s.role_answers.other.trim().length > 0)
+  ).length
+  const roleOptionsAgg = roleOptions.map(o => {
+    const count = roleSelectedLists.filter(sel => sel.includes(o.code)).length
+    return {
+      code: o.code,
+      label: o.label,
+      count,
+      sharePct: roleN > 0 ? Math.round((count / roleN) * 100) : 0,
+    }
+  })
+  const role: RoleAgg = {
+    n: roleN,
+    options: roleOptionsAgg,
+    otherAnswers: roleOtherAnswers,
+  }
+
   return {
     n,
     overallMean,
@@ -150,5 +188,6 @@ export function aggregateMoba(
     mostDivergent,
     segments,
     openAnswers,
+    role,
   }
 }

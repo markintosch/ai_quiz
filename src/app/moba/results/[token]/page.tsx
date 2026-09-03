@@ -45,7 +45,7 @@ export default async function MobaResultsPage({ params }: PageProps) {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: subs } = await (supabase.from('moba_submissions') as any)
-    .select('dimension_scores, priorities, open_answers, segment')
+    .select('dimension_scores, priorities, open_answers, segment, role_answers')
     .eq('team_id', team.id)
 
   const submissions: MobaSubmissionLike[] = (subs ?? []).map((s: Record<string, unknown>) => ({
@@ -53,6 +53,7 @@ export default async function MobaResultsPage({ params }: PageProps) {
     priorities: (s.priorities as Record<string, number>) ?? {},
     open_answers: (s.open_answers as Record<string, string>) ?? {},
     segment: (s.segment as number | null) ?? null,
+    role_answers: (s.role_answers as { selected?: string[]; other?: string } | null) ?? null,
   }))
 
   const minResponses = team.min_responses ?? 4
@@ -74,7 +75,7 @@ export default async function MobaResultsPage({ params }: PageProps) {
   }
 
   const content = await getMobaContent(supabase)
-  const data = aggregateMoba(submissions, content.openQuestions)
+  const data = aggregateMoba(submissions, content.openQuestions, content.roleQuestion.options)
 
   return (
     <Shell>

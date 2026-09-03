@@ -104,6 +104,17 @@ export default function AdminMobaQuestionsPage() {
     setContent(c => c && ({ ...c, segment: { ...c.segment, [field]: value } }))
     setDirty(true)
   }
+  function setRoleField(field: 'text' | 'helper' | 'otherLabel', value: string) {
+    setContent(c => c && ({ ...c, roleQuestion: { ...c.roleQuestion, [field]: value } }))
+    setDirty(true)
+  }
+  function setRoleOptionLabel(code: string, label: string) {
+    setContent(c => c && ({
+      ...c,
+      roleQuestion: { ...c.roleQuestion, options: c.roleQuestion.options.map(o => o.code === code ? { ...o, label } : o) },
+    }))
+    setDirty(true)
+  }
 
   const byDimension = useMemo(() => {
     if (!content) return []
@@ -219,6 +230,55 @@ export default function AdminMobaQuestionsPage() {
               className="w-full text-sm text-gray-700 border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent resize-none"
             />
           ))}
+        </div>
+      </section>
+
+      {/* Role of marketing question */}
+      <section className="mb-10">
+        <h2 className="text-base font-bold text-gray-900 mb-1">Rol van marketing</h2>
+        <p className="text-xs text-gray-500 mb-4">
+          Meerkeuze waar meerdere antwoorden mogen, plus een open aanvulling. De antwoordopties
+          zelf liggen vast; alleen de teksten pas je hier aan.
+        </p>
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-3">
+          <div>
+            <label className="block text-xs font-semibold text-gray-500 mb-1">Vraag</label>
+            <textarea
+              value={content.roleQuestion.text}
+              onChange={e => setRoleField('text', e.target.value)}
+              rows={2}
+              className="w-full text-sm text-gray-700 border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent resize-none"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-gray-500 mb-1">Toelichting</label>
+            <input
+              value={content.roleQuestion.helper}
+              onChange={e => setRoleField('helper', e.target.value)}
+              className="w-full text-sm text-gray-700 border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-gray-500 mb-1">Antwoordopties</label>
+            <div className="space-y-1.5">
+              {content.roleQuestion.options.map(o => (
+                <input
+                  key={o.code}
+                  value={o.label}
+                  onChange={e => setRoleOptionLabel(o.code, e.target.value)}
+                  className="w-full text-sm text-gray-700 border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent"
+                />
+              ))}
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-gray-500 mb-1">Label open aanvulling</label>
+            <input
+              value={content.roleQuestion.otherLabel}
+              onChange={e => setRoleField('otherLabel', e.target.value)}
+              className="w-full text-sm text-gray-700 border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent"
+            />
+          </div>
         </div>
       </section>
 
