@@ -773,6 +773,9 @@ export default function MobaSignalAdmin() {
                 <span className="text-gray-700">{r.source_id}</span>
                 <span className="text-gray-400 ml-auto">
                   {fmtTs(r.started_at)} · {r.pages_fetched}p · {r.items_found} found · {r.items_new} new
+                  {r.sitemap_urls > 0 && (
+                    <span> · sitemap {r.sitemap_urls}u{r.sitemap_new > 0 && <span className="text-amber-700 font-medium">, +{r.sitemap_new}</span>}</span>
+                  )}
                   {r.error && <span className="text-red-600"> · {r.error}</span>}
                 </span>
               </div>

@@ -13,8 +13,10 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { discoverArticleLinks, fetchPage, htmlToText, parseFeed, resolveWaybackSnapshot } from './crawl'
 import { extractItems, type ExtractedItem } from './extract'
 import { credibilityFor, dedupeKey, linkEntities, materialityFor, proximityFor, type EntityRow } from './score'
+import { checkSitemap, pickCrawlableAdditions } from './sitemap'
 
 const MAX_ARTICLES = 5
+const MAX_SITEMAP_ARTICLES = 3
 const CONCURRENCY = 3
 
 export interface RunResult {
@@ -23,6 +25,10 @@ export interface RunResult {
   pagesFetched: number
   itemsFound: number
   itemsNew: number
+  /** URLs listed in the source's sitemap this run (0 = not checked or none). */
+  sitemapUrls: number
+  /** Sitemap additions since the previous check (0 on the baseline run). */
+  sitemapNew: number
   error?: string
 }
 
@@ -115,7 +121,7 @@ export async function runSource(supabase: Db, sourceId: string): Promise<RunResu
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const db = supabase as any
   const { data: source } = await db.from('moba_signal_sources').select('*').eq('id', sourceId).maybeSingle()
-  if (!source) return { sourceId, ok: false, pagesFetched: 0, itemsFound: 0, itemsNew: 0, error: 'Unknown source' }
+  if (!source) return { sourceId, ok: false, pagesFetched: 0, itemsFound: 0, itemsNew: 0, sitemapUrls: 0, sitemapNew: 0, error: 'Unknown source' }
 
   const { data: runRow } = await db.from('moba_signal_runs')
     .insert({ source_id: sourceId }).select('id').single()
@@ -123,6 +129,8 @@ export async function runSource(supabase: Db, sourceId: string): Promise<RunResu
   let pagesFetched = 0
   let itemsFound = 0
   let itemsNew = 0
+  let sitemapUrls = 0
+  let sitemapNew = 0
   let error: string | undefined
 
   try {
@@ -197,6 +205,36 @@ export async function runSource(supabase: Db, sourceId: string): Promise<RunResu
     const stored = await storeExtracted(db, source, extracted)
     itemsNew = stored.itemsNew
 
+    // 5. Sitemap check: collect the site's sitemap, diff it against the
+    //    seen-URL memory, and feed the freshest article-like additions through
+    //    the same extract-link-score pipeline. The layer is additive by rule:
+    //    a missing sitemap, a blocked robots.txt or an unapplied migration
+    //    degrades to zero counts and never fails the run.
+    try {
+      const sm = await checkSitemap(db, source)
+      sitemapUrls = sm.totalUrls
+      sitemapNew = sm.newEntries.length
+      if (sm.newEntries.length > 0) {
+        const alreadyFetched = new Set(pages.map(p => p.url))
+        const picks = pickCrawlableAdditions(sm.newEntries, source.url, alreadyFetched, MAX_SITEMAP_ARTICLES)
+        const bodies = await withConcurrency(picks, CONCURRENCY, async e => {
+          try {
+            const html = await fetchPage(e.url)
+            return { url: e.url, text: htmlToText(html), dateHint: e.lastmod?.slice(0, 10) }
+          } catch {
+            return null
+          }
+        })
+        const smPages = bodies.flatMap(b => (b ? [b] : []))
+        pagesFetched += smPages.length
+        const smBatches = await withConcurrency(smPages, 2, p => extractItems(p.url, p.text, p.dateHint).catch(() => [] as ExtractedItem[]))
+        const smExtracted = smBatches.flat()
+        itemsFound += smExtracted.length
+        const smStored = await storeExtracted(db, source, smExtracted, { provenance: { via: 'sitemap' } })
+        itemsNew += smStored.itemsNew
+      }
+    } catch { /* the run result stands without the sitemap layer */ }
+
     await db.from('moba_signal_sources').update({
       status: 'ok',
       last_run_at: new Date().toISOString(),
@@ -221,7 +259,14 @@ export async function runSource(supabase: Db, sourceId: string): Promise<RunResu
       items_new: itemsNew,
       error: error ?? null,
     }).eq('id', runRow.id)
+    // Separate write so a database without the sitemap migration still logs
+    // the run above; this one simply errors into the returned (ignored) result.
+    if (sitemapUrls > 0 || sitemapNew > 0) {
+      await db.from('moba_signal_runs')
+        .update({ sitemap_urls: sitemapUrls, sitemap_new: sitemapNew })
+        .eq('id', runRow.id)
+    }
   }
 
-  return { sourceId, ok: !error, pagesFetched, itemsFound, itemsNew, error }
+  return { sourceId, ok: !error, pagesFetched, itemsFound, itemsNew, sitemapUrls, sitemapNew, error }
 }

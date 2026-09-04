@@ -104,6 +104,21 @@ export async function loadLiveDataset(supabase: Db): Promise<LiveDataset | null>
       if (!prev || r.event_date > prev) lastItemBySource.set(r.source_id, day(r.event_date))
     }
     const runs: Row[] = runQ.data ?? []
+
+    // Sitemap additions per source, last 30 days. Separate guarded query: on
+    // a database without the sitemap migration this simply yields nothing.
+    const sitemapNew30d = new Map<string, number>()
+    try {
+      const { data: smRuns } = await db.from('moba_signal_runs')
+        .select('source_id, started_at, sitemap_new')
+        .gt('sitemap_new', 0)
+        .gte('started_at', new Date(Date.now() - 30 * 86_400_000).toISOString())
+        .limit(400)
+      for (const x of (smRuns ?? []) as Row[]) {
+        sitemapNew30d.set(x.source_id, (sitemapNew30d.get(x.source_id) ?? 0) + (x.sitemap_new ?? 0))
+      }
+    } catch { /* column may not exist yet */ }
+
     const sources: Source[] = (srcQ.data ?? []).map((r: Row) => {
       const srcRuns = runs.filter(x => x.source_id === r.id)
       const status: SourceStatus =
@@ -118,6 +133,11 @@ export async function loadLiveDataset(supabase: Db): Promise<LiveDataset | null>
         scoredItemsLast90d: items.filter(i => i.source_id === r.id).length,
         failureReason: r.failure_reason ?? undefined,
         language: r.language ?? undefined,
+        sitemap: r.sitemap_page_count != null ? {
+          pages: r.sitemap_page_count,
+          newLast30d: sitemapNew30d.get(r.id) ?? 0,
+          checkedAt: r.sitemap_checked_at ?? undefined,
+        } : undefined,
       }
     })
 

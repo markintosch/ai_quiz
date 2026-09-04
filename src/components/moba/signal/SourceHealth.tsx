@@ -37,6 +37,14 @@ export function SourceHealth({ data }: { data: SignalDataset }) {
                   <span className="block text-[11px] text-gray-400">
                     last item {s.lastItem ? fmtDate(s.lastItem) : 'never'} · {s.itemsLast30d} items/30d · {s.scoredItemsLast90d} scored/90d
                   </span>
+                  {s.sitemap && (
+                    <span className="block text-[11px] text-gray-400">
+                      sitemap: {s.sitemap.pages} pages
+                      {s.sitemap.newLast30d > 0
+                        ? <span className="text-amber-700 font-medium"> · +{s.sitemap.newLast30d} new/30d</span>
+                        : ' · no additions/30d'}
+                    </span>
+                  )}
                   {s.failureReason && <span className="block text-[11px] text-red-600 mt-0.5">{s.failureReason}</span>}
                 </div>
               </div>

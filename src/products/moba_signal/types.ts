@@ -319,6 +319,12 @@ export interface Source {
   /** Set when the run failed, so the panel can say what broke. */
   failureReason?: string
   language?: string
+  /** Sitemap scanning state: how many pages the site lists, and additions. */
+  sitemap?: {
+    pages: number
+    newLast30d: number
+    checkedAt?: string
+  }
 }
 
 // ── Contribution and approvals ────────────────────────────────────────────────
