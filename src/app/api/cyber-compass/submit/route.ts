@@ -191,7 +191,7 @@ export async function POST(req: Request) {
         to:       email,
         subject:  SUBJECT_BY_LANG[lang](score.overall, score.band),
         html,
-        reply_to: REPLY_TO,
+        replyTo: REPLY_TO,
       })
       await supabase
         .from('cyber_compass_assessments')
@@ -222,7 +222,7 @@ export async function POST(req: Request) {
         to:       NOTIFY_TO_DIEDERIK,
         subject:  `Nieuwe Cyber Compass lead: ${organisationName ?? email} — ${score.overall}/100 (${score.band})`,
         html:     notifyHtml,
-        reply_to: REPLY_TO,
+        replyTo: REPLY_TO,
       })
     } catch (err) {
       console.warn('[cyber-compass/submit] notify Diederik failed', err)

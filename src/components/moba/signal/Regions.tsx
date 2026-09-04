@@ -124,7 +124,8 @@ export function Regions({ data, onSelect, activeRegion, onRegionFilter }: {
               onClick={clickable ? () => onRegionFilter!(region) : undefined}
               style={{ cursor: clickable ? 'pointer' : 'default', opacity: dim ? 0.4 : 1 }}
             >
-              <title>{REGION_LABELS[region]} · {t.label} · {r.count} signals</title>
+              {/* React 19 requires a single text child in <title> */}
+              <title>{`${REGION_LABELS[region]} · ${t.label} · ${r.count} signals`}</title>
               <ellipse
                 cx={g.cx} cy={g.cy} rx={g.rx} ry={g.ry}
                 fill={t.hex} fillOpacity={0.28 + 0.55 * r.heat}

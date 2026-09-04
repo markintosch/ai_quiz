@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
     await resend.emails.send({
       from: FROM,
       to: TO,
-      reply_to: email,
+      replyTo: email,
       subject: `AI Leiderschap voorinschrijving: ${name}${body.organisation ? ` (${body.organisation})` : ''}`,
       html,
     })

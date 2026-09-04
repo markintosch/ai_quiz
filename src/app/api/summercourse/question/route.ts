@@ -110,7 +110,7 @@ export async function POST(req: Request) {
       await resend.emails.send({
         from:     FROM,
         to:       TO,
-        reply_to: email,
+        replyTo: email,
         subject: `[Summer Course] Nieuwe vraag van ${email}`,
         html,
       })

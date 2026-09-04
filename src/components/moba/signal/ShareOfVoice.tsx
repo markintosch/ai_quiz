@@ -159,7 +159,8 @@ function ShareChart({ data, segments, entityIds }: {
         const tx = i === 0 ? Math.max(x(i) - 30, 2) : i === segments.length - 1 ? x(i) + 6 : x(i)
         return (
           <text key={seg.key} x={tx} y={H - 18} textAnchor={anchor} fontSize="10" fill="#898781">
-            <title>{fmtDate(seg.start)} – {fmtDate(seg.end)}</title>
+            {/* React 19 requires a single text child in <title> */}
+            <title>{`${fmtDate(seg.start)} – ${fmtDate(seg.end)}`}</title>
             <tspan x={tx}>{seg.labelTop}</tspan>
             <tspan x={tx} dy="11" fontSize="9" fill="#b0aea7">{seg.labelBottom}</tspan>
           </text>

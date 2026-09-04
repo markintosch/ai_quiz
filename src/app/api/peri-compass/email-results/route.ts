@@ -160,7 +160,7 @@ export async function POST(req: Request) {
       to:       email,
       subject:  SUBJECT_BY_LANG[lang](score.overall, score.band),
       html,
-      reply_to: REPLY_TO,
+      replyTo: REPLY_TO,
     })
   } catch (err) {
     return NextResponse.json({ error: err instanceof Error ? err.message : 'send failed' }, { status: 500 })

@@ -1,7 +1,6 @@
 import { ImageResponse } from 'next/og'
 import { HCSS_OFFLINE } from '@/lib/cyber-compass/offline'
 
-export const runtime = 'edge'
 export const alt = 'Hammer Cyber Security Services — Pragmatische cybersecurity voor het MKB'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'

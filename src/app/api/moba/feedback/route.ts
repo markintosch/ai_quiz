@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
     const { error } = await resend.emails.send({
       from: FROM,
       to: TO,
-      reply_to: TO,
+      replyTo: TO,
       subject: 'MOBA Marketing Survey — feedback op de demo',
       html: `
         <p>Nieuwe feedback op de MOBA Marketing Survey demo:</p>
