@@ -12,7 +12,6 @@
 
 import { ImageResponse } from 'next/og'
 
-export const runtime = 'edge'
 
 const BG     = '#0A0F1F'
 const CARD   = '#13192E'

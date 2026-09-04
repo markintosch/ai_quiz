@@ -202,7 +202,7 @@ export async function POST(req: Request) {
       to:      email,
       subject,
       html,
-      reply_to: REPLY_TO,
+      replyTo: REPLY_TO,
       headers: {
         // RFC 8058: one-click unsubscribe header (Gmail/Apple Mail respecteert dit)
         'List-Unsubscribe':      `<${unsubscribeUrl}>`,

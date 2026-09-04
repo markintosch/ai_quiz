@@ -1,6 +1,5 @@
 import { ImageResponse } from 'next/og'
 
-export const runtime = 'edge'
 export const alt    = 'AI Maturity Assessment — Brand PWRD Media'
 export const size   = { width: 1200, height: 630 }
 export const contentType = 'image/png'

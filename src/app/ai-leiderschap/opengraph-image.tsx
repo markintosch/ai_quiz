@@ -1,6 +1,5 @@
 import { ImageResponse } from 'next/og'
 
-export const runtime = 'edge'
 export const alt = 'AI impact op leiderschap · executive sessie 14 september of 7 oktober 2026'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'

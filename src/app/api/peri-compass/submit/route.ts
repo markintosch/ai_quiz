@@ -222,7 +222,7 @@ export async function POST(req: Request) {
         to:       email,
         subject:  SUBJECT_BY_LANG[lang](score.overall, score.band),
         html,
-        reply_to: REPLY_TO,
+        replyTo: REPLY_TO,
       })
       await supabase
         .from('perimenopause_compass_assessments')
