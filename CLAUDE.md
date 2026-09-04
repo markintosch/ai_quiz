@@ -1,3 +1,12 @@
+# Database migrations (Supabase)
+
+Migrations in `supabase/*.sql` are applied by hand in the Supabase SQL editor;
+deploys never touch the database. Whenever you create or change a migration
+file, ALWAYS paste the complete SQL text directly in the chat reply as well,
+in a copyable code block, so Mark can run it immediately without opening the
+file. Write every migration to be idempotent and safe on a database where it
+has not run yet.
+
 # Writing style for user-facing copy
 
 Persistent preferences from Mark for content on `markdekock.com` (page copy,
