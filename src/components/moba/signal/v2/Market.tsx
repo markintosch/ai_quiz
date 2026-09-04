@@ -35,8 +35,11 @@ export function Battlefield({ data }: { data: SignalDataset }) {
                     </span>
                   </td>
                   <td className="py-2.5 pr-3">
-                    <span className={`inline-block text-[11px] px-2 py-0.5 rounded-full border font-semibold ${meta.cls}`}>
-                      {meta.label}
+                    <span className="flex items-center gap-2">
+                      <span className={`inline-block w-1 h-6 rounded-full ${meta.bar}`} aria-hidden />
+                      <span className={`inline-block text-[11px] px-2 py-0.5 rounded-full border font-semibold ${meta.cls}`}>
+                        {meta.label}
+                      </span>
                     </span>
                   </td>
                   <td className="py-2.5 pr-3 text-xs text-gray-500">
@@ -80,8 +83,8 @@ export function SovInsightCard({ data }: { data: SignalDataset }) {
   const insight = sovInsight(data)
   if (!insight) return null
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-4">
-      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">What the share-of-voice data says</p>
+    <div className="rounded-xl border border-gray-200 border-l-4 border-l-brand bg-white p-4">
+      <p className="text-[10px] font-bold uppercase tracking-wider text-brand mb-1.5">What the share-of-voice data says</p>
       {insight.lines.map((line, i) => (
         <p key={i} className={i === 0 ? 'text-[15px] font-medium text-gray-900 leading-snug' : 'text-[13px] text-gray-600 mt-1.5'}>
           {line}

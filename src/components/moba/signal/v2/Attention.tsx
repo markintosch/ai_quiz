@@ -41,14 +41,14 @@ export function AttentionHero({ data, items, onSelect }: {
 }) {
   if (items.length === 0) {
     return (
-      <p className="text-xl font-medium text-gray-700">
+      <p className="text-xl font-medium text-white">
         Nothing requires attention this week. The watch list is quiet.
       </p>
     )
   }
   return (
     <div className="space-y-5">
-      <h2 className="text-[22px] sm:text-[26px] font-bold text-gray-900 leading-tight tracking-tight">
+      <h2 className="text-[24px] sm:text-[28px] font-bold text-white leading-tight tracking-tight">
         {items.length} development{items.length > 1 ? 's' : ''} require{items.length > 1 ? '' : 's'} attention
       </h2>
 
@@ -57,7 +57,7 @@ export function AttentionHero({ data, items, onSelect }: {
           const meta = ATTENTION_META[item.kind]
           const hs = item.signal ? humanScore(item.signal) : null
           return (
-            <article key={i} className="rounded-2xl border border-gray-200 bg-white p-5 flex flex-col shadow-sm">
+            <article key={i} className={`rounded-2xl border border-gray-200 border-t-4 ${meta.top} bg-white p-5 flex flex-col shadow-lg`}>
               <div className="flex items-center gap-2 mb-3">
                 <span className={`inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border ${meta.cls}`}>
                   <span className={`w-1.5 h-1.5 rounded-full ${meta.dot}`} aria-hidden />
@@ -66,8 +66,8 @@ export function AttentionHero({ data, items, onSelect }: {
                 <span className="text-[11px] text-gray-400">{meta.sub}</span>
               </div>
 
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">{item.kicker}</p>
-              <h3 className="text-[17px] font-bold text-gray-900 leading-snug mt-1">
+              <p className={`text-[11px] font-bold uppercase tracking-wider ${meta.kicker}`}>{item.kicker}</p>
+              <h3 className="text-[18px] font-bold text-gray-900 leading-snug mt-1">
                 {item.signal && <EvidenceMark inference={item.signal.inference} className="mr-1.5" />}
                 {item.headline}
               </h3>
@@ -99,11 +99,11 @@ export function AttentionHero({ data, items, onSelect }: {
               <div className="mt-3 flex items-center justify-between gap-2">
                 {item.signal ? (
                   <button onClick={() => onSelect(item.signal!)}
-                    className="text-xs font-semibold text-brand hover:underline">
+                    className="text-xs font-bold text-brand-accent hover:underline">
                     Open intelligence →
                   </button>
                 ) : item.event ? (
-                  <a href="#ahead" className="text-xs font-semibold text-brand hover:underline">
+                  <a href="#ahead" className="text-xs font-bold text-brand-accent hover:underline">
                     Open event brief →
                   </a>
                 ) : <span />}

@@ -24,9 +24,10 @@ export function AccountsAtRisk({ data, onSelect }: {
     <div className="space-y-2.5">
       {rows.map(row => {
         const meta = RISK_META[row.level]
+        const edge = row.level === 'high' ? 'border-l-red-500' : row.level === 'medium' ? 'border-l-amber-400' : 'border-l-gray-300'
         return (
           <button key={row.account} onClick={() => onSelect(row.latest)}
-            className="w-full text-left rounded-xl border border-gray-200 bg-white p-4 hover:bg-gray-50 transition-colors">
+            className={`w-full text-left rounded-xl border border-gray-200 border-l-4 ${edge} bg-white p-4 hover:bg-gray-50 transition-colors`}>
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-[15px] font-bold text-gray-900">{row.account}</span>
               <span className={`text-[11px] px-2 py-0.5 rounded-full border font-semibold uppercase tracking-wide ${meta.cls}`}>
@@ -54,17 +55,20 @@ const LEANING_META = {
   quiet:  { label: 'Quiet',         cls: 'bg-gray-100 text-gray-500 border-gray-200' },
 } as const
 
-export function RegionPulseCards({ data, onSelect }: {
+export function RegionPulseCards({ data, onSelect, cols = 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-4' }: {
   data: SignalDataset
   onSelect: (s: Signal) => void
+  /** Grid classes, so the module packs into a narrow column or spans a row. */
+  cols?: string
 }) {
   const pulses = regionPulse(data)
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+    <div className={`grid ${cols} gap-3`}>
       {pulses.map(p => {
         const meta = LEANING_META[p.leaning]
+        const edge = p.leaning === 'threat' ? 'border-l-red-500' : p.leaning === 'active' ? 'border-l-amber-400' : 'border-l-gray-200'
         return (
-          <div key={p.region} className="rounded-xl border border-gray-200 bg-white p-4">
+          <div key={p.region} className={`rounded-xl border border-gray-200 border-l-4 ${edge} bg-white p-4`}>
             <div className="flex items-center justify-between gap-2">
               <h4 className="text-sm font-bold text-gray-900">{REGION_LABELS[p.region]}</h4>
               <span className={`text-[10px] px-2 py-0.5 rounded-full border font-semibold ${meta.cls}`}>{meta.label}</span>

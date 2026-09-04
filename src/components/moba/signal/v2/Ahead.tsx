@@ -9,17 +9,21 @@ import type { SignalDataset } from '@/products/moba_signal/types'
 import { fmtDate, relUntil } from '@/products/moba_signal/selectors'
 import { eventDecisions } from '@/products/moba_signal/v2'
 
-export function EventDecisions({ data }: { data: SignalDataset }) {
+export function EventDecisions({ data, cols = 'grid-cols-1 lg:grid-cols-2' }: {
+  data: SignalDataset
+  /** Grid classes, so the module packs into a narrow column or spans a row. */
+  cols?: string
+}) {
   const decisions = eventDecisions(data)
   if (decisions.length === 0) {
     return <p className="text-sm text-gray-500">No event decisions open. The radar is watching the calendar.</p>
   }
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+    <div className={`grid ${cols} gap-3`}>
       {decisions.map(d => (
         <article key={d.event.id}
-          className={`rounded-xl border p-4 bg-white ${d.kind === 'decision' ? 'border-amber-300' : 'border-gray-200'}`}>
-          <p className={`text-[10px] font-bold uppercase tracking-wider mb-1 ${d.kind === 'decision' ? 'text-amber-700' : 'text-gray-400'}`}>
+          className={`rounded-xl border border-l-4 p-4 ${d.kind === 'decision' ? 'border-amber-300 border-l-amber-500 bg-amber-50/60' : 'border-gray-200 border-l-brand/30 bg-white'}`}>
+          <p className={`text-[10px] font-bold uppercase tracking-wider mb-1 ${d.kind === 'decision' ? 'text-amber-700' : 'text-brand'}`}>
             {d.kind === 'decision' ? 'Event decision required' : 'Prepare for this event'}
           </p>
           <h4 className="text-[15px] font-bold text-gray-900 leading-snug">{d.headline}</h4>

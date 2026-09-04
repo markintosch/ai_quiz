@@ -97,10 +97,10 @@ export function addDays(iso: string, days: number): string {
 
 export type AttentionKind = 'act' | 'prepare' | 'watch'
 
-export const ATTENTION_META: Record<AttentionKind, { label: string; sub: string; cls: string; dot: string }> = {
-  act:     { label: 'Act',     sub: 'needs an owner this week',  cls: 'text-red-700 border-red-200 bg-red-50',       dot: 'bg-red-500' },
-  prepare: { label: 'Prepare', sub: 'known moment ahead',        cls: 'text-amber-700 border-amber-200 bg-amber-50', dot: 'bg-amber-500' },
-  watch:   { label: 'Watch',   sub: 'pattern forming, not fact', cls: 'text-gray-700 border-gray-300 bg-gray-100',   dot: 'bg-gray-400' },
+export const ATTENTION_META: Record<AttentionKind, { label: string; sub: string; cls: string; dot: string; top: string; kicker: string }> = {
+  act:     { label: 'Act',     sub: 'needs an owner this week',  cls: 'text-red-700 border-red-200 bg-red-50',       dot: 'bg-red-500',   top: 'border-t-red-500',   kicker: 'text-red-600' },
+  prepare: { label: 'Prepare', sub: 'known moment ahead',        cls: 'text-amber-700 border-amber-200 bg-amber-50', dot: 'bg-amber-500', top: 'border-t-amber-400', kicker: 'text-amber-600' },
+  watch:   { label: 'Watch',   sub: 'pattern forming, not fact', cls: 'text-gray-700 border-gray-300 bg-gray-100',   dot: 'bg-gray-400',  top: 'border-t-gray-400',  kicker: 'text-gray-500' },
 }
 
 export interface AttentionItem {

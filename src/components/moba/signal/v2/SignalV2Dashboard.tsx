@@ -5,13 +5,18 @@
 // "what should I care about today?" first, then "what should we do about it?",
 // and only then shows the evidence. Three editorial levels (review §5):
 //
-//   Level 1, Decision:  the attention hero and actions. Large type, limited.
-//   Level 2, Evidence:  chapters of modules, reused from V1, re-weighted.
+//   Level 1, Decision:  a dark masthead band carrying the attention hero.
+//   Level 2, Evidence:  the timeline in full view, then the asymmetric
+//                       column grid (main + two supporting columns), the
+//                       same density logic V1 proved out.
 //   Level 3, System:    sources, method, queue, behind one confidence figure.
 //
-// Three lenses, not three products: Executive, Sales and Marketing are
-// prioritisation modes over the same dataset. The analyst's full working
-// surface stays where it was: V1 at /moba/signal.
+// Art direction: deep teal ink (brand) for the decision band, the brand
+// orange/gold strictly as the action accent, triage colour on card edges.
+// Editorial contrast without becoming a colourful SaaS dashboard.
+//
+// Three lenses, not three products: Executive, Sales and Marketing re-weight
+// the same modules. The analyst's full working surface stays on V1.
 
 import { useMemo, useState } from 'react'
 import type { Signal, SignalDataset } from '@/products/moba_signal/types'
@@ -57,37 +62,26 @@ function weekday(iso: string): string {
   return WEEKDAYS[new Date(iso + 'T00:00:00Z').getUTCDay()]
 }
 
-/** Level-2 chapter header: the mental map the card wall never gave. */
-function Chapter({ id, title, sub, children }: {
-  id: string
+/** The module card: V1's proven container, with an editorial header accent. */
+function Card({ id, title, sub, tall, scroll = true, children }: {
+  id?: string
   title: string
   sub?: string
+  tall?: boolean
+  scroll?: boolean
   children: React.ReactNode
 }) {
   return (
-    <section id={id} className="scroll-mt-24">
-      <header className="flex items-baseline gap-3 border-b-2 border-gray-900 pb-1.5 mb-4">
-        <h2 className="text-[13px] font-bold uppercase tracking-[0.15em] text-gray-900">{title}</h2>
-        {sub && <p className="text-[11px] text-gray-400">{sub}</p>}
+    <section id={id} className="scroll-mt-24 rounded-xl border border-gray-200 bg-white flex flex-col min-w-0 shadow-sm">
+      <header className="px-4 py-2.5 border-b border-gray-100 shrink-0 flex items-start gap-2">
+        <span className="w-[3px] self-stretch my-0.5 rounded-full bg-brand-accent shrink-0" aria-hidden />
+        <div className="min-w-0">
+          <h2 className="text-[13px] font-bold text-brand-dark leading-tight">{title}</h2>
+          {sub && <p className="text-[11px] text-gray-400 mt-0.5">{sub}</p>}
+        </div>
       </header>
-      {children}
+      <div className={`p-4 ${scroll ? `overflow-y-auto ${tall ? 'max-h-[840px]' : 'max-h-[520px]'}` : ''}`}>{children}</div>
     </section>
-  )
-}
-
-function SubHead({ children }: { children: React.ReactNode }) {
-  return <h3 className="text-[11px] font-bold uppercase tracking-wider text-gray-500 mb-2">{children}</h3>
-}
-
-/** Collapsed exploration block: keep depth reachable, not mandatory. */
-function Fold({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <details className="rounded-xl border border-gray-200 bg-white">
-      <summary className="px-4 py-3 text-sm font-semibold text-gray-700 cursor-pointer select-none hover:text-gray-900">
-        {label}
-      </summary>
-      <div className="px-4 pb-4 border-t border-gray-100 pt-3">{children}</div>
-    </details>
   )
 }
 
@@ -117,251 +111,226 @@ export function SignalV2Dashboard({ data, sourceLabel = 'prototype, sample data'
     { label: 'Claims', value: `${contested} contested`, alert: contested >= 3, href: '#market' },
   ]
 
-  const history = (
-    <Fold label="Competitive history: 24 months of movement, momentum and head to head">
-      <div className="space-y-5">
-        <Timeline data={data} onSelect={setSelected} />
-        <div>
-          <SubHead>Momentum: signals per competitor per quarter</SubHead>
-          <HeatStrip
-            quarters={momentum.quarters}
-            rows={momentum.rows}
-            laneLabel={id => { const e = entityById(data, id); return e ? entityLabel(e) : id }}
-          />
-        </div>
-        <div>
-          <SubHead>Head to head</SubHead>
-          <HeadToHead data={data} />
-        </div>
-      </div>
-    </Fold>
-  )
+  const laneLabel = (id: string) => { const e = entityById(data, id); return e ? entityLabel(e) : id }
 
-  const latest = (
-    <Fold label="Latest intelligence: everything collected, ranked">
-      <Feed data={data} onSelect={setSelected} />
-    </Fold>
-  )
-
-  const evidence = (
-    <Chapter id="evidence" title="Evidence"
-      sub="The system layer: for trust and for analysts, not for the daily read">
-      <Fold label={`Data confidence ${confidence.pct}%: ${confidence.ok} of ${confidence.total} sources healthy${confidence.failed ? `, ${confidence.failed} failed` : ''}${confidence.stale ? `, ${confidence.stale} stale` : ''}. Sources, method and blind spots`}>
-        <div className="space-y-5">
-          <SourceHealth data={data} />
-          <div>
-            <SubHead>Curator queue</SubHead>
-            <Queue data={data} />
-          </div>
+  // ── The module cards, keyed, so each lens is just a column layout ──────────
+  const cards: Record<string, React.ReactNode> = {
+    actions: (
+      <Card key="actions" id="actions" title="Actions and implications" tall
+        sub="Promoted interpretations with a recommended action, a suggested owner and a due date.">
+        <div className="space-y-4">
+          {lens === 'sales' && <TalkTrack data={data} />}
+          {lens === 'marketing' && <MarketingResponse data={data} />}
+          <Actions data={data} onSelect={setSelected} />
         </div>
-      </Fold>
-    </Chapter>
-  )
+      </Card>
+    ),
+    accounts: (
+      <Card key="accounts" id="accounts" title="Accounts at risk"
+        sub="Strategic Moba accounts touched by competitor intelligence.">
+        <AccountsAtRisk data={data} onSelect={setSelected} />
+      </Card>
+    ),
+    wins: (
+      <Card key="wins" title="Wins and references"
+        sub="Announced wins by region. Red flag: touches a Moba strategic account.">
+        <Wins data={data} onSelect={setSelected} />
+      </Card>
+    ),
+    regions: (
+      <Card key="regions" id="regions" title="Regional pulse"
+        sub="Region, competitor, account, event: one card per territory.">
+        <RegionPulseCards data={data} onSelect={setSelected} cols="grid-cols-1" />
+      </Card>
+    ),
+    eventactions: (
+      <Card key="eventactions" id="ahead" title="Event actions"
+        sub="Attendance gaps as decisions, competitor moments as preparation.">
+        <EventDecisions data={data} cols="grid-cols-1" />
+      </Card>
+    ),
+    events: (
+      <Card key="events" title="Event radar" tall={lens === 'marketing'}
+        sub="T-90 to T+30 monitoring. Stand size is a budget decision made months ahead.">
+        <Events data={data} />
+      </Card>
+    ),
+    hiring: (
+      <Card key="hiring" title="Hiring signals"
+        sub="Vacancy clusters read as intent. Inference, marked ◐, never presented as fact.">
+        <Hiring data={data} onSelect={setSelected} />
+      </Card>
+    ),
+    battlefield: (
+      <Card key="battlefield" id="market" title="Positioning battlefield" scroll={false}
+        sub="Moba territory against competitive pressure. Whitespace is the investment call.">
+        <Battlefield data={data} />
+      </Card>
+    ),
+    claims: (
+      <Card key="claims" title="Claims, in their words"
+        sub="Every messaging-house claim against what competitors say, with source and date.">
+        <Claims data={data} />
+      </Card>
+    ),
+    sov: (
+      <Card key="sov" title="Share of voice"
+        sub="LinkedIn competitor analytics, interpreted before charted.">
+        <div className="space-y-3">
+          <SovInsightCard data={data} />
+          <ShareOfVoice data={data} />
+        </div>
+      </Card>
+    ),
+    positioning: (
+      <Card key="positioning" title="Brand positioning" tall
+        sub="The quarterly reference paper: fixed axes, fixed themes.">
+        <PositioningCard paper={data.paper} entityName={laneLabel} />
+      </Card>
+    ),
+    momentum: (
+      <Card key="momentum" title="Momentum" scroll={false}
+        sub="Signals per competitor per quarter. Darker = more movement.">
+        <HeatStrip quarters={momentum.quarters} rows={momentum.rows} laneLabel={laneLabel} />
+      </Card>
+    ),
+    h2h: (
+      <Card key="h2h" title="Head to head"
+        sub="Fixed axes, confidence and last-verified per cell.">
+        <HeadToHead data={data} />
+      </Card>
+    ),
+    feed: (
+      <Card key="feed" title="Latest intelligence"
+        sub="Everything collected, newest first, impact-ranked.">
+        <Feed data={data} onSelect={setSelected} />
+      </Card>
+    ),
+    brief: (
+      <Card key="brief" title="This week's brief" scroll={false}
+        sub="Drafted by the Editor agent, worded and approved by the analyst.">
+        {brief.empty
+          ? <p className="text-sm text-gray-600">{brief.headline}</p>
+          : <BriefCard data={data} />}
+      </Card>
+    ),
+  }
+
+  // ── The asymmetric grid per lens: main column + two supporting ─────────────
+  const layout: Record<Lens, { main: string[]; a: string[]; b: string[] }> = {
+    executive: { main: ['actions', 'battlefield'], a: ['brief', 'regions'], b: ['eventactions', 'momentum', 'sov'] },
+    sales:     { main: ['accounts', 'actions'], a: ['regions', 'wins', 'eventactions', 'h2h'], b: ['hiring', 'events', 'momentum', 'feed'] },
+    marketing: { main: ['actions', 'battlefield', 'claims'], a: ['sov', 'positioning'], b: ['eventactions', 'events', 'hiring', 'feed'] },
+  }
+  const cols = layout[lens]
 
   return (
-    <main className="min-h-screen bg-gray-50">
-      {/* ── Masthead: identity, lens switcher, nothing else ── */}
-      <div className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-gray-200">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-2.5 flex items-center gap-3">
-          <span className="font-bold text-brand whitespace-nowrap">Moba Signal</span>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-white bg-gray-900 rounded px-1.5 py-0.5">V2 preview</span>
+    <main className="min-h-screen bg-gray-100">
+      {/* ── Level 1: the ink band. Masthead and the attention hero ── */}
+      <div className="sticky top-0 z-40 bg-brand-dark/95 backdrop-blur border-b border-white/10">
+        <div className="max-w-[1800px] mx-auto px-4 sm:px-6 py-2.5 flex items-center gap-3">
+          <span className="font-bold text-white whitespace-nowrap">Moba <span className="text-brand-gold">Signal</span></span>
+          <span className="text-[10px] font-bold uppercase tracking-wider text-white bg-brand-gradient rounded px-1.5 py-0.5">V2 preview</span>
           <span className="text-[11px] text-gray-400 hidden md:inline whitespace-nowrap">{sourceLabel}</span>
           <div className="ml-auto flex items-center gap-1" role="tablist" aria-label="Lens">
             {(Object.keys(LENSES) as Lens[]).map(k => (
               <button key={k} role="tab" aria-selected={lens === k} onClick={() => setLens(k)} title={LENSES[k].hint}
-                className={`px-2.5 py-1 rounded-full text-xs font-medium border transition-colors ${
-                  lens === k ? 'bg-gray-900 text-white border-gray-900' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
+                className={`px-2.5 py-1 rounded-full text-xs font-semibold border transition-colors ${
+                  lens === k ? 'bg-brand-accent text-white border-brand-accent' : 'bg-transparent text-gray-300 border-white/25 hover:border-white/60 hover:text-white'
                 }`}>
                 {LENSES[k].label}
               </button>
             ))}
           </div>
-          <a href="/moba/signal" className="text-[11px] text-gray-400 hover:text-gray-600 whitespace-nowrap hidden sm:inline"
+          <a href="/moba/signal" className="text-[11px] text-gray-400 hover:text-white whitespace-nowrap hidden sm:inline"
             title="The analyst's full working surface: V1, unchanged">
             Analyst workspace →
           </a>
         </div>
       </div>
 
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-8 space-y-10">
-        {/* ── Level 1: the attention hero ── */}
-        <section>
-          <p className="text-[13px] text-gray-500 mb-1">
-            {weekday(data.asOf)} · {fmtDate(data.asOf)}
-            {data.headlineOverride && <span className="text-gray-400"> · {data.headlineOverride.text}</span>}
+      <div className="bg-brand-dark text-white">
+        <div className="max-w-[1800px] mx-auto px-4 sm:px-6 pt-7 pb-9">
+          <p className="text-[13px] text-gray-300 mb-2">
+            <span className="font-semibold text-brand-gold">{weekday(data.asOf)} · {fmtDate(data.asOf)}</span>
+            {data.headlineOverride && <span className="text-gray-300"> · {data.headlineOverride.text}</span>}
           </p>
           <AttentionHero data={data} items={attention} onSelect={setSelected} />
-          <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1">
-            <a href="#actions" className="text-xs font-semibold text-gray-500 hover:text-gray-900">Explore the evidence ↓</a>
+          <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-1">
+            <a href="#accounts" className="text-xs font-bold text-brand-gold hover:underline">Explore the evidence ↓</a>
             <EvidenceLegend />
           </div>
-        </section>
+        </div>
+      </div>
 
-        {/* ── Your world: four doors into the chapters ── */}
+      <div className="max-w-[1800px] mx-auto px-4 sm:px-6 py-6 space-y-5">
+        {/* ── Your world: four doors, triage-coloured edges ── */}
         <section aria-label="Your world" className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {world.map(w => (
             <a key={w.label} href={w.href}
-              className="rounded-xl border border-gray-200 bg-white px-4 py-3 hover:border-gray-400 transition-colors">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">{w.label}</span>
+              className={`rounded-xl border border-gray-200 border-l-4 ${w.alert ? 'border-l-red-500' : 'border-l-brand'} bg-white px-4 py-3 shadow-sm hover:border-gray-400 transition-colors`}>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-brand">{w.label}</span>
               <span className={`block text-[15px] font-semibold mt-0.5 ${w.alert ? 'text-red-700' : 'text-gray-800'}`}>{w.value}</span>
             </a>
           ))}
         </section>
 
-        {/* ── Executive lens: the 90-second read ── */}
+        {/* ── Executive counts, only where the 90-second read needs them ── */}
         {lens === 'executive' && (
-          <>
-            <section className="grid grid-cols-2 sm:grid-cols-4 gap-3" aria-label="This quarter in numbers">
-              {[
-                { n: counts.changes, label: 'material changes, 90d' },
-                { n: counts.threats, label: 'labelled threats' },
-                { n: counts.opportunities, label: 'labelled opportunities' },
-                { n: counts.decisions, label: 'decisions required' },
-              ].map(x => (
-                <div key={x.label} className="rounded-xl border border-gray-200 bg-white px-4 py-3">
-                  <span className="text-2xl font-bold text-gray-900">{x.n}</span>
-                  <span className="block text-[11px] text-gray-500">{x.label}</span>
-                </div>
-              ))}
-            </section>
-
-            <Chapter id="actions" title="Attention" sub="What changed and who should act">
-              <Actions data={data} onSelect={setSelected} />
-            </Chapter>
-
-            <Chapter id="market" title="Market and message" sub="Where Moba can own language">
-              <Battlefield data={data} />
-            </Chapter>
-
-            <Chapter id="regions" title="Competition" sub="Where the pressure sits">
-              <div className="space-y-4">
-                <RegionPulseCards data={data} onSelect={setSelected} />
-                {brief.empty
-                  ? <p className="text-sm text-gray-500">{brief.headline}</p>
-                  : <Fold label={`This week's brief: ${brief.headline}`}><BriefCard data={data} /></Fold>}
+          <section className="grid grid-cols-2 sm:grid-cols-4 gap-3" aria-label="This quarter in numbers">
+            {[
+              { n: counts.changes, label: 'material changes, 90d', cls: 'text-brand-dark' },
+              { n: counts.threats, label: 'labelled threats', cls: counts.threats > 0 ? 'text-red-600' : 'text-brand-dark' },
+              { n: counts.opportunities, label: 'labelled opportunities', cls: counts.opportunities > 0 ? 'text-emerald-600' : 'text-brand-dark' },
+              { n: counts.decisions, label: 'decisions required', cls: counts.decisions > 0 ? 'text-brand-accent' : 'text-brand-dark' },
+            ].map(x => (
+              <div key={x.label} className="rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm">
+                <span className={`text-3xl font-bold ${x.cls}`}>{x.n}</span>
+                <span className="block text-[11px] text-gray-500 mt-0.5">{x.label}</span>
               </div>
-            </Chapter>
-
-            {evidence}
-          </>
+            ))}
+          </section>
         )}
 
-        {/* ── Sales lens: accounts first ── */}
-        {lens === 'sales' && (
-          <>
-            <Chapter id="accounts" title="Accounts" sub="Strategic accounts touched by competitor intelligence, and announced wins">
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-5 items-start">
-                <div>
-                  <SubHead>Accounts at risk</SubHead>
-                  <AccountsAtRisk data={data} onSelect={setSelected} />
-                </div>
-                <div>
-                  <SubHead>Competitor wins and references</SubHead>
-                  <Wins data={data} onSelect={setSelected} />
-                </div>
-              </div>
-            </Chapter>
+        {/* ── Level 2 opens with the visual context: the timeline, in view ── */}
+        <Card id="movement" title="Competitive movement" scroll={false}
+          sub="24 months of movement, Moba's lane on top, events as guide lines. Click any point for the source and annotations.">
+          <Timeline data={data} onSelect={setSelected} />
+        </Card>
 
-            <Chapter id="actions" title="Actions and implications" sub="What it means and who does what">
-              <div className="space-y-4">
-                <TalkTrack data={data} />
-                <Actions data={data} onSelect={setSelected} />
-              </div>
-            </Chapter>
+        {/* ── The asymmetric module grid: main column + two supporting ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-[minmax(0,1.9fr)_minmax(0,1fr)_minmax(0,1fr)] gap-4 items-start">
+          <div className="lg:col-span-2 2xl:col-span-1 grid grid-cols-1 gap-4 min-w-0">
+            {cols.main.map(id => cards[id])}
+          </div>
+          <div className="grid grid-cols-1 gap-4 min-w-0">
+            {cols.a.map(id => cards[id])}
+          </div>
+          <div className="grid grid-cols-1 gap-4 min-w-0">
+            {cols.b.map(id => cards[id])}
+          </div>
+        </div>
 
-            <Chapter id="regions" title="Competition" sub="Region, competitor, account, event: one card per territory">
-              <div className="space-y-4">
-                <RegionPulseCards data={data} onSelect={setSelected} />
-                {history}
-              </div>
-            </Chapter>
-
-            <Chapter id="ahead" title="Ahead" sub="Known moments and forming patterns">
-              <div className="space-y-4">
-                <EventDecisions data={data} />
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-5 items-start">
-                  <div>
-                    <SubHead>Hiring read as intent</SubHead>
-                    <Hiring data={data} onSelect={setSelected} />
-                  </div>
-                  <div>
-                    <SubHead>Event radar</SubHead>
-                    <Events data={data} />
-                  </div>
-                </div>
-              </div>
-            </Chapter>
-
-            <Chapter id="latest" title="Latest" sub="The full ranked feed, when you want to go deeper">
-              {latest}
-            </Chapter>
-
-            {evidence}
-          </>
-        )}
-
-        {/* ── Marketing lens: claims and message first ── */}
-        {lens === 'marketing' && (
-          <>
-            <Chapter id="actions" title="Actions and implications" sub="What it means and who does what">
-              <div className="space-y-4">
-                <MarketingResponse data={data} />
-                <Actions data={data} onSelect={setSelected} />
-              </div>
-            </Chapter>
-
-            <Chapter id="market" title="Market and message" sub="The positioning battlefield, claims and share of voice">
-              <div className="space-y-5">
-                <Battlefield data={data} />
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-5 items-start">
-                  <div className="space-y-3">
-                    <SubHead>Share of voice</SubHead>
-                    <SovInsightCard data={data} />
-                    <ShareOfVoice data={data} />
-                  </div>
-                  <div>
-                    <SubHead>Claims, in their words</SubHead>
-                    <Claims data={data} />
-                  </div>
-                </div>
-                <Fold label="Brand positioning: the quarterly reference paper">
-                  <PositioningCard paper={data.paper} entityName={id => { const e = entityById(data, id); return e ? entityLabel(e) : id }} />
-                </Fold>
-              </div>
-            </Chapter>
-
-            <Chapter id="ahead" title="Ahead" sub="Event moments to prepare and patterns forming">
-              <div className="space-y-4">
-                <EventDecisions data={data} />
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-5 items-start">
-                  <div>
-                    <SubHead>Event radar</SubHead>
-                    <Events data={data} />
-                  </div>
-                  <div>
-                    <SubHead>Hiring read as intent</SubHead>
-                    <Hiring data={data} onSelect={setSelected} />
-                  </div>
-                </div>
-              </div>
-            </Chapter>
-
-            <Chapter id="regions" title="Competition" sub="History and pressure, for context">
-              <div className="space-y-4">
-                <RegionPulseCards data={data} onSelect={setSelected} />
-                {history}
-                {latest}
-              </div>
-            </Chapter>
-
-            {evidence}
-          </>
-        )}
-
-        {/* ── Universal search: the interface many users will prefer ── */}
-        <Chapter id="search" title="Search" sub="A competitor, an account, a market, a claim">
+        {/* ── Universal search ── */}
+        <Card id="search" title="Search Signal" scroll={false}
+          sub="A competitor, an account, a market, a claim. The graph answers the way users ask.">
           <UniversalSearch data={data} onSelect={setSelected} />
-        </Chapter>
+        </Card>
+
+        {/* ── Level 3: the system layer, one figure in front ── */}
+        <details id="evidence" className="rounded-xl border border-gray-200 bg-white shadow-sm">
+          <summary className="px-4 py-3 text-sm font-bold text-brand-dark cursor-pointer select-none hover:text-brand">
+            Data confidence {confidence.pct}%: {confidence.ok} of {confidence.total} sources healthy
+            {confidence.failed ? `, ${confidence.failed} failed` : ''}{confidence.stale ? `, ${confidence.stale} stale` : ''}. Sources, method and blind spots
+          </summary>
+          <div className="px-4 pb-4 border-t border-gray-100 pt-3 space-y-5">
+            <SourceHealth data={data} />
+            <div>
+              <h3 className="text-[11px] font-bold uppercase tracking-wider text-gray-500 mb-2">Curator queue</h3>
+              <Queue data={data} />
+            </div>
+          </div>
+        </details>
 
         <footer className="pt-2 pb-8 text-[11px] text-gray-400 space-y-1 border-t border-gray-200">
           <p>

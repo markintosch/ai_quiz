@@ -72,7 +72,7 @@ export function Actions({ data, onSelect }: {
               </div>
             )}
 
-            <button onClick={() => onSelect(s)} className="text-xs font-semibold text-brand hover:underline mt-2">
+            <button onClick={() => onSelect(s)} className="text-xs font-bold text-brand-accent hover:underline mt-2">
               Open the evidence →
             </button>
           </article>
