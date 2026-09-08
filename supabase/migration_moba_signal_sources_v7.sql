@@ -24,7 +24,7 @@ insert into moba_signal_proposals (kind, title, rationale, proposed_by, source_u
 
   ('source', 'Add sources: event exhibitor directories (IPPE, VIV, SPACE, EuroTier)',
    'Event intent. Stand bookings and floor positions publish months ahead and are budget decisions, the event radar''s stand-size deltas currently depend on manual capture. Crawling the four directories feeds T-90 monitoring with data instead of notes.',
-   'curator', 'https://www.ippexpo.org/exhibitors/'),
+   'curator', 'https://www.ippexpo.org/exhibitor-list/'),
 
   ('source', 'Add source: Cal-Maine Foods investor news (US demand side)',
    'Demand creation and account intelligence. The largest US egg producer is public: quarterly reports name capex, cage-free conversion rates and egg-products acquisitions. Their investment cycle is a leading indicator for Americas grading and processing demand.',
