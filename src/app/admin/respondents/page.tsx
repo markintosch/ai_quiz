@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { createServiceClient } from '@/lib/supabase/server'
 import ScoreBadge from '@/components/admin/ScoreBadge'
 import { DeleteRespondentButton } from '@/components/admin/DeleteRespondentButton'
+import { resultHref } from '@/lib/results/href'
 
 export const dynamic = 'force-dynamic'
 
@@ -45,15 +46,6 @@ function prettifyProduct(key: string): string {
     .join(' ')
 }
 
-/** Each product can have its own results page. Wouterblok lives outside the /results/[id] pipeline. */
-function resultHref(productKey: string | null | undefined, responseId: string): string {
-  switch (productKey) {
-    case 'wouterblok':
-      return `/wouterblok/results?id=${responseId}`
-    default:
-      return `/results/${responseId}`
-  }
-}
 
 export default async function RespondentsPage(
   props: {

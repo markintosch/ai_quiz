@@ -1,4 +1,5 @@
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
+import { hasOwnResultsPage, resultHref } from '@/lib/results/href'
 import type { Metadata } from 'next'
 import { setRequestLocale } from 'next-intl/server'
 import { createServiceClient } from '@/lib/supabase/server'
@@ -87,6 +88,13 @@ export default async function ResultsPage({ params }: PageProps) {
     notFound()
   }
 
+  // A product that scores its own way (its own pillars, its own ladder) stores
+  // a different shape and ships its own results page. Send it there instead of
+  // rendering a radar over dimensions this response does not have.
+  if (hasOwnResultsPage(response.product_key as string | null)) {
+    redirect(resultHref(response.product_key as string | null, id, locale))
+  }
+
   // Fetch respondent (name, email, company_name, job_title, company_size, cohort_id, source)
   const { data: respondent } = response.respondent_id
     ? await supabase
@@ -99,6 +107,13 @@ export default async function ResultsPage({ params }: PageProps) {
   // Cast stored JSON back to typed shapes
   const scores = response.scores as unknown as QuizScore
   const storedRecommendations = response.recommendation_payload as unknown as Recommendation[]
+
+  // Both dashboards below render RadarChart and DimensionBreakdown, which map
+  // straight over dimensionScores. A row without it is not renderable here, and
+  // reaching the chart would throw and surface as the generic error boundary.
+  if (!Array.isArray(scores?.dimensionScores)) {
+    notFound()
+  }
 
   // Apply role + company-size context overrides BEFORE localising, so override
   // copy resolves through the same locale map as the dimension-based recs.

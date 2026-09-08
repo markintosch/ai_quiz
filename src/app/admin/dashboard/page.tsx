@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { createServiceClient } from '@/lib/supabase/server'
 import ScoreBadge from '@/components/admin/ScoreBadge'
 import { DeleteRespondentButton } from '@/components/admin/DeleteRespondentButton'
+import { resultHref } from '@/lib/results/href'
 
 export const dynamic = 'force-dynamic'
 
@@ -47,7 +48,7 @@ export default async function DashboardPage() {
   // 4. All responses for score calculations
   const { data: allResponses } = await supabase
     .from('responses')
-    .select('id, respondent_id, scores, maturity_level, created_at')
+    .select('id, respondent_id, scores, maturity_level, product_key, created_at')
     .order('created_at', { ascending: false })
 
   let avgScore = 0
@@ -92,6 +93,7 @@ export default async function DashboardPage() {
       id: r.id,
       respondent_id: r.respondent_id,
       maturity_level: r.maturity_level,
+      product_key: r.product_key,
       created_at: r.created_at,
       name: respondent?.name ?? '—',
       email: respondent?.email ?? '',
@@ -192,7 +194,7 @@ export default async function DashboardPage() {
                     </td>
                     <td className="px-4 py-3 text-right">
                       <Link
-                        href={`/results/${r.id}`}
+                        href={resultHref(r.product_key, r.id)}
                         className="text-brand-accent hover:underline font-medium"
                       >
                         View →

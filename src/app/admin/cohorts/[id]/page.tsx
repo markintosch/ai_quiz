@@ -6,6 +6,7 @@ import { DimensionDeltaChart } from '@/components/cohort/DimensionDeltaChart'
 import { ShadowAIPanel } from '@/components/cohort/ShadowAIPanel'
 import { AddWaveForm } from '@/components/cohort/AddWaveForm'
 import { CopyClientLinkButton } from '@/components/cohort/CopyClientLinkButton'
+import { resultHref } from '@/lib/results/href'
 
 export const dynamic = 'force-dynamic'
 
@@ -27,6 +28,7 @@ interface ResponseRow {
   respondent_id: string
   scores: ScoresJsonb
   shadow_ai_flag: boolean
+  product_key: string | null
   created_at: string
 }
 interface RespondentRow { id: string; name: string; email: string; company_name: string; job_title: string }
@@ -59,7 +61,7 @@ async function fetchWaveResponses(supabase: ReturnType<typeof createServiceClien
 
   const { data: responses } = await supabase
     .from('responses')
-    .select('id, respondent_id, scores, shadow_ai_flag, created_at')
+    .select('id, respondent_id, scores, shadow_ai_flag, product_key, created_at')
     .in('id', responseIds) as unknown as { data: ResponseRow[] | null }
 
   const respondentIds = Array.from(new Set((responses ?? []).map(r => r.respondent_id)))
@@ -451,7 +453,7 @@ export default async function CohortDetailPage({ params, searchParams }: PagePro
                         {new Date(r.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                       </td>
                       <td className="px-4 py-3 text-right">
-                        <Link href={`/results/${r.id}`} className="text-brand-accent hover:underline font-medium text-xs">
+                        <Link href={resultHref(r.product_key, r.id)} className="text-brand-accent hover:underline font-medium text-xs">
                           View →
                         </Link>
                       </td>
