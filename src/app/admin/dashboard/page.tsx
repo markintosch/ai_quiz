@@ -4,6 +4,7 @@ import { createServiceClient } from '@/lib/supabase/server'
 import ScoreBadge from '@/components/admin/ScoreBadge'
 import { DeleteRespondentButton } from '@/components/admin/DeleteRespondentButton'
 import { resultHref } from '@/lib/results/href'
+import { AI_MATURITY_KEY, productLabel } from '@/lib/results/product'
 
 export const dynamic = 'force-dynamic'
 
@@ -169,6 +170,7 @@ export default async function DashboardPage() {
                 <tr>
                   <th className="text-left px-4 py-3">Name</th>
                   <th className="text-left px-4 py-3">Company</th>
+                  <th className="text-left px-4 py-3">Product</th>
                   <th className="text-left px-4 py-3">Score</th>
                   <th className="text-left px-4 py-3">Level</th>
                   <th className="text-left px-4 py-3">Date</th>
@@ -181,6 +183,17 @@ export default async function DashboardPage() {
                   <tr key={r.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-4 py-3 font-medium text-gray-900">{r.name}</td>
                     <td className="px-4 py-3 text-gray-600">{r.company}</td>
+                    <td className="px-4 py-3">
+                      {/* The default product is the quiet case; anything else is
+                          scored differently and lives on its own results page. */}
+                      {(r.product_key ?? AI_MATURITY_KEY) === AI_MATURITY_KEY ? (
+                        <span className="text-gray-400">{productLabel(r.product_key)}</span>
+                      ) : (
+                        <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-brand-accent/10 text-brand-accent border border-brand-accent/20 whitespace-nowrap">
+                          {productLabel(r.product_key)}
+                        </span>
+                      )}
+                    </td>
                     <td className="px-4 py-3 font-semibold text-brand">{r.overallScore}</td>
                     <td className="px-4 py-3">
                       <ScoreBadge level={r.maturity_level} />

@@ -4,6 +4,7 @@ import { createServiceClient } from '@/lib/supabase/server'
 import ScoreBadge from '@/components/admin/ScoreBadge'
 import { DeleteRespondentButton } from '@/components/admin/DeleteRespondentButton'
 import { resultHref } from '@/lib/results/href'
+import { AI_MATURITY_KEY, productLabel } from '@/lib/results/product'
 
 export const dynamic = 'force-dynamic'
 
@@ -32,19 +33,6 @@ interface RespondentRow {
 
 const PAGE_SIZE = 20
 
-// Legacy responses (pre multi-product) have product_key = NULL. Treat them as ai_maturity.
-const AI_MATURITY_KEY = 'ai_maturity'
-
-// Acronyms that should stay uppercase in product labels.
-const ACRONYMS = new Set(['ai', 'pr', 'hr', 'cx', 'esg', 'hcss', 'sbs', 'md'])
-
-/** Turn a product_key like "pr_maturity" into a readable label like "PR Maturity". */
-function prettifyProduct(key: string): string {
-  return key
-    .split(/[_-]/)
-    .map((w) => (ACRONYMS.has(w) ? w.toUpperCase() : w.charAt(0).toUpperCase() + w.slice(1)))
-    .join(' ')
-}
 
 
 export default async function RespondentsPage(
@@ -197,7 +185,7 @@ export default async function RespondentsPage(
                     : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
                 }`}
               >
-                {prettifyProduct(opt.key)}
+                {productLabel(opt.key)}
                 <span className={`ml-1.5 ${product === opt.key ? 'text-white/70' : 'text-gray-400'}`}>{opt.count}</span>
               </Link>
             ))}
