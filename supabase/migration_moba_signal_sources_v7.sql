@@ -15,10 +15,15 @@
 -- Everything enters as a pending proposal in the curator queue: nothing
 -- becomes an active source without the analyst accepting it (PRD §8.3).
 -- New sources get the sitemap check automatically (migration_moba_signal_sitemap).
--- Run in the Supabase SQL editor. Idempotent via the (kind, title) unique index.
+-- Run in the Supabase SQL editor. Idempotent by title: re-running inserts
+-- nothing. Deliberately does not use ON CONFLICT, which needs a unique index
+-- on (kind, title) that older databases may not have and which fails the whole
+-- statement when missing, inserting nothing and reporting only an error.
 
-insert into moba_signal_proposals (kind, title, rationale, proposed_by, source_url) values
-  ('source', 'Add source: competitor patent filings (Espacenet)',
+insert into moba_signal_proposals (kind, title, rationale, proposed_by, source_url)
+select v.kind, v.title, v.rationale, v.proposed_by, v.source_url
+from (values
+('source', 'Add source: competitor patent filings (Espacenet)',
    'Capability threat, 12-18 months early. Assignee watches on Sanovo Technology, NABEL, Kyowa Machinery, Zenyer and Vencomatic/Prinzen. A vision-grading or robotics filing precedes the launch the newsroom announces later. Monthly poll of the public search, source_class patents (unused so far).',
    'curator', 'https://worldwide.espacenet.com/'),
 
@@ -53,4 +58,8 @@ insert into moba_signal_proposals (kind, title, rationale, proposed_by, source_u
   ('source', 'Add source: TED public procurement (EU tenders)',
    'Account risk and win detection. Public tenders occasionally name egg grading and packing equipment, with the buyer and eventually the winner on record. Low volume, high certainty: a lost tender is a confirmed competitor win with paperwork.',
    'curator', 'https://ted.europa.eu/')
-on conflict (kind, title) do nothing;
+) as v(kind, title, rationale, proposed_by, source_url)
+where not exists (
+  select 1 from moba_signal_proposals p
+   where p.kind = v.kind and p.title = v.title
+);
