@@ -389,6 +389,12 @@ export interface ContextItem {
   loadedOn: string
   reviewBy: string
   note?: string
+  /**
+   * Publishable to the board as a standing market frame. Opt-in by design:
+   * context also holds analyst-only material (the strategic account list),
+   * so anything unflagged stays off the dashboard.
+   */
+  frame?: boolean
 }
 
 // ── Weekly competitive brief (Editor agent drafts, analyst approves) ──────────

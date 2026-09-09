@@ -47,6 +47,7 @@ import { AccountsAtRisk, MarketingResponse, RegionPulseCards, TalkTrack } from '
 import { EventDecisions } from './Ahead'
 import { UniversalSearch } from './Search'
 import { EvidenceLegend } from './EvidenceMark'
+import { MarketFrame } from './MarketFrame'
 
 type Lens = 'executive' | 'sales' | 'marketing'
 
@@ -206,6 +207,12 @@ export function SignalV2Dashboard({ data, sourceLabel = 'prototype, sample data'
         <Feed data={data} onSelect={setSelected} />
       </Card>
     ),
+    frame: (
+      <Card key="frame" title="Market frame" scroll={false}
+        sub="Where the market is going, as read from third-party research. Interpretation, not events.">
+        <MarketFrame data={data} />
+      </Card>
+    ),
     brief: (
       <Card key="brief" title="This week's brief" scroll={false}
         sub="Drafted by the Editor agent, worded and approved by the analyst.">
@@ -218,9 +225,9 @@ export function SignalV2Dashboard({ data, sourceLabel = 'prototype, sample data'
 
   // ── The asymmetric grid per lens: main column + two supporting ─────────────
   const layout: Record<Lens, { main: string[]; a: string[]; b: string[] }> = {
-    executive: { main: ['actions', 'battlefield'], a: ['brief', 'regions'], b: ['eventactions', 'momentum', 'sov'] },
+    executive: { main: ['actions', 'battlefield'], a: ['brief', 'frame', 'regions'], b: ['eventactions', 'momentum', 'sov'] },
     sales:     { main: ['accounts', 'actions'], a: ['regions', 'wins', 'eventactions', 'h2h'], b: ['hiring', 'events', 'momentum', 'feed'] },
-    marketing: { main: ['actions', 'battlefield', 'claims'], a: ['sov', 'positioning'], b: ['eventactions', 'events', 'hiring', 'feed'] },
+    marketing: { main: ['actions', 'battlefield', 'claims'], a: ['sov', 'frame', 'positioning'], b: ['eventactions', 'events', 'hiring', 'feed'] },
   }
   const cols = layout[lens]
 

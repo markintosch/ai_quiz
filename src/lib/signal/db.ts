@@ -215,6 +215,8 @@ export async function loadLiveDataset(supabase: Db): Promise<LiveDataset | null>
     const context = (contextQ.data ?? []).map((r: Row) => ({
       id: r.id, name: r.name, owner: r.owner, loadedOn: day(r.loaded_on),
       reviewBy: day(r.review_by), note: r.note ?? undefined,
+      // Absent until migration_moba_signal_context_frame has run: stays false.
+      frame: r.is_frame ?? false,
     }))
 
     const dataset: SignalDataset = {
