@@ -49,7 +49,7 @@ export function getAllProducts(): QuizProductConfig[] {
 }
 
 // ── Subdomain → product_key mapping ──────────────────────────────────────────
-// Must stay in sync with middleware.ts and quiz_products.subdomain in Supabase.
+// Must stay in sync with quiz_products.subdomain in Supabase.
 // Add new subdomains here when a product is launched.
 const SUBDOMAIN_MAP: Record<string, string> = {
   'ai':           'ai_maturity',    // ai.brandpwrdmedia.nl

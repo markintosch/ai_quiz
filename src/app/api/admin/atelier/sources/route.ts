@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 // FILE: src/app/api/admin/atelier/sources/route.ts
-// POST — add a source. Admin layout middleware protects it.
+// POST — add a source. Admin-only (isAuthorised).
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'

@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic'
 
 // FILE: src/app/api/admin/atelier/icp/[id]/route.ts
 // PATCH — update an ICP's validation_status, note, or supersede link.
-// Admin layout middleware already enforces auth.
+// Admin-only: checked with isAuthorised() below.
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'

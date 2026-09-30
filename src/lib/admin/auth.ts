@@ -11,6 +11,7 @@
 
 import { createHmac, timingSafeEqual } from 'crypto'
 import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 /**
  * Derive a deterministic session token from the admin secret.
@@ -53,4 +54,14 @@ export async function isAuthorised(): Promise<boolean> {
     // Buffer.from with invalid hex throws — treat as invalid token
     return false
   }
+}
+
+/**
+ * Guard for server-rendered admin pages: redirects to the login page when the
+ * request has no valid admin session. Call it at the top of every admin page
+ * that renders data on the server. The (panel) layout checks too, but layouts
+ * do not re-render on client navigation, so the page must check for itself.
+ */
+export async function requireAdmin(): Promise<void> {
+  if (!(await isAuthorised())) redirect('/admin/login')
 }
