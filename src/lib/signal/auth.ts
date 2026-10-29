@@ -16,8 +16,21 @@ export function deriveSignalToken(secret: string): string {
   return createHmac('sha256', secret).update('moba-signal-session-v1').digest('hex')
 }
 
+// Hosting dashboards make it easy to paste a trailing newline/space or wrap the
+// value in quotes, which then never matches what people type. Normalise both
+// sides the same way so the password works exactly as written.
+export function normaliseSignalPassword(value: string): string {
+  let v = value.normalize('NFC').trim()
+  if (v.length >= 2 && (v[0] === '"' || v[0] === "'") && v[v.length - 1] === v[0]) {
+    v = v.slice(1, -1).trim()
+  }
+  return v
+}
+
 export function signalPassword(): string | null {
-  return process.env.MOBA_SIGNAL_PASSWORD ?? null
+  const raw = process.env.MOBA_SIGNAL_PASSWORD
+  if (!raw) return null
+  return normaliseSignalPassword(raw) || null
 }
 
 export async function isSignalAuthorised(): Promise<boolean> {

@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { timingSafeEqual } from 'crypto'
-import { deriveSignalToken, SIGNAL_COOKIE, signalPassword } from '@/lib/signal/auth'
+import { deriveSignalToken, normaliseSignalPassword, SIGNAL_COOKIE, signalPassword } from '@/lib/signal/auth'
 
 export const dynamic = 'force-dynamic'
 
@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
   let password: string
   try {
     const body = await req.json()
-    password = String(body.password ?? '')
+    password = normaliseSignalPassword(String(body.password ?? ''))
   } catch {
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
   }
