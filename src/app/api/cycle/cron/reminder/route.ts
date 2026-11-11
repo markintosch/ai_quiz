@@ -67,6 +67,13 @@ export async function GET(req: Request) {
     return NextResponse.json({ ok: false }, { status: 401 })
   }
 
+  // Paused: the daily Cycle reminder emails are switched off. The cron entry
+  // was removed from vercel.json as well; this guard covers any manual or
+  // leftover invocation. Set CYCLE_REMINDERS_ENABLED=true to turn them back on.
+  if (process.env.CYCLE_REMINDERS_ENABLED !== 'true') {
+    return NextResponse.json({ ok: true, sent: 0, paused: true })
+  }
+
   const supabase = createServiceClient()
 
   // Fetch profiles with onboarded_at for day-number calculation
