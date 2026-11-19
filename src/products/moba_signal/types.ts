@@ -435,7 +435,8 @@ export interface SocialStat {
 /** One day of one metric on one of Moba's own pages. Real imported numbers. */
 export interface OwnedDaily {
   platform: 'facebook' | 'instagram' | 'meta'
-  metric: 'views' | 'interactions' | 'visits' | 'link_clicks' | 'follows' | 'reach'
+  /** A known metric key (see META_METRIC_LABELS in lib/signal/meta) or "other:<title slug>". */
+  metric: string
   day: string
   value: number
 }

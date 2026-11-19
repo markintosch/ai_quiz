@@ -274,7 +274,7 @@ export default function MobaSignalAdmin() {
       const results: any[] = json.results ?? []
       const ok = results.filter(r => !r.error)
       const bad = results.filter(r => r.error)
-      const bits = ok.map(r => `${r.title} → ${r.platform} ${r.metric}, ${r.days} days (${r.from} to ${r.to})`)
+      const bits = ok.map(r => `${r.title} → ${r.platform} ${r.known ? r.metric : 'new metric, stored as is'}, ${r.days} days (${r.from} to ${r.to})`)
       if (bad.length) bits.push(`failed: ${bad.map(r => `${r.file}: ${r.error}`).join(' · ')}`)
       setNotice(bits.join(' · ') || json.error || `HTTP ${res.status}`)
       setNoticeErr(!res.ok || bad.length > 0)
@@ -512,7 +512,8 @@ export default function MobaSignalAdmin() {
               {busy === 'meta' ? 'Importing…' : `Import ${metaFiles.length || ''} Meta export${metaFiles.length === 1 ? '' : 's'}`}
             </button>
             <span className="text-[11px] text-gray-400">
-              Business Suite CSVs for Moba&rsquo;s own pages, one metric per file, select them all at once.
+              Business Suite CSVs for Moba&rsquo;s own pages, any metric, select them all at once. Unfamiliar
+              titles are stored under their own name, never rejected.
               Files titled &ldquo;Facebook-…&rdquo; set their own platform; the choice applies to titles like
               &ldquo;Weergaven&rdquo;. Re-uploads update overlapping days.
             </span>

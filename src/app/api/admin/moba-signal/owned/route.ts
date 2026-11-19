@@ -1,6 +1,6 @@
 // FILE: src/app/api/admin/moba-signal/owned/route.ts
-// POST multipart: one or more Meta Business Suite CSV exports (one metric per
-// file) for Moba's own pages. Field "platform" (facebook | instagram | meta)
+// POST multipart: one or more Meta Business Suite CSV exports for Moba's own
+// pages, any metric, one or several per file. Field "platform" (facebook | instagram | meta)
 // applies to files whose title does not name the platform, such as
 // "Weergaven". ?dryRun=1 parses and reports without writing. Re-uploading an
 // overlapping period updates the stored values.
@@ -31,22 +31,26 @@ export async function POST(req: NextRequest) {
   const fallback: MetaPlatform = PLATFORMS.includes(p) ? p : 'meta'
   const dryRun = req.nextUrl.searchParams.get('dryRun') === '1'
 
-  const results: Array<{ file: string; title?: string; platform?: string; metric?: string; days?: number; from?: string; to?: string; error?: string }> = []
+  const results: Array<{ file: string; title?: string; platform?: string; metric?: string; known?: boolean; days?: number; from?: string; to?: string; error?: string }> = []
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const db = dryRun ? null : (createServiceClient() as any)
 
   for (const file of files) {
     try {
       const parsed = parseMetaExport(new Uint8Array(await file.arrayBuffer()), fallback)
-      const days = parsed.rows.map(r => r.day).sort()
       if (db) {
-        const payload = parsed.rows.map(r => ({ ...r, source_title: parsed.title, filename: file.name, uploaded_at: new Date().toISOString() }))
+        const titleOf = new Map(parsed.sections.map(s => [s.metric, s.title]))
+        const now = new Date().toISOString()
+        const payload = parsed.rows.map(r => ({ ...r, source_title: titleOf.get(r.metric) ?? null, filename: file.name, uploaded_at: now }))
         for (let i = 0; i < payload.length; i += 500) {
           const { error } = await db.from('moba_signal_owned_daily').upsert(payload.slice(i, i + 500), { onConflict: 'platform,metric,day' })
           if (error) throw new Error(error.message)
         }
       }
-      results.push({ file: file.name, title: parsed.title, platform: parsed.platform, metric: parsed.metric, days: parsed.rows.length, from: days[0], to: days[days.length - 1] })
+      for (const s of parsed.sections) {
+        const days = [...new Set(s.rows.map(r => r.day))].sort()
+        results.push({ file: file.name, title: s.title, platform: s.platforms.join('+'), metric: s.metric, known: s.known, days: days.length, from: days[0], to: days[days.length - 1] })
+      }
     } catch (err) {
       results.push({ file: file.name, error: err instanceof Error ? err.message : String(err) })
     }
