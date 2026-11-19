@@ -10,7 +10,7 @@
 // built on. The view switcher decides what "primary" means per role: the same
 // modules, re-weighted, never forked content.
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { Signal, SignalDataset, Region } from '@/products/moba_signal/types'
 import { REGION_LABELS } from '@/products/moba_signal/types'
 import { band, daysBetween, entityById, entityLabel, headline, laneEntityId, quarterlyLaneCounts, relTime, sortForFeed, statusMetrics, fmtDate } from '@/products/moba_signal/selectors'
@@ -30,6 +30,8 @@ import { PositioningCard } from './Positioning'
 import { ShareOfVoice } from './ShareOfVoice'
 import { SourceHealth } from './SourceHealth'
 import { Queue } from './Queue'
+import { CompanyProfileTab } from './Profile'
+import { SANOVO_PROFILE } from '@/products/moba_signal/profiles/sanovo'
 
 const TONE_CLS = {
   alert: 'text-red-600',
@@ -64,6 +66,12 @@ function Card({ id, title, sub, tall, scroll = true, children }: {
 // Same modules, re-weighted. Sales stays a deferred P2 (battlecard view).
 
 type ViewKey = 'answer' | 'explore'
+// Profile tabs sit beside the two views: a standing picture of one competitor
+// group for colleagues who want "the latest from Sanovo" without the analyst
+// surface. Deep-linkable as /moba/signal#sanovo.
+type ProfileKey = 'sanovo'
+type TabKey = ViewKey | ProfileKey
+const PROFILES = { sanovo: SANOVO_PROFILE } as const
 type CardId = 'feed' | 'claims' | 'h2h' | 'wins' | 'events' | 'queue' | 'tech' | 'momentum' | 'sov' | 'brief' | 'implications' | 'positioning' | 'hiring' | 'regions'
 
 const VIEWS: Record<ViewKey, { label: string; hint: string; main: CardId[]; a: CardId[]; b: CardId[] }> = {
@@ -77,9 +85,28 @@ const VIEWS: Record<ViewKey, { label: string; hint: string; main: CardId[]; a: C
   },
 }
 
-export function SignalDashboard({ data, sourceLabel = 'prototype, sample data' }: { data: SignalDataset; sourceLabel?: string }) {
+export function SignalDashboard({ data, sourceLabel = 'prototype, sample data', live = false }: {
+  data: SignalDataset
+  sourceLabel?: string
+  /** True when data comes from the live database. Profile tabs use collected items only then. */
+  live?: boolean
+}) {
   const [selected, setSelected] = useState<Signal | null>(null)
-  const [view, setView] = useState<ViewKey>('explore')
+  const [tab, setTab] = useState<TabKey>('explore')
+  const view: ViewKey = tab === 'answer' ? 'answer' : 'explore'
+  const profile = tab in PROFILES ? PROFILES[tab as ProfileKey] : null
+
+  // Hash deep link: #sanovo opens the profile tab; switching tabs keeps the hash in step.
+  useEffect(() => {
+    const h = window.location.hash.slice(1)
+    if (h in PROFILES) setTab(h as ProfileKey)
+  }, [])
+  const selectTab = (k: TabKey) => {
+    setTab(k)
+    const url = k in PROFILES ? `#${k}` : window.location.pathname + window.location.search
+    window.history.replaceState(null, '', url)
+    if (k in PROFILES) window.scrollTo({ top: 0 })
+  }
   const [regionFilter, setRegionFilter] = useState<Region | null>(null)
 
   // The region lens: when a region is picked in Regional pressure, the
@@ -211,7 +238,9 @@ export function SignalDashboard({ data, sourceLabel = 'prototype, sample data' }
           <div className="flex items-center justify-between gap-4 mb-1.5">
             <div className="flex items-baseline gap-2 min-w-0">
               <span className="font-bold text-brand whitespace-nowrap">Moba Signal</span>
-              <span className="text-[11px] text-gray-400 whitespace-nowrap hidden sm:inline">as of {fmtDate(data.asOf)} · {sourceLabel}</span>
+              <span className="text-[11px] text-gray-400 whitespace-nowrap hidden sm:inline">
+                {profile ? `${profile.name} profile · researched ${fmtDate(profile.researchedOn)} · real data only` : `as of ${fmtDate(data.asOf)} · ${sourceLabel}`}
+              </span>
               {regionFilter && (
                 <button
                   onClick={() => setRegionFilter(null)}
@@ -222,19 +251,34 @@ export function SignalDashboard({ data, sourceLabel = 'prototype, sample data' }
                 </button>
               )}
             </div>
-            <div className="flex items-center gap-1" role="tablist" aria-label="View">
+            <div className="flex items-center justify-end flex-wrap gap-1" role="tablist" aria-label="View">
               {(Object.keys(VIEWS) as ViewKey[]).map(k => (
                 <button
                   key={k}
                   role="tab"
-                  aria-selected={view === k}
-                  onClick={() => setView(k)}
+                  aria-selected={tab === k}
+                  onClick={() => selectTab(k)}
                   title={VIEWS[k].hint}
                   className={`px-2.5 py-1 rounded-full text-xs font-medium border transition-colors ${
-                    view === k ? 'bg-brand text-white border-brand' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'
+                    tab === k ? 'bg-brand text-white border-brand' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'
                   }`}
                 >
                   {VIEWS[k].label}
+                </button>
+              ))}
+              <span className="w-px h-4 bg-gray-200 mx-1" aria-hidden />
+              {(Object.keys(PROFILES) as ProfileKey[]).map(k => (
+                <button
+                  key={k}
+                  role="tab"
+                  aria-selected={tab === k}
+                  onClick={() => selectTab(k)}
+                  title={`Competitor profile: the latest from ${PROFILES[k].name}, with legal and communications guidance`}
+                  className={`px-2.5 py-1 rounded-full text-xs font-semibold border transition-colors ${
+                    tab === k ? 'bg-brand-dark text-white border-brand-dark' : 'bg-white text-brand-dark border-brand-dark/30 hover:border-brand-dark'
+                  }`}
+                >
+                  {PROFILES[k].name}
                 </button>
               ))}
               <a
@@ -246,7 +290,7 @@ export function SignalDashboard({ data, sourceLabel = 'prototype, sample data' }
               </a>
             </div>
           </div>
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-x-4 gap-y-2">
+          {!profile && <div className="grid grid-cols-3 md:grid-cols-6 gap-x-4 gap-y-2">
             {metrics.map(m => (
               <div key={m.key} className="min-w-0">
                 <div className="flex items-end gap-2">
@@ -257,11 +301,14 @@ export function SignalDashboard({ data, sourceLabel = 'prototype, sample data' }
                 <div className="text-[10px] text-gray-400 leading-tight truncate" title={m.baseline}>{m.baseline}</div>
               </div>
             ))}
-          </div>
+          </div>}
         </div>
       </div>
 
       <div className="max-w-[1800px] mx-auto px-4 sm:px-6 py-5 space-y-4">
+        {profile ? (
+          <CompanyProfileTab data={data} live={live} profile={profile} onSelect={setSelected} />
+        ) : (<>
         {/* ── Tier 2: analyst headline (hero) or a quiet status line, critical alerts right ── */}
         <section className="grid grid-cols-1 2xl:grid-cols-3 gap-4 items-start">
           <div>
@@ -324,11 +371,12 @@ export function SignalDashboard({ data, sourceLabel = 'prototype, sample data' }
           sub="Honesty about gaps is what makes the rest trustworthy.">
           <SourceHealth data={data} />
         </Card>
+        </>)}
 
-        <footer className="pt-2 pb-8 text-[11px] text-gray-400 space-y-1">
+        {!profile && <footer className="pt-2 pb-8 text-[11px] text-gray-400 space-y-1">
           <p>Internal prototype for Moba marketing and innovation. Mode: {sourceLabel}. In live mode the claims tracker, head to head and event calendar still show curated sample content until their pipeline phases land.</p>
           <p>Impact model: proximity + materiality + credibility. Critical 8-9 · Notable 5-7 · Context 3-4 · Noise below 3. An item can never be Critical on credibility 1.</p>
-        </footer>
+        </footer>}
       </div>
 
       {selected && <SignalDetail signal={selected} data={data} onClose={() => setSelected(null)} />}
