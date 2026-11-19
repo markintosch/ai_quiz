@@ -16,8 +16,9 @@
 import { useMemo, useState } from 'react'
 import type { OwnedDaily } from '@/products/moba_signal/types'
 import { fmtDate } from '@/products/moba_signal/selectors'
+import { LEVEL_METRICS, META_METRIC_LABELS, metricLabel } from '@/lib/signal/meta'
 
-type Metric = OwnedDaily['metric']
+type Metric = string
 
 const PLATFORM_LABEL: Record<OwnedDaily['platform'], string> = {
   facebook: 'Facebook', instagram: 'Instagram', meta: 'Facebook + Instagram',
@@ -43,16 +44,30 @@ function weekOf(day: string): string {
   return iso(t - wd * DAY)
 }
 
-interface Series { platform: OwnedDaily['platform']; byDay: Map<string, number> }
+interface Series { platforms: Set<OwnedDaily['platform']>; byDay: Map<string, number> }
 
-function buildSeries(rows: OwnedDaily[]): Partial<Record<Metric, Series>> {
-  const out: Partial<Record<Metric, Series>> = {}
+function buildSeries(rows: OwnedDaily[]): Record<Metric, Series | undefined> {
+  const out: Record<Metric, Series | undefined> = {}
   for (const r of rows) {
-    const s = out[r.metric] ?? { platform: r.platform, byDay: new Map<string, number>() }
+    const s = out[r.metric] ?? { platforms: new Set<OwnedDaily['platform']>(), byDay: new Map<string, number>() }
+    s.platforms.add(r.platform)
     s.byDay.set(r.day, (s.byDay.get(r.day) ?? 0) + r.value)
     out[r.metric] = s
   }
   return out
+}
+
+function platformLabel(s: Series): string {
+  const p = [...s.platforms]
+  if (p.includes('meta') || (p.includes('facebook') && p.includes('instagram'))) return PLATFORM_LABEL.meta
+  return PLATFORM_LABEL[p[0]]
+}
+
+/** For a level metric (total followers): the last value on or before a day. */
+function levelAt(s: Series, beforeT: number): number | null {
+  let best: [number, number] | null = null
+  for (const [d, v] of s.byDay) { const t = ms(d); if (t < beforeT && (!best || t > best[0])) best = [t, v] }
+  return best ? best[1] : null
 }
 
 function windowSum(s: Series | undefined, from: number, to: number): number {
@@ -86,7 +101,8 @@ export function OwnedSocial({ rows }: { rows: OwnedDaily[] }) {
     const l30 = [end - 30 * DAY, end] as const
     const p30 = [end - 60 * DAY, end - 30 * DAY] as const
 
-    const main: Metric = series.views ? 'views' : (Object.keys(series)[0] as Metric)
+    const main: Metric = ['views', 'reach', 'impressions', 'interactions'].find(m => series[m])
+      ?? Object.keys(series).find(m => !LEVEL_METRICS.has(m)) ?? Object.keys(series)[0]
     const ms0 = series[main]!
 
     // Weekly buckets of the main metric (and interactions for the tooltip)
@@ -141,14 +157,10 @@ export function OwnedSocial({ rows }: { rows: OwnedDaily[] }) {
   }
 
   const { series, weekList, peaks } = model
-  const tiles: Array<{ metric: Metric; label: string }> = ([
-    { metric: 'views', label: 'Views' },
-    { metric: 'interactions', label: 'Content interactions' },
-    { metric: 'visits', label: 'Page visits' },
-    { metric: 'follows', label: 'New followers' },
-    { metric: 'link_clicks', label: 'Link clicks' },
-    { metric: 'reach', label: 'Viewers' },
-  ] as const).filter(t => series[t.metric])
+  const mainLabel = metricLabel(model.main).toLowerCase()
+  // Known metrics as tiles in a fixed order; unfamiliar titles listed below them.
+  const tiles = Object.keys(META_METRIC_LABELS).filter(m => series[m]).map(m => ({ metric: m, label: metricLabel(m) }))
+  const others = Object.keys(series).filter(m => m.startsWith('other:'))
 
   // ── Chart geometry ──
   const W = 640, H = 150, PAD_L = 4, PAD_B = 18, PAD_T = 22
@@ -165,7 +177,7 @@ export function OwnedSocial({ rows }: { rows: OwnedDaily[] }) {
   const hw = hover !== null ? weekList[hover] : null
 
   const headline = [
-    `Moba's audience shows up in bursts: the three biggest weeks carried ${model.peakShare}% of the year's ${model.main}.`,
+    `Moba's audience shows up in bursts: the three biggest weeks carried ${model.peakShare}% of the year's ${mainLabel}.`,
     model.change !== null
       ? `The last 30 days are ${model.change >= 0 ? 'up' : 'down'} ${Math.abs(model.change)}% on the 30 before.`
       : '',
@@ -178,29 +190,42 @@ export function OwnedSocial({ rows }: { rows: OwnedDaily[] }) {
       <div className="grid grid-cols-2 gap-2">
         {tiles.map(t => {
           const s = series[t.metric]!
-          const total = [...s.byDay.values()].reduce((a, b) => a + b, 0)
+          const level = LEVEL_METRICS.has(t.metric)
+          const total = level ? (levelAt(s, model.l30[1]) ?? 0) : [...s.byDay.values()].reduce((a, b) => a + b, 0)
           return (
             <div key={t.metric} className="rounded-lg border border-gray-200 px-3 py-2 min-w-0">
               <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-500 leading-tight">{t.label}</p>
-              <p className="text-[10px] text-gray-400 leading-tight">{PLATFORM_LABEL[s.platform]}</p>
+              <p className="text-[10px] text-gray-400 leading-tight">{platformLabel(s)}{level ? ', latest' : ''}</p>
               <p className="text-lg font-bold text-gray-900 tabular-nums leading-tight">{nf(total)}</p>
-              <Delta now={windowSum(s, ...model.l30)} before={windowSum(s, ...model.p30)} />
+              {level
+                ? <Delta now={total} before={levelAt(s, model.l30[0]) ?? 0} />
+                : <Delta now={windowSum(s, ...model.l30)} before={windowSum(s, ...model.p30)} />}
             </div>
           )
         })}
       </div>
 
+      {others.length > 0 && (
+        <p className="text-[11px] text-gray-500">
+          <span className="font-semibold text-gray-700">Also imported:</span>{' '}
+          {others.map(m => {
+            const sm = series[m]!
+            return `${metricLabel(m)} (${platformLabel(sm)}, ${nf([...sm.byDay.values()].reduce((a, b) => a + b, 0))})`
+          }).join(' · ')}
+        </p>
+      )}
+
       <div>
         <div className="flex items-baseline justify-between gap-2 mb-1">
           <p className="text-[11px] font-semibold text-gray-700">
-            Weekly {model.main} · {PLATFORM_LABEL[series[model.main]!.platform]}
+            Weekly {mainLabel} · {platformLabel(series[model.main]!)}
           </p>
           <p className="text-[11px] text-gray-500 tabular-nums h-4">
-            {hw ? `Week of ${fmtDate(hw.start)}: ${nf(hw.views)} ${model.main}${series.interactions ? `, ${nf(hw.inter)} interactions` : ''}` : 'Hover a week for its numbers'}
+            {hw ? `Week of ${fmtDate(hw.start)}: ${nf(hw.views)} ${mainLabel}${series.interactions ? `, ${nf(hw.inter)} interactions` : ''}` : 'Hover a week for its numbers'}
           </p>
         </div>
         <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" role="img"
-          aria-label={`Weekly ${model.main} from ${fmtDate(model.first)} to ${fmtDate(model.last)}, peak ${nf(maxV)}`}
+          aria-label={`Weekly ${mainLabel} from ${fmtDate(model.first)} to ${fmtDate(model.last)}, peak ${nf(maxV)}`}
           onMouseLeave={() => setHover(null)}>
           <line x1={PAD_L} x2={W} y1={H - PAD_B} y2={H - PAD_B} className="stroke-gray-200" strokeWidth={1} />
           {weekList.map((w, i) => {
@@ -233,10 +258,10 @@ export function OwnedSocial({ rows }: { rows: OwnedDaily[] }) {
         <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1.5">What drives it</p>
         <ul className="space-y-1.5 text-xs text-gray-700">
           <li className="flex gap-2"><span className="text-brand-accent" aria-hidden>■</span>
-            <span>Biggest weeks against a typical week ({nf(Math.round(model.typicalWeek))} {model.main}):{' '}
+            <span>Biggest weeks against a typical week ({nf(Math.round(model.typicalWeek))} {mainLabel}):{' '}
               {peaks.map(p => `${fmtDate(p.start)} ${(p.views / Math.max(1, model.typicalWeek)).toFixed(1)}×`).join(', ')}. Check what Moba posted or attended those weeks: that is the content to repeat.</span></li>
           <li className="flex gap-2"><span className="text-brand-accent" aria-hidden>■</span>
-            <span>The top 10% of days carry {model.concentration}% of all {model.main}: attention comes in bursts around posts and events, not as a steady stream.</span></li>
+            <span>The top 10% of days carry {model.concentration}% of all {mainLabel}: attention comes in bursts around posts and events, not as a steady stream.</span></li>
           {model.bestWd && (
             <li className="flex gap-2"><span className="text-brand-accent" aria-hidden>■</span>
               <span>{WEEKDAYS[model.bestWd.k]} is the strongest day on average{model.weekendRatio !== null ? `; weekends run at ${Math.round(model.weekendRatio * 100)}% of midweek` : ''}.</span></li>
