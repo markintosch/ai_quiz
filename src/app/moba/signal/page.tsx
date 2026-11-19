@@ -56,6 +56,7 @@ export default async function MobaSignalPage({ searchParams }: PageProps) {
       if (live) {
         return (
           <SignalDashboard
+            live
             data={live.dataset}
             sourceLabel={`live · ${live.counts.approved} approved items${live.counts.proposed ? ` · ${live.counts.proposed} awaiting review` : ''}`}
           />
