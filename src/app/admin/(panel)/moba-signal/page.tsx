@@ -76,6 +76,8 @@ export default function MobaSignalAdmin() {
   const [upKind, setUpKind] = useState('news')
   const [upNote, setUpNote] = useState('')
   const [sovFile, setSovFile] = useState<File | null>(null)
+  const [metaFiles, setMetaFiles] = useState<File[]>([])
+  const [metaPlatform, setMetaPlatform] = useState<'instagram' | 'facebook' | 'meta'>('instagram')
   const [brief, setBrief] = useState<Row | null>(null)
   const [briefEdits, setBriefEdits] = useState<Record<string, string>>({})
   const [paperDraft, setPaperDraft] = useState<Row | null>(null)
@@ -256,6 +258,31 @@ export default function MobaSignalAdmin() {
     }
     setBusy(null)
     load()
+  }
+
+  async function importMeta() {
+    if (metaFiles.length === 0) return
+    setBusy('meta')
+    setNotice(`Importing ${metaFiles.length} Meta export${metaFiles.length === 1 ? '' : 's'}…`)
+    try {
+      const fd = new FormData()
+      metaFiles.forEach(f => fd.append('file', f))
+      fd.append('platform', metaPlatform)
+      const res = await fetch('/api/admin/moba-signal/owned', { method: 'POST', body: fd })
+      const json = await safeJson(res)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const results: any[] = json.results ?? []
+      const ok = results.filter(r => !r.error)
+      const bad = results.filter(r => r.error)
+      const bits = ok.map(r => `${r.title} → ${r.platform} ${r.metric}, ${r.days} days (${r.from} to ${r.to})`)
+      if (bad.length) bits.push(`failed: ${bad.map(r => `${r.file}: ${r.error}`).join(' · ')}`)
+      setNotice(bits.join(' · ') || json.error || `HTTP ${res.status}`)
+      setNoticeErr(!res.ok || bad.length > 0)
+      if (ok.length) setMetaFiles([])
+    } catch (e) {
+      setNotice(e instanceof Error ? e.message : String(e)); setNoticeErr(true)
+    }
+    setBusy(null)
   }
 
   async function briefAction(action: 'draft' | 'approve') {
@@ -457,6 +484,37 @@ export default function MobaSignalAdmin() {
             <span className="text-[11px] text-gray-400">
               The LinkedIn competitor analytics .xlsx, any period length. Numbers, not items: feeds the
               Share of voice card, never the signal feed.
+            </span>
+          </div>
+          <div className="pt-3 border-t border-gray-100 flex flex-wrap items-center gap-2">
+            <span className="text-xs font-semibold text-gray-700">Moba on Meta:</span>
+            <input
+              type="file"
+              accept=".csv"
+              multiple
+              onChange={e => setMetaFiles(Array.from(e.target.files ?? []))}
+              className="text-xs text-gray-600 file:mr-2 file:px-3 file:py-1.5 file:rounded-lg file:border file:border-gray-300 file:bg-white file:text-xs file:font-semibold"
+            />
+            <label className="text-xs text-gray-600 flex items-center gap-1">
+              Unnamed metrics are
+              <select value={metaPlatform} onChange={e => setMetaPlatform(e.target.value as typeof metaPlatform)}
+                className="text-xs border border-gray-300 rounded-lg px-2 py-1 bg-white">
+                <option value="instagram">Instagram</option>
+                <option value="facebook">Facebook</option>
+                <option value="meta">Facebook + Instagram</option>
+              </select>
+            </label>
+            <button
+              onClick={importMeta}
+              disabled={busy !== null || metaFiles.length === 0}
+              className="text-xs font-semibold px-4 py-1.5 rounded-lg bg-brand text-white disabled:opacity-40"
+            >
+              {busy === 'meta' ? 'Importing…' : `Import ${metaFiles.length || ''} Meta export${metaFiles.length === 1 ? '' : 's'}`}
+            </button>
+            <span className="text-[11px] text-gray-400">
+              Business Suite CSVs for Moba&rsquo;s own pages, one metric per file, select them all at once.
+              Files titled &ldquo;Facebook-…&rdquo; set their own platform; the choice applies to titles like
+              &ldquo;Weergaven&rdquo;. Re-uploads update overlapping days.
             </span>
           </div>
         </div>

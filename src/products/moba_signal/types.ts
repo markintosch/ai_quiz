@@ -430,6 +430,16 @@ export interface SocialStat {
   posts: number
 }
 
+// ── Owned channels (Moba's own Meta pages, Business Suite export) ───────────
+
+/** One day of one metric on one of Moba's own pages. Real imported numbers. */
+export interface OwnedDaily {
+  platform: 'facebook' | 'instagram' | 'meta'
+  metric: 'views' | 'interactions' | 'visits' | 'link_clicks' | 'follows' | 'reach'
+  day: string
+  value: number
+}
+
 // ── Brand & positioning paper (Positioning agent drafts, analyst approves) ────
 //
 // One edition per quarter, identical structure every time so editions compare.

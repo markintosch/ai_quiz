@@ -11,7 +11,7 @@
 // modules, re-weighted, never forked content.
 
 import { useEffect, useMemo, useState } from 'react'
-import type { Signal, SignalDataset, Region } from '@/products/moba_signal/types'
+import type { OwnedDaily, Signal, SignalDataset, Region } from '@/products/moba_signal/types'
 import { REGION_LABELS } from '@/products/moba_signal/types'
 import { band, daysBetween, entityById, entityLabel, headline, laneEntityId, quarterlyLaneCounts, relTime, sortForFeed, statusMetrics, fmtDate } from '@/products/moba_signal/selectors'
 import { HeatStrip, Sparkline } from './viz'
@@ -31,6 +31,7 @@ import { ShareOfVoice } from './ShareOfVoice'
 import { SourceHealth } from './SourceHealth'
 import { Queue } from './Queue'
 import { CompanyProfileTab } from './Profile'
+import { OwnedSocial } from './OwnedSocial'
 import { SANOVO_PROFILE } from '@/products/moba_signal/profiles/sanovo'
 
 const TONE_CLS = {
@@ -72,21 +73,23 @@ type ViewKey = 'answer' | 'explore'
 type ProfileKey = 'sanovo'
 type TabKey = ViewKey | ProfileKey
 const PROFILES = { sanovo: SANOVO_PROFILE } as const
-type CardId = 'feed' | 'claims' | 'h2h' | 'wins' | 'events' | 'queue' | 'tech' | 'momentum' | 'sov' | 'brief' | 'implications' | 'positioning' | 'hiring' | 'regions'
+type CardId = 'feed' | 'claims' | 'h2h' | 'wins' | 'events' | 'queue' | 'tech' | 'momentum' | 'sov' | 'owned' | 'brief' | 'implications' | 'positioning' | 'hiring' | 'regions'
 
 const VIEWS: Record<ViewKey, { label: string; hint: string; main: CardId[]; a: CardId[]; b: CardId[] }> = {
   answer: {
     label: 'Answer', hint: 'The takeaway: what changed, what it means, what to do',
-    main: ['brief'], a: ['implications', 'positioning', 'claims'], b: ['regions', 'momentum', 'wins', 'hiring', 'sov', 'events'],
+    main: ['brief'], a: ['implications', 'positioning', 'claims'], b: ['regions', 'momentum', 'wins', 'hiring', 'sov', 'owned', 'events'],
   },
   explore: {
     label: 'Explore', hint: 'The working view: everything collected, ranked, with the queue',
-    main: ['events', 'feed'], a: ['implications', 'regions', 'momentum', 'hiring', 'sov'], b: ['wins', 'claims', 'h2h', 'tech', 'queue'],
+    main: ['events', 'feed'], a: ['implications', 'regions', 'momentum', 'hiring', 'sov', 'owned'], b: ['wins', 'claims', 'h2h', 'tech', 'queue'],
   },
 }
 
-export function SignalDashboard({ data, sourceLabel = 'prototype, sample data', live = false }: {
+export function SignalDashboard({ data, sourceLabel = 'prototype, sample data', live = false, owned = [] }: {
   data: SignalDataset
+  /** Moba's own Meta daily insights: real imported numbers, shown in every mode. */
+  owned?: OwnedDaily[]
   sourceLabel?: string
   /** True when data comes from the live database. Profile tabs use collected items only then. */
   live?: boolean
@@ -218,6 +221,12 @@ export function SignalDashboard({ data, sourceLabel = 'prototype, sample data', 
       <Card key="sov" id="sov" title="Share of voice" scroll={false}
         sub="LinkedIn competitor analytics: who is publishing, who is resonating. Monthly import.">
         <ShareOfVoice data={data} />
+      </Card>
+    ),
+    owned: () => (
+      <Card key="owned" id="owned" title="Moba on Meta" scroll={false}
+        sub="Moba's own Facebook and Instagram pages: when our audience pays attention. Real imported data in every mode.">
+        <OwnedSocial rows={owned} />
       </Card>
     ),
     tech: () => (

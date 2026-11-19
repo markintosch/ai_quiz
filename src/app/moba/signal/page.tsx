@@ -14,6 +14,7 @@ import { redirect } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase/server'
 import { isSignalAuthorised, signalPassword } from '@/lib/signal/auth'
 import { loadLiveDataset } from '@/lib/signal/db'
+import { loadOwnedDaily } from '@/lib/signal/owned'
 import { SIGNAL_DEMO } from '@/products/moba_signal/data'
 import { SignalDashboard } from '@/components/moba/signal/SignalDashboard'
 
@@ -49,6 +50,9 @@ export default async function MobaSignalPage({ searchParams }: PageProps) {
   if (!(await isSignalAuthorised())) redirect('/moba/signal/login')
 
   const { demo } = await searchParams
+  // Moba's own Meta insights are real imported numbers: loaded in every mode.
+  let owned: Awaited<ReturnType<typeof loadOwnedDaily>> = []
+  try { owned = await loadOwnedDaily(createServiceClient()) } catch { /* no database: card shows its empty state */ }
 
   if (demo === undefined) {
     try {
@@ -57,6 +61,7 @@ export default async function MobaSignalPage({ searchParams }: PageProps) {
         return (
           <SignalDashboard
             live
+            owned={owned}
             data={live.dataset}
             sourceLabel={`live · ${live.counts.approved} approved items${live.counts.proposed ? ` · ${live.counts.proposed} awaiting review` : ''}`}
           />
@@ -67,5 +72,5 @@ export default async function MobaSignalPage({ searchParams }: PageProps) {
     }
   }
 
-  return <SignalDashboard data={SIGNAL_DEMO} sourceLabel="prototype, sample data" />
+  return <SignalDashboard data={SIGNAL_DEMO} owned={owned} sourceLabel="prototype, sample data" />
 }
