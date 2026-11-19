@@ -36,6 +36,12 @@ describe('parseMetaExport', () => {
     expect(r.metric).toBe('link_clicks')
   })
 
+  it('reads Kijkers (Viewers, formerly Reach) as reach', () => {
+    const r = parseMetaExport(utf16le('sep=,\n"Kijkers"\n"Datum","Primary"\n"2026-01-05T01:00:00","120"\n'), 'instagram')
+    expect(r).toMatchObject({ metric: 'reach', platform: 'instagram' })
+    expect(r.rows[0].value).toBe(120)
+  })
+
   it('fails loudly on an unknown title', () => {
     expect(() => parseMetaExport(utf16le('"Iets anders"\n"Datum","Primary"\n'), 'meta')).toThrow(/Unknown metric title/)
   })

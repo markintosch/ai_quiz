@@ -147,7 +147,7 @@ export function OwnedSocial({ rows }: { rows: OwnedDaily[] }) {
     { metric: 'visits', label: 'Page visits' },
     { metric: 'follows', label: 'New followers' },
     { metric: 'link_clicks', label: 'Link clicks' },
-    { metric: 'reach', label: 'Reach' },
+    { metric: 'reach', label: 'Viewers' },
   ] as const).filter(t => series[t.metric])
 
   // ── Chart geometry ──

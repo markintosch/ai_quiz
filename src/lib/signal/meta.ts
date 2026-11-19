@@ -23,7 +23,7 @@ export const META_METRIC_LABELS: Record<MetaMetric, string> = {
   visits:       'Page visits',
   link_clicks:  'Link clicks',
   follows:      'New followers',
-  reach:        'Reach',
+  reach:        'Viewers',
 }
 
 export interface MetaDailyRow {
@@ -56,7 +56,8 @@ const METRIC_RULES: Array<[RegExp, MetaMetric]> = [
   [/interact/i, 'interactions'],
   [/bezoek|visit/i, 'visits'],
   [/volger|follow/i, 'follows'],
-  [/bereik|reach/i, 'reach'],
+  // Meta renamed Reach to Viewers (NL: Kijkers): unique accounts that saw content
+  [/kijker|viewer|bereik|reach/i, 'reach'],
   [/weergave|view|impressi/i, 'views'],
 ]
 
@@ -73,7 +74,7 @@ export function parseMetaExport(bytes: Uint8Array, fallbackPlatform: MetaPlatfor
   if (!title) throw new Error('No metric title found on the first lines.')
 
   const metric = METRIC_RULES.find(([re]) => re.test(title))?.[1]
-  if (!metric) throw new Error(`Unknown metric title "${title}". Expected views, interactions, visits, link clicks, followers or reach.`)
+  if (!metric) throw new Error(`Unknown metric title "${title}". Expected views, viewers, interactions, visits, link clicks or followers.`)
 
   const fromTitle: MetaPlatform | null = /facebook/i.test(title) ? 'facebook' : /instagram/i.test(title) ? 'instagram' : null
   const platform = fromTitle ?? fallbackPlatform
